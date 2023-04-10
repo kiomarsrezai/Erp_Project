@@ -37,7 +37,7 @@
             </div>
             <div class="modal-body clearfix">*@
 <table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
-    <thead style="color: black; background-color: rgb(157 152 232 / 0.63)">
+    <thead class="bg-gray-high-table">
         <tr style="border: 1px solid black; border-collapse: collapse;">
             <th class="text-center" width="200px">منطقه</th>
             <th class="text-center" width="150px">مصوب</th>
@@ -56,7 +56,7 @@
             {
                 if (i % 2 == 0)
                 {
-                    <tr style="background-color:rgb(104 140 175 / 0.71)">
+                    <tr class="bg-gray-table">
 
                         <td class="text-center" width="200px">@item.AreaName</td>
                         <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>

@@ -26,7 +26,7 @@
 <div class="row">
     <div class="col-md-12">
         <table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
-            <thead style="color: black; background-color: rgb(157 152 232 / 0.63)">
+            <thead class="bg-gray-high-table">
                 <tr style="border: 1px solid black; border-collapse: collapse;">
                     <th rowspan="2">ردیف</th>
                     <th rowspan="2">عنوان</th>
@@ -54,7 +54,7 @@
                     {
                         if (i % 2 == 0)
                         {
-                            <tr style="background-color:rgb(104 140 175 / 0.71)">
+                            <tr class="bg-gray-table">
                                 <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.Id.ToString())</td>
                                 <td class="text-center" width="200px">@item.AreaName</td>
                                 <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabCurrent).ToString())</td>
@@ -65,13 +65,13 @@
                                 <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCivil.ToString()) %</td>
                                 <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentTotal.ToString()) %</td>
                                 <td width="50px">
-                                    <a class="btn btn-link" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 2 })">
-                                        <i class="fa fa-eye-dropper fa-1x"></i>
+                                    <a class="btn btn-link text-primary" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 2 })">
+                                        <i class="fa fa-eye-dropper"></i>
                                     </a>
                                 </td>
                                 <td width="50px">
-                                    <a class="btn btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 3 })">
-                                        <i class="fa fa-university fa-1x"></i>
+                                    <a class="btn btn-link text-primary" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 3 })">
+                                        <i class="fa fa-university"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -91,13 +91,13 @@
                                 <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCivil.ToString()) %</td>
                                 <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentTotal.ToString()) %</td>
                                 <td width="70px">
-                                    <a class="btn btn-link" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 2 })">
-                                        <i class="fa fa-eye-dropper fa-1x"></i>
+                                    <a class="btn btn-link text-primary" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 2 })">
+                                        <i class="fa fa-eye-dropper"></i>
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 3 })">
-                                        <i class="fa fa-university fa-1x"></i>
+                                    <a class="btn btn-link text-primary" data-toggle="ajax-modal" data-url="@Url.Action("FnProctorAreaBudget", "Deputy", new { yId = item.YearId, pId = item.ProctorId, aId = item.AreaId, bId = 3 })">
+                                        <i class="fa fa-university"></i>
                                     </a>
                                 </td>
                             </tr>

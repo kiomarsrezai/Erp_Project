@@ -54,27 +54,35 @@
 
 <div id="modal-placeholder"></div>
 <table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;height:100%;z-index:98888888;">
-    <thead style="color:black;background-color:rgb(157 152 232)">
+    <thead class="bg-gray-high-table">
         <tr style="border: 1px solid black; border-collapse: collapse;">
-            <th colspan="10" style="color: black; background-color: rgb(157 152 232 / 0.90);border: 1px solid black; border-collapse: collapse;">
+            <th colspan="10" style="color: black;border: 1px solid black; border-collapse: collapse;" class="pt-3">
                 <div class="row">
                     <form asp-action="Index" asp-controller="VasetSazmanha" class="row">
                         <div class="col-md-3">
-                            <div class="control-label">سال</div>
-                            <div>
-                                @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control" })
+                            <div class="form-overlap">
+                                @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control form-overlap-input" })
+                                <label class="form-overlap-label">سال</label>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="control-label">منطقه</div>
-                            @Html.DropDownList("areaId", new SelectList(_uw.AreaFetch(3).ToList(), "Id", "AreaName"), new { @class = "form-control" })
+                            <div class="form-overlap">
+                                @Html.DropDownList("areaId", new SelectList(_uw.AreaFetch(3).ToList(), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                <label class="form-overlap-label">منطقه</label>
+
+                            </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="control-label">نوع بودجه</div>
-                            @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control" })
+                                <div class="form-overlap">
+                                @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control form-overlap-input" })
+                                <label class="form-overlap-label">نوع بودجه</label>
+
+                            </div>
                         </div>
-                        <div class="col-md-3 mt-3">
-                            <input id="refresh-btn" class="btn btn-primary" type="submit" value="ارسال" />
+                        <div class="col-md-3">
+                            <div class="text-right">
+                                <input id="refresh-btn" class="btn btn-primary rounded fs-normal" type="submit" value="ارسال" />
+                            </div>
                         </div>
                     </form>
                 </div>

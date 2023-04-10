@@ -433,7 +433,7 @@ h2,
 h3,
 .h3 {
     font-size: 1.0625rem;
-    font-family: Vazir_Bold;
+    /*font-family: Vazir_Bold;*/
     font-weight: 100;
     margin: 0px;
 }
@@ -1676,7 +1676,7 @@ pre {
     }
 
     .table tbody td {
-        font-family: Vazir_Bold;
+        /*font-family: Vazir_Bold;*/
         font-size: 22px !important;
         text-wrap:initial;
     }
@@ -2034,8 +2034,7 @@ pre {
     background-color: #fff;
     background-clip: padding-box;
     box-shadow: none;
-    font-family:Vazir;
-
+    /*font-family:Vazir;*/
 }
 
 @media screen and (prefers-reduced-motion: reduce) {
@@ -2509,7 +2508,7 @@ textarea.form-control {
 
 .btn {
     font-size: 20px;
-    font-family: Vazir;
+    /*font-family: Vazir;*/
     line-height: 1.5;
     display: inline-block;
     padding: .625rem 1.25rem;
@@ -4912,8 +4911,8 @@ input[type='button'].btn-block {
 
 .navbar-light .navbar-nav .nav-link {
     color: black;
-    font-size:20px;
-    font-family: Vazir_Bold;
+    font-size: 20px;
+    /* font-family: Vazir_Bold; */
 }
 
     .navbar-light .navbar-nav .nav-link:hover,
@@ -19321,7 +19320,7 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
 }
 
 .tox[dir="rtl"] {
-    font-family: Vazir;
+    /*font-family: Vazir;*/
 }
 .tox[dir="rtl"] .tox-label {
     margin-bottom: 5px !important;
