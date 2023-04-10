@@ -1,0 +1,27 @@
+﻿tr, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.tbody {
+    color: black;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tableFixHead {
+    overflow: auto;
+    height: 100px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    .tableFixHead thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        color: black;
+    }

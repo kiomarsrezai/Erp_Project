@@ -1,0 +1,100 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.SepratorAreaRequestViewModel>
+@{
+    ViewData["Title"] = "ProctorArea";
+    Layout = null;
+}
+
+<style>
+    .modal-dialog {
+        max-width: 80% !important;
+        max-height:80% !important;
+    }
+    tr, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .tbody {
+        color: black;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+        max-height: 80% !important;
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 100px;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            color: black;
+            background-color: #2999e2;
+            height: 100px;
+            line-height: 1.5px;
+        }
+</style>
+
+<table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
+    <thead style="color: black; background-color: rgb(157 152 232 / 0.63)">
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <th class="text-center">ردیف</th>
+            <th class="text-center">شماره</th>
+            <th class="text-right">تاریخ</th>
+            <th class="text-center">شرح</th>
+            <th class="text-center">مبلغ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                if (i % 2 == 0)
+                {
+                    <tr style="background-color:#b9d7e2">
+                        <td>@i.ToString()</td>
+                        <td class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.Number.ToString()) </td>
+                        <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.Date.ToString()) </td>
+                        <td class="text-right">@item.Description</td>
+                        <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
+                    </tr>
+                    i++;
+                }
+                else
+                {
+                    <tr style="background-color:#ffffff">
+                        <td>@i.ToString()</td>
+                        <td class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.Number.ToString()) </td>
+                        <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.Date.ToString()) </td>
+                        <td class="text-right">@item.Description</td>
+                        <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
+                    </tr>
+                    i++;
+                }
+            }
+            <tr>
+                <td colspan="4">جمع کل</td>
+                <td class="text-right">
+                    @NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.EstimateAmount)))
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="10" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+

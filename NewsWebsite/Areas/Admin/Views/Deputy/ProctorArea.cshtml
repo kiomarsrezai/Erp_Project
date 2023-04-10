@@ -1,0 +1,100 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.AreaProctorViewModel>
+@{
+    ViewData["Title"] = "ProctorArea";
+    Layout = null;
+}
+<style>
+    .modal-dialog {
+        max-width: 80% !important;
+    }
+</style>
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <h3 id="modal-title">مناطق</h3>
+                <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="50px">ردیف</th>
+                            <th class="text-center" width="200px">عنوان</th>
+                            <th class="text-center" width="150px">مصوب هزینه ای</th>
+                            <th class="text-center" width="150px">عملکرد هزینه ای</th>
+                            <th class="text-center" width="150px">% جذب هزینه ای</th>
+                            <th class="text-center" width="150px">مصوب سرمایه ای</th>
+                            <th class="text-center" width="150px">عملکرد سرمایه ای</th>
+                            <th class="text-center" width="150px">% جذب سرمایه ای</th>
+                            <th class="text-center" width="150px">% جذب کل</th>
+                            <th width="50px"><i class="ni ni-send"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-dark">
+                        @if (Model.Count > 0)
+                        {
+                            int i = 1;
+                            foreach (var item in Model)
+                            {
+
+                                <tr class="table-striped">
+                                    <td colspan="1" class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.Id.ToString())</td>
+                                    <td colspan="1" class="text-center" width="200px">@item.AreaName</td>
+                                    <td colspan="1" class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabCurrent).ToString())</td>
+                                    <td colspan="1" class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.ExpenseCurrent).ToString())</td>
+                                    <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCurrent.ToString()) %</td>
+                                    <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabCivil).ToString())</td>
+                                    <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.ExpenseCivil).ToString())</td>
+                                    <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCivil.ToString()) %</td>
+                                    <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentTotal.ToString()) %</td>
+                                    <td width="50px">
+                                        @*<button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderTag","Tag")">
+                                            <i class="fa fa-plus"></i> | افزودن برچسب جدید
+                                        </button>*@
+                                        @*<a id="mymodal-inner" class="btn btn-primary btn-sm" onclick="ProctorAreaBudgetTable(32,1,0,2)"></a>*@
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="ajax-modal" data-url="@Url.Action("Details2", "Deputy" ,new {YearId=item.YearId,ProctorId=item.ProctorId,areaId=item.AreaId,budgetProcessId=2})">
+                                            اعتبارات هزینه ای
+                                        </button>
+                                        <button type="button" id="mymodal-inner" class="btn btn-warning btn-sm" data-toggle="ajax-modal" data-target="#myModal-inner">
+                                            تملک دارائیهای سرمایه ای
+                                        </button>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">بستن</button>
+                               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*<script type="text/javascript">
+    function ProctorAreaBudgetTable(yId, pId, aId, bId) {
+            $.ajax({
+                url: "Deputy/GetDataAreaTable",
+                data: { yearId=yId, areaId=pId, proctorId=aId, budgetprocessId=bId },
+                type: "get",
+            }).done(function (result) {
+                $("#myModal-inner").modal('show');
+                $(".modal-title").html('جزئیات اطلاعات');
+                $(".modal-body").html(result);
+            });
+    </script>*@
+

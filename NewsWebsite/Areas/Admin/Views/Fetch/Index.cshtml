@@ -1,0 +1,209 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.FetchViewModel>
+@inject NewsWebsite.Data.Models.ProgramBuddbContext _db
+
+@inject NewsWebSite.Data.Repository.IBudget_001Rep _uw
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    tr, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 100px;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .tableFixHead thead {
+            position: sticky;
+            top: 0px;
+            z-index: 150000;
+        }
+</style>
+<div id="modal-placeholder"></div>
+
+<div>
+
+    <div>
+        <table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
+            <thead style="color: black; background-color: rgb(157 152 232)">
+
+                <tr style="border: 1px solid black; border-collapse: collapse;">
+                    <th colspan="7" style="color: black; background-color: rgb(157 152 232 / 0.90);border: 1px solid black; border-collapse: collapse;">
+                        <form asp-action="Index" asp-controller="Fetch" class="row">
+                            <div class="col-md-3">
+                                <div class="control-label">سال</div>
+                                <div>
+                                    @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="control-label">منطقه</div>
+                                @Html.DropDownList("areaId", new SelectList(_uw.AreaFetch(1).ToList(), "Id", "AreaName"), new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-3">
+                                <div class="control-label">نوع بودجه</div>
+                                @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-3 mt-3">
+                                <input class="btn btn-primary" type="submit" value="ارسال" />
+                            </div>
+                        </form>
+                    </th>
+                </tr>
+                <tr style="border: 1px solid black; border-collapse: collapse;">
+                    <th class="text-center">ردیف</th>
+                    <th class="text-center">کد</th>
+                    <th class="text-center">شرح</th>
+                    <th class="text-center">مصوب</th>
+                    <th class="text-center">عملکرد</th>
+                    <th class="text-center">% جذب</th>
+
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody style="color:black; border: 1px solid black; border-collapse: collapse; width: 100%;">
+
+                @if (Model.Count > 0)
+                {
+                    int i = Model.Count;
+                    foreach (var item in Model)
+                    {
+                        if (item.LevelNumber == 1)
+                        {
+                            <tr style="background-color:#76afea">
+                                <td class="text-center">@i</td>
+                                <td class="text-nowrap">@item.Code</td>
+                                <td>@item.Description</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
+                                <td class="text-center">
+                                    <button type="button" class="btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("GetDataBudget","Fetch",new {yearId=32,codingId=item.CodingId})">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                        else if (item.LevelNumber == 2)
+                        {
+                            <tr style="background-color:#b0cce9">
+                                <td class="text-center">@i</td>
+                                <td class="text-nowrap">@item.Code</td>
+                                <td>@item.Description</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
+                                <td class="text-center">
+                                    <button type="button" class="btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("GetDataBudget","Fetch",new {yearId=32,codingId=item.CodingId})">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        if (item.LevelNumber == 3)
+                        {
+                            <tr style="background-color: #d1e0ef">
+                                <td class="text-center">@i</td>
+                                <td class="text-nowrap">@item.Code</td>
+                                <td>@item.Description</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
+                                <td class="text-center">
+                                    <button type="button" class="btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("GetDataBudget","Fetch",new {yearId=32,codingId=item.CodingId})">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        if (item.LevelNumber == 4)
+                        {
+                            <tr style="background-color: rgb(255 255 153)">
+                                <td class="text-center">@i</td>
+                                <td class="text-nowrap">@item.Code</td>
+                                <td>@item.Description</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
+                                <td class="text-center">
+                                    @if (item.Show == true)
+                                    {
+                                        <button type="button" class="btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("GetDataBudget","Fetch",new {yearId=32,codingId=item.CodingId})">
+                                            <i class="fa fa-arrow-up"></i>
+                                        </button>
+                                        @*<button type="button" class="fa fa-barcode" data-toggle="modal" data-target="#myModal">
+                                            </button>*@
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        else
+                        if (item.LevelNumber == 5)
+                        {
+                            <tr style="background-color: rgb(255 255 255)">
+                                <td class="text-center">@i</td>
+                                <td class="text-nowrap">@item.Code</td>
+                                <td>@item.Description</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
+                                <td class="text-center">
+                                    @if (item.Show == true)
+                                    {
+                                        <button type="button" class="btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("GetDataBudget","Fetch",new {yearId=32,codingId=item.CodingId})">
+                                            <i class="fa fa-arrow-up"></i>
+                                        </button>
+                                        @*<button type="button" class="fa fa-barcode" data-toggle="modal" data-target="#myModal">
+                                            </button>*@
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr style="background-color: rgb(255 106 0)">
+                                <td class="text-center">@i</td>
+                                <td class="text-nowrap">@item.Code</td>
+                                <td>@item.Description</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
+                                <td class="text-center">
+                                    @if (item.Show == true)
+                                    {
+                                        <button type="button" class="btn-icon" data-toggle="ajax-modal" data-url="@Url.Action("GetDataBudget","Fetch",new {yearId=32,codingId=item.CodingId})">
+                                            <i class="fa fa-arrow-up"></i>
+                                        </button>
+                                        @*<button type="button" class="fa fa-barcode" data-toggle="modal" data-target="#myModal">
+                                            </button>*@
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        i++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="11" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,115 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.ChartAreaViewModel>
+
+@{
+    ViewData["Title"] = "ProctorArea";
+    Layout = null;
+}
+<style>
+    .modal-dialog {
+        max-width: 80% !important;
+        max-height: 80% !important;
+    }
+
+    .tr, td, th {
+        text-align: center;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 100px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>
+
+@*<div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">ردیف های بودجه</h3>
+                <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body clearfix">*@
+<table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
+    <thead style="color: black; background-color: rgb(157 152 232 / 0.63)">
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <th class="text-center" width="200px">منطقه</th>
+            <th class="text-center" width="150px">مصوب</th>
+            <th class="text-center" width="150px">مصوب روزانه</th>
+            <th class="text-center" width="150px">عملکرد</th>
+            <th class="text-center" width="150px">محقق نشده</th>
+            <th class="text-center" width="150px">% جذب روزانه</th>
+            <th class="text-center" width="150px">% جذب به مصوب</th>
+        </tr>
+    </thead>
+    <tbody class="border-dark w-auto">
+        @if (Model.Count > 0)
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                if (i % 2 == 0)
+                {
+                    <tr style="background-color:rgb(104 140 175 / 0.71)">
+
+                        <td class="text-center" width="200px">@item.AreaName</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabDaily).ToString())</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.NotGet).ToString())</td>
+                        <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentMosavabDaily.ToString()) %</td>
+                        <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentMosavab.ToString()) %</td>
+                    </tr>
+                    i++;
+
+                }
+                else
+                {
+                    <tr style="background-color:#ffffff">
+
+                        <td class="text-center" width="200px">@item.AreaName</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabDaily).ToString())</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                        <td class="text-right" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.NotGet).ToString())</td>
+                        <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentMosavabDaily.ToString()) %</td>
+                        <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentMosavab.ToString()) %</td>
+                    </tr>
+                    i++;
+
+                }
+            }
+            <tr style="background-color:#ffffff">
+                <td></td>
+                <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.Mosavab)))</td>
+                <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.MosavabDaily)))</td>
+                <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.Expense)))</td>
+
+                <td class="text-right">
+                    @NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.NotGet)))
+                </td>
+                <td width="150px" class="text-center"></td>
+                <td width="150px" class="text-center"></td>
+            </tr>
+
+        }
+        else
+        {
+            <tr>
+                <td colspan="10" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+            @*</div>
+        </div>
+    </div>
+</div>*@
+

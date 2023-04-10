@@ -1,0 +1,240 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.VasetSazmanhaViewModel>
+@inject NewsWebsite.Data.Models.ProgramBuddbContext _db
+
+@inject NewsWebSite.Data.Repository.IBudget_001Rep _uw
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .modal-header--sticky {
+        position: sticky;
+        top: 0;
+        background-color: inherit; /* [1] */
+        z-index: 1055; /* [2] */
+    }
+
+    /* Footer fixed to the bottom of the modal */
+    .modal-footer--sticky {
+        position: sticky;
+        bottom: 0;
+        background-color: inherit; /* [1] */
+        z-index: 1055; /* [2] */
+    }
+
+    tr, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .tbody {
+        color: black;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 100px;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .tableFixHead thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            color: black;
+        }
+</style>
+
+<div id="modal-placeholder"></div>
+<table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;height:100%;z-index:98888888;">
+    <thead style="color:black;background-color:rgb(157 152 232)">
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <th colspan="10" style="color: black; background-color: rgb(157 152 232 / 0.90);border: 1px solid black; border-collapse: collapse;">
+                <div class="row">
+                    <form asp-action="Index" asp-controller="VasetSazmanha" class="row">
+                        <div class="col-md-3">
+                            <div class="control-label">سال</div>
+                            <div>
+                                @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="control-label">منطقه</div>
+                            @Html.DropDownList("areaId", new SelectList(_uw.AreaFetch(3).ToList(), "Id", "AreaName"), new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-3">
+                            <div class="control-label">نوع بودجه</div>
+                            @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <input id="refresh-btn" class="btn btn-primary" type="submit" value="ارسال" />
+                        </div>
+                    </form>
+                </div>
+            </th>
+        </tr>
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <th class="text-center" width="50px"></th>
+            <th class="text-center" width="50px"></th>
+            <th class="text-center" width="100px">ردیف</th>
+            <th class="text-center" width="100px">کد</th>
+            <th class="text-center" width="500px">شرح</th>
+            <th class="text-center" width="150px">مصوب</th>
+            <th class="text-center" width="150px">کدحسابداری</th>
+            <th class="text-center" width="150px">شرح حسابداری</th>
+            <th class="text-center" width="100px">% تسهیم</th>
+            @*<th width="100px">کد حسابداری</th>*@
+            <th width="100px">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                if (i % 2 == 0)
+                {
+                    <tr style="background-color:rgb(202 221 217 / 0.71)">
+                        <td width="50px" class="text-center">
+                            <a class="btn btn-link" onclick="InsertCodeAccjs('@item.Id')">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </td>
+                        <td width="50px" class="text-center">
+                            <a class="btn btn-link" onclick="DeleteCodeAccjs('@item.Id')">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.Code</td>
+                        <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Description</td>
+                        <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.CodeAcc</td>
+                        <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.TitleAcc</td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud</td>
+                        <td width="50px" class="filterable-cell text-center">
+                            <a class="btn btn-icon" onclick="UpdateCodeAccjs('@item.Id','@item.Code','@item.Description')">
+                                <i class="fa fa-balance-scale"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    i++;
+
+                }
+                else
+                    if (i % 2 == 1)
+                {
+                    <tr style="background-color:#ffffff">
+                        <td width="50px" class="text-center">
+                            <a class="btn btn-link" onclick="InsertCodeAccjs('@item.Id')">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </td>
+                        <td width="50px" class="text-center">
+                            <a class="btn btn-link" onclick="DeleteCodeAccjs('@item.Id')">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.Code</td>
+                        <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Description</td>
+                        <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.CodeAcc</td>
+                        <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.TitleAcc</td>
+                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud</td>
+                        <td width="50px" class="text-center">
+                            <a class="btn btn-icon" onclick="UpdateCodeAccjs('@item.Id','@item.Code','@item.Description')">
+                                <i class="fa fa-balance-scale"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    i++;
+
+                }
+
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="MasterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="~/CacheFiles/lib/sweetalert2/dist/sweetalert2.css" rel="stylesheet" />
+<script src="~/CacheFiles/lib/sweetalert2/dist/sweetalert2.js"></script>
+<script type="text/javascript">
+    
+    function UpdateCodeAccjs(id, code, description)
+    {
+        //alert('ok');
+
+        var _yearId = $("#yearId").val();
+        var _areaId = $("#areaId").val();
+
+        $.ajax({
+            url: "VasetSazmanha/UpdateCodeAcc",
+            type: "get",
+            data: { 'id': id, 'code': code, 'description': description, 'yearId': _yearId, 'areaId': _areaId }
+        }).done(function (result)
+        {
+            $("#MasterModal").modal('show');
+            $(".modal-title").html('');
+            $(".modal-body").html(result);
+        });
+    }
+
+    function InsertCodeAccjs(id)
+    {
+        $.ajax({
+            url: "VasetSazmanha/InsertCodeAccPost",
+            type: "post",
+            data: { 'id': id }
+        }).done(
+            window.location.reload()
+        );
+    }
+
+    function DeleteCodeAccjs(id)
+    {
+        $.ajax({
+            url: "VasetSazmanha/DeleteCodeAccPost",
+            type: "post",
+            data: { 'id': id }
+        }).done(function ()
+        {
+            window.location.reload()
+        });
+    }
+
+
+</script>
+
+
+

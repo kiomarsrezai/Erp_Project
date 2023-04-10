@@ -1,0 +1,45 @@
+﻿@model NewsWebsite.ViewModels.Home.HomePageViewModel
+@using NewsWebsite.Common
+@using NewsWebsite.ViewModels.Newsletter
+@using NewsWebsite.ViewModels.Home
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- ##### Hero Area End ##### -->
+<!-- ##### Trending Posts Area Start ##### -->
+@*<p class="row heading"> 
+    سامانه تحلیل بودجه و عملکرد شهرداری اهواز
+</p>*@
+<div class="center">
+    <a type="button" href="~/Admin/manage/Signin" class="btn btn-primary"><h3>ورود</h3></a>
+</div>
+<!-- ##### Trending Posts Area End ##### -->
+<!-- ##### Vizew Post Area Start ##### -->
+
+<script src="~/CacheFiles/js/pagination.min.js" asp-append-version="true"></script>
+<script type="text/javascript">
+$(function() {
+	$('#page').Pagination({
+            size: @Model.CountNewsPublished,
+            limit: 5,
+    	}, function(obj){
+              var offset=(obj.page-1)*5;
+              $.ajax({
+                url: '/Home/GetNewsPaginate?offset='+offset+'&&limit=5',
+                beforeSend: function () { $('#modal-placeholder').after('<div class="preloader d-flex align-items-center justify-content-center"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>');},
+                complete: function () { $('.preloader').remove();},
+                error: function () {
+                     ShowSweetErrorAlert();
+                }
+             }).done(function (result) {
+                $("#NewsPaginate").html(result);
+             });
+    	});
+});
+
+</script>
+
+

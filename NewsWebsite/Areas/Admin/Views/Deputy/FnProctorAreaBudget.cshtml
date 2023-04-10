@@ -1,0 +1,101 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.ProctorAreaBudgetViewModel>
+@{
+    ViewData["Title"] = "FnProctorAreaBudget";
+    Layout = null;
+}
+<style>
+    .modal-dialog {
+        max-width: 80% !important;
+        max-height: 80% !important;
+    }
+
+    .tr, td, th {
+        text-align: center;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 100px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            text-align: center;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+</style>
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="position:absolute;z-index:2000000;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">ردیف های بودجه</h3>
+                <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body clearfix">
+                <table class="tableFixHead">
+                    <thead style="color:black;background-color:#2999e2">
+                        <tr>
+                            <th class="text-center" width="50px">کد</th>
+                            <th class="text-center" width="200px">عنوان</th>
+                            <th class="text-center" width="150px">مصوب</th>
+                            <th class="text-center" width="150px">هزینه</th>
+                            <th class="text-center" width="150px">% جذب</th>
+                        </tr>
+                    </thead>
+                    <tbody style="color:black; border: 1px solid black; border-collapse: collapse; width: 100%;">
+                        @if (Model.Count > 0)
+                        {
+                            int i = 1;
+                            foreach (var item in Model)
+                            {
+                                if (i % 2 == 0)
+                                {
+                        <tr style="background-color:rgb(104 140 175 / 0.71)">
+                            <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.Code.ToString())</td>
+                            <td class="text-right " width="200px">@item.Description</td>
+                            <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                            <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.Percent.ToString()) %</td>
+
+                        </tr>
+                                    i++;
+                                }
+                                else
+                                    if (i % 2 != 0)
+                                {
+                        <tr style="background-color: #ffffff">
+                            <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.Code.ToString())</td>
+                            <td class="text-right " width="200px">@item.Description</td>
+                            <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                            <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.Percent.ToString()) %</td>
+
+                        </tr>
+                                    i++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                        <tr>
+                            <td colspan="10" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+                        </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

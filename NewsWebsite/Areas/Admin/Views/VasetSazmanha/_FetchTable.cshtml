@@ -1,0 +1,69 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model List<NewsWebsite.ViewModels.Fetch.FetchViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <span> نتایج جستجوی پیشرفته</span>
+                <a href="/Admin/Books/Index" style="font-size:13px;" class="float-left"><i class="fa fa-arrow-circle-left"></i>  بازگشت به لیست ها</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive mt-3 mr-2">
+                    <table style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ردیف</th>
+                                <th class="text-center">کد</th>
+                                <th class="text-right">شرح</th>
+                                <th class="text-center">مبلغ</th>
+                                <th class="text-center">مبلغ عملکرد</th>
+
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int i = Model.Count;}
+                            @if (Model.Count != 0)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="row">
+                                        
+                                        <td class="text-center col-md-1">@i</td>
+                                        <td class="col-md-1">@item.Code</td>
+                                        <td class="col-md-6 text-justify">@item.Description</td>
+                                        <td class="col-md-2">@item.Mosavab</td>
+                                        <td class="col-md-2">@item.Expense</td>
+
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="11" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                    @*<nav>
+                            await this.Component.InvokeAsync("Pager", new { PagingList = this.Model })
+                        </nav>*@
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,71 @@
+﻿@using NewsWebsite.Common;
+@addTagHelper*,NewsWebsite
+
+<ul class="navbar-nav">
+    <li class="nav-item">
+        @*<security-trimming asp-action="Index" asp-controller="Dashboard" asp-area="Admin">*@
+        <a class="nav-link" asp-action="ShowData" asp-controller="Dashboard">
+            <i class="ni ni-tv-2 text-primary"></i> گزارش
+        </a>
+        @*</security-trimming>*@
+    </li>
+    <li class="nav-item">
+        @*<security-trimming asp-action="Index" asp-controller="Charts" asp-area="Admin">*@
+        <a class="nav-link" asp-action="Index" asp-controller="Fetch">
+            <i class="ni ni-folder-17 text-blue"></i> بودجه
+        </a>
+        @*</security-trimming>*@
+    </li>
+    <li class="nav-item">
+        @*<security-trimming asp-action="Index" asp-controller="BudgetSeprator" asp-area="Admin">*@
+        <a class="nav-link" asp-action="Index" asp-controller="BudgetSeprator">
+            <i class="ni ni-bullet-list-67 text-red"></i> بودجه تفکیکی
+        </a>
+        @*</security-trimming>*@
+    </li>
+    <li class="nav-item">
+        @*<security-trimming asp-action="Index" asp-controller="Proctor" asp-area="Admin">*@
+        <a class="nav-link" asp-action="Index" asp-controller="Deputy">
+            <i class="ni ni-bullet-list-67 text-red"></i> متولی ها
+        </a>
+        @*</security-trimming>*@
+    </li>
+    <li class="nav-item">
+        @*<security-trimming asp-action="Index" asp-controller="Proctor" asp-area="Admin">*@
+        <a class="nav-link" asp-action="Index" asp-controller="VasetSazmanha">
+            <i class="ni ni-map-big text-yellow"></i> واسط سازمانها
+        </a>
+        @*</security-trimming>*@
+    </li>
+
+    <!--<li class="nav-item">-->
+    @*<security-trimming asp-action="Index" asp-controller="UserManager" asp-area="Admin">*@
+    <!--<a class="nav-link" asp-action="Index" asp-controller="UserManager">
+        <i class="fa fa-users text-yellow"></i> مدیریت کاربران
+    </a>-->
+    @*</security-trimming>*@
+    <!--</li>
+
+    <li class="nav-item">
+        <a class="nav-link" asp-action="ChangePassword" asp-controller="Manage">
+            <i class="ni ni-key-25 text-info"></i> تغییر کلمه عبور
+        </a>
+    </li>-->
+    @*<li class="nav-item">
+            <security-trimming asp-action="Index" asp-controller="SiteSetting" asp-area="Admin">
+                <a class="nav-link" asp-action="Index" asp-controller="SiteSetting">
+                    <i class="ni ni-settings-gear-65 text-suceess"></i> تنظیمات سامانه
+                </a>
+            </security-trimming>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="" asp-controller="">
+                <i class="ni ni-settings-gear-65 text-info"></i>  احراز هویت دو مرحله ای
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="Profile" asp-controller="Manage" asp-route-userId="@User.Identity.GetUserId()">
+                <i class="ni ni-circle-08 text-pink"></i> نمایه من
+            </a>
+        </li>*@
+</ul>

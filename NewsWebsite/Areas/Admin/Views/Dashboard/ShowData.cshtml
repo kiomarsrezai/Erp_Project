@@ -1,0 +1,254 @@
+﻿@inject NewsWebsite.Data.Models.ProgramBuddbContext _db
+@inject NewsWebSite.Data.Repository.IBudget_001Rep _uw
+@{
+
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .chartbtns {
+        position: absolute;
+        left: 8px
+    }
+
+    .objectchart {
+        width: 17%
+    }
+</style>
+<div id="modal-placeholder"></div>
+
+<div>
+    <div>
+        <div class="row">
+
+            <div id="stracturelist" class="col-md-2">
+                <div class="control-label">انتخاب کنید</div>
+                <select class="form-control" id="structureId">
+                    <option value="3">شهرداری</option>
+                    <option value="4">سازمانها</option>
+                </select>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="control-label">سال</div>
+                <div>
+                    @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id==33).ToList(), "Id", "YearName"), new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div id="centerlist" class="col-md-2">
+                <div class="control-label">انتخاب کنید</div>
+                <select class="form-control" id="centerId">
+                    <option value="0" selected>انتخاب کنید</option>
+                    <option value="1">با مرکز</option>
+                    <option value="2">بدون مرکز</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <div class="control-label">نوع بودجه</div>
+                @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control", onchange = "resetgraph();" })
+            </div>
+            <div class="col-md-2">
+                <div class="row ml-2">
+                    <span class="ml-2">درامد</span>
+                    <input class="ml-2" type="checkbox" checked="checked" id="revenue" value="1"/>
+                    <span class="ml-2">فروش اموال</span>
+                    <input class="ml-2" type="checkbox" checked="checked" id="sale" value="1" />
+
+                </div>
+                <div class="row">
+                    <span class="ml-2">وام واوراق</span>
+                    <input class="ml-2" type="checkbox" checked="checked" id="loan" value="1" />
+                    <span class="ml-2">نیابتی</span>
+                    <input class="ml-2" type="checkbox" checked="checked" id="niabati" value="1" />
+                </div>
+            </div>
+            <div class="col-md-2 mt-4 chartbtns">
+                <input id="btnChart" class="btn btn-primary" type="submit" value="نمایش" />
+                <a id="btnlist" class="btn btn-primary text-white" onclick="GetDataAreaTable()">ریز مقادیر</a>
+                @*<button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-url="@Url.Action("GetDataAreaTable","Dashboard")">
+                        <i class="fa fa-list"></i> | ریز مقادیر درآمد
+                    </button>*@
+                @*<a class="btn btn-primary" onclick="GetDataAreaTable()">
+                        <i class="fa fa-list"></i> | ریز مقادیر درآمد
+                    </a>*@
+            </div>
+        </div>
+
+    </div>
+    <div id="graph-container">
+
+        <canvas id="myChart" style="height:80%;max-width:90%"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</div>
+<div class="modal" id="MasterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                @*<button type="button" id="mymodal-inner" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal-inner">
+                        Launch demo modal
+                    </button>*@
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#structureId').change(function ()
+    {
+        var _structureId = $("#structureId").val();
+
+        if (_structureId == 3)
+        {
+            $("#centerlist").show();
+
+        } else if (_structureId == 4)
+        {
+            $("#centerlist").hide();
+        }
+    });
+
+    function GetDataAreaTable()
+    {
+        var _yearId = $("#yearId").val();
+        var _centerId = $("#centerId").val();
+        var _budgetProcessId = $("#budgetProcessId").val();
+        var _structureId = $("#structureId").val();
+        var _revenue = $("#revenue").is(":checked");
+        var _sale = $("#sale").is(":checked");
+        var _loan = $("#loan").is(":checked");
+        var _niabati = $("#niabati").is(":checked");
+
+        $.ajax({
+            url: "/Admin/Dashboard/GetDataAreaTable",
+            data: { 'yearId': _yearId, 'centerId': _centerId, 'budgetProcessId': _budgetProcessId, 'structureId': _structureId, 'revenue': _revenue, 'sale': _sale, 'loan': _loan, 'niabati': _niabati },
+            type: "get",
+        }).done(function (result)
+        {
+            $("#MasterModal").modal('show');
+            $(".modal-title").html('جزئیات اطلاعات ');
+            $(".modal-body").html(result);
+        });
+    }
+
+
+
+    $(function ()
+    {
+        $("#btnChart").click(function ()
+        {
+            var _yearId = $("#yearId").val();
+            var _centerId = $("#centerId").val();
+            var _budgetProcessId = $("#budgetProcessId").val();
+            var _structureId = $("#structureId").val();
+            var _revenue = $("#revenue").is(":checked");
+            var _sale = $("#sale").is(":checked");
+            var _loan = $("#loan").is(":checked");
+            var _niabati = $("#niabati").is(":checked");
+
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Dashboard/GetDataBudget",
+                data: { 'yearId': _yearId, 'centerId': _centerId, 'budgetProcessId': _budgetProcessId, 'structureId': _structureId, 'revenue': _revenue, 'sale': _sale, 'loan': _loan, 'niabati': _niabati },
+                contextType: "application/Json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccessResult,
+                error: onerror
+            });
+
+            var resetgraph = function ()
+            {
+                $('#myChart').remove(); // this is my <canvas> element
+                $('#graph-container').append('<canvas id="myChart" style="height:80%;max-width:90%"></canvas>');
+                canvas = document.querySelector('#myChart');
+            }
+
+            function OnSuccessResult(data)
+            {
+                //alert("hioooo")
+                var _data = data;
+                var _chartlabel = _data[0];
+                var _chartmosvab = _data[1];
+                var _chartexpense = _data[2];
+                //var _chartmosavabdaily = _data[3];
+                var _percmosavab = _data[4];
+                //var _percmosavabdaily = _data[5];
+
+                //var barcolormosab = ["blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue"];
+                //var linecolordaily = ["red", "red", "red", "red", "red", "red", "red", "red", "red"];
+                //var barcolorexpense = ["green", "green", "green", "green", "green", "green", "green", "green", "green"];
+                resetgraph();
+                var ctx = document.getElementById("myChart");
+                var chart = new Chart(ctx, {
+                    type: "bar",
+
+                    data: {
+                        labels: _chartlabel,
+                        datasets: [
+                            {
+                                type: "bar",
+                                backgroundColor: "rgba(33, 55, 0, 0.2)",
+                                borderColor: "rgba(33, 55, 0, 1)",
+                                borderWidth: 1,
+                                label: "مصوب",
+                                data: _chartmosvab,
+                                options: {
+                                    title: {
+                                        plugins: {
+                                            datalabels: {
+                                                color: '#111',
+                                                textAlign: 'center',
+                                                font: {
+                                                    lineHeight: 1.6
+                                                },
+                                                formatter: function (value, ctx)
+                                                {
+                                                    return _percmosavab + '%';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            //{
+                            //    type: "line",
+                            //    label: "مصوب روزانه",
+                            //    data: _chartmosavabdaily,
+                            //    borderColor: "rgb(255 0 0 / 0.72)",
+                            //    lineTension: 0, //
+                            //    fill: false
+                            //},
+                            ,{
+                                type: "line",
+                                label: "عملکرد",
+                                data: _chartexpense,
+                                borderColor: "rgb(0 255 33)",
+                                lineTension: 0, //
+                                fill: false
+                            }]
+                    }
+                });
+            }
+
+            function onerror(err)
+            {
+
+            }
+        });
+
+
+    });
+    //alert('میاد یا نه');
+
+
+
+</script>

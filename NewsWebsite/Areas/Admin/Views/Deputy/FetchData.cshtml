@@ -1,0 +1,94 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model List<NewsWebsite.ViewModels.Fetch.BudgetSepratorViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, Bootstrap Table!</title>
+
+
+</head>
+<body>
+    <table data-toggle="table">
+        <thead>
+            <tr>
+                <th>Item ID</th>
+                <th>Item Name</th>
+                <th>Item Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Item 1</td>
+                <td>$1</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Item 2</td>
+                <td>$2</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+</body>
+</html>
+<div class="container-fluid mt--7">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center">ردیف</th>
+                    <th class="text-center">کد</th>
+                    <th class="text-center">شرح</th>
+                    <th class="text-center">مبلغ</th>
+                    <th class="text-center">مبلغ عملکرد</th>
+                    <th class="text-center">کد حسابداری</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = Model.Count;}
+                @if (Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                <tr>
+                    <td class="text-center"></td>
+                    <td class="text-nowrap">@item.Code</td>
+                    <td class="text-center">@item.Description</td>
+                    <td class="text-center">@item.Mosavab</td>
+                    <td class="text-center">@item.Expense</td>
+                    <td class="text-center">@item.CodeVaset</td>
+                </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">هیچ رکوردی در جدول وجود ندارد.</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+
+        <nav>
+            <vc:pager paging-list="@Model"></vc:pager>
+        </nav>
+
+
+    </div>
+</div>
+
+

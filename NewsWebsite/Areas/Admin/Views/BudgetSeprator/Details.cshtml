@@ -1,0 +1,114 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.SepratorAreaRequestViewModel>
+@{
+    ViewData["Title"] = "ProctorArea";
+    Layout = null;
+}
+
+<style>
+    .modal-dialog {
+        max-width: 80% !important;
+    }
+
+    .tr, td, th {
+        text-align: center;
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 100px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
+            <thead style="color: black; background-color: rgb(157 152 232 / 0.63)">
+                <tr>
+                    <td colspan="5">
+                        <a class="btn btn-primary" onclick="Taminetebarat()">
+                            تامین اعتبارات
+                        </a>
+                    </td>
+                </tr>
+                <tr style="border: 1px solid black; border-collapse: collapse;">
+                    <th class="text-center">ردیف</th>
+                    <th class="text-center">شماره</th>
+                    <th class="text-right">تاریخ</th>
+                    <th class="text-center">شرح</th>
+                    <th class="text-center">مبلغ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count > 0)
+                {
+                    int i = 1;
+                    foreach (var item in Model)
+                    {
+                        if (i % 2 == 0)
+                        {
+                            <tr style="background-color:#b9d7e2">
+                                <td>@i.ToString()</td>
+                                <td class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.Number.ToString()) </td>
+                                <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.Date.ToString()) </td>
+                                <td class="text-right">@item.Description</td>
+                                <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
+                            </tr>
+                            i++;
+                        }
+                        else
+                        {
+                            <tr style="background-color:#ffffff">
+                                <td>@i.ToString()</td>
+                                <td class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.Number.ToString()) </td>
+                                <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.Date.ToString()) </td>
+                                <td class="text-right">@item.Description</td>
+                                <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                    <tr>
+                        <td colspan="4">جمع کل</td>
+                        <td class="text-right">
+                            @NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.EstimateAmount)))
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function Taminetebarat()
+    {
+        var _yearId = $("#yearId").val();
+        var _areaId = $("#areaId").val();
+        var _budgetProcessId = $("#budgetProcessId").val();
+
+        $.ajax({
+            url: "BudgetSeprator/Taminetebarat",
+            type: "get",
+            data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId, 'codingId':@ViewBag.codingId }
+        }).done(function (result)
+        {
+            $("#DetailModal").modal('show');
+            $(".modal-title").html('تامین اعتبارات');
+            $(".modal-body").html(result);
+        });
+    }
+</script>

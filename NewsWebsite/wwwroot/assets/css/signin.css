@@ -1,0 +1,14 @@
+﻿.signin-images{
+    background-image: url('../../newsImage/places/karoon.jpg') ;
+    background-size:cover;
+    background-repeat:no-repeat
+}
+
+.signin-card-content {
+    width: 50%;
+    height: 50%;
+    background: rgba(1,1,1,0.35);
+    color: #fff;
+    /*background: rgba(255,255,255,0.7);
+    color: #000;*/
+}

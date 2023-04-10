@@ -1,0 +1,79 @@
+﻿@using NewsWebsite.Services.Contracts
+@using NewsWebsite.ViewModels.Settings
+@inject IWritableOptions<SiteSettings> writableLocations
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="@writableLocations.Value.SiteInfo.MetaDescriptionTag">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>@writableLocations.Value.SiteInfo.Title</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/img/@writableLocations.Value.SiteInfo.Favicon">
+
+    <link rel="stylesheet" href="~/CacheFiles/css/style.css" asp-append-version="true">
+    <script src="~/assets/vendor/jquery/dist/jquery-2.2.4.min.js"></script>
+    <script src="~/CacheFiles/js/Ajax.js" asp-append-version="true"></script>
+    <link href="~/CacheFiles/lib/sweetalert2/dist/sweetalert2.min.css" asp-append-version="true" rel="stylesheet" />
+    <script src="~/CacheFiles/lib/sweetalert2/dist/sweetalert2.min.js" asp-append-version="true"></script>
+
+</head>
+
+<body>
+    <div id="modal-placeholder"></div>
+    <!-- Preloader -->
+    <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- ##### Header Area Start ##### -->
+    <header class="header-area">
+        
+        
+    </header>
+    <!-- ##### Header Area End ##### -->
+    @RenderBody()
+    <!-- ##### Footer Area Start ##### -->
+    <footer class="footer-area">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Widget Area -->
+               
+            </div>
+        </div>
+
+        <!-- Copywrite Area -->
+        <!--<div class="copywrite-area">
+            <div class="container">
+                <div class="row align-items-center">-->
+                    <!-- Copywrite Text -->
+                    <!--<div class="col-12 col-sm-6">
+                        <p class="copywrite-text">-->
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            <!--Copyright &copy  <a href="https://Ict.Ahvaz.ir" target="_blank">Ahvaz.ir</a>-->
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        <!--</p>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+    <!-- ##### All Javascript Script ##### -->
+    <!-- jQuery-2.2.4 js -->
+
+    <script src="~/assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/CacheFiles/js/plugins.js" asp-append-version="true"></script>
+    <script src="~/CacheFiles/js/active.js" asp-append-version="true"></script>
+</body>
+
+</html>

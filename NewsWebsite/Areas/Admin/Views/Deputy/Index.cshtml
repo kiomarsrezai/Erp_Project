@@ -1,0 +1,199 @@
+﻿@model List<NewsWebsite.ViewModels.Fetch.DeputyViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    tr, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align:center;
+    }
+
+    .tbody {
+        color: black;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 100px;
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .tableFixHead thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            color: black;
+
+        }
+</style>
+
+<div id="modal-placeholder"></div>
+<table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;height:100%">
+    <thead style="color:black;background-color:rgb(157 152 232)">
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <th rowspan="2">ردیف</th>
+            <th rowspan="2">عنوان</th>
+            <th colspan="3">هزینه ای</th>
+            <th colspan="3">سرمایه ای</th>
+            <th rowspan="2">% جذب کل</th>
+            <th rowspan="2"></th>
+        </tr>
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <th class="text-center" width="150px">مصوب</th>
+            <th class="text-center" width="150px">عملکرد</th>
+            <th class="text-center" width="150px">% جذب</th>
+            <th class="text-center" width="150px">مصوب</th>
+            <th class="text-center" width="150px">عملکرد</th>
+            <th class="text-center" width="150px">% جذب</th>
+        </tr>
+    </thead>
+    <tbody style="color:black; border: 1px solid black; border-collapse: collapse; width: 100%;">
+        @if (Model.Count > 0)
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                if (i % 2 == 0)
+                {
+                    <tr style="background-color:rgb(104 140 175 / 0.71)">
+                        <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.Id.ToString())</td>
+                        <td class="text-center" width="200px">@item.ProctorName</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabCurrent).ToString())</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.ExpenseCurrent).ToString())</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCurrent.ToString()) %</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabCivil).ToString())</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.ExpenseCivil).ToString())</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCivil.ToString()) %</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentTotal.ToString()) %</td>
+                        <td width="50px">
+                            <a onclick="Details(@item.Id)" class="btn btn-primary btn-icon"><i class="fa fa-list text-white"></i></a>
+                        </td>
+
+                    </tr>
+                    i++;
+                }
+                else if (i % 2 != 0)
+
+                {
+                    <tr style="background-color:#ffffff">
+                        <td colspan="1" class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.Id.ToString())</td>
+                        <td colspan="1" class="text-center" width="200px">@item.ProctorName</td>
+                        <td colspan="1" class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabCurrent).ToString())</td>
+                        <td colspan="1" class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.ExpenseCurrent).ToString())</td>
+                        <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCurrent.ToString()) %</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.MosavabCivil).ToString())</td>
+                        <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.ExpenseCivil).ToString())</td>
+                        <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentCivil.ToString()) %</td>
+                        <td width="150px" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(@item.PercentTotal.ToString()) %</td>
+                        <td width="50px">
+                            <a onclick="Details(@item.Id)" class="btn btn-primary btn-icon"><i class="fa fa-list text-white"></i></a>
+                        </td>
+                    </tr>
+                    i++;
+
+                }
+
+            }
+            <tr>
+                <td colspan="2">جمع کل</td>
+                <td class="text-center">
+                    @NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.MosavabCurrent)))
+                </td>
+                <td class="text-center">
+                    @NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.ExpenseCurrent)))
+                </td>
+                <td></td>
+                <td class="text-center">
+                    @NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.MosavabCivil)))
+                </td>
+                <td class="text-center">
+                    @NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(@Model.Sum(x => x.ExpenseCivil)))
+                </td>
+                <td colspan="3"></td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="10" class="text-center">هیچ ردیفی در جدول وجود ندارد.</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+@*<div class="container-fluid mt--7">
+    <div class="row mt-5">
+        <div class="card shadow w-100">
+           
+            <div class="card-body">
+                <form asp-area="Admin" asp-controller="Deputy">
+                    @await Html.PartialAsync("_FetchTable")
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="modal" id="MasterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="DetailModal" tabindex="-2" role="dialog" aria-labelledby="myModalLabel2">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="row col-md-12">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary btn-block">هزینه ها جاری</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary btn-block">تملک دارائی سرمایه ای</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //const { Script } = require("vm");
+    function Details(Id)
+    {
+        $.ajax({
+            url: "Deputy/Details?Id=" + Id,
+            type: "get",
+        }).done(function (result)
+        {
+            $("#MasterModal").modal('show');
+            $(".modal-title").html('جزئیات اطلاعات ');
+            $(".modal-body").html(result);
+        });
+    }
+</script>
