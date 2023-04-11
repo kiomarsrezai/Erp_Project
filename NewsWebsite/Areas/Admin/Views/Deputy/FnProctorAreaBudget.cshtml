@@ -29,7 +29,7 @@
             border-collapse: collapse;
         }
 </style>
-<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="position:absolute;z-index:2000000;">
+<div class="modal" tabindex="-1" role="dialog" aria-hidden="true" style="position:fixed;z-index:2000000;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,7 +37,8 @@
                 <button type="button" class="close btn-link" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body clearfix">
-                <table class="tableFixHead">
+                 <div class="table-modal-container">
+                <table class="tableFixHead w-100">
                     <thead style="color:black;background-color:#2999e2">
                         <tr>
                             <th class="text-center" width="50px">کد</th>
@@ -89,6 +90,7 @@
 
                     </tbody>
                 </table>
+            </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
