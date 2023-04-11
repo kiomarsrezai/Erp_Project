@@ -87,7 +87,7 @@
                                 <td width="50px" class="filterable-cell text-center">
                                     @if (item.IdKol != "0" && item.IdMoein != "0" && item.IdTafsily != "0")
                                     {
-                                        <button type="submit" class="btn btn-link" onclick="updateAcc('@item.Id','@item.IdKol.ToString()'+'-'+'@item.IdMoein.ToString()'+'-'+'@item.IdTafsily.ToString()','@item.Name')">
+                                    <button type="submit" class="btn btn-link" onclick="updateAcc('@item.Id','@item.IdKol.ToString()'+'-'+'@item.IdMoein.ToString()'+'-'+'@item.IdTafsily.ToString()'+'-'+'@item.IdTafsily5.ToString()','@item.Name')">
                                             <i class="fa fa-link"></i>
                                         </button>
                                     }
@@ -109,10 +109,10 @@
                                 <td width="50px" class="filterable-cell text-center">
                                     @if (item.IdKol != "0" && item.IdMoein != "0" && item.IdTafsily != "0")
                                     {
-                                        <button type="submit" class="btn btn-link" onclick="updateAcc('@item.Id','@item.IdKol.ToString()'+'-'+'@item.IdMoein.ToString()'+'-'+'@item.IdTafsily.ToString()','@item.Name')">
-                                            <i class="fa fa-link"></i>
-                                        </button>
-                                    }
+                                    <button type="submit" class="btn btn-link" onclick="updateAcc('@item.Id','@item.IdKol.ToString()'+'-'+'@item.IdMoein.ToString()'+'-'+'@item.IdTafsily.ToString()'+'-'+'@item.IdTafsily5.ToString()','@item.Name')">
+                                        <i class="fa fa-link"></i>
+                                    </button>
+                                }
                                 </td>
                             </tr>
                             i++;

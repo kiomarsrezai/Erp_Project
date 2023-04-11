@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
-    [DisplayName("جدول واسط سازمانها")]
+    [DisplayName("جدول واسط")]
     public class VasetSazmanhaController : BaseController
     {
         private IBudget_001Rep _uw;
@@ -44,7 +44,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Sazman_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.Add(YearId);
@@ -165,7 +165,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Sazman_Modal_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Modal_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
@@ -180,6 +180,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         codeAcc.IdMoein = dataReader["IdMoien"].ToString();
                         codeAcc.IdTafsily = dataReader["IdTafsily"].ToString();
                         codeAcc.Name = dataReader["Name"].ToString();
+                        codeAcc.IdTafsily5 = dataReader["IdTafsily5"].ToString();
                         codeAcc.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         fecthViewModel.Add(codeAcc);
                         //dataReader.NextResult();
@@ -199,7 +200,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
                 using (SqlConnection sqlconnect = new SqlConnection(connection))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Sazman_Update", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Update", sqlconnect))
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("Id", id);
@@ -224,7 +225,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
                 using (SqlConnection sqlconnect = new SqlConnection(connection))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Sazman_Insert", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Insert", sqlconnect))
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("id", id);
@@ -247,7 +248,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
                 using (SqlConnection sqlconnect = new SqlConnection(connection))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Sazman_Delete", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Delete", sqlconnect))
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("id", id);

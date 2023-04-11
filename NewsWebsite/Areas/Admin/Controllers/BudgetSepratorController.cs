@@ -72,7 +72,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
                             fetchView.PercentBud = Math.Round(_uw.Divivasion(fetchView.Expense, fetchView.Mosavab));
                         }
                         else
-                        { fetchView.PercentBud = 0; }
+                        { 
+                            fetchView.PercentBud = 0;
+                        }
                         fecthViewModel.Add(fetchView);
                         //dataReader.NextResult();
                     }
