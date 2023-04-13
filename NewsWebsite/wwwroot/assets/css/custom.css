@@ -2,6 +2,7 @@
     font-family:IRANSans
 }
 
+
 /* colors */
 .layout-bg-color {
     background-color: #e5e7eb
@@ -68,6 +69,19 @@
     max-width: 85% !important;
     max-height: 85% !important;
 }
+
+.modal-custom-lg {
+    top: 10%
+}
+
+.modal-custom-lg .modal-dialog {
+    max-width: 85% !important
+}
+
+.modal-custom-lg .modal-content {
+    height: 90%
+}
+
 
 /* table */
 th {

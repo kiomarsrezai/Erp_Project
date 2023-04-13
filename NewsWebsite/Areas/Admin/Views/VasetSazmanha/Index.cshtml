@@ -97,7 +97,7 @@
             <th class="text-center" width="150px">مصوب</th>
             <th class="text-center" width="150px">کدحسابداری</th>
             <th class="text-center" width="150px">شرح حسابداری</th>
-            <th class="text-center" width="100px">% تسهیم</th>
+            @*<th class="text-center" width="100px">% تسهیم</th>*@
             @*<th width="100px">کد حسابداری</th>*@
             <th width="100px">عملیات</th>
         </tr>
@@ -127,7 +127,7 @@
                         <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
                         <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.CodeAcc</td>
                         <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.TitleAcc</td>
-                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud</td>
+                        @*<td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud</td>*@
                         <td width="50px" class="filterable-cell text-center">
                             <a class="btn btn-icon" onclick="UpdateCodeAccjs('@item.Id','@item.Code','@item.Description')">
                                 <i class="fa fa-balance-scale"></i>
@@ -157,7 +157,7 @@
                         <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
                         <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.CodeAcc</td>
                         <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.TitleAcc</td>
-                        <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud</td>
+                        @*<td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud</td>*@
                         <td width="50px" class="text-center">
                             <a class="btn btn-icon" onclick="UpdateCodeAccjs('@item.Id','@item.Code','@item.Description')">
                                 <i class="fa fa-balance-scale"></i>
@@ -179,7 +179,7 @@
     </tbody>
 </table>
 
-<div class="modal" id="MasterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal modal-custom-lg" id="MasterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -202,7 +202,6 @@
     
     function UpdateCodeAccjs(id, code, description)
     {
-        //alert('ok');
 
         var _yearId = $("#yearId").val();
         var _areaId = $("#areaId").val();
