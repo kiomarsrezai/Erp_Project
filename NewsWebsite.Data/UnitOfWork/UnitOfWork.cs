@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.Data.Models;
 using NewsWebsite.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace NewsWebsite.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
+        ProgramBuddbContext _budgetcontext = new ProgramBuddbContext();
         public NewsDBContext _Context { get; }
         private IMapper _mapper;
         private ICategoryRepository _categoryRepository;
@@ -19,6 +21,7 @@ namespace NewsWebsite.Data.UnitOfWork
         private INewsRepository _newsRepository;
         private INewsletterRepository _newsletterRepository;
         private ICommentRepository _commentRepository;
+        private IBudget_001Rep _budget_001Rep;
         private readonly IConfiguration _configuration;
 
         public UnitOfWork(NewsDBContext context, IMapper mapper, IConfiguration configuration)
@@ -98,6 +101,17 @@ namespace NewsWebsite.Data.UnitOfWork
                     _commentRepository = new CommentRepository(_Context);
 
                 return _commentRepository;
+            }
+        }
+
+        public IBudget_001Rep Budget_001Rep
+        {
+            get
+            {
+                if (_budget_001Rep == null)
+                    _budget_001Rep = new Budget_001Rep(_budgetcontext);
+
+                return _budget_001Rep;
             }
         }
 

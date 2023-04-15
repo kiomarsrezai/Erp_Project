@@ -18,7 +18,8 @@ namespace NewsWebsite.ViewModels.Fetch
         
         [Display(Name ="عملکرد")]
         public Int64 Expense { get; set; }
-        
+        public int AreaId { get; set; }
+
 
     }
 }

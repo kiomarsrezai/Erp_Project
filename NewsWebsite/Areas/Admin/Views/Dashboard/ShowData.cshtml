@@ -1,5 +1,6 @@
-﻿@inject NewsWebsite.Data.Models.ProgramBuddbContext _db
-@inject NewsWebSite.Data.Repository.IBudget_001Rep _uw
+﻿@using NewsWebsite.Data.Contracts;
+@inject NewsWebsite.Data.Models.ProgramBuddbContext _db
+@inject IBudget_001Rep _uw
 @{
 
     Layout = "~/Views/Shared/_AdminLayout.cshtml";

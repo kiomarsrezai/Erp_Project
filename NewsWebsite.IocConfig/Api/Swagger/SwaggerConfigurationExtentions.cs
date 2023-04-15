@@ -25,14 +25,14 @@ namespace NewsWebsite.IocConfig.Api.Swagger
                         Description = "Through this Api you can access BookInfo",
                         Contact = new OpenApiContact
                         {
-                            Email = "arezoo.ebrahimi@gmail.com",
-                            Name = "arezoo ebrahimi",
-                            Url=  new Uri("http://www.mizfa.com"),
+                            Email = "kiomarsrezai@gmail.com",
+                            Name = "Kiomars Rezaei",
+                            Url=  new Uri("http://www.Ict.Ahvaz.Ir"),
                         },
                         License = new OpenApiLicense
                         {
                             Name = "License",
-                            Url = new Uri("http://www.mizfa.com"),
+                            Url = new Uri("http://www.Ict.Ahvaz.ir"),
                         },
                     });
                 c.SwaggerDoc(
@@ -44,14 +44,14 @@ namespace NewsWebsite.IocConfig.Api.Swagger
                        Description = "Through this Api you can access BookInfo",
                        Contact = new OpenApiContact
                        {
-                           Email = "arezoo.ebrahimi@gmail.com",
-                           Name = "arezoo ebrahimi",
-                           Url = new Uri("http://www.mizfa.com"),
+                           Email = "kiomarsrezai@gmail.com",
+                           Name = "Kiomars Rezaei",
+                           Url = new Uri("http://www.Ict.Ahvaz.ir"),
                        },
                        License = new OpenApiLicense
                        {
                            Name = "License",
-                           Url = new Uri("http://www.mizfa.com"),
+                           Url = new Uri("http://www.Ict.Ahvaz.ir"),
                        },
                    });
 

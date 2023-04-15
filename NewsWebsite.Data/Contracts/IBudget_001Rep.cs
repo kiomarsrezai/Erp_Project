@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NewsWebSite.Data.Repository
+namespace NewsWebsite.Data.Contracts
 {
     public interface IBudget_001Rep
     {
@@ -13,6 +13,7 @@ namespace NewsWebSite.Data.Repository
         List<ProctorViewModel> ProctorList();
         double Divivasion(double expense, double mosavab);
         List<DeputyViewModel> GetAllDeputies();
+        Task<List<BudgetSepratorViewModel>> GetAllBudgetSeprtaorAsync(int yearId, int areaId, int budgetProcessId);
         List<DeputyViewModel> GetAllDeputiesAsync(int offset, int limit, string Orderby, string searchText);
         List<AreaProctorViewModel> ProctorArea(int Id);
         List<ProctorAreaBudgetViewModel> budgetViewModels(int yearId, int proctorId, int areaId, int budgetProcessId);

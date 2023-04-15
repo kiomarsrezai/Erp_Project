@@ -19,7 +19,6 @@ using NewsWebsite.Services;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.Settings;
-using NewsWebSite.Data.Repository;
 
 namespace NewsWebsite
 {

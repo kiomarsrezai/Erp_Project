@@ -1,7 +1,8 @@
-﻿@model List<NewsWebsite.ViewModels.Fetch.FetchViewModel>
+﻿@using NewsWebsite.Data.Contracts;
+@model List<NewsWebsite.ViewModels.Fetch.FetchViewModel>
 @inject NewsWebsite.Data.Models.ProgramBuddbContext _db
 
-@inject NewsWebSite.Data.Repository.IBudget_001Rep _uw
+@inject IBudget_001Rep _uw
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";

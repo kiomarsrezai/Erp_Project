@@ -6,7 +6,6 @@ using NewsWebsite.Services;
 using NewsWebsite.Services.Api;
 using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
-using NewsWebSite.Data.Repository;
 
 namespace NewsWebsite.IocConfig
 {

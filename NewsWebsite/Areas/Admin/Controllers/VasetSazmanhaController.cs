@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Attributes;
+using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Fetch;
-using NewsWebSite.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
@@ -20,6 +24,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         private readonly ProgramBuddbContext _context;
         private const string TagNotFound = "بودجه یافت نشد.";
         private const string TagDuplicate = "نام بودجه تکراری است.";
+        private const string NotFoundeEacord = "آیتم مورد نظر یافت نشد";
         //private const string DeleteSuccess = "حذف با موفقیت انجام شد";
 
         public VasetSazmanhaController(ProgramBuddbContext dbContext, IBudget_001Rep uw)
@@ -68,6 +73,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     }
                     //TempData["budgetSeprator"] = fecthViewModel;
                 }
+                sqlconnect.Close();
             }
             return View(fecthViewModel);
         }
@@ -110,10 +116,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         else
                         { fetchView.PercentBud = 0; }
                         fecthViewModel.Add(fetchView);
-                        //dataReader.NextResult();
                     }
                     //TempData["budgetSeprator"] = fecthViewModel;
                 }
+                sqlconnect.Close();
             }
             return View(fecthViewModel);
         }
@@ -147,7 +153,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
                         fecthViewModel.Add(fetchView);
                     }
+
                 }
+                sqlconnect.Close();
             }
 
             return PartialView(fecthViewModel);
@@ -178,10 +186,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         codeAcc.Id = id;
                         codeAcc.IdKol = dataReader["IdKol"].ToString();
                         codeAcc.IdMoein = dataReader["IdMoien"].ToString();
-                        codeAcc.IdTafsily = dataReader["IdTafsily"].ToString();
+                        codeAcc.IdTafsily = dataReader["IdTafsily"].ToString()==null ? "" : dataReader["IdTafsily"].ToString();
                         codeAcc.Name = dataReader["Name"].ToString();
-                        codeAcc.IdTafsily5 = dataReader["IdTafsily5"].ToString();
+                        codeAcc.IdTafsily5 = dataReader["IdTafsily5"].ToString() == null ? "": dataReader["IdTafsily5"].ToString();
                         codeAcc.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        codeAcc.AreaId = areaId;
                         fecthViewModel.Add(codeAcc);
                         //dataReader.NextResult();
                     }
@@ -192,7 +201,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateCodeAccPost(int id,string codeAcc,string titleAcc)
+        public IActionResult UpdateCodeAccPost(int id,int areaId,string codeAcc,string titleAcc)
         {
             if (id > 0)
             {
@@ -204,6 +213,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("Id", id);
+                        sqlCommand.Parameters.AddWithValue("areaId", areaId);
                         sqlCommand.Parameters.AddWithValue("codeAcc", codeAcc);
                         sqlCommand.Parameters.AddWithValue("titleAcc", titleAcc);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -232,6 +242,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = sqlCommand.ExecuteReader();
                         TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                        sqlconnect.Close();
                     }
                 }
             }
@@ -255,12 +266,49 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = sqlCommand.ExecuteReader();
                         TempData["notification"] = "حذف با موفقیت انجام شد";
+                        sqlconnect.Close();
                     }
                 }
             }
 
             return View("Index");
         }
+
+        [HttpGet, DisplayName("حذف")]
+        public IActionResult Delete(int id)
+        {
+            if (!id.ToString().HasValue())
+                ModelState.AddModelError(string.Empty, NotFoundeEacord);
+            else
+            {
+                return PartialView("_DeleteConfirmation");
+            }
+            return PartialView("_DeleteConfirmation");
+        }
+
+
+        //[HttpPost, ActionName("Delete")]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+            
+        //    var user = await _userManager.FindByIdAsync(model.Id.ToString());
+        //    if (user == null)
+        //        ModelState.AddModelError(string.Empty, UserNotFound);
+        //    else
+        //    {
+        //        var result = await _userManager.DeleteAsync(user);
+        //        if (result.Succeeded)
+        //        {
+        //            FileExtensions.DeleteFile($"{_env.WebRootPath}/avatars/{user.Image}");
+        //            TempData["notification"] = DeleteSuccess;
+        //            return PartialView("_DeleteConfirmation", user);
+        //        }
+        //        else
+        //            ModelState.AddErrorsFromResult(result);
+        //    }
+
+        //    return PartialView("_DeleteConfirmation");
+        //}
 
         [HttpGet, DisplayName("حذف")]
         public IActionResult Delete()

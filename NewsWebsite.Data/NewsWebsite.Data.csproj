@@ -21,4 +21,8 @@
     <ProjectReference Include="..\NewsWebsite.ViewModels\NewsWebsite.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\" />
+  </ItemGroup>
+
 </Project>
