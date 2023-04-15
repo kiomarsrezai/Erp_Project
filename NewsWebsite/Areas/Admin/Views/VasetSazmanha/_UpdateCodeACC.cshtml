@@ -61,6 +61,7 @@
             </tr>
             <tr style="border: 1px solid black; border-collapse: collapse;">
                 @* <th class="text-center" width="100px">ردیف</th> *@
+                <th class="text-center" width="100px">عنوان مرکز هزینه</th>
                 <th class="text-center" width="100px">مرکز هزینه</th>
                 <th class="text-center" width="100px">تفضیلی</th>
                 <th class="text-center" width="100px">معین</th>
@@ -81,11 +82,12 @@
                     {
                         <tr style="background-color:rgb(248 243 210)">
                             @*<td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td> *@
+                            <td width="200px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.MarkazHazine)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdTafsily5)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdTafsily)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdMoein)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdKol)</td>
-                            <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@item.Name</td>
+                            <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Name</td>
                             <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                             <td width="50px" class="filterable-cell text-center">
                                 @if (item.AreaId <= 9)
@@ -112,11 +114,12 @@
                     {
                         <tr style="background-color:#ffffff">
                             @*<td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td>*@
+                            <td width="200px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.MarkazHazine)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdTafsily5)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdTafsily)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdMoein)</td>
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.IdKol)</td>
-                            <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@item.Name</td>
+                            <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Name</td>
                             <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                             <td width="50px" class="filterable-cell text-center">
                                 @if (item.AreaId <= 9)

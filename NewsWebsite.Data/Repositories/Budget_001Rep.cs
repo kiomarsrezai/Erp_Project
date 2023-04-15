@@ -59,7 +59,7 @@ namespace NewsWebsite.Data.Repositories
 
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Area", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Year", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.CommandType = CommandType.StoredProcedure;

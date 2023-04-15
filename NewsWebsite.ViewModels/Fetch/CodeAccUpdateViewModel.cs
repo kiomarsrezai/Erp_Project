@@ -15,6 +15,9 @@ namespace NewsWebsite.ViewModels.Fetch
         
         [Display(Name = "شرح حسابداری")]
         public string Name { get; set; }
+
+        [Display(Name = "مرکز هزینه")]
+        public string MarkazHazine { get; set; }
         
         [Display(Name ="عملکرد")]
         public Int64 Expense { get; set; }

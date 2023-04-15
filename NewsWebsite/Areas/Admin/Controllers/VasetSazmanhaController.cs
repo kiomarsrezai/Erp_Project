@@ -190,6 +190,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         codeAcc.Name = dataReader["Name"].ToString();
                         codeAcc.IdTafsily5 = dataReader["IdTafsily5"].ToString() == null ? "": dataReader["IdTafsily5"].ToString();
                         codeAcc.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        codeAcc.MarkazHazine = dataReader["MarkazHazine"].ToString();
                         codeAcc.AreaId = areaId;
                         fecthViewModel.Add(codeAcc);
                         //dataReader.NextResult();

@@ -30,7 +30,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
         }
 
-        [Route("YaerFetch")]
+        [Route("YearFetch")]
         [HttpGet]
         public async Task<IActionResult> YearFetch()
         {
