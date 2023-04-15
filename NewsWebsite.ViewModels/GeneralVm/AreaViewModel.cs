@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.Fetch
+namespace NewsWebsite.ViewModels.GeneralVm
 {
-    public class AreaViewModelSepertator
+    public class AreaViewModel
     {
         public int Id { get; set; }
-        
-        [Display(Name ="منطقه")]
+
+        [Display(Name = "منطقه")]
         public string AreaName { get; set; }
     }
 }

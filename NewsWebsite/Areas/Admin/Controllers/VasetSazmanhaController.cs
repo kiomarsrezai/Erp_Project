@@ -34,10 +34,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
         
         [DisplayName("مشاهده")]
-        public IActionResult Index(int yearId, int areaId, int budgetProcessId)
+        public async Task<IActionResult> Index(int yearId, int areaId, int budgetProcessId)
         {
             ViewBag.YearId = new SelectList(_context.TblYears.Where(a => a.Id == 32).ToList(), "Id", "YearName");
-            ViewBag.AreaId = new SelectList(_uw.AreaFetch(3).ToList(), "Id", "AreaName");
+            ViewBag.AreaId = new SelectList(await _uw.AreaFetchAsync(3), "Id", "AreaName");
             ViewBag.BudgetProcessId = new SelectList(_context.TblBudgetProcess.ToList(), "Id", "ProcessName");
             List<VasetSazmanhaViewModel> fecthViewModel = new List<VasetSazmanhaViewModel>();
 

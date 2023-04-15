@@ -1,4 +1,5 @@
 ﻿using NewsWebsite.ViewModels.Fetch;
+using NewsWebsite.ViewModels.GeneralVm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,10 @@ namespace NewsWebsite.Data.Contracts
 {
     public interface IBudget_001Rep
     {
-        List<AreaViewModelSepertator> AreaFetchForPropozalBudget();
-        List<AreaViewModelSepertator> AreaFetch(int areaform);
-        List<ProctorViewModel> ProctorList();
+        List<AreaViewModel> AreaFetchForPropozalBudget();
+        Task<List<AreaViewModel>> AreaFetchAsync(int areaform);
+        Task<List<YearViewModel>> YearFetchAsync();
+        Task<List<ProctorViewModel>> ProctorList();
         double Divivasion(double expense, double mosavab);
         List<DeputyViewModel> GetAllDeputies();
         Task<List<BudgetSepratorViewModel>> GetAllBudgetSeprtaorAsync(int yearId, int areaId, int budgetProcessId);

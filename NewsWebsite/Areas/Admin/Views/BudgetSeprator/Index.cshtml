@@ -58,7 +58,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-overlap">
-                                    @Html.DropDownList("areaId", new SelectList(_uw.AreaFetch(2).ToList(), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                    @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(2), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
                                 <label class="form-overlap-label">منطقه</label>
                                 </div>
                             </div>

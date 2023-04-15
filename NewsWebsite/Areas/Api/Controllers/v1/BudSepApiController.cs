@@ -24,7 +24,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
-        //[Route("FetchSeprator")]
+        [Route("FetchSeprator")]
         [HttpGet]
         public async Task<IActionResult> FetchSeprators(int yearId,int areaId,int budgetprocessId)
         {

@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Admin.Controllers
 {
@@ -30,10 +31,10 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
 
         [DisplayName("مشاهده")]
-        public IActionResult Index(int yearId, int areaId, int budgetProcessId)
+        public async Task<IActionResult> Index(int yearId, int areaId, int budgetProcessId)
         {
             ViewBag.YearId = new SelectList(_context.TblYears.Where(a => a.Id == 32).ToList(), "Id", "YearName");
-            ViewBag.AreaId = new SelectList(_uw.AreaFetch(2).ToList(), "Id", "AreaName");
+            ViewBag.AreaId = new SelectList(await _uw.AreaFetchAsync(2), "Id", "AreaName");
             ViewBag.BudgetProcessId = new SelectList(_context.TblBudgetProcess.ToList(), "Id", "ProcessName");
             List<BudgetSepratorViewModel> fecthViewModel = new List<BudgetSepratorViewModel>();
 

@@ -3,6 +3,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
 using NewsWebsite.ViewModels.Api.BudgetSepratorViewModel;
 using NewsWebsite.ViewModels.Fetch;
+using NewsWebsite.ViewModels.GeneralVm;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,11 +24,11 @@ namespace NewsWebsite.Data.Repositories
         }
 
         //private readonly ProgramBudDbContext context;
-        public List<AreaViewModelSepertator> AreaFetchForPropozalBudget()
+        public List<AreaViewModel> AreaFetchForPropozalBudget()
         {
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            List<AreaViewModelSepertator> areaViews = new List<AreaViewModelSepertator>();
+            List<AreaViewModel> areaViews = new List<AreaViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
@@ -38,7 +39,7 @@ namespace NewsWebsite.Data.Repositories
                     SqlDataReader dataReader = sqlCommand.ExecuteReader();
                     while (dataReader.Read())
                     {
-                        AreaViewModelSepertator fetchView = new AreaViewModelSepertator();
+                        AreaViewModel fetchView = new AreaViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
                         fetchView.AreaName = dataReader["AreaName"].ToString();
                         areaViews.Add(fetchView);
@@ -50,12 +51,38 @@ namespace NewsWebsite.Data.Repositories
             return areaViews;
         }
 
-        
-        public List<AreaViewModelSepertator> AreaFetch(int areaform)
+        public async Task<List<YearViewModel>> YearFetchAsync()
         {
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            List<AreaViewModelSepertator> areaViews = new List<AreaViewModelSepertator>();
+            List<YearViewModel> yearViews = new List<YearViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Area", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        YearViewModel fetchView = new YearViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.YearName = dataReader["YearName"].ToString();
+                        yearViews.Add(fetchView);
+
+                        //dataReader.NextResult();
+                    }
+                }
+            }
+            return yearViews;
+        }
+
+        public async Task<List<AreaViewModel>> AreaFetchAsync(int areaform)
+        {
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            List<AreaViewModel> areaViews = new List<AreaViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
@@ -64,10 +91,10 @@ namespace NewsWebsite.Data.Repositories
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("areaForm", areaform);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        AreaViewModelSepertator fetchView = new AreaViewModelSepertator();
+                        AreaViewModel fetchView = new AreaViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
                         fetchView.AreaName = dataReader["AreaName"].ToString();
                         areaViews.Add(fetchView);
@@ -79,7 +106,7 @@ namespace NewsWebsite.Data.Repositories
             return areaViews;
         }
 
-        public List<ProctorViewModel> ProctorList()
+        public async Task<List<ProctorViewModel>> ProctorList()
         {
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
@@ -91,7 +118,7 @@ namespace NewsWebsite.Data.Repositories
                 {
                     sqlconnect.Open();
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         ProctorViewModel fetchView = new ProctorViewModel();
