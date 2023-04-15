@@ -31,9 +31,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("GetModalVaset")]
         [HttpGet]
-        public async Task<IActionResult> GetModalVaset(int yearId, int areaId, int budgetProcessId, int codingId)
+        public async Task<IActionResult> GetModalVaset(int id, string code, string description, int yearId, int areaId)
         {
-            return Ok(await _uw.VasetRepository.ModalDetailsAsync(yearId, areaId, budgetProcessId,codingId));
+            return Ok(await _uw.VasetRepository.ModalDetailsAsync(id, code, description, yearId, areaId));
         }
 
         [Route("InsertCodeAcc")]
