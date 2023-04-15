@@ -11,6 +11,7 @@ namespace NewsWebsite.Data.Contracts
     {
         List<AreaViewModel> AreaFetchForPropozalBudget();
         Task<List<AreaViewModel>> AreaFetchAsync(int areaform);
+        Task<List<BudgetProcessViewModel>> BudgetProcessFetchAsync();
         Task<List<YearViewModel>> YearFetchAsync();
         Task<List<ProctorViewModel>> ProctorList();
         double Divivasion(double expense, double mosavab);

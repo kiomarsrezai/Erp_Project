@@ -12,12 +12,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class YearAreaApiController : ControllerBase
+    public class GeneralApiController : ControllerBase
     {
         ProgramBuddbContext _context = new ProgramBuddbContext();
         public readonly IUnitOfWork _uw;
 
-        public YearAreaApiController(ProgramBuddbContext context, IUnitOfWork uw)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw)
         {
             _context = context;
             _uw = uw;
@@ -35,6 +35,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<IActionResult> YearFetch()
         {
             return Ok(await _uw.Budget_001Rep.YearFetchAsync());
+        }
+
+        [Route("BudgetProcessFetch")]
+        [HttpGet]
+        public async Task<IActionResult> BudgetProcess()
+        {
+            return Ok(await _uw.Budget_001Rep.BudgetProcessFetchAsync());
         }
 
     }

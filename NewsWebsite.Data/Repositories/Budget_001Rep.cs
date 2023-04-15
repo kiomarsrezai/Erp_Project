@@ -78,6 +78,33 @@ namespace NewsWebsite.Data.Repositories
             return yearViews;
         }
 
+        public async Task<List<BudgetProcessViewModel>> BudgetProcessFetchAsync()
+        {
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            List<BudgetProcessViewModel> yearViews = new List<BudgetProcessViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_BudgetSection", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetProcessViewModel fetchView = new BudgetProcessViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.ProcessName = dataReader["ProcessName"].ToString();
+                        yearViews.Add(fetchView);
+
+                        //dataReader.NextResult();
+                    }
+                }
+            }
+            return yearViews;
+        }
+
         public async Task<List<AreaViewModel>> AreaFetchAsync(int areaform)
         {
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
