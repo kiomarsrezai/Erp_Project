@@ -22,6 +22,7 @@ namespace NewsWebsite.Data.UnitOfWork
         private INewsletterRepository _newsletterRepository;
         private ICommentRepository _commentRepository;
         private IBudget_001Rep _budget_001Rep;
+        private IVasetRepository _vasetRepository;
         private readonly IConfiguration _configuration;
 
         public UnitOfWork(NewsDBContext context, IMapper mapper, IConfiguration configuration)
@@ -113,6 +114,17 @@ namespace NewsWebsite.Data.UnitOfWork
 
                 return _budget_001Rep;
             }
+        }
+
+        public IVasetRepository VasetRepository
+        {
+            get
+            {
+                if (_vasetRepository == null)
+                    _vasetRepository = new VasetRepostory(_budgetcontext);
+                return _vasetRepository;
+            }
+        
         }
 
         public async Task Commit()

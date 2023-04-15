@@ -46,7 +46,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
             SqlParameter BudgetProcessId = new SqlParameter { ParameterName = "budgetProcessId", Value = budgetProcessId };
 
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Read", sqlconnect))
