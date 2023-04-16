@@ -156,15 +156,37 @@
 
 
 <script type="text/javascript">
+
+    function Index() {
+        var _yearId = $("#yearId").val();
+        var _areaId = $("#areaId").val();
+        var _budgetProcessId = $("#budgetProcessId").val();
+
+        $.ajax({
+            url: "VasetSazmanha/AdvancedSearch",
+            type: "get",
+            data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId }
+        }).done(function (result) {
+            $('tbody').html(result)
+        });
+    }
+
     function updateAcc(Id,AreaId, codeAcc, titleAcc) {
+
         $.ajax({
             url: "VasetSazmanha/UpdateCodeAccPost",
             data: { 'Id': Id,'areaId':AreaId, 'codeAcc': codeAcc, 'titleAcc': titleAcc },
             type: "post",
             success: function () {
-                $("#MasterModal").hide();
+                $("#MasterModal").modal('hide');
+                Index()
+            },
+            error: function () {
+                $("#MasterModal").modal('hide');
+                Index()
+
             }
-        });
+        })
 
     }
 

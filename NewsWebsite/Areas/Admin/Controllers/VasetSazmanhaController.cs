@@ -34,16 +34,19 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
         
         [DisplayName("مشاهده")]
-        public async Task<IActionResult> Index(int yearId, int areaId, int budgetProcessId)
+        public async Task<IActionResult> Index()
         {
             ViewBag.YearId = new SelectList(_context.TblYears.Where(a => a.Id == 32).ToList(), "Id", "YearName");
             ViewBag.AreaId = new SelectList(await _uw.AreaFetchAsync(3), "Id", "AreaName");
             ViewBag.BudgetProcessId = new SelectList(_context.TblBudgetProcess.ToList(), "Id", "ProcessName");
             List<VasetSazmanhaViewModel> fecthViewModel = new List<VasetSazmanhaViewModel>();
 
-            SqlParameter YearId = new SqlParameter { ParameterName = "yearId", Value = yearId };
-            SqlParameter AreaId = new SqlParameter { ParameterName = "areaId", Value = areaId };
-            SqlParameter BudgetProcessId = new SqlParameter { ParameterName = "budgetProcessId", Value = budgetProcessId };
+            return View(fecthViewModel);
+        }
+
+        public async Task<IActionResult> AdvancedSearch(int yearId,int areaId,int budgetProcessId)
+        {
+            List<VasetSazmanhaViewModel> fecthViewModel = new List<VasetSazmanhaViewModel>();
 
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
@@ -51,11 +54,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Read", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.Add(YearId);
-                    sqlCommand.Parameters.Add(AreaId);
-                    sqlCommand.Parameters.Add(BudgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("yearId",yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId",areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId",budgetProcessId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         VasetSazmanhaViewModel fetchView = new VasetSazmanhaViewModel();
@@ -64,8 +67,8 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         fetchView.CodeAcc = dataReader["CodeAcc"].ToString();
-                        fetchView.TitleAcc= dataReader["TitleAcc"].ToString();
-                        fetchView.PercentBud= int.Parse(dataReader["PercentBud"].ToString());
+                        fetchView.TitleAcc = dataReader["TitleAcc"].ToString();
+                        fetchView.PercentBud = int.Parse(dataReader["PercentBud"].ToString());
 
                         fecthViewModel.Add(fetchView);
                         //dataReader.NextResult();
@@ -74,54 +77,53 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 }
                 sqlconnect.Close();
             }
-            return View(fecthViewModel);
+            return PartialView(fecthViewModel);
         }
-
       
-        public IActionResult AdvancedSearch(FetchSearchViewModel fetchSearchView)
-        {
-            List<BudgetSepratorViewModel> fecthViewModel = new List<BudgetSepratorViewModel>();
+        //public IActionResult AdvancedSearch(FetchSearchViewModel fetchSearchView)
+        //{
+        //    List<BudgetSepratorViewModel> fecthViewModel = new List<BudgetSepratorViewModel>();
 
-            SqlParameter YearId = new SqlParameter { ParameterName = "YearId", Value = fetchSearchView.YearId };
-            SqlParameter AreaId = new SqlParameter { ParameterName = "AreaId", Value = fetchSearchView.AreaId };
-            SqlParameter BudgetProcessId = new SqlParameter { ParameterName = "BudgetProcessId", Value = fetchSearchView.BudgetProcessId };
+        //    SqlParameter YearId = new SqlParameter { ParameterName = "YearId", Value = fetchSearchView.YearId };
+        //    SqlParameter AreaId = new SqlParameter { ParameterName = "AreaId", Value = fetchSearchView.AreaId };
+        //    SqlParameter BudgetProcessId = new SqlParameter { ParameterName = "BudgetProcessId", Value = fetchSearchView.BudgetProcessId };
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudget", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.Add(YearId);
-                    sqlCommand.Parameters.Add(AreaId);
-                    sqlCommand.Parameters.Add(BudgetProcessId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
-                    while (dataReader.Read())
-                    {
-                        BudgetSepratorViewModel fetchView = new BudgetSepratorViewModel();
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        fetchView.CodeVaset = dataReader["CodeVaset"].ToString();
-                        fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        if (fetchView.Mosavab != 0)
-                        {
-                            fetchView.PercentBud = (double)(Int64.Parse(dataReader["Expense"].ToString()) / Int64.Parse(dataReader["Mosavab"].ToString())) * 100;
-                        }
-                        else
-                        { fetchView.PercentBud = 0; }
-                        fecthViewModel.Add(fetchView);
-                    }
-                    //TempData["budgetSeprator"] = fecthViewModel;
-                }
-                sqlconnect.Close();
-            }
-            return View(fecthViewModel);
-        }
+        //    string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+        //    //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+        //    using (SqlConnection sqlconnect = new SqlConnection(connection))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudget", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.Parameters.Add(YearId);
+        //            sqlCommand.Parameters.Add(AreaId);
+        //            sqlCommand.Parameters.Add(BudgetProcessId);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = sqlCommand.ExecuteReader();
+        //            while (dataReader.Read())
+        //            {
+        //                BudgetSepratorViewModel fetchView = new BudgetSepratorViewModel();
+        //                fetchView.Code = dataReader["Code"].ToString();
+        //                fetchView.Description = dataReader["Description"].ToString();
+        //                fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
+        //                fetchView.CodeVaset = dataReader["CodeVaset"].ToString();
+        //                fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+        //                fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+        //                fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+        //                if (fetchView.Mosavab != 0)
+        //                {
+        //                    fetchView.PercentBud = (double)(Int64.Parse(dataReader["Expense"].ToString()) / Int64.Parse(dataReader["Mosavab"].ToString())) * 100;
+        //                }
+        //                else
+        //                { fetchView.PercentBud = 0; }
+        //                fecthViewModel.Add(fetchView);
+        //            }
+        //            //TempData["budgetSeprator"] = fecthViewModel;
+        //        }
+        //        sqlconnect.Close();
+        //    }
+        //    return View(fecthViewModel);
+        //}
 
         [HttpGet, DisplayName("درج و ویرایش")]
         public IActionResult Details(int yearId, int areaId, int budgetProcessId, int codingId)
