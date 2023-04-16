@@ -98,6 +98,71 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return data;
 
         }
+        
+        [Route("DetailChartApi")]
+        [HttpGet]
+        public async Task<ApiResult<List<ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati)
+        {
+            List<ChartAreaViewModel> dataset = new List<ChartAreaViewModel>();
+            //List<ColumnChart> dataset = new List<ColumnChart>();
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_Chart", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("CenterId", centerId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("StructureId", StructureId);
+                    sqlCommand.Parameters.AddWithValue("revenue", revenue);
+                    sqlCommand.Parameters.AddWithValue("sale", sale);
+                    sqlCommand.Parameters.AddWithValue("loan", loan);
+                    sqlCommand.Parameters.AddWithValue("niabati", niabati);
+                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+
+                    while (dataReader.Read())
+                    {
+                        ChartAreaViewModel row = new ChartAreaViewModel();
+
+                        row.Id = int.Parse(dataReader["AreaId"].ToString());
+                        row.Row = int.Parse(dataReader["AreaId"].ToString());
+                        row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        row.AreaName = dataReader["AreaName"].ToString();
+                        row.BudgetProcessId = int.Parse(dataReader["BudgetProcessId"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.MosavabDaily = Int64.Parse(dataReader["MosavabDaily"].ToString());
+                        row.NotGet = Int64.Parse(dataReader["NotGet"].ToString());
+
+                        row.YearId = int.Parse(dataReader["YearId"].ToString());
+                        if (row.Mosavab != 0)
+                        {
+                            row.PercentMosavab = _uw.Budget_001Rep.Divivasion(row.Expense, row.Mosavab);
+                        }
+                        else
+                        {
+                            row.PercentMosavab = 0;
+                        }
+                        if (row.MosavabDaily != 0)
+                        {
+                            row.PercentMosavabDaily = _uw.Budget_001Rep.Divivasion(row.Expense, row.MosavabDaily);
+                        }
+                        else
+                        {
+                            row.PercentMosavabDaily = 0;
+                        }
+                        dataset.Add(row);
+                    }
+
+                }
+
+            };
+            
+            return dataset;
+
+        }
 
     }
 
