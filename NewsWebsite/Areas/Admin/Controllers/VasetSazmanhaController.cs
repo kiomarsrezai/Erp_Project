@@ -189,7 +189,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         codeAcc.Name = dataReader["Name"].ToString();
                         codeAcc.IdTafsily5 = dataReader["IdTafsily5"].ToString() == null ? "": dataReader["IdTafsily5"].ToString();
                         codeAcc.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        codeAcc.MarkazHazine = dataReader["MarkazHazine"].ToString();
+                        codeAcc.MarkazHazine = dataReader["MarkazHazine"]==null? "": dataReader["MarkazHazine"].ToString();
                         codeAcc.AreaId = areaId;
                         fecthViewModel.Add(codeAcc);
                         //dataReader.NextResult();
@@ -227,7 +227,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult InsertCodeAccPost(int id)
+        public async Task<bool> InsertCodeAccPost(int id)
         {
             if (id > 0)
             {
@@ -240,18 +240,20 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("id", id);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                        SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                         TempData["notification"] = "ویرایش با موفقیت انجام شد";
                         sqlconnect.Close();
                     }
                 }
+                return true;
             }
 
-            return PartialView("_UpdateCodeACC");
+             else
+                return false;
         }
         
         [HttpPost]
-        public IActionResult DeleteCodeAccPost(int id)
+        public async Task<bool> DeleteCodeAccPost(int id)
         {
             if (id > 0)
             {
@@ -264,14 +266,16 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("id", id);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                        SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                         TempData["notification"] = "حذف با موفقیت انجام شد";
                         sqlconnect.Close();
                     }
                 }
+                return true;
             }
 
-            return View("Index");
+            else
+                return false;
         }
 
         [HttpGet, DisplayName("حذف")]
