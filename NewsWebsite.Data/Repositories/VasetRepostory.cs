@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NewsWebsite.Common.Api;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
 using NewsWebsite.ViewModels.Fetch;
@@ -93,52 +95,6 @@ namespace NewsWebsite.Data.Repositories
             return fecthViewModel;
         }
 
-        public async Task<bool> InsertCodeAccPostAsync(int id)
-        {
-            if (id == 0)
-                return false;
-            else
-            {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
-                }
-                return true;
-            }
-
-        }
-        public async Task<bool> DeleteCodeAccPostAsync(int id)
-        {
-            if (id == 0)
-                return false;
-            else
-            {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Delete", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
-                }
-                return true;
-            }
-
-        }
-
+      
     }
 }

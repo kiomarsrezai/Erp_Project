@@ -10,7 +10,5 @@ namespace NewsWebsite.Data.Contracts
     {
         Task<List<VasetSazmanhaViewModel>> GetAllAsync(int yearId, int areaId, int budgetProcessId);
         Task<List<CodeAccUpdateViewModel>> ModalDetailsAsync(int id, string code, string description, int yearId, int areaId);
-        Task<bool> InsertCodeAccPostAsync(int id);
-        Task<bool> DeleteCodeAccPostAsync(int id);
     }
 }

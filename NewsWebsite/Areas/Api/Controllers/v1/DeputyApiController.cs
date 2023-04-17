@@ -26,9 +26,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("GetAllDeputy")]
         [HttpGet]
-        public async Task<IActionResult> FetchDeputys(int yearId,int areaId,int budgetprocessId)
+        public async Task<IActionResult> FetchDeputys(int yearId,int proctorId,int areaId,int budgetprocessId)
         {
-            return Ok(await _uw.DeputyRepository.GetAllDeputiesAsync(yearId, areaId, budgetprocessId));
+            return Ok(await _uw.DeputyRepository.GetAllDeputiesAsync(yearId,proctorId, areaId, budgetprocessId));
         }
 
         [Route("ProctorAreaBudget")]

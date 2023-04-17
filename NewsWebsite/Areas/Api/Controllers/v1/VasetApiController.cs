@@ -40,14 +40,80 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<IActionResult> InsertCodeAccAsync(int id)
         {
-            return Ok(await _uw.VasetRepository.InsertCodeAccPostAsync(id));
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok("با موفقیت انجام شد");
         }
 
         [Route("DeleteCodeAcc")]
         [HttpGet]
-        public async Task<IActionResult> DeleteCodeAccAsync(int id)
+        public async Task<ApiResult<string>> DeleteCodeAccAsync(int id)
         {
-            return Ok(await _uw.VasetRepository.DeleteCodeAccPostAsync(id));
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Delete", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok("با موفقیت انجام شد");
+        }
+
+        [Route("LinkCodeAcc")]
+        [HttpGet]
+        public async Task<ApiResult<string>> LinkCodeAcc(int id, int areaId, string codeAcc, string titleAcc)
+        {
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد"); 
+            if (id > 0)
+            {
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+                //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Update", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", id);
+                        sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                        sqlCommand.Parameters.AddWithValue("codeAcc", codeAcc);
+                        sqlCommand.Parameters.AddWithValue("titleAcc", titleAcc);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                        TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    }
+                }
+
+             }
+            return Ok("با موفقیت انجام شد");
+            
         }
 
     }

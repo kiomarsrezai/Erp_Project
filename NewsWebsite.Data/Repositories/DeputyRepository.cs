@@ -22,7 +22,7 @@ namespace NewsWebsite.Data.Repositories
 
         }
 
-        public async Task<List<DeputyViewModel>> GetAllDeputiesAsync(int yearId, int areaId, int budgetProcessId)
+        public async Task<List<DeputyViewModel>> GetAllDeputiesAsync(int yearId,int proctorId, int areaId, int budgetProcessId)
         {
             List<DeputyViewModel> fecthViewModel = new List<DeputyViewModel>();
 
@@ -34,6 +34,7 @@ namespace NewsWebsite.Data.Repositories
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("proctorId", proctorId);
                     sqlCommand.Parameters.AddWithValue("areaId", areaId);
                     sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
