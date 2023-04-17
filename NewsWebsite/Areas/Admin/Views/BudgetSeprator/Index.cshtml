@@ -106,7 +106,7 @@
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.Code</td>
                             <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Description</td>
                             <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
-                            @if (item.CreditAmount < item.Mosavab)
+                            @if (item.CreditAmount <= item.Mosavab)
                             {
                                 <td width="150px" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
@@ -114,7 +114,17 @@
                             {
                                 <td width="150px" style="background-color:#d7a2a2" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
-                            <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+
+                            @if (item.CreditAmount <= item.Mosavab)
+                            {
+                                <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            else
+                            {
+                                <td width="150px" style="background-color:#d7a2a2;border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+
+                            
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud %</td>
                             @*<td class="filterable-cell">@NewsWebsite.Common.StringExtensions.En2Fa(item.CodeVaset).ToString()</td>*@
                             <td width="50px" class="filterable-cell text-center">
@@ -134,7 +144,7 @@
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.Code</td>
                             <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Description</td>
                             <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
-                            @if (item.CreditAmount < item.Mosavab)
+                            @if (item.CreditAmount <= item.Mosavab)
                             {
                                 <td width="150px" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
@@ -142,7 +152,15 @@
                             {
                                 <td width="150px" style="background-color:#d7a2a2" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
-                            <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            @*<td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>*@
+                            @if (item.Expense <= item.Mosavab)
+                            {
+                                <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            else
+                            {
+                                <td width="150px" style="background-color:#d7a2a2;border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud %</td>
                             @*<td class="filterable-cell">@NewsWebsite.Common.StringExtensions.En2Fa(item.CodeVaset).ToString()</td>*@
                             <td width="50px" class="filterable-cell text-center">
@@ -162,7 +180,7 @@
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.Code</td>
                             <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Description</td>
                             <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
-                            @if (item.CreditAmount < item.Mosavab)
+                            @if (item.CreditAmount <= item.Mosavab)
                             {
                                 <td width="150px" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
@@ -170,7 +188,16 @@
                             {
                                 <td width="150px" style="background-color:#d7a2a2" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
-                            <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+
+                            @if (item.Expense <= item.Mosavab)
+                            {
+                                <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            else
+                            {
+                                <td width="150px" style="background-color:#d7a2a2;border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            @*<td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>*@
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud %</td>
                             @*<td class="filterable-cell">@NewsWebsite.Common.StringExtensions.En2Fa(item.CodeVaset).ToString()</td>*@
                             <td width="50px" class="filterable-cell text-center">
@@ -189,7 +216,7 @@
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.Code</td>
                             <td width="500px" style="border: 1px solid black; border-collapse: collapse;" class="text-right">@item.Description</td>
                             <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
-                            @if (item.CreditAmount < item.Mosavab)
+                            @if (item.CreditAmount <= item.Mosavab)
                             {
                                 <td width="150px" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
@@ -197,7 +224,16 @@
                             {
                                 <td width="150px" style="background-color:#d7a2a2" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
-                            <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+
+                            @if (item.Expense <= item.Mosavab)
+                            {
+                                <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            else
+                            {
+                                <td width="150px" style="background-color:#d7a2a2;border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            @*<td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>*@
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud %</td>
                             @*<td class="filterable-cell">@NewsWebsite.Common.StringExtensions.En2Fa(item.CodeVaset).ToString()</td>*@
                             <td width="50px" class="filterable-cell text-center">
@@ -224,7 +260,16 @@
                             {
                                 <td width="150px" style="background-color:#d7a2a2" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.CreditAmount).ToString())</td>
                             }
-                            <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+
+                            @if (item.Expense <= item.Mosavab)
+                            {
+                                <td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            else
+                            {
+                                <td width="150px" style="background-color:#d7a2a2;border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
+                            }
+                            @*<td width="150px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>*@
                             <td width="100px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@item.PercentBud %</td>
                             @*<td class="filterable-cell">@NewsWebsite.Common.StringExtensions.En2Fa(item.CodeVaset).ToString()</td>*@
                             <td width="50px" class="filterable-cell text-center">
@@ -260,6 +305,7 @@
                 @*<button type="button" id="mymodal-inner" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal-inner">
                         Launch demo modal
                     </button>*@
+                <div class="table-modal-container" id="MasterModal-body"></div>
 
             </div>
             <div class="modal-footer">
@@ -276,7 +322,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-
+                <div class="table-modal-container" id="DetailModal-body"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
@@ -340,7 +386,7 @@
         {
             $("#MasterModal").modal('show');
             $(".modal-title").html('ویرایش');
-            $(".modal-body").html(result);
+            $("#MasterModal-body").html(result);
         });
     }
 

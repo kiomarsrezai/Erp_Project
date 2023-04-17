@@ -118,7 +118,7 @@
     </nav>
     <!-- Main content -->
     <div class="main-content h-100vh d-flex flex-column">
-        <header>
+        <header class="main-header">
             <nav class="navbar navbar-expand-lg navbar-dark admin-main-header">
                 <a class="navbar-brand text-white" href="#">عنوان</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,10 +140,11 @@
                 </div>
             </nav>
         </header>
-        <div>
+        <div style="position: fixed; top: 64px;right: 250px; width: calc(100% - 250px); height: calc(100% - 64px);overflow:auto">
         @RenderBody()
         </div>
     </div>
+
    
     <div class="modal fade" id="myModal">
             <div class="modal-dialog">

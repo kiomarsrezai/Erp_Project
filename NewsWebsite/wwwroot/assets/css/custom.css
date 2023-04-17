@@ -2,7 +2,18 @@
     font-family:IRANSans
 }
 
+.modal-open{
+    overflow: hidden !important
 
+}
+
+.main-header{
+    position: fixed;
+    top:0;
+    left:0;
+    z-index:100;
+    width: calc(100% - 250px)
+}
 /* colors */
 .layout-bg-color {
     background-color: #e5e7eb
