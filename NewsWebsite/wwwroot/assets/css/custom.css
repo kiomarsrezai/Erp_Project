@@ -82,15 +82,16 @@
 }
 
 .modal-custom-lg {
-    top: 10%
+    top: 50px
 }
 
 .modal-custom-lg .modal-dialog {
     max-width: 85% !important
 }
 
-.modal-custom-lg .modal-content {
-    height: 90%
+.modal-custom-lg .modal-body {
+    height: 700px;
+    max-height: 70vh;
 }
 
 

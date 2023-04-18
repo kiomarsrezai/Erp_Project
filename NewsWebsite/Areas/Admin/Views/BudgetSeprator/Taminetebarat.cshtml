@@ -34,8 +34,9 @@
     <label id="codingId" style="display:none" value="@ViewBag.codingId"></label>
     <div class="col-md-12">
         <table class="tableFixHead">
-            <thead style="color:black;background-color:#2999e2">
+            <thead class="bg-gray-high-table">
                 <tr>
+                    <th class="text-center" width="100px">ردیف</th>
                     <th class="text-center" width="100px">شماره درخواست</th>
                     <th class="text-center" width="100px">تاریخ درخواست</th>
                     <th class="text-center" width="100px">کد بودجه</th>
@@ -53,7 +54,8 @@
                     {
                         if (i % 2 == 0)
                         {
-                <tr style="background-color:rgb(104 140 175 / 0.71)">
+                            <tr class="bg-gray-table">
+                                <td width="50px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td>
                     <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestRefStr.ToString())</td>
                     <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestDate.ToString())</td>
                     <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.BodgetId.ToString())</td>
@@ -72,12 +74,18 @@
                             if (i % 2 != 0)
                         {
                             <tr style="background-color: #ffffff">
+                                <td width="50px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td>
                                 <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestRefStr.ToString())</td>
                                 <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestDate.ToString())</td>
                                 <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.BodgetId.ToString())</td>
                                 <td class="text-right " width="200px">@item.BodgetDesc</td>
                                 <td class="text-right " width="200px">@item.ReqDesc</td>
                                 <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.RequestPrice).ToString())</td>
+                                <td>
+                                    <button type="submit" class="btn btn-link" onclick="TaminInsert('@item.RequestRefStr','@item.RequestDate','@item.RequestPrice.ToString()','@item.ReqDesc.ToString()')">
+                                        <i class="fa fa-link"></i>
+                                    </button>
+                                </td>
                             </tr>
                             i++;
                         }
@@ -106,13 +114,21 @@
         $.ajax({
             url: "BudgetSeprator/TaminInsertPost",
             /**/
-            data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId, 'RequestRefStr': RequestRefStr, 'RequestDate': RequestDate, 'RequestPrice': RequestPrice, 'ReqDesc': ReqDesc, 'codingId':_codingId },
+            data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId, 'RequestRefStr': RequestRefStr, 'RequestDate': RequestDate, 'RequestPrice': RequestPrice, 'ReqDesc': ReqDesc, 'codingId': globalCodingId },
     /**/
     type: "post",
-}).done(function ()
-{
-    alert('انجام شد')
-});
+    success: function (){
+        $("#DetailModal").modal('hide');
+        Details(globalCodingId, $("#DetailModalTitle").text())
+    },
+    error:function(){
+              $("#DetailModal").modal('hide');
+        Details(globalCodingId, $("#DetailModalTitle").text())
+
+    },
+    }).done(function ()
+    {
+    });
 }
 
 
