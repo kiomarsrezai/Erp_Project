@@ -29,10 +29,10 @@
 <div class="row">
     <div class="col-md-12">
         <table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
-            <thead style="color: black; background-color: rgb(157 152 232 / 0.63)">
+            <thead class="bg-gray-high-table" >
                 <tr>
                     <td colspan="5">
-                        <a class="btn btn-primary" onclick="Taminetebarat()">
+                        <a class="btn btn-primary rounded text-white" onclick="Taminetebarat()">
                             تامین اعتبارات
                         </a>
                     </td>
@@ -53,7 +53,7 @@
                     {
                         if (i % 2 == 0)
                         {
-                            <tr style="background-color:#b9d7e2">
+                            <tr class="bg-gray-table">
                                 <td>@i.ToString()</td>
                                 <td class="text-center">@NewsWebsite.Common.StringExtensions.En2Fa(item.Number.ToString()) </td>
                                 <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.Date.ToString()) </td>
@@ -107,7 +107,7 @@
         }).done(function (result)
         {
             $("#DetailModal").modal('show');
-            $(".modal-title").html('تامین اعتبارات');
+            $("#DetailModalTitle").html($('#myModalLabel').text());
             $("#DetailModal-body").html(result);
         });
     }

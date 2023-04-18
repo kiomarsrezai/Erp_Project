@@ -130,7 +130,7 @@
                             <td width="50px" class="filterable-cell text-center">
                                 @if (item.Crud == true)
                                 {
-                                    <a onclick="Details(@item.CodingId)"><i class="fa fa-credit-card"></i></a>
+                                    <a onclick="Details(@item.CodingId, '@item.Code - @item.Description')"><i class="fa fa-credit-card"></i></a>
                                 }
                             </td>
 
@@ -166,7 +166,7 @@
                             <td width="50px" class="filterable-cell text-center">
                                 @if (item.Crud == true)
                                 {
-                                    <a onclick="Details(@item.CodingId)"><i class="fa fa-credit-card"></i></a>
+                                    <a onclick="Details(@item.CodingId, '@item.Code - @item.Description')"><i class="fa fa-credit-card"></i></a>
                                 }
                             </td>
 
@@ -203,7 +203,7 @@
                             <td width="50px" class="filterable-cell text-center">
                                 @if (item.Crud == true)
                                 {
-                                    <a onclick="Details(@item.CodingId)"><i class="fa fa-credit-card"></i></a>
+                                    <a onclick="Details(@item.CodingId, '@item.Code - @item.Description')"><i class="fa fa-credit-card"></i></a>
                                 }
                             </td>
 
@@ -239,7 +239,7 @@
                             <td width="50px" class="filterable-cell text-center">
                                 @if (item.Crud == true)
                                 {
-                                    <a onclick="Details(@item.CodingId)"><i class="fa fa-credit-card"></i></a>
+                                    <a onclick="Details(@item.CodingId, '@item.Code - @item.Description')"><i class="fa fa-credit-card"></i></a>
                                 }
                             </td>
 
@@ -275,7 +275,7 @@
                             <td width="50px" class="filterable-cell text-center">
                                 @if (item.Crud == true)
                                 {
-                                    <a onclick="Details(@item.CodingId)"><i class="fa fa-credit-card"></i></a>
+                                    <a onclick="Details(@item.CodingId, '@item.Code - @item.Description')"><i class="fa fa-credit-card"></i></a>
                                 }
                             </td>
                         </tr>
@@ -298,8 +298,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h4 class="modal-title font-weight-bold" id="myModalLabel">Modal title</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
             </div>
             <div class="modal-body">
                 @*<button type="button" id="mymodal-inner" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal-inner">
@@ -309,28 +309,29 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-default rounded fs-normal" data-dismiss="modal">بستن</button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="DetailModal" tabindex="-2" role="dialog" aria-labelledby="myModalLabel2">
+<div class="modal modal-custom-lg" id="DetailModal" tabindex="-2" role="dialog" aria-labelledby="myModalLabel2">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                تامین اعتبارات
+                <h4 class="modal-title font-weight-bold" id="DetailModalTitle">تامین اعتبارات</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="table-modal-container" id="DetailModal-body"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-default rounded fs-normal" data-dismiss="modal">بستن</button>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
+    var  globalCodingId = null;
 
     $(document).ready(function ()
     {
@@ -372,7 +373,9 @@
             });
     }
 
-    function Details(id)
+
+
+    function Details(id, title)
     {
         var _yearId = $("#yearId").val();
         var _areaId = $("#areaId").val();
@@ -384,8 +387,9 @@
             data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId, 'codingId': id }
         }).done(function (result)
         {
+            globalCodingId  = id
             $("#MasterModal").modal('show');
-            $(".modal-title").html('ویرایش');
+            $(".modal-title").html(title);
             $("#MasterModal-body").html(result);
         });
     }
