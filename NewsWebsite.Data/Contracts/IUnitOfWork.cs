@@ -17,6 +17,7 @@ namespace NewsWebsite.Data.Contracts
         IBudget_001Rep Budget_001Rep { get; }
         IDeputyRepository DeputyRepository{ get; }
         IVasetRepository VasetRepository { get; }
+        IProjectRepository ProjectRepository { get; }
         NewsDBContext _Context { get; }
         Task Commit();
     }

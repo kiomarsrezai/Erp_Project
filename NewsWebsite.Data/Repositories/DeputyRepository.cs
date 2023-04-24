@@ -30,15 +30,15 @@ namespace NewsWebsite.Data.Repositories
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand.Parameters.AddWithValue("proctorId", proctorId);
-                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("YearId", 32);
+                    sqlCommand.Parameters.AddWithValue("ProctorId", 0);
+                    sqlCommand.Parameters.AddWithValue("AreaId", 0);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", 0);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         DeputyViewModel fetchView = new DeputyViewModel();
@@ -87,8 +87,8 @@ namespace NewsWebsite.Data.Repositories
                         fecthViewModel.Add(fetchView);
                     }
                 }
-                sqlconnect.Close();
             }
+            
             return fecthViewModel;
         }
 

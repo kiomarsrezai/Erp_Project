@@ -77,6 +77,10 @@ namespace NewsWebsite.ViewModels.UserManager
         [JsonPropertyName("جنسیت")]
         public string GenderName { get; set; }
 
+        [JsonPropertyName("لایسنس")]
+        public string Lisence { get; set; }
+        public string TokStr { get; set; }
+
         [Display(Name = "معرفی"), JsonPropertyName("معرفی")]
         public string Bio { get; set; }
 

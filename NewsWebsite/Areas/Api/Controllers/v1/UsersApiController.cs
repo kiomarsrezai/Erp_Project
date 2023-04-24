@@ -6,10 +6,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.Api.UsersApi;
@@ -24,6 +26,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     public class UsersApiController : ControllerBase
     {
         private readonly IApplicationUserManager _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IjwtService _jwtService;
         public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService)
         {
@@ -59,13 +62,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
             else
             {
-                var result = await _userManager.CheckPasswordAsync(User, ViewModel.Password);
-                if (result)
+                var result = await _signInManager.PasswordSignInAsync(ViewModel.UserName, ViewModel.Password, true, true);
+                if (result.Succeeded)
                 {
                     User.TokStr = await _jwtService.GenerateTokenAsync(User);
                     //User.Lisence = license;
                     await _userManager.UpdateAsync(User);
-                    return Ok(User);
+                    return Ok(User.TokStr);
                 }
                 else
                     return BadRequest("نام کاربری یا کلمه عبور شما صحیح نمی باشد.");

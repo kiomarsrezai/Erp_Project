@@ -23,6 +23,7 @@ namespace NewsWebsite.Data.UnitOfWork
         private ICommentRepository _commentRepository;
         private IBudget_001Rep _budget_001Rep;
         private IVasetRepository _vasetRepository;
+        private IProjectRepository _projectRepository;
         private IDeputyRepository _deputyRepository;
         private readonly IConfiguration _configuration;
 
@@ -124,6 +125,16 @@ namespace NewsWebsite.Data.UnitOfWork
                 if (_vasetRepository == null)
                     _vasetRepository = new VasetRepostory(_budgetcontext);
                 return _vasetRepository;
+            }
+        
+        }
+        public IProjectRepository ProjectRepository
+        {
+            get
+            {
+                if (_projectRepository == null)
+                    _projectRepository = new ProjectRepostory(_budgetcontext);
+                return _projectRepository;
             }
         
         }
