@@ -32,7 +32,7 @@
         <table class="tableFixHead" style="border: 1px solid black; border-collapse: collapse; width: 100%;">
             <thead class="bg-gray-high-table" >
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         <a class="btn btn-primary rounded text-white" onclick="Taminetebarat()">
                             تامین اعتبارات
                         </a>
@@ -44,6 +44,7 @@
                     <th class="text-right">تاریخ</th>
                     <th class="text-center">شرح</th>
                     <th class="text-center">مبلغ</th>
+                    <th class="text-center">عملیات</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,6 +61,11 @@
                                 <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.Date.ToString()) </td>
                                 <td class="text-right">@item.Description</td>
                                 <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
+                                <td>
+                                    <button type="submit" class="btn btn-link text-danger" onclick="deleteItem()">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                             i++;
                         }
@@ -71,6 +77,11 @@
                                 <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(item.Date.ToString()) </td>
                                 <td class="text-right">@item.Description</td>
                                 <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
+                                <td>
+                                    <button type="submit" class="btn btn-link text-danger" onclick="deleteItem()">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                             i++;
                         }
@@ -95,6 +106,28 @@
 </div>
 
 <script type="text/javascript">
+    function deleteItem(){
+        var _yearId = $("#yearId").val();
+        var _areaId = $("#areaId").val();
+        var _budgetProcessId = $("#budgetProcessId").val();
+        var _codingId = $("#codingId").val();
+
+        $.ajax({
+            url: "BudgetSeprator/TaminInsertPost",
+            /**/
+            data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId, 'RequestRefStr': RequestRefStr, 'RequestDate': RequestDate, 'RequestPrice': RequestPrice, 'ReqDesc': ReqDesc, 'codingId': globalCodingId },
+            /**/
+            type: "post",
+            success: function () {
+                Details(globalCodingId, $("#DetailModalTitle").text())
+            },
+            error: function () {
+                Details(globalCodingId, $("#DetailModalTitle").text())
+
+            },
+        })
+    }
+
     function Taminetebarat()
     {
         var _yearId = $("#yearId").val();
