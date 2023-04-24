@@ -17,6 +17,7 @@ namespace NewsWebsite.ViewModels.Fetch
 
         [Display(Name = "مبلغ")]
         public Int64 EstimateAmount { get; set; }
+        public int? id { get; set; }
 
     }
    

@@ -62,7 +62,7 @@
                                 <td class="text-right">@item.Description</td>
                                 <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
                                 <td>
-                                    <button type="submit" class="btn btn-link text-danger" onclick="deleteItem()">
+                                    <button type="submit" class="btn btn-link text-danger" onclick="deleteItem(@item.id)">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -78,7 +78,7 @@
                                 <td class="text-right">@item.Description</td>
                                 <td class="text-right">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.EstimateAmount).ToString())</td>
                                 <td>
-                                    <button type="submit" class="btn btn-link text-danger" onclick="deleteItem()">
+                                    <button type="submit" class="btn btn-link text-danger" onclick="deleteItem(@item.id)">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -106,16 +106,9 @@
 </div>
 
 <script type="text/javascript">
-    function deleteItem(){
-        var _yearId = $("#yearId").val();
-        var _areaId = $("#areaId").val();
-        var _budgetProcessId = $("#budgetProcessId").val();
-        var _codingId = $("#codingId").val();
-
+    function deleteItem(id){
         $.ajax({
-            url: "BudgetSeprator/TaminInsertPost",
-            /**/
-            data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId, 'RequestRefStr': RequestRefStr, 'RequestDate': RequestDate, 'RequestPrice': RequestPrice, 'ReqDesc': ReqDesc, 'codingId': globalCodingId },
+            url: "BudgetSeprator/TaminModalDelete?id="+id,
             /**/
             type: "post",
             success: function () {

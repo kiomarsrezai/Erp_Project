@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using NewsWebsite.Common.Attributes;
+using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
 using NewsWebsite.ViewModels.Fetch;
@@ -176,6 +176,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     while (dataReader.Read())
                     {
                         SepratorAreaRequestViewModel fetchView = new SepratorAreaRequestViewModel();
+                        fetchView.id = StringExtensions.ToNullableInt(dataReader["id"].ToString());
                         fetchView.Number = dataReader["Number"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.Date = dataReader["Date"].ToString();
@@ -259,7 +260,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 return StatusCode(400);
 
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Delete", sqlconnect))
