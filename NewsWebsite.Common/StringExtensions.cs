@@ -9,6 +9,20 @@ namespace NewsWebsite.Common
             return ignoreWhiteSpace ? !string.IsNullOrWhiteSpace(value) : !string.IsNullOrEmpty(value);
         }
 
+        public static int? ToNullableInt(this string s)
+        {
+            int i;
+            if (int.TryParse(s, out i)) return i;
+            return null;
+        }
+
+        public static float? ToNullablefloat(this string s)
+        {
+            float i;
+            if (float.TryParse(s, out i)) return i;
+            return null;
+        }
+
         public static int ToInt(this string value)
         {
             return Convert.ToInt32(value);

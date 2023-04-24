@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data.Contracts;
@@ -73,7 +74,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                             fetchView.PercentBud = Math.Round(_uw.Divivasion(fetchView.Expense, fetchView.Mosavab));
                         }
                         else
-                        { 
+                        {
                             fetchView.PercentBud = 0;
                         }
                         fecthViewModel.Add(fetchView);
@@ -144,7 +145,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     sqlCommand.ExecuteReader();
-                    ViewBag.alertsucces="بروزرسانی انجام شد";
+                    ViewBag.alertsucces = "بروزرسانی انجام شد";
                 }
                 //view["notification"] = "بروزرسانی با موفقیت انجام شد";
             }
@@ -189,7 +190,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet, DisplayName("درج و ویرایش")]
-        public IActionResult Taminetebarat(int yearId, int areaId, int budgetProcessId,string codingId)
+        public IActionResult Taminetebarat(int yearId, int areaId, int budgetProcessId, string codingId)
         {
             List<BudgetSepTaminModal2ViewModel> fecthViewModel = new List<BudgetSepTaminModal2ViewModel>();
 
@@ -210,11 +211,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     {
                         BudgetSepTaminModal2ViewModel fetchView = new BudgetSepTaminModal2ViewModel();
                         fetchView.BodgetId = dataReader["BodgetId"].ToString();
-                        fetchView.BodgetDesc= dataReader["BodgetDesc"].ToString();
-                        fetchView.ReqDesc= dataReader["ReqDesc"].ToString();
-                        fetchView.RequestDate= dataReader["RequestDate"].ToString();
-                        fetchView.RequestRefStr= dataReader["RequestRefStr"].ToString();
-                        fetchView.RequestPrice= Int64.Parse(dataReader["RequestPrice"].ToString());
+                        fetchView.BodgetDesc = dataReader["BodgetDesc"].ToString();
+                        fetchView.ReqDesc = dataReader["ReqDesc"].ToString();
+                        fetchView.RequestDate = dataReader["RequestDate"].ToString();
+                        fetchView.RequestRefStr = dataReader["RequestRefStr"].ToString();
+                        fetchView.RequestPrice = Int64.Parse(dataReader["RequestPrice"].ToString());
 
                         fecthViewModel.Add(fetchView);
                     }
@@ -225,30 +226,53 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult TaminInsertPost(int yearId, int areaId, int budgetProcessId,string RequestRefStr,string RequestDate,Int64 RequestPrice,string ReqDesc,int codingId)
+        public IActionResult TaminInsertPost(int yearId, int areaId, int budgetProcessId, string RequestRefStr, string RequestDate, Int64 RequestPrice, string ReqDesc, int codingId)
         {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Insert", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                        sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                        sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
-                        sqlCommand.Parameters.AddWithValue("RequestRefStr", RequestRefStr);
-                        sqlCommand.Parameters.AddWithValue("RequestDate", RequestDate);
-                        sqlCommand.Parameters.AddWithValue("RequestPrice", RequestPrice);
-                        sqlCommand.Parameters.AddWithValue("ReqDesc", ReqDesc);
-                        sqlCommand.Parameters.AddWithValue("codingId", codingId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = sqlCommand.ExecuteReader();
-                        TempData["notification"] = "ویرایش با موفقیت انجام شد";
-                    }
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("RequestRefStr", RequestRefStr);
+                    sqlCommand.Parameters.AddWithValue("RequestDate", RequestDate);
+                    sqlCommand.Parameters.AddWithValue("RequestPrice", RequestPrice);
+                    sqlCommand.Parameters.AddWithValue("ReqDesc", ReqDesc);
+                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
                 }
+            }
 
             return PartialView("Details");
+        }
+
+        [HttpPost]
+        public async Task<StatusCodeResult> TaminModalDelete(int? id)
+        {
+            if (id == 0 || id == null)
+                return StatusCode(400);
+
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                }
+            }
+
+            return StatusCode(200);
         }
 
         [HttpPost]

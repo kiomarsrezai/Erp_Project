@@ -8,7 +8,7 @@ namespace NewsWebsite.ViewModels.Project
     {
         public int Id { get; set; }
 
-        public int MotherId { get; set; }
+        public int? MotherId { get; set; }
 
         [Display(Name = "عنوان")]
         public string ProjectName { get; set; }
@@ -17,7 +17,8 @@ namespace NewsWebsite.ViewModels.Project
         public string ProjectCode { get; set; }
        
         [Display(Name = "منطقه")]
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
+        public float? Weight { get; set; }
 
     }
    
