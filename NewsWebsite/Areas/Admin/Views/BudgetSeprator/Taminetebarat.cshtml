@@ -31,6 +31,9 @@
         }
 </style>
 <div class="row">
+    <div class="col-12">
+        <input id="search-input" class="form-control mb-3" />
+    </div>
     <label id="codingId" style="display:none" value="@ViewBag.codingId"></label>
     <div class="col-md-12">
         <table class="tableFixHead">
@@ -58,7 +61,7 @@
                                 <td width="50px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td>
                     <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestRefStr.ToString())</td>
                     <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestDate.ToString())</td>
-                    <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.BodgetId.ToString())</td>
+                                <td class="text-center table-item" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.BodgetId.ToString())</td>
                     <td class="text-right " width="200px">@item.BodgetDesc</td>
                     <td class="text-right " width="200px">@item.ReqDesc</td>
                     <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.RequestPrice).ToString())</td>
@@ -77,7 +80,7 @@
                                 <td width="50px" style="border: 1px solid black; border-collapse: collapse;" class="filterable-cell text-center">@i</td>
                                 <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestRefStr.ToString())</td>
                                 <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.RequestDate.ToString())</td>
-                                <td class="text-center" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.BodgetId.ToString())</td>
+                                <td class="text-center table-item" width="50px">@NewsWebsite.Common.StringExtensions.En2Fa(item.BodgetId.ToString())</td>
                                 <td class="text-right " width="200px">@item.BodgetDesc</td>
                                 <td class="text-right " width="200px">@item.ReqDesc</td>
                                 <td class="text-center" width="150px">@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.RequestPrice).ToString())</td>
@@ -104,6 +107,28 @@
 </div>
 
 <script type="text/javascript">
+    function searchItem(text){
+        var
+            persianNumbers = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g],
+            arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g],
+            fixNumbers = function (str) {
+                if (typeof str === 'string') {
+                    for (var i = 0; i < 10; i++) {
+                        str = str.replace(persianNumbers[i], i).replace(arabicNumbers[i], i);
+                    }
+                }
+                return str;
+            };
+
+        [...document.querySelectorAll(".table-item")].forEach(item => item.parentElement.classList.add('d-none'));
+        [...document.querySelectorAll(".table-item")].filter(item => fixNumbers(item.innerText).includes(text)).forEach(item => item.parentElement.classList.remove('d-none'))
+    }
+
+    $("#search-input").on('change keydown paste input', function (e) {
+
+        searchItem($(this).val())
+    });
+
     function TaminInsert(RequestRefStr, RequestDate, RequestPrice, ReqDesc)
     {
         var _yearId = $("#yearId").val();
