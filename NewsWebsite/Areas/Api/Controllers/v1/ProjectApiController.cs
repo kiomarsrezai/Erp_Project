@@ -112,7 +112,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectUpdate")]
         [HttpGet]
-        public async Task<ApiResult<string>> ProjectUpdate(int id)
+        public async Task<ApiResult<string>> ProjectUpdate(int id,string projctName,string projectCode)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -125,7 +125,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_Project_Update", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", id);
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.Parameters.AddWithValue("ProjectName", projctName);
+                        sqlCommand.Parameters.AddWithValue("ProjectCode", projectCode);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         TempData["notification"] = "ویرایش با موفقیت انجام شد";
