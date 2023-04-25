@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,11 +11,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.GeneralVm;
 using NewsWebsite.ViewModels.UserManager;
 
 namespace NewsWebsite.Areas.Admin.Controllers
@@ -24,9 +30,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
         private readonly IApplicationRoleManager _roleManager;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
-        //private readonly IUnitOfWork _uw;
+        private readonly IUnitOfWork _uw;
         private const string UserNotFound = "کاربر یافت نشد.";
-        public UserManagerController(IApplicationUserManager userManager, IMapper mapper, IApplicationRoleManager roleManager, IWebHostEnvironment env)
+        public UserManagerController(IApplicationUserManager userManager, IMapper mapper, IApplicationRoleManager roleManager, IWebHostEnvironment env,IUnitOfWork uw)
         {
             _userManager = userManager;
             _userManager.CheckArgumentIsNull(nameof(_userManager));
@@ -39,6 +45,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             _env = env;
             _env.CheckArgumentIsNull(nameof(_env));
+
+            _uw = uw;
+            _uw.CheckArgumentIsNull(nameof(_uw));
         }
 
         [HttpGet,DisplayName("مشاهده")]
@@ -76,12 +85,12 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "LastName desc", search);
             }
 
-            else if (sort == "ایمیل")
+            else if (sort == "منطقه")
             {
                 if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "Email", search);
+                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "SectionId", search);
                 else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "Email desc", search);
+                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "SectionId desc", search);
             }
 
             else if (sort == "نام کاربری")
@@ -109,17 +118,63 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return Json(new { total = total, rows = allUsers });
         }
 
+        public List<AreaViewModel> AreaFetch(int areaform)
+        {
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            List<AreaViewModel> areaViews=new List<AreaViewModel>();
 
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Area", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("areaForm", areaform);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        AreaViewModel fetchView = new AreaViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.AreaName = dataReader["AreaName"].ToString();
+                        areaViews.Append(fetchView);
+                    }
+                }
+            }
+            return areaViews;
+        }
 
         [HttpGet,DisplayName("درج و ویرایش")]
         public async Task<IActionResult> RenderUser(int? userId)
         {
             var user = new UsersViewModel();
             ViewBag.Roles = _roleManager.GetAllRoles();
+            ViewBag.SectionId = new SelectList(await _uw.Budget_001Rep.AreaFetchAsync(3), "Id", "AreaName");
 
             if (userId != null)
             {
-                user = _mapper.Map<UsersViewModel>(await _userManager.FindUserWithRolesByIdAsync((int)userId));
+                user =await _uw._Context.Users.Where(u => u.Id == userId).Select(user => new UsersViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    PhoneNumber = user.PhoneNumber,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    IsActive = user.IsActive,
+                    Image = user.Image,
+                    RegisterDateTime = user.RegisterDateTime,
+                    RoleName = user.Roles.First().Role.Name,
+                    AccessFailedCount = user.AccessFailedCount,
+                    EmailConfirmed = user.EmailConfirmed,
+                    LockoutEnabled = user.LockoutEnabled,
+                    LockoutEnd = user.LockoutEnd,
+                    PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                    SectionId = user.SectionId,
+                    TwoFactorEnabled = user.TwoFactorEnabled,
+                    Gender = user.Gender,
+                    Lisence = user.Lisence,
+                    Token = user.Token
+                }).FirstOrDefaultAsync();
                 user.PersianBirthDate = user.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd");
             }
 
@@ -152,7 +207,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     user.FirstName = viewModel.FirstName;
                     user.LastName = viewModel.LastName;
                     user.BirthDate = viewModel.BirthDate;
-                    user.Email = viewModel.Email;
+                    user.Email = "kia@test.com";
                     user.UserName = viewModel.UserName;
                     user.Gender = viewModel.Gender.Value;
                     user.PhoneNumber = viewModel.PhoneNumber;
@@ -174,8 +229,9 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
                 else
                 {
-                    await viewModel.ImageFile.UploadFileAsync($"{_env.WebRootPath}/avatars/{viewModel.Image}");
+                    //await viewModel.ImageFile.UploadFileAsync($"{_env.WebRootPath}/avatars/{viewModel.Image}");
                     viewModel.EmailConfirmed = true;
+                    viewModel.Email = "Kia@gmail.com";
                     result = await _userManager.CreateAsync(_mapper.Map<User>(viewModel),viewModel.Password);
                 }
 

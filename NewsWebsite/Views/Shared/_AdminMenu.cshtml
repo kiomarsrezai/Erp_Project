@@ -27,7 +27,7 @@
         </a>
         @*</security-trimming>*@
     </li>
-     @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
+    @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
     {
         <li class="nav-item">
             @*<security-trimming asp-action="Index" asp-controller="Proctor" asp-area="Admin">*@
@@ -44,20 +44,19 @@
         </a>
         @*</security-trimming>*@
     </li>
-
-    <!--<li class="nav-item">-->
-    @*<security-trimming asp-action="Index" asp-controller="UserManager" asp-area="Admin">*@
-    <!--<a class="nav-link" asp-action="Index" asp-controller="UserManager">
-        <i class="fa fa-users text-yellow"></i> مدیریت کاربران
-    </a>-->
-    @*</security-trimming>*@
-    <!--</li>
-
+    @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-action="Index" asp-controller="UserManager">
+                <i class="fa fa-users text-yellow"></i> مدیریت کاربران
+            </a>
+        </li>
+    }
     <li class="nav-item">
         <a class="nav-link" asp-action="ChangePassword" asp-controller="Manage">
             <i class="ni ni-key-25 text-info"></i> تغییر کلمه عبور
         </a>
-    </li>-->
+    </li>
     @*<li class="nav-item">
     <security-trimming asp-action="Index" asp-controller="SiteSetting" asp-area="Admin">
     <a class="nav-link" asp-action="Index" asp-controller="SiteSetting">

@@ -19,7 +19,6 @@ namespace NewsWebsite.ViewModels.UserManager
         public string Image { get; set; }
 
         [JsonIgnore,Display(Name ="تصویر پروفایل")]
-        [Required(ErrorMessage = "انتخاب {0} الزامی است.")]
         public IFormFile ImageFile { get; set; }
 
 
@@ -28,8 +27,6 @@ namespace NewsWebsite.ViewModels.UserManager
         public string UserName { get; set; }
         
         [Display(Name ="ایمیل"), JsonPropertyName("ایمیل")]
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
-        [EmailAddress(ErrorMessage ="ایمیل وارد شده صحیح نمی باشد.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
@@ -37,13 +34,7 @@ namespace NewsWebsite.ViewModels.UserManager
         [DataType(DataType.Password), Display(Name = "کلمه عبور"),JsonIgnore]
         public string Password { get; set; }
 
-        [DataType(DataType.Password), Display(Name = "تکرار کلمه عبور"),JsonIgnore]
-        [Compare("Password", ErrorMessage = "کلمه عبور وارد شده با تکرار کلمه عبور مطابقت ندارد.")]
-        public string ConfirmPassword { get; set; }
-
-
         [Display(Name = "شماره موبایل"), JsonPropertyName("شماره تماس")]
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public string PhoneNumber { get; set; }
 
         [Display(Name = "نام"), JsonPropertyName("نام")]
@@ -58,7 +49,6 @@ namespace NewsWebsite.ViewModels.UserManager
         public DateTime? BirthDate { get; set; }
 
         [Display(Name = "تاریخ تولد"), JsonPropertyName("تاریخ تولد")]
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public string PersianBirthDate { get; set; }
         
         [Display(Name = "تاریخ عضویت"),JsonIgnore]
@@ -71,16 +61,15 @@ namespace NewsWebsite.ViewModels.UserManager
         public bool IsActive { get; set; }
 
         [Display(Name = "جنسیت"),JsonIgnore]
-        [Required(ErrorMessage = "انتخاب {0} الزامی است.")]
         public GenderType? Gender { get; set; }
 
         [JsonPropertyName("جنسیت")]
         public string GenderName { get; set; }
 
-        [JsonPropertyName("لایسنس")]
+        [JsonPropertyName("لایسنس"), JsonIgnore]
         public string Lisence { get; set; }
         
-        [JsonPropertyName("توکن")]
+        [JsonPropertyName("توکن"), JsonIgnore]
         public string Token { get; set; }
 
         [Display(Name = "معرفی"), JsonPropertyName("معرفی")]
@@ -92,6 +81,9 @@ namespace NewsWebsite.ViewModels.UserManager
         [JsonIgnore,Display(Name ="نقش")]
         [Required(ErrorMessage = "انتخاب {0} الزامی است.")]
         public int? RoleId { get; set; }
+        
+        [JsonIgnore,JsonPropertyName("منطقه"), Display(Name = "منطقه")]
+        public int SectionId { get; set; }
 
         [JsonPropertyName("نقش")]
         public string RoleName { get; set; }

@@ -89,7 +89,6 @@ namespace NewsWebsite.Services.Identity
                 PhoneNumber = user.PhoneNumber,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                BirthDate = user.BirthDate,
                 IsActive = user.IsActive,
                 Image = user.Image,
                 RegisterDateTime = user.RegisterDateTime,
@@ -99,8 +98,11 @@ namespace NewsWebsite.Services.Identity
                 LockoutEnabled = user.LockoutEnabled,
                 LockoutEnd = user.LockoutEnd,
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                SectionId = user.SectionId,
                 TwoFactorEnabled = user.TwoFactorEnabled,
                 Gender = user.Gender,
+                Lisence=user.Lisence,
+                Token=user.Token
             }).FirstOrDefaultAsync();
         }
 
@@ -135,6 +137,7 @@ namespace NewsWebsite.Services.Identity
                       FirstName = user.FirstName,
                       LastName = user.LastName,
                       IsActive = user.IsActive,
+                      SectionId = user.SectionId,
                       Image = user.Image,
                       Bio = user.Bio,
                       PersianBirthDate = user.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd"),
