@@ -38,6 +38,8 @@ namespace NewsWebsite.Services.Contracts
         Task<IdentityResult> DeleteAsync(User user);
         Task<User> FindByIdAsync(string userId);
         Task<User> FindByNameAsync(string userName);
+        User FindByName(string userName);
+        int FindSectionIdByName(string userName);
         Task<IdentityResult> CreateAsync(User user, string password);
         string NormalizeName(string name);
         string NormalizeEmail(string email);

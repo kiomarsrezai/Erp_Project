@@ -1,6 +1,7 @@
 ﻿@using NewsWebsite.Data.Contracts;
 @model List<NewsWebsite.ViewModels.Fetch.BudgetSepratorViewModel>
 @inject NewsWebsite.Data.Models.ProgramBuddbContext _db
+@inject NewsWebsite.Services.Contracts.IApplicationUserManager _unit
 
 @inject IBudget_001Rep _uw
 @{
@@ -49,33 +50,45 @@
                 <th colspan="8" style="color: black;border: 1px solid black; border-collapse: collapse;" class="pt-3">
                     <div class="row">
                         @*<form asp-action="Index" asp-controller="BudgetSeprator" class="row">*@
-                            <div class="col-md-3">
+                        <div class="col-md-3">
+                            <div class="form-overlap">
+                                @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control form-overlap-input" })
+                                <label class="form-overlap-label">سال</label>
+
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
+                            {
                                 <div class="form-overlap">
-                                    @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control form-overlap-input" })
-                                    <label class="form-overlap-label">سال</label>
+                                    @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(3), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                    <label class="form-overlap-label">منطقه</label>
 
                                 </div>
-                            </div>
-                            <div class="col-md-3">
+                            }
+                            else
+                            {
                                 <div class="form-overlap">
-                                    @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(2), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
-                                <label class="form-overlap-label">منطقه</label>
+                                    @Html.DropDownList("areaId", new SelectList(_db.TblAreas.Where(a=>a.Id==_unit.FindSectionIdByName(User.Identity.Name)).ToList(), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                    <label class="form-overlap-label">منطقه</label>
+
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                    <div class="form-overlap">
-                                    @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control form-overlap-input" })
+                            }
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-overlap">
+                                @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control form-overlap-input" })
                                 <label class="form-overlap-label">نوع بودجه</label>
-                                </div>
                             </div>
-                            <div class="col-xm-2">
-                                <input class="btn btn-primary rounded fs-normal" type="submit" value="ارسال" onclick="Index()" />
-                            </div>
-                       @*     <div class="col-xm-1 mr-2">
-                                <button id="btnRefresh" class="btn btn-primary rounded fs-normal" onclick="refreshForm()">
-                                    بروزرسانی
-                                </button>
-                            </div>*@
+                        </div>
+                        <div class="col-xm-2">
+                            <input class="btn btn-primary rounded fs-normal" type="submit" value="ارسال" onclick="Index()" />
+                        </div>
+                        @*     <div class="col-xm-1 mr-2">
+                        <button id="btnRefresh" class="btn btn-primary rounded fs-normal" onclick="refreshForm()">
+                        بروزرسانی
+                        </button>
+                        </div>*@
                         @*</form>*@
 
                     </div>
@@ -94,7 +107,6 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
 </div>
@@ -108,8 +120,8 @@
             </div>
             <div class="modal-body">
                 @*<button type="button" id="mymodal-inner" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal-inner">
-                        Launch demo modal
-                    </button>*@
+                Launch demo modal
+                </button>*@
                 <div class="table-modal-container" id="MasterModal-body"></div>
 
             </div>
@@ -136,7 +148,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    var  globalCodingId = null;
+    var globalCodingId = null;
 
     $('#DetailModal').on('hidden.bs.modal', function (event) {
         document.body.classList.add("modal-open")
@@ -160,12 +172,10 @@
     //    });
     //}
 
-    $(document).ready(function ()
-    {
+    $(document).ready(function () {
 
         var Pesan = "@((string)ViewBag.alertsucces)";
-        if (Pesan !== null && Pesan !== '')
-        {
+        if (Pesan !== null && Pesan !== '') {
             swal("پیغام : ", Pesan)
         };
     });
@@ -185,8 +195,7 @@
     }
 
 
-    function Validate(ctl, event)
-    {
+    function Validate(ctl, event) {
         event.preventDefault();
         swal({
             title: "Do you want to save it?",
@@ -199,16 +208,12 @@
             closeOnConfirm: false,
             closeOnCancel: false
         },
-            function (isConfirm)
-            {
-                if (isConfirm)
-                {
-                    if (validateData() == true)
-                    {
+            function (isConfirm) {
+                if (isConfirm) {
+                    if (validateData() == true) {
                         $("#CreateForm").submit();
                     }
-                } else
-                {
+                } else {
                     swal("Cancelled", "You have Cancelled Form Submission!", "error");
                 }
             });
@@ -216,8 +221,7 @@
 
 
 
-    function Details(id, title)
-    {
+    function Details(id, title) {
         var _yearId = $("#yearId").val();
         var _areaId = $("#areaId").val();
         var _budgetProcessId = $("#budgetProcessId").val();
@@ -226,17 +230,15 @@
             url: "BudgetSeprator/Details",
             type: "get",
             data: { 'yearId': _yearId, 'areaId': _areaId, 'budgetProcessId': _budgetProcessId, 'codingId': id }
-        }).done(function (result)
-        {
-            globalCodingId  = id
+        }).done(function (result) {
+            globalCodingId = id
             $("#MasterModal").modal('show');
             $(".modal-title").html(title);
             $("#MasterModal-body").html(result);
         });
     }
 
-    function refreshForm()
-    {
+    function refreshForm() {
         var _yearId = $("#yearId").val();
         var _areaId = $("#areaId").val();
 
@@ -244,8 +246,7 @@
             url: "BudgetSeprator/RefreshForm",
             type: "post",
             data: { 'yearId': _yearId, 'areaId': _areaId }
-        }).done(function ()
-        {
+        }).done(function () {
             alert('بروزرسانی با موفقیت انجام شد');
         });
     }

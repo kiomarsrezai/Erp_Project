@@ -1,14 +1,18 @@
-﻿@using NewsWebsite.Common;
+﻿@inject NewsWebsite.Services.Contracts.IApplicationUserManager _unit
+@using NewsWebsite.Common;
 @addTagHelper*,NewsWebsite
 
 <ul class="navbar-nav">
-    <li class="nav-item">
-        @*<security-trimming asp-action="Index" asp-controller="Dashboard" asp-area="Admin">*@
-        <a class="nav-link nav-link-hover" asp-action="ShowData" asp-controller="Dashboard">
-            <i class="ni ni-tv-2 text-primary"></i> گزارش
-        </a>
-        @*</security-trimming>*@
-    </li>
+    @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
+    {
+        <li class="nav-item">
+
+            <a class="nav-link nav-link-hover" asp-action="ShowData" asp-controller="Dashboard">
+                <i class="ni ni-tv-2 text-primary"></i> گزارش
+            </a>
+        </li>
+    }
+
     <li class="nav-item">
         @*<security-trimming asp-action="Index" asp-controller="Charts" asp-area="Admin">*@
         <a class="nav-link nav-link-hover" asp-action="Index" asp-controller="Fetch">
@@ -23,17 +27,20 @@
         </a>
         @*</security-trimming>*@
     </li>
-    <li class="nav-item">
-        @*<security-trimming asp-action="Index" asp-controller="Proctor" asp-area="Admin">*@
-        <a class="nav-link nav-link-hover" asp-action="Index" asp-controller="Deputy">
-            <i class="ni ni-bullet-list-67 text-red"></i> متولی ها
-        </a>
-        @*</security-trimming>*@
-    </li>
+     @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
+    {
+        <li class="nav-item">
+            @*<security-trimming asp-action="Index" asp-controller="Proctor" asp-area="Admin">*@
+            <a class="nav-link nav-link-hover" asp-action="Index" asp-controller="Deputy">
+                <i class="ni ni-bullet-list-67 text-red"></i> متولی ها
+            </a>
+            @*</security-trimming>*@
+        </li>
+    }
     <li class="nav-item">
         @*<security-trimming asp-action="Index" asp-controller="Proctor" asp-area="Admin">*@
         <a class="nav-link nav-link-hover" asp-action="Index" asp-controller="VasetSazmanha">
-            <i class="ni ni-map-big text-yellow"></i> واسط سازمانها
+            <i class="ni ni-map-big text-yellow"></i> واسط
         </a>
         @*</security-trimming>*@
     </li>
@@ -52,20 +59,20 @@
         </a>
     </li>-->
     @*<li class="nav-item">
-            <security-trimming asp-action="Index" asp-controller="SiteSetting" asp-area="Admin">
-                <a class="nav-link" asp-action="Index" asp-controller="SiteSetting">
-                    <i class="ni ni-settings-gear-65 text-suceess"></i> تنظیمات سامانه
-                </a>
-            </security-trimming>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-action="" asp-controller="">
-                <i class="ni ni-settings-gear-65 text-info"></i>  احراز هویت دو مرحله ای
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-action="Profile" asp-controller="Manage" asp-route-userId="@User.Identity.GetUserId()">
-                <i class="ni ni-circle-08 text-pink"></i> نمایه من
-            </a>
-        </li>*@
+    <security-trimming asp-action="Index" asp-controller="SiteSetting" asp-area="Admin">
+    <a class="nav-link" asp-action="Index" asp-controller="SiteSetting">
+    <i class="ni ni-settings-gear-65 text-suceess"></i> تنظیمات سامانه
+    </a>
+    </security-trimming>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" asp-action="" asp-controller="">
+    <i class="ni ni-settings-gear-65 text-info"></i>  احراز هویت دو مرحله ای
+    </a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" asp-action="Profile" asp-controller="Manage" asp-route-userId="@User.Identity.GetUserId()">
+    <i class="ni ni-circle-08 text-pink"></i> نمایه من
+    </a>
+    </li>*@
 </ul>

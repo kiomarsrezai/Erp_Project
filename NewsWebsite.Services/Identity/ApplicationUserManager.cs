@@ -110,7 +110,15 @@ namespace NewsWebsite.Services.Identity
             return UserInfo.FirstName + " " + UserInfo.LastName;
         }
 
-
+        public User FindByName(string userName)
+        {
+            return Users.FirstOrDefault(u => u.UserName == userName);
+        } 
+        
+        public int FindSectionIdByName(string userName)
+        {
+            return Users.FirstOrDefault(u => u.UserName == userName).SectionId;
+        }
         public async Task<List<UsersViewModel>> GetPaginateUsersAsync(int offset, int limit, string orderBy, string searchText)
         {
             var getDateTimesForSearch = searchText.GetDateTimeForSearch();

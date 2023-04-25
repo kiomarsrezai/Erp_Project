@@ -1,6 +1,7 @@
 ﻿@using NewsWebsite.Data.Contracts;
 @model List<NewsWebsite.ViewModels.Fetch.FetchViewModel>
 @inject NewsWebsite.Data.Models.ProgramBuddbContext _db
+@inject NewsWebsite.Services.Contracts.IApplicationUserManager _unit
 
 @inject IBudget_001Rep _uw
 @{
@@ -46,10 +47,22 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="form-overlap">
-                                    @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(1), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
-                                    <label class="form-overlap-label">منطقه</label>
-                                </div>
+                                @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
+                                {
+                                    <div class="form-overlap">
+                                        @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(3), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                        <label class="form-overlap-label">منطقه</label>
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-overlap">
+                                        @Html.DropDownList("areaId", new SelectList(_db.TblAreas.Where(a=>a.Id==_unit.FindSectionIdByName(User.Identity.Name)).ToList(), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                        <label class="form-overlap-label">منطقه</label>
+
+                                    </div>
+                                }
                             </div>
                             <div class="col-md-3">
                                 <div class="form-overlap">
