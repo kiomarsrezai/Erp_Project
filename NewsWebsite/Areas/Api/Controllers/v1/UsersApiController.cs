@@ -54,7 +54,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         [HttpPost("[action]")]
-        public virtual async Task<ApiResult<string>> SignIn([FromBody] SignInBaseViewModel ViewModel)
+        public virtual async Task<ApiResult<UsersViewModel>> SignIn([FromBody] SignInBaseViewModel ViewModel)
         {
             //string license = "";
             var User = await _userManager.FindByNameAsync(ViewModel.UserName);
@@ -65,10 +65,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 var result = await _signInManager.PasswordSignInAsync(ViewModel.UserName, ViewModel.Password, true, true);
                 if (result.Succeeded)
                 {
-                    User.TokStr = await _jwtService.GenerateTokenAsync(User);
+                    User.Token = await _jwtService.GenerateTokenAsync(User);
                     //User.Lisence = license;
                     await _userManager.UpdateAsync(User);
-                    return Ok(User.TokStr);
+                    return Ok(User);
                 }
                 else
                     return BadRequest("نام کاربری یا کلمه عبور شما صحیح نمی باشد.");

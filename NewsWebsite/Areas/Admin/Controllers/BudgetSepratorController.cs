@@ -275,15 +275,59 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return StatusCode(200);
         }
 
-        [HttpPost]
-        public IActionResult UpdateCodeAcc()
+        [HttpGet]
+        public async Task<IActionResult> ParitialIndexTable(int yearId,int areaId,int budgetProcessId)
         {
-            if (ModelState.IsValid)
-            {
-                TempData["notification"] = "ویرایش با موفقیت انجام شد";
-            }
+            ViewBag.YearId = new SelectList(_context.TblYears.Where(a => a.Id == 32).ToList(), "Id", "YearName");
+            ViewBag.AreaId = new SelectList(await _uw.AreaFetchAsync(2), "Id", "AreaName");
+            ViewBag.BudgetProcessId = new SelectList(_context.TblBudgetProcess.ToList(), "Id", "ProcessName");
+            List<BudgetSepratorViewModel> fecthViewModel = new List<BudgetSepratorViewModel>();
 
-            return View();
+            SqlParameter YearId = new SqlParameter { ParameterName = "YearId", Value = yearId };
+            SqlParameter AreaId = new SqlParameter { ParameterName = "AreaId", Value = areaId };
+            SqlParameter BudgetProcessId = new SqlParameter { ParameterName = "BudgetProcessId", Value = budgetProcessId };
+
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.Add(YearId);
+                    sqlCommand.Parameters.Add(AreaId);
+                    sqlCommand.Parameters.Add(BudgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetSepratorViewModel fetchView = new BudgetSepratorViewModel();
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        //fetchView.CodeVaset = dataReader["CodeVaset"].ToString();
+                        fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        fetchView.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+                        fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
+                        fetchView.budgetProcessId = budgetProcessId;
+
+                        if (fetchView.Mosavab != 0)
+                        {
+                            fetchView.PercentBud = Math.Round(_uw.Divivasion(fetchView.Expense, fetchView.Mosavab));
+                        }
+                        else
+                        {
+                            fetchView.PercentBud = 0;
+                        }
+                        fecthViewModel.Add(fetchView);
+                        //dataReader.NextResult();
+                    }
+                    //TempData["budgetSeprator"] = fecthViewModel;
+                }
+            }
+            return PartialView(fecthViewModel);
         }
 
         [HttpGet, DisplayName("حذف")]
