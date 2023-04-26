@@ -89,7 +89,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return RedirectToAction("SignIn", "Manage", new { area = "Admin" });
         }
 
-
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
@@ -99,7 +98,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -121,7 +119,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             return View(ViewModel);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Profile(int? userId)
@@ -184,7 +181,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 return View(viewModel);
             }
         }
-
 
         public IActionResult AccessDenied()
         {

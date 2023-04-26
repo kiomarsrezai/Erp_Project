@@ -166,7 +166,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             CommiteModalViewModel commiteView = new CommiteModalViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
                             commiteView.dates = dataReader["dates"].ToString();
-                            commiteView.number= StringExtensions.ToNullableInt(dataReader["number"].ToString());
+                            commiteView.number= dataReader["number"].ToString();
                             commiteViews.Add(commiteView);
 
                         }
@@ -176,7 +176,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             }
             return Ok(commiteViews);
-
         }
 
         [Route("ProjectExecute_Modal")]
