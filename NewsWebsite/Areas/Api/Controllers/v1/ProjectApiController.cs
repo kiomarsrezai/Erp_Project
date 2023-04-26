@@ -156,7 +156,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", id);
                         sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
                         sqlCommand.Parameters.AddWithValue("YearId", YearId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -219,7 +218,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             }
             return Ok(commiteViews);
-
         }
 
         [Route("ProjectGetCommiteDetail")]
