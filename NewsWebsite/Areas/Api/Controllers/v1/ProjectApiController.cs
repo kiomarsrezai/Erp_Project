@@ -181,13 +181,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectExecute_Modal")]
         [HttpGet]
-        public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int id, int CommiteKindId, int YearId)
+        public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int CommiteKindId)
         {
             List<CommiteExecuteModalViewModel> commiteViews = new List<CommiteExecuteModalViewModel>();
 
-            if (id == 0)
+            if (CommiteKindId == 0)
                 return BadRequest("با خطا مواجه شد");
-            if (id > 0)
+            if (CommiteKindId > 0)
             {
                 string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
                 using (SqlConnection sqlconnect = new SqlConnection(connection))
@@ -195,9 +195,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteExecute_Modal", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", id);
                         sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
-                        sqlCommand.Parameters.AddWithValue("YearId", YearId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
@@ -223,7 +221,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectGetCommiteDetail")]
         [HttpGet]
-        public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id, int CommiteKindId, int YearId)
+        public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id)
         {
             List<CommiteViewModel> commiteViews = new List<CommiteViewModel>();
 
@@ -238,8 +236,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("Id", id);
-                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
-                        sqlCommand.Parameters.AddWithValue("YearId", YearId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
