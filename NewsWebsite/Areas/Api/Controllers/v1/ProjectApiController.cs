@@ -167,7 +167,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
                             commiteView.dates = dataReader["dates"].ToString();
                             commiteView.number= StringExtensions.ToNullableInt(dataReader["number"].ToString());
-                  
                             commiteViews.Add(commiteView);
 
                         }
@@ -178,8 +177,51 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(commiteViews);
 
-        } 
-        
+        }
+
+        [Route("ProjectExecute_Modal")]
+        [HttpGet]
+        public async Task<ApiResult<string>> CommiteExecute_Modal(int id, int CommiteKindId, int YearId)
+        {
+            List<CommiteExecuteModalViewModel> commiteViews = new List<CommiteExecuteModalViewModel>();
+
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteExecute_Modal", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", id);
+                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
+                        sqlCommand.Parameters.AddWithValue("YearId", YearId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.HasRows)
+                        {
+                            CommiteExecuteModalViewModel commiteView = new CommiteExecuteModalViewModel();
+                            commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                            commiteView.FirstName = dataReader["FirstName"].ToString();
+                            commiteView.LastName = dataReader["LastName"].ToString();
+                            commiteView.DateStart= dataReader["DateStart"].ToString();
+                            commiteView.DateEnd = dataReader["DateEnd"].ToString();
+                            commiteView.Responsibility= dataReader["Responsibility"].ToString();
+                            commiteViews.Add(commiteView);
+
+                        }
+
+                    }
+                    sqlconnect.Close();
+                }
+
+            }
+            return Ok(commiteViews);
+
+        }
+
         [Route("ProjectGetCommiteDetail")]
         [HttpGet]
         public async Task<ApiResult<string>> GetCommiteDetail(int id, int CommiteKindId, int YearId)
@@ -193,7 +235,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
                 using (SqlConnection sqlconnect = new SqlConnection(connection))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteDetail_Read", sqlconnect))
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("Id", id);
@@ -211,12 +253,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             commiteView.Description = dataReader["Description"].ToString();
                             commiteView.ProjectName = dataReader["ProjectName"].ToString();
                             commiteViews.Add(commiteView);
-
                         }
-
                     }
                 }
             }
+            return Ok(commiteViews);
+        }  
+        
+        [Route("ProjectCommiteKindCombo")]
+        [HttpGet]
+        public async Task<ApiResult<string>> CommiteKindCombo()
+        {
+            List<CommiteComboboxViewModel> commiteViews = new List<CommiteComboboxViewModel>();
+
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteKind_Com", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.HasRows)
+                        {
+                        CommiteComboboxViewModel commiteView = new CommiteComboboxViewModel();
+                            commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                            commiteView.CommiteName = dataReader["CommiteName"].ToString();
+                            commiteViews.Add(commiteView);
+                        }
+                    }
+                }
+            
             return Ok(commiteViews);
         } 
 
