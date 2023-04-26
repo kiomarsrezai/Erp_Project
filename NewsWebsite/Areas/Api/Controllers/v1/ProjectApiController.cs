@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("GetProject")]
         [HttpGet]
-        public async Task<IActionResult> GetProject(int id)
+        public async Task<ApiResult<List<ProjectViewModel>>> GetProject(int id)
         {
             if (id == 0)
                 return BadRequest("خطایی رخ داده است");
@@ -45,7 +46,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("id", id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
+                    while (await dataReader.ReadAsync())
                     {
                         ProjectViewModel fetchView = new ProjectViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
@@ -63,7 +64,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectInsert")]
         [HttpPost]
-        public async Task<IActionResult> InsertProject(int id)
+        public async Task<ApiResult<string>> InsertProject(int id)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -160,7 +161,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("YearId", YearId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (dataReader.HasRows)
+                        while (await dataReader.ReadAsync())
                         {
                             CommiteModalViewModel commiteView = new CommiteModalViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
