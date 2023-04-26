@@ -142,7 +142,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectCommitModal")]
         [HttpGet]
-        public async Task<ApiResult<string>> Commite_Modal(int CommiteKindId, int YearId)
+        public async Task<ApiResult<List<CommiteModalViewModel>>> Commite_Modal(int CommiteKindId, int YearId)
         {
             List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
             
@@ -180,7 +180,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectExecute_Modal")]
         [HttpGet]
-        public async Task<ApiResult<string>> CommiteExecute_Modal(int id, int CommiteKindId, int YearId)
+        public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int id, int CommiteKindId, int YearId)
         {
             List<CommiteExecuteModalViewModel> commiteViews = new List<CommiteExecuteModalViewModel>();
 
@@ -222,7 +222,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectGetCommiteDetail")]
         [HttpGet]
-        public async Task<ApiResult<string>> GetCommiteDetail(int id, int CommiteKindId, int YearId)
+        public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id, int CommiteKindId, int YearId)
         {
             List<CommiteViewModel> commiteViews = new List<CommiteViewModel>();
 
@@ -260,7 +260,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("ProjectCommiteKindCombo")]
         [HttpGet]
-        public async Task<ApiResult<string>> CommiteKindCombo()
+        public async Task<ApiResult<List<CommiteComboboxViewModel>>> CommiteKindCombo()
         {
             List<CommiteComboboxViewModel> commiteViews = new List<CommiteComboboxViewModel>();
 
