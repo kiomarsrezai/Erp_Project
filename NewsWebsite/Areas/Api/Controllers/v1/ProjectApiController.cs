@@ -142,7 +142,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectCommitModal")]
         [HttpGet]
-        public async Task<ApiResult<string>> Commite_Modal(int id, int CommiteKindId, int YearId)
+        public async Task<ApiResult<string>> Commite_Modal(int CommiteKindId, int YearId)
         {
             List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
             
