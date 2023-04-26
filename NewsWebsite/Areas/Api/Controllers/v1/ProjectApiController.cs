@@ -272,7 +272,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlconnect.Open();
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (dataReader.HasRows)
+                        while (await dataReader.ReadAsync())
                         {
                         CommiteComboboxViewModel commiteView = new CommiteComboboxViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
