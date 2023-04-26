@@ -18,6 +18,19 @@
 .modal-open .main-content-layout {
     overflow: hidden !important
 }
+
+@keyframes spinner_rotate{
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+.spinner-custom {
+    animation: spinner_rotate infinite 0.5s linear;
+}
 /* colors */
 .layout-bg-color {
     background-color: #e5e7eb

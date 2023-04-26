@@ -84,11 +84,11 @@
                         <div class="col-xm-2">
                             <input class="btn btn-primary rounded fs-normal" type="submit" value="ارسال" onclick="Index()" />
                         </div>
-                        @*     <div class="col-xm-1 mr-2">
+                            <div class="col-xm-1 mr-2">
                         <button id="btnRefresh" class="btn btn-primary rounded fs-normal" onclick="refreshForm()">
                         بروزرسانی
                         </button>
-                        </div>*@
+                        </div>
                         @*</form>*@
 
                     </div>
@@ -149,6 +149,30 @@
 </div>
 <script type="text/javascript">
     var globalCodingId = null;
+    //const showLoading = function () {
+    //    swal({
+    //        title: 'Now loading',
+    //        allowEscapeKey: false,
+    //        allowOutsideClick: false,
+    //        timer: 2000,
+    //        onOpen: () => {
+    //            swal.showLoading();
+    //        }
+    //    }).then(
+    //        () => { },
+    //        (dismiss) => {
+    //            if (dismiss === 'timer') {
+    //                console.log('closed by timer!!!!');
+    //                swal({
+    //                    title: 'Finished!',
+    //                    type: 'success',
+    //                    timer: 2000,
+    //                    showConfirmButton: false
+    //                })
+    //            }
+    //        }
+    //    )
+    //};
 
     $('#DetailModal').on('hidden.bs.modal', function (event) {
         document.body.classList.add("modal-open")
@@ -241,13 +265,20 @@
     function refreshForm() {
         var _yearId = $("#yearId").val();
         var _areaId = $("#areaId").val();
-
+        const instance = Swal.fire({
+            title: "",
+            html: '<div class="spinner-custom"><i class="fa fa-spinner"></i></div>',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            
+        });
         $.ajax({
             url: "BudgetSeprator/RefreshForm",
             type: "post",
             data: { 'yearId': _yearId, 'areaId': _areaId }
         }).done(function () {
-            alert('بروزرسانی با موفقیت انجام شد');
+            swal.close()
         });
     }
 
