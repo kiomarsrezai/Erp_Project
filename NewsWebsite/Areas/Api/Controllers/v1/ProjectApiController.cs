@@ -199,7 +199,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("YearId", YearId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (dataReader.HasRows)
+                        while (await dataReader.ReadAsync())
                         {
                             CommiteExecuteModalViewModel commiteView = new CommiteExecuteModalViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
@@ -241,7 +241,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("YearId", YearId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (dataReader.HasRows)
+                        while (await dataReader.ReadAsync())
                         {
                             CommiteViewModel commiteView = new CommiteViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
