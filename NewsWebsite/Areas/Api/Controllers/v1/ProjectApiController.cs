@@ -3,6 +3,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Api.Commite;
 using NewsWebsite.ViewModels.Project;
 using System;
 using System.Collections.Generic;
@@ -60,8 +61,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fetchViewlist);
         }
 
-        [Route("InsertProject")]
-        [HttpGet]
+        [Route("ProjectInsert")]
+        [HttpPost]
         public async Task<IActionResult> InsertProject(int id)
         {
             if (id == 0)
@@ -85,9 +86,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
-        [Route("DeleteProject")]
-        [HttpGet]
-        public async Task<ApiResult<string>> DeleteProject(int id)
+        [Route("ProjectDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Delete(int id)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -111,8 +112,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         [Route("ProjectUpdate")]
-        [HttpGet]
-        public async Task<ApiResult<string>> ProjectUpdate(int id,string projectName,string projectCode,int motherId)
+        [HttpPost]
+        public async Task<ApiResult<string>> Update(int id,string projectName,string projectCode,int motherId)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -131,7 +132,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("MotherId", motherId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        TempData["notification"] = "ویرایش با موفقیت انجام شد";
                     }
                 }
 
@@ -140,8 +140,85 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+        [Route("ProjectCommitModal")]
+        [HttpGet]
+        public async Task<ApiResult<string>> Commite_Modal(int id, int CommiteKindId, int YearId)
+        {
+            List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
+            
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", id);
+                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
+                        sqlCommand.Parameters.AddWithValue("YearId", YearId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.HasRows)
+                        {
+                            CommiteModalViewModel commiteView = new CommiteModalViewModel();
+                            commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                            commiteView.dates = dataReader["dates"].ToString();
+                            commiteView.number= StringExtensions.ToNullableInt(dataReader["number"].ToString());
+                  
+                            commiteViews.Add(commiteView);
+
+                        }
+
+                    }
+                }
+
+            }
+            return Ok(commiteViews);
+
+        } 
         
+        [Route("ProjectGetCommiteDetail")]
+        [HttpGet]
+        public async Task<ApiResult<string>> GetCommiteDetail(int id, int CommiteKindId, int YearId)
+        {
+            List<CommiteViewModel> commiteViews = new List<CommiteViewModel>();
+
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", id);
+                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
+                        sqlCommand.Parameters.AddWithValue("YearId", YearId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.HasRows)
+                        {
+                            CommiteViewModel commiteView = new CommiteViewModel();
+                            commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                            commiteView.ProjectId = StringExtensions.ToNullableInt(dataReader["ProjectId"].ToString());
+                            commiteView.CommiteKindId = StringExtensions.ToNullableInt(dataReader["CommiteKindId"].ToString());
+                            commiteView.CommiteName = dataReader["CommiteName"].ToString();
+                            commiteView.Description = dataReader["Description"].ToString();
+                            commiteView.ProjectName = dataReader["ProjectName"].ToString();
+                            commiteViews.Add(commiteView);
+
+                        }
+
+                    }
+                }
+            }
+            return Ok(commiteViews);
+        } 
+
     }
-
-
 }
