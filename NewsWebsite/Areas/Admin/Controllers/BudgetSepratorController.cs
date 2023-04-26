@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NewsWebsite.Common;
+using NewsWebsite.Common.Api;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
 using NewsWebsite.ViewModels.Fetch;
@@ -136,20 +137,38 @@ namespace NewsWebsite.Areas.Admin.Controllers
         {
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            if (yearId == 32)
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP900_Convert_Taraz_Sazman_To_Vaset", sqlconnect))
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
                 {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    sqlCommand.ExecuteReader();
-                    ViewBag.alertsucces = "بروزرسانی انجام شد";
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9900_Akh_TO_Olden_Then_Budget_1401_Main", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        sqlCommand.ExecuteReader();
+                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                    }
+                    //view["notification"] = "بروزرسانی با موفقیت انجام شد";
                 }
-                //view["notification"] = "بروزرسانی با موفقیت انجام شد";
             }
-            return View("Index");
+            else
+            if (yearId == 33)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9900_Akh_TO_Olden_Then_Budget_1402_Main", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        sqlCommand.ExecuteReader();
+                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                    }
+                    //view["notification"] = "بروزرسانی با موفقیت انجام شد";
+                }
+            }
+            return Ok("با موفقیت انجام شد");
         }
 
         [HttpGet, DisplayName("درج و ویرایش")]
@@ -276,7 +295,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ParitialIndexTable(int yearId,int areaId,int budgetProcessId)
+        public async Task<IActionResult> ParitialIndexTable(int yearId, int areaId, int budgetProcessId)
         {
             ViewBag.YearId = new SelectList(_context.TblYears.Where(a => a.Id == 32).ToList(), "Id", "YearName");
             ViewBag.AreaId = new SelectList(await _uw.AreaFetchAsync(2), "Id", "AreaName");
