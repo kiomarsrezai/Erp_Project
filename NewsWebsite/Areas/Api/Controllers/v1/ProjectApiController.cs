@@ -146,9 +146,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
             
-            if (id == 0)
+            if (CommiteKindId == 0)
                 return BadRequest("با خطا مواجه شد");
-            if (id > 0)
+            if (CommiteKindId > 0)
             {
                 string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
                 using (SqlConnection sqlconnect = new SqlConnection(connection))
