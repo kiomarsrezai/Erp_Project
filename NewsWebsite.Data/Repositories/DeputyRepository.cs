@@ -33,10 +33,10 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", 32);
-                    sqlCommand.Parameters.AddWithValue("ProctorId", 0);
-                    sqlCommand.Parameters.AddWithValue("AreaId", 0);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", 0);
+                    sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("ProctorId", proctorId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
