@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
-using NewsWebsite.ViewModels.Api.BudgetSepratorViewModel;
 using NewsWebsite.ViewModels.Fetch;
 using NewsWebsite.ViewModels.GeneralVm;
 using System;

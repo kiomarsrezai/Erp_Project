@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.ViewModels.Api.BudgetSepratorViewModel;
+using NewsWebsite.ViewModels.Api.BudgetSeprator;
 using System.Collections.Generic;
 using System.Data;
 using System;
 using System.Threading.Tasks;
 using NewsWebsite.Common.Api;
-using NewsWebsite.ViewModels.Fetch;
 using System.Data.SqlClient;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -29,6 +28,42 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<IActionResult> FetchSeprators(int yearId,int areaId,int budgetprocessId)
         {
             return Ok(await _uw.Budget_001Rep.GetAllBudgetSeprtaorAsync(yearId, areaId, budgetprocessId));
+        }
+
+        [HttpGet]
+        [Route("Taminetebarat")]
+        public async Task<ApiResult<List<BudgetSepTaminModal2ViewModel>>> Taminetebarat(int yearId, int areaId, int budgetProcessId)
+        {
+            List<BudgetSepTaminModal2ViewModel> fecthViewModel = new List<BudgetSepTaminModal2ViewModel>();
+
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_2", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetSepTaminModal2ViewModel fetchView = new BudgetSepTaminModal2ViewModel();
+                        fetchView.BodgetId = dataReader["BodgetId"].ToString();
+                        fetchView.BodgetDesc = dataReader["BodgetDesc"].ToString();
+                        fetchView.ReqDesc = dataReader["ReqDesc"].ToString();
+                        fetchView.RequestDate = dataReader["RequestDate"].ToString();
+                        fetchView.RequestRefStr = dataReader["RequestRefStr"].ToString();
+                        fetchView.RequestPrice = Int64.Parse(dataReader["RequestPrice"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
         }
 
         [Route("ChartApi")]
@@ -101,9 +136,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("DetailChartApi")]
         [HttpGet]
-        public async Task<ApiResult<List<ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati)
+        public async Task<ApiResult<List<ViewModels.Fetch.ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati)
         {
-            List<ChartAreaViewModel> dataset = new List<ChartAreaViewModel>();
+            List<ViewModels.Fetch.ChartAreaViewModel> dataset = new List<ViewModels.Fetch.ChartAreaViewModel>();
             //List<ColumnChart> dataset = new List<ColumnChart>();
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
@@ -124,7 +159,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                     while (dataReader.Read())
                     {
-                        ChartAreaViewModel row = new ChartAreaViewModel();
+                        ViewModels.Fetch.ChartAreaViewModel row = new ViewModels.Fetch.ChartAreaViewModel();
 
                         row.Id = int.Parse(dataReader["AreaId"].ToString());
                         row.Row = int.Parse(dataReader["AreaId"].ToString());

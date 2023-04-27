@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.Api.BudgetSepratorViewModel
+namespace NewsWebsite.ViewModels.Api.BudgetSeprator
 {
     public class SepratorBaseViewModel
     {
