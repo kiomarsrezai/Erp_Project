@@ -46,9 +46,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(await _uw.DeputyRepository.ProctorListAsync());
         }
 
-        [Route("ProctorAreaBudget")]
+        [Route("ProctorAreaBudgetDetail")]
         [HttpGet]
-        public async Task<ApiResult<List<ProctorAreaBudgetViewModel>>> ProctorAreaBudget(int yearId, int proctorId, int areaId, int budgetProcessId)
+        public async Task<ApiResult<List<ProctorAreaBudgetViewModel>>> ProctorAreaBudgetDetail(int yearId, int proctorId, int areaId, int budgetProcessId)
         {
             if (yearId == 0 | areaId==0 | proctorId==0)
             {
@@ -93,6 +93,42 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     //TempData["budgetSeprator"] = fecthViewModel;
                 }
             }
+            return Ok(fecthViewModel);
+        }
+
+        [HttpGet]
+        [Route("Taminetebarat")]
+        public async Task<ApiResult<List<BudgetSepTaminModal2ViewModel>>> Taminetebarat(int yearId, int areaId, int budgetProcessId)
+        {
+            List<BudgetSepTaminModal2ViewModel> fecthViewModel = new List<BudgetSepTaminModal2ViewModel>();
+
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_2", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetSepTaminModal2ViewModel fetchView = new BudgetSepTaminModal2ViewModel();
+                        fetchView.BodgetId = dataReader["BodgetId"].ToString();
+                        fetchView.BodgetDesc = dataReader["BodgetDesc"].ToString();
+                        fetchView.ReqDesc = dataReader["ReqDesc"].ToString();
+                        fetchView.RequestDate = dataReader["RequestDate"].ToString();
+                        fetchView.RequestRefStr = dataReader["RequestRefStr"].ToString();
+                        fetchView.RequestPrice = Int64.Parse(dataReader["RequestPrice"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
             return Ok(fecthViewModel);
         }
 

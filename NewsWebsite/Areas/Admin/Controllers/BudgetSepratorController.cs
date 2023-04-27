@@ -210,7 +210,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet, DisplayName("درج و ویرایش")]
-        public IActionResult Taminetebarat(int yearId, int areaId, int budgetProcessId, string codingId)
+        public IActionResult Taminetebarat(int yearId, int areaId, int budgetProcessId)
         {
             List<BudgetSepTaminModal2ViewModel> fecthViewModel = new List<BudgetSepTaminModal2ViewModel>();
 
