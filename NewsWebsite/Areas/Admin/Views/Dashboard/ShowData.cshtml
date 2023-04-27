@@ -23,7 +23,7 @@
 
             <div class="col-md-2 pb-1">
                 <div class="form-overlap">
-                    <select class="form-control form-overlap-input" id="structureId" required>
+                    <select class="form-control form-overlap-input" id="structureId" required onchange="resetgraph();">
                         <option value="3">شهرداری</option>
                         <option value="4">سازمانها</option>
                     </select>
@@ -33,14 +33,14 @@
 
             <div class="col-sm-2 pb-1">
                 <div class="form-overlap">
-                    @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id==33).ToList(), "Id", "YearName"), new { @class = "form-control form-overlap-input" })
+                    @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id==33).ToList(), "Id", "YearName"), new { @class = "form-control form-overlap-input", onChange = "resetgraph();"  })
                     <label class="form-overlap-label">سال</label>
                 </div>
             </div>
 
             <div id="centerlist" class="col-md-2">
                 <div class="form-overlap">
-                    <select class="form-control form-overlap-input" id="centerId">
+                    <select class="form-control form-overlap-input" id="centerId" onchange="resetgraph();">
                         <option value="0" selected>انتخاب کنید</option>
                         <option value="1">با مرکز</option>
                         <option value="2">بدون مرکز</option>
@@ -51,7 +51,7 @@
 
             <div class="col-md-2">
                 <div class="form-overlap">
-                    @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control form-overlap-input", onchange = "resetgraph();" })
+                    @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control form-overlap-input", onChange = "resetgraph();" })
                     <label class="form-overlap-label">نوع بودجه</label>
                 </div>
             </div>
@@ -69,22 +69,22 @@
 
             <div class="col-2">
                 <label class="ml-2" for="revenue">درامد</label>
-                <input class="ml-2" type="checkbox" checked="checked" id="revenue" value="1" />
+                <input class="ml-2" type="checkbox" checked="checked" id="revenue" value="1" onchange="resetgraph();" />
             </div>
 
             <div class="col-2">
                 <label class="ml-2" for="sale">فروش اموال</label>
-                <input class="ml-2" type="checkbox" checked="checked" id="sale" value="1" />
+                <input class="ml-2" type="checkbox" checked="checked" id="sale" value="1" onchange="resetgraph();" />
             </div>
 
             <div class="col-2">
                 <label class="ml-2" for="loan">وام واوراق</label>
-                <input class="ml-2" type="checkbox" checked="checked" id="loan" value="1" />
+                <input class="ml-2" type="checkbox" checked="checked" id="loan" value="1" onchange="resetgraph();" />
             </div>
 
             <div class="col-2">
                 <label class="ml-2" for="niabati">نیابتی</label>
-                <input class="ml-2" type="checkbox" checked="checked" id="niabati" value="1" />
+                <input class="ml-2" type="checkbox" checked="checked" id="niabati" value="1" onchange="resetgraph();" />
             </div>
             
         </div>
@@ -118,6 +118,13 @@
     </div>
 </div>
 <script type="text/javascript">
+
+    var resetgraph = function () {
+        $('#myChart').remove(); // this is my <canvas> element
+        $('#graph-container').append('<canvas id="myChart" style="height:80%;max-width:90%"></canvas>');
+        canvas = document.querySelector('#myChart');
+    }
+
     $('#structureId').change(function ()
     {
         var _structureId = $("#structureId").val();

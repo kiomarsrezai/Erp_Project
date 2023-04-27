@@ -63,7 +63,7 @@
                         @*<form asp-action="Index" asp-controller="VasetSazmanha" class="row">*@
                         <div class="col-md-3">
                             <div class="form-overlap">
-                                @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control form-overlap-input" })
+                                @Html.DropDownList("yearId", new SelectList(_db.TblYears.Where(a => a.Id == 32 || a.Id == 33).ToList(), "Id", "YearName"), new { @class = "form-control form-overlap-input", onChange= "changeInput()" })
                                 <label class="form-overlap-label">سال</label>
                             </div>
                         </div>
@@ -71,14 +71,14 @@
                             @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin")==true)
                             {
                                 <div class="form-overlap">
-                                    @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(3), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                    @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(3), "Id", "AreaName"), new { @class = "form-control form-overlap-input", onChange= "changeInput()" })
                                     <label class="form-overlap-label">منطقه</label>
 
                                 </div>
                             }else
                             {
                                 <div class="form-overlap">
-                                    @Html.DropDownList("areaId", new SelectList(_db.TblAreas.Where(a=>a.Id==_unit.FindSectionIdByName(User.Identity.Name)).ToList(), "Id", "AreaName"), new { @class = "form-control form-overlap-input" })
+                                    @Html.DropDownList("areaId", new SelectList(_db.TblAreas.Where(a=>a.Id==_unit.FindSectionIdByName(User.Identity.Name)).ToList(), "Id", "AreaName"), new { @class = "form-control form-overlap-input", onChange= "changeInput()" })
                                     <label class="form-overlap-label">منطقه</label>
 
                                 </div>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-overlap">
-                                @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control form-overlap-input" })
+                                @Html.DropDownList("budgetProcessId", new SelectList(_db.TblBudgetProcess.ToList(), "Id", "ProcessName"), new { @class = "form-control form-overlap-input", onChange= "changeInput()" })
                                 <label class="form-overlap-label">نوع بودجه</label>
 
                             </div>
@@ -235,6 +235,10 @@
             }).done(function (result) {
                 $('tbody').html(result)
             });
+        }
+
+        function changeInput(){
+            $('tbody').html('')
         }
 
         function UpdateCodeAccjs(id, code, description) {
