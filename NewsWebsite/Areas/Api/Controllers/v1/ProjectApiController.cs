@@ -178,6 +178,43 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
+        [Route("ProjectCommiteDetailInsert")]
+        [HttpPost]
+        public async Task<ApiResult<List<CommiteModalViewModel>>> CommiteDetail_Insert(int CommiteKindId, int YearId)
+        {
+            List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
+            
+            if (CommiteKindId == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (CommiteKindId > 0)
+            {
+                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
+                        sqlCommand.Parameters.AddWithValue("YearId", YearId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            CommiteModalViewModel commiteView = new CommiteModalViewModel();
+                            commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                            commiteView.dates = dataReader["dates"].ToString();
+                            commiteView.number= dataReader["number"].ToString();
+                            commiteViews.Add(commiteView);
+
+                        }
+
+                    }
+                }
+
+            }
+            return Ok(commiteViews);
+        }
+
         [Route("ProjectExecute_Modal")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int CommiteKindId)
