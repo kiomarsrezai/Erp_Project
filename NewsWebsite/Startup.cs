@@ -40,8 +40,8 @@ namespace NewsWebsite
             services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
             services.AddDbContext<ProgramBuddbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Sqlerp")));
             services.AddCustomServices();
-            services.AddTransient<ISecurityTrimmingService,SecurityTrimmingService>();
-            services.AddTransient<IMvcActionsDiscoveryService,MvcActionsDiscoveryService>();
+            services.AddTransient<ISecurityTrimmingService, SecurityTrimmingService>();
+            services.AddTransient<IMvcActionsDiscoveryService, MvcActionsDiscoveryService>();
             services.AddCustomIdentityServices();
             services.AddAutoMapper();
             services.AddScheduler();
@@ -80,7 +80,7 @@ namespace NewsWebsite
                     appBuilder.UseExceptionHandler("/Home/Error");
             });
 
-           
+            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CacheFiles")),
@@ -125,7 +125,7 @@ namespace NewsWebsite
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
                 routes.MapControllerRoute(
-                  
+
                  name: "default",
                  pattern: "{controller=Home}/{action=Index}/{id?}"
                );
