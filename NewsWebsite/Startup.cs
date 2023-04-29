@@ -47,6 +47,16 @@ namespace NewsWebsite
             services.AddScheduler();
             services.AddApiVersioning();
             services.AddSwagger();
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                builder =>
+                {
+                    builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+                }));
+
             services.AddCustomAuthentication(SiteSettings);
             services.ConfigureWritable<SiteSettings>(Configuration.GetSection("SiteSettings"));
             services.AddAuthorization(options =>
