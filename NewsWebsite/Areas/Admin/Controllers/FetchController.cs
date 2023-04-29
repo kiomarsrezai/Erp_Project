@@ -58,6 +58,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         fetchView.Show = (bool)dataReader["Show"];
                         _totalMosavab += fetchView.Mosavab;
@@ -151,6 +152,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         fetchView.Code = dataReader["Code"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         fetchView.Show = (bool)dataReader["Show"];
                         if (fetchView.Mosavab != 0)

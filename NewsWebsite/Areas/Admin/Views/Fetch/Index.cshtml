@@ -50,7 +50,7 @@
                                 @if (await _unit.IsInRoleAsync(_unit.FindByName(User.Identity.Name), "Admin") == true)
                                 {
                                     <div class="form-overlap">
-                                        @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(3), "Id", "AreaName"), new { @class = "form-control form-overlap-input", onChange= "changeInput()" })
+                                        @Html.DropDownList("areaId", new SelectList(await _uw.AreaFetchAsync(1), "Id", "AreaName"), new { @class = "form-control form-overlap-input", onChange= "changeInput()" })
                                         <label class="form-overlap-label">منطقه</label>
 
                                     </div>

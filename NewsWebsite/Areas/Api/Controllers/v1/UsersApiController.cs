@@ -4,13 +4,18 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
+using NewsWebsite.Data;
+using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
@@ -28,14 +33,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         private readonly IApplicationUserManager _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IjwtService _jwtService;
-        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService)
+        private readonly NewsDBContext _Context;
+        private CancellationToken cancellationToken;
+
+        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService,NewsDBContext context)
         {
             _userManager = userManager;
             _jwtService = jwtService;
+            _Context = context;
         }
 
         [HttpGet]
-        [JwtAuthentication(Policy = ConstantPolicies.DynamicPermission)]
+        //[JwtAuthentication(Policy = ConstantPolicies.DynamicPermission)]
         public virtual async Task<ApiResult<List<UsersViewModel>>> Get(int offset, int limit, string order, string search)
         {
             if (!search.HasValue())
@@ -54,27 +63,133 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         [HttpPost("[action]")]
-        public virtual async Task<ApiResult<UsersViewModel>> SignIn([FromBody] SignInBaseViewModel ViewModel)
+        [AllowAnonymous]
+        public virtual async Task<ApiResult<UserSignViewModel>> SignIn([FromBody] SignInBaseViewModel ViewModel)
         {
-            //string license = "";
+           
             var User = await _userManager.FindByNameAsync(ViewModel.UserName);
+
             if (User == null)
-                return BadRequest("نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
+                return BadRequest("شماره موبایل یا کلمه عبور شما صحیح نمی باشد.");
             else
             {
-                var result = await _signInManager.PasswordSignInAsync(ViewModel.UserName, ViewModel.Password, true, true);
-                if (result.Succeeded)
+                User.Token = await _jwtService.GenerateTokenAsync(User);
+                await _userManager.UpdateAsync(User);
+
+                UserSignViewModel userSignView = new UserSignViewModel()
                 {
-                    User.Token = await _jwtService.GenerateTokenAsync(User);
-                    //User.Lisence = license;
-                    await _userManager.UpdateAsync(User);
-                    return Ok(User);
-                }
+                    FirstName =User.FirstName,
+                    LastName =User.LastName,
+                    SectionId=User.SectionId,
+                    token= await _jwtService.GenerateTokenAsync(User),
+                    UserName = User.UserName,
+                };
+                var result = await _userManager.CheckPasswordAsync(User, ViewModel.Password);
+                if (result)
+                    return Ok(userSignView);
                 else
-                    return BadRequest("نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
+                    return BadRequest("شماره موبایل یا کلمه عبور شما صحیح نمی باشد.");
             }
         }
 
-       
+
+        //[HttpPost("SignIn")]
+        //public async Task<ApiResult<User>> Authenticate(string username, string password)
+        //{
+        //    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        //        return null;
+
+        //    var user = await _Context.Users.SingleOrDefaultAsync(x => x.UserName == username);
+
+        //    // check if username exists
+        //    user.Token = await _jwtService.GenerateTokenAsync(user);
+        //    await _userManager.UpdateAsync(user);
+
+        //    await _signInManager.SignInAsync(user, isPersistent: false);
+        //    // check if password is correct
+
+        //    // authentication successful
+        //    return Ok(User);
+        //}
+
+
+        //[HttpPost("CreateUser")]
+        //public async Task<User> Create([FromBody] UsersViewModel viewModel)
+        //{
+        //    // validation
+        //    if (string.IsNullOrWhiteSpace(viewModel.Password))
+        //        throw new Exception("Password is required");
+
+        //    if (await _Context.Users.AnyAsync(x => x.UserName == viewModel.UserName))
+        //        throw new Exception("Username \"" + viewModel.UserName + "\" is already taken");
+
+        //    byte[] passwordHash, passwordSalt;
+        //    _userService.CreatePasswordHash(viewModel.Password, out passwordHash, out passwordSalt);
+
+        //    User user = new User
+        //    {
+        //        passStoredHash = passwordHash,
+        //    passStoredSalt = passwordSalt,
+        //    };
+
+        //    await _Context.Users.AddAsync(user,cancellationToken);
+        //    _Context.SaveChanges();
+
+        //    return user;
+        //}
+
+        //[HttpPost("UpdateUser")]
+        //public void Update(User userParam, string password = null)
+        //{
+        //    var user = _Context.Users.Find(userParam.Id);
+
+        //    if (user == null)
+        //        throw new Exception("User not found");
+
+        //    // update username if it has changed
+        //    if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
+        //    {
+        //        // throw error if the new username is already taken
+        //        if (_Context.Users.Any(x => x.UserName == userParam.UserName))
+        //            throw new Exception("Username " + userParam.UserName + " is already taken");
+
+        //        user.UserName = userParam.UserName;
+        //    }
+
+        //    // update user properties if provided
+        //    if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+        //        user.FirstName = userParam.FirstName;
+
+        //    if (!string.IsNullOrWhiteSpace(userParam.LastName))
+        //        user.LastName = userParam.LastName;
+
+        //    // update password if provided
+        //    if (!string.IsNullOrWhiteSpace(password))
+        //    {
+        //        byte[] passwordHash, passwordSalt;
+        //        _userManager.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+        //        user.passStoredHash = passwordHash;
+        //        user.passStoredSalt = passwordSalt;
+        //    }
+
+        //    _Context.Users.Update(user);
+        //    _Context.SaveChanges();
+        //}
+
+        //[HttpPost("DeleteUser")]
+        //public void Delete(int id)
+        //{
+        //    var user = _Context.Users.Find(id);
+        //    if (user != null)
+        //    {
+        //        _Context.Users.Remove(user);
+        //        _Context.SaveChanges();
+        //    }
+        //}
+
+        // private helper methods
+
+
     }
 }

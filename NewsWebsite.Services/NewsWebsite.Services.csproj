@@ -15,4 +15,8 @@
     <ProjectReference Include="..\NewsWebsite.Data\NewsWebsite.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Api\User\" />
+  </ItemGroup>
+
 </Project>

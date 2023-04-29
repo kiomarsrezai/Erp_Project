@@ -26,6 +26,9 @@ namespace NewsWebsite.ViewModels.Fetch
 
         [Display(Name = "% درصد")]
         public double PercentBud { get; set; }
+        
+        [Display(Name = "اصلاح بودجه")]
+        public Int64 Edit { get; set; }
         public bool Show { get; set; }
 
         public Int64 TotalMosavab { get; set; }

@@ -2,6 +2,7 @@
 using System.IO;
 using AutoMapper;
 using Coravel;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ using NewsWebsite.Services;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.Settings;
+using Newtonsoft;
 
 namespace NewsWebsite
 {

@@ -50,6 +50,8 @@ namespace NewsWebsite.ViewModels.UserManager
 
         [Display(Name = "تاریخ تولد"), JsonPropertyName("تاریخ تولد")]
         public string PersianBirthDate { get; set; }
+        public byte[] passStoredSalt { get; set; }
+        public byte[] passStoredHash { get; set; }
         
         [Display(Name = "تاریخ عضویت"),JsonIgnore]
         public DateTime? RegisterDateTime { get; set; }

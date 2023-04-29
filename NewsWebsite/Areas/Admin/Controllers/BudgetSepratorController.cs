@@ -65,6 +65,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         //fetchView.CodeVaset = dataReader["CodeVaset"].ToString();
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         fetchView.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
                         fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
@@ -327,6 +328,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         //fetchView.CodeVaset = dataReader["CodeVaset"].ToString();
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         fetchView.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
                         fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
