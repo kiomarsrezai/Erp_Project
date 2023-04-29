@@ -66,6 +66,8 @@ namespace NewsWebsite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(options => options.WithOrigins("*").AllowAnyMethod());
+
             var cachePeriod = env.IsDevelopment() ? "600" : "605800";
             app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
             {
@@ -80,7 +82,6 @@ namespace NewsWebsite
                     appBuilder.UseExceptionHandler("/Home/Error");
             });
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "CacheFiles")),
