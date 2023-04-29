@@ -73,7 +73,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
                         if (fetchView.Mosavab != 0)
                         {
-                            fetchView.PercentBud = Math.Round(_uw.Divivasion(fetchView.Expense, fetchView.Mosavab));
+                            fetchView.PercentBud = Math.Round(_uw.Divivasion(fetchView.Expense, fetchView.Edit));
                         }
                         else
                         {
@@ -121,7 +121,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         if (fetchView.Mosavab != 0)
                         {
-                            fetchView.PercentBud = (double)(Int64.Parse(dataReader["Expense"].ToString()) / Int64.Parse(dataReader["Mosavab"].ToString())) * 100;
+                            fetchView.PercentBud = Math.Round(_uw.Divivasion(fetchView.Expense, fetchView.Edit));
                         }
                         else
                         { fetchView.PercentBud = 0; }

@@ -38,7 +38,7 @@
             <thead style="color: black;" class="bg-gray-high-table">
 
                 <tr style="border: 1px solid black; border-collapse: collapse;">
-                    <th colspan="7" style="color: black;border: 1px solid black; border-collapse: collapse;" class="pt-3">
+                    <th colspan="8" style="color: black;border: 1px solid black; border-collapse: collapse;" class="pt-3">
                         <form asp-action="Index" asp-controller="Fetch" class="row">
                             <div class="col-md-3">
                                 <div class="form-overlap">
@@ -81,6 +81,7 @@
                     <th class="text-center">کد</th>
                     <th class="text-center">شرح</th>
                     <th class="text-center">مصوب</th>
+                    <th class="text-center">اصلاح بودجه</th>
                     <th class="text-center">عملکرد</th>
                     <th class="text-center">% جذب</th>
 
@@ -101,6 +102,7 @@
                                 <td class="text-nowrap">@item.Code</td>
                                 <td>@item.Description</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Edit).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
                                 <td class="text-center">
@@ -117,6 +119,7 @@
                                 <td class="text-nowrap">@item.Code</td>
                                 <td>@item.Description</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Edit).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
                                 <td class="text-center">
@@ -134,6 +137,7 @@
                                 <td class="text-nowrap">@item.Code</td>
                                 <td>@item.Description</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Edit).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
                                 <td class="text-center">
@@ -151,6 +155,7 @@
                                 <td class="text-nowrap">@item.Code</td>
                                 <td>@item.Description</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Edit).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
                                 <td class="text-center">
@@ -173,6 +178,7 @@
                                 <td class="text-nowrap">@item.Code</td>
                                 <td>@item.Description</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Edit).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
                                 <td class="text-center">
@@ -194,6 +200,7 @@
                                 <td class="text-nowrap">@item.Code</td>
                                 <td>@item.Description</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Mosavab).ToString())</td>
+                                <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Edit).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(NewsWebsite.Common.StringExtensions.ToNumeric(item.Expense).ToString())</td>
                                 <td>@NewsWebsite.Common.StringExtensions.En2Fa(item.PercentBud.ToString()) %</td>
                                 <td class="text-center">

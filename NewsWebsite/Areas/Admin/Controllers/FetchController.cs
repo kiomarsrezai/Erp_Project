@@ -65,7 +65,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         _totalExpense += fetchView.Expense;
                         if (fetchView.Mosavab != 0)
                         {
-                            fetchView.PercentBud = _uw.Divivasion(fetchView.Expense, fetchView.Mosavab);
+                            fetchView.PercentBud = _uw.Divivasion(fetchView.Expense, fetchView.Edit);
                         }
                         else
                         { 
@@ -124,6 +124,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //ViewBag.AreaId = new SelectList(_context.TblAreas.ToList(), "Id", "AreaName");
             //ViewBag.BudgetProcessId = new SelectList(_context.TblBudgetProcess.ToList(), "Id", "ProcessName");
             //fecth1 = fecth;
+
             ViewBag.YearId = new SelectList(_context.TblYears.Where(a => a.Id == 32).ToList(), "Id", "YearName");
             ViewBag.AreaId = new SelectList(_context.TblAreas.Where(a => a.Id == 10).ToList(), "Id", "AreaName");
             ViewBag.BudgetProcessId = new SelectList(_context.TblBudgetProcess, "Id", "ProcessName");
@@ -138,8 +139,11 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
+                Int64 _totalMosavab = 0; Int64 _totalExpense = 0;
+
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudget", sqlconnect))
                 {
+
                     sqlconnect.Open();
                     sqlCommand.Parameters.Add(YearId);
                     sqlCommand.Parameters.Add(AreaId);
@@ -149,18 +153,24 @@ namespace NewsWebsite.Areas.Admin.Controllers
                     while (dataReader.Read())
                     {
                         FetchViewModel fetchView = new FetchViewModel();
+                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         fetchView.Code = dataReader["Code"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         fetchView.Show = (bool)dataReader["Show"];
+                        _totalMosavab += fetchView.Mosavab;
+                        _totalExpense += fetchView.Expense;
                         if (fetchView.Mosavab != 0)
                         {
-                            fetchView.PercentBud = _uw.Divivasion(fetchView.Expense,fetchView.Mosavab);
+                            fetchView.PercentBud = _uw.Divivasion(fetchView.Expense, fetchView.Edit);
                         }
                         else
-                        { fetchView.PercentBud = 0; }
+                        {
+                            fetchView.PercentBud = 0;
+                        }
 
                         fecthViewModel.Add(fetchView);
                         //dataReader.NextResult();
@@ -201,7 +211,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         fetchView.Show = (bool)dataReader["Show"];
                         if (fetchView.Mosavab != 0)
                         {
-                            fetchView.PercentBud = _uw.Divivasion(fetchView.Expense, fetchView.Mosavab);
+                            fetchView.PercentBud = _uw.Divivasion(fetchView.Expense, fetchView.Edit);
                         }
                         else
                         { fetchView.PercentBud = 0; }
