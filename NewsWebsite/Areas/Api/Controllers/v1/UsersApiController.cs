@@ -23,6 +23,7 @@ using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.UserManager;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -37,7 +38,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         private readonly NewsDBContext _Context;
         private readonly IBudget_001Rep _uw;
 
-        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService,NewsDBContext context, IBudget_001Rep uw)
+        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService, NewsDBContext context, IBudget_001Rep uw)
         {
             _userManager = userManager;
             _jwtService = jwtService;
@@ -68,7 +69,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [AllowAnonymous]
         public virtual async Task<ApiResult<UserSignViewModel>> SignIn([FromBody] SignInBaseViewModel ViewModel)
         {
-           
+
             var User = await _userManager.FindByNameAsync(ViewModel.UserName);
 
             if (User == null)
@@ -81,12 +82,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 UserSignViewModel userSignView = new UserSignViewModel()
                 {
                     Id = User.Id,
-                    FirstName =User.FirstName,
-                    LastName =User.LastName,
-                    Lisence =User.Lisence,
-                    SectionId=User.SectionId,
-                    SectionName=await _uw.AreaNameByIdAsync(User.SectionId),
-                    Token= await _jwtService.GenerateTokenAsync(User),
+                    FirstName = User.FirstName,
+                    LastName = User.LastName,
+                    Lisence = User.Lisence,
+                    SectionId = User.SectionId,
+                    SectionName = await _uw.AreaNameByIdAsync(User.SectionId),
+                    Token = User.Token,
                     UserName = User.UserName,
                     Bio = User.Bio,
                 };
@@ -99,18 +100,41 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        [HttpGet("GetUserByTocken")]
-        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken (string tocken)
+        [HttpPost("GetUesrByTocken")]
+        [AllowAnonymous]
+        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken([FromBody] TockenViewModel tocken)
         {
-            var user =await _uw.GetUserByTocken(tocken);
-            if (user == null) return BadRequest("با خطا مواجه شدید");
-            return Ok(user);
+            string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
+            UserSignViewModel userfech = new UserSignViewModel();
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_GetUserInfoByTocken", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("tocken", tocken.Tocken);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (await dataReader.ReadAsync())
+                    {
+                        userfech.Id = int.Parse(dataReader["Id"].ToString());
+                        userfech.UserName = dataReader["UserName"].ToString();
+                        userfech.Lisence = dataReader["Lisence"].ToString();
+                        userfech.Bio = dataReader["Bio"].ToString();
+                        userfech.FirstName = dataReader["FirstName"].ToString();
+                        userfech.LastName = dataReader["LastName"].ToString();
+                        userfech.SectionId = int.Parse(dataReader["SectionId"].ToString());
+                        userfech.SectionName = await _uw.AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
+                        userfech.Token = dataReader["Token"].ToString();
+                    }
+                }
+            }
+            return Ok(userfech);
         }
 
         [HttpPost("Savelicense")]
         public virtual async Task<ApiResult<string>> SaveLisenc(int id, string lisence)
         {
-            User user = await _Context.Users.FirstOrDefaultAsync(x=>x.Id==id);
+            User user = await _Context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if (user == null) return BadRequest("توکن ارسال شده معتبر نمی باشد");
 
             user.Lisence = lisence;

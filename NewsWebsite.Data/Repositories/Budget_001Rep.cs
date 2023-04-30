@@ -125,14 +125,15 @@ namespace NewsWebsite.Data.Repositories
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
-                    name= dataReader["AreaName"].ToString();
+                        name = dataReader["AreaName"].ToString();
                 }
             }
             return name;
         }
-        
+
         public async Task<UserSignViewModel> GetUserByTocken(string tocken)
         {
+
             string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
             UserSignViewModel user = new UserSignViewModel();
             using (SqlConnection sqlconnect = new SqlConnection(connection))
@@ -145,12 +146,17 @@ namespace NewsWebsite.Data.Repositories
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (await dataReader.ReadAsync())
                     {
-                        user.FirstName = dataReader["FirstName"].ToString();
-                        user.LastName = dataReader["LastName"].ToString();
-                        user.SectionId = StringExtensions.ToNullableInt(dataReader["SectionId"].ToString());
-                        user.SectionName = await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
-                        user.Token = dataReader["Token"].ToString();
-                        user.UserName = dataReader["UserName"].ToString();
+            //            user.FirstName = user.FirstName;
+            //user.LastName = userfetch.LastName;
+            //user.SectionId = userfetch.SectionId;
+            //user.SectionName = await AreaNameByIdAsync(userfetch.SectionId);
+            //user.Token = userfetch.Token;
+            //            user.UserName = dataReader["UserName"].ToString(); user.FirstName = dataReader["FirstName"].ToString();
+            //            user.LastName = dataReader["LastName"].ToString();
+            //            user.SectionId = StringExtensions.ToNullableInt(dataReader["SectionId"].ToString());
+            //            user.SectionName = await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
+            //            user.Token = dataReader["Token"].ToString();
+            //            user.UserName = dataReader["UserName"].ToString();
                     }
                 }
             }
@@ -169,7 +175,7 @@ namespace NewsWebsite.Data.Repositories
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("areaForm", areaform);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         AreaViewModel fetchView = new AreaViewModel();
@@ -196,7 +202,7 @@ namespace NewsWebsite.Data.Repositories
                 {
                     sqlconnect.Open();
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         ProctorViewModel fetchView = new ProctorViewModel();
@@ -445,11 +451,11 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId",yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId",areaId);
-                    sqlCommand.Parameters.AddWithValue("budgetProcessId",budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         BudgetSepratorViewModel fetchView = new BudgetSepratorViewModel();
@@ -481,7 +487,7 @@ namespace NewsWebsite.Data.Repositories
             return fecth;
         }
 
-        public async Task<bool> SaveLisenceAsync(int userId,string lisence)
+        public async Task<bool> SaveLisenceAsync(int userId, string lisence)
         {
             if (userId == 0)
                 return false;
