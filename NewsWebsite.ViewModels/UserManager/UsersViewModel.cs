@@ -68,10 +68,10 @@ namespace NewsWebsite.ViewModels.UserManager
         [JsonPropertyName("جنسیت")]
         public string GenderName { get; set; }
 
-        [JsonPropertyName("لایسنس"), JsonIgnore]
+        [JsonPropertyName("لایسنس")]
         public string Lisence { get; set; }
         
-        [JsonPropertyName("توکن"), JsonIgnore]
+        [JsonPropertyName("توکن")]
         public string Token { get; set; }
 
         [Display(Name = "معرفی"), JsonPropertyName("معرفی")]
