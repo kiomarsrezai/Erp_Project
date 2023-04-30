@@ -1,4 +1,5 @@
 ﻿using NewsWebsite.Common.Api;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Fetch;
 using NewsWebsite.ViewModels.GeneralVm;

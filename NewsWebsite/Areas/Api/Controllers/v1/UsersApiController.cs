@@ -108,10 +108,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost("Savelicense")]
         public virtual async Task<ApiResult<string>> SaveLisenc(string tocken, string lisence)
         {
-            var user = await _uw.GetUserByTocken(tocken);
+            User user = await _Context.Users.FirstOrDefaultAsync(x=>x.Token==tocken);
             if (user == null) return BadRequest("توکن ارسال شده معتبر نمی باشد");
 
             user.Lisence = lisence;
+            _Context.Users.Update(user);
             return Ok("با موفقیت انجام شد");
         }
 

@@ -147,7 +147,7 @@ namespace NewsWebsite.Data.Repositories
                         user.FirstName = dataReader["FirstName"].ToString();
                         user.LastName = dataReader["LastName"].ToString();
                         user.SectionId = StringExtensions.ToNullableInt(dataReader["SectionId"].ToString());
-                        user.SectionName =await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
+                        user.SectionName = await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
                         user.token = dataReader["token"].ToString();
                         user.UserName = dataReader["UserName"].ToString();
                     }
