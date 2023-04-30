@@ -102,7 +102,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [HttpPost("GetUesrByTocken")]
         [AllowAnonymous]
-        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken([FromBody] TockenViewModel tocken)
+        public virtual async Task<ApiResult<UserSignViewModel>> GetUserByTocken([FromBody] TockenViewModel tocken)
         {
             string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
             UserSignViewModel userfech = new UserSignViewModel();
@@ -134,9 +134,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost("Savelicense")]
         public virtual async Task<ApiResult<string>> SaveLisenc(int id, string lisence)
         {
-            User user = await _Context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _Context.Users.FirstOrDefaultAsync(x => x.Id == id);
             user.Lisence = lisence;
-            _Context.Users.Update(user);
+            await _Context.SaveChangesAsync();
             return Ok("با موفقیت انجام شد");
         }
 
