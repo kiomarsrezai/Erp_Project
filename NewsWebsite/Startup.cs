@@ -53,8 +53,7 @@ namespace NewsWebsite
                     builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
+                    .AllowAnyHeader();
                 }));
 
             services.AddCustomAuthentication(SiteSettings);

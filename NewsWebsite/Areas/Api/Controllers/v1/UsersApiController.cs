@@ -34,13 +34,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         private readonly SignInManager<User> _signInManager;
         private readonly IjwtService _jwtService;
         private readonly NewsDBContext _Context;
+        private readonly IBudget_001Rep _uw;
         private CancellationToken cancellationToken;
 
-        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService,NewsDBContext context)
+        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService,NewsDBContext context, IBudget_001Rep uw)
         {
             _userManager = userManager;
             _jwtService = jwtService;
             _Context = context;
+            _uw = uw;
         }
 
         [HttpGet]
@@ -80,7 +82,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     FirstName =User.FirstName,
                     LastName =User.LastName,
+                    Lisence =User.Lisence,
                     SectionId=User.SectionId,
+                    SectionName=await _uw.AreaNameByIdAsync(User.SectionId),
                     token= await _jwtService.GenerateTokenAsync(User),
                     UserName = User.UserName,
                 };
@@ -93,25 +97,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        //[HttpPost("SignIn")]
-        //public async Task<ApiResult<User>> Authenticate(string username, string password)
-        //{
-        //    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-        //        return null;
+        [HttpGet("GetUserByTocken")]
+        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken (string tocken)
+        {
+            var user =await _uw.GetUserByTocken(tocken);
+            if (user == null) return BadRequest("با خطا مواجه شدید");
+            return Ok(user);
+        }
 
-        //    var user = await _Context.Users.SingleOrDefaultAsync(x => x.UserName == username);
+        [HttpPost("Savelicense")]
+        public virtual async Task<ApiResult<string>> SaveLisenc(string tocken, string lisence)
+        {
+            var user = await _uw.GetUserByTocken(tocken);
+            if (user == null) return BadRequest("توکن ارسال شده معتبر نمی باشد");
 
-        //    // check if username exists
-        //    user.Token = await _jwtService.GenerateTokenAsync(user);
-        //    await _userManager.UpdateAsync(user);
-
-        //    await _signInManager.SignInAsync(user, isPersistent: false);
-        //    // check if password is correct
-
-        //    // authentication successful
-        //    return Ok(User);
-        //}
-
+            user.Lisence = lisence;
+            return Ok("با موفقیت انجام شد");
+        }
 
         //[HttpPost("CreateUser")]
         //public async Task<User> Create([FromBody] UsersViewModel viewModel)

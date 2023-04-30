@@ -1,14 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NewsWebsite.Common;
+using NewsWebsite.Common.Api;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
+using NewsWebsite.Entities.identity;
+using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Fetch;
 using NewsWebsite.ViewModels.GeneralVm;
+using NewsWebsite.ViewModels.UserManager;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -104,6 +112,49 @@ namespace NewsWebsite.Data.Repositories
             return yearViews;
         }
 
+        public async Task<string> AreaNameByIdAsync(int id)
+        {
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            string name = "";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_AreaNameById", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    name= dataReader["AreaName"].ToString();
+                }
+            }
+            return name;
+        }
+        
+        public async Task<UserSignViewModel> GetUserByTocken(string tocken)
+        {
+            string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
+            UserSignViewModel user = new UserSignViewModel();
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_GetUserInfoByTocken", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("areaForm", tocken);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (await dataReader.ReadAsync())
+                    {
+                        user.FirstName = dataReader["FirstName"].ToString();
+                        user.LastName = dataReader["LastName"].ToString();
+                        user.SectionId = StringExtensions.ToNullableInt(dataReader["SectionId"].ToString());
+                        user.SectionName =await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
+                        user.token = dataReader["token"].ToString();
+                        user.UserName = dataReader["UserName"].ToString();
+                    }
+                }
+            }
+            return user;
+        }
         public async Task<List<AreaViewModel>> AreaFetchAsync(int areaform)
         {
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
@@ -428,6 +479,17 @@ namespace NewsWebsite.Data.Repositories
             }
             return fecth;
         }
+
+        public async Task<bool> SaveLisenceAsync(int userId,string lisence)
+        {
+            if (userId == 0)
+                return false;
+
+            var user = await _uw._Context.Users.FirstOrDefaultAsync(a => a.Id == userId);
+            user.Lisence = lisence;
+            return true;
+        }
+
     }
 
 }

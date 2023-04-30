@@ -1,5 +1,8 @@
-﻿using NewsWebsite.ViewModels.Fetch;
+﻿using NewsWebsite.Common.Api;
+using NewsWebsite.ViewModels.Api.UsersApi;
+using NewsWebsite.ViewModels.Fetch;
 using NewsWebsite.ViewModels.GeneralVm;
+using NewsWebsite.ViewModels.UserManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +14,9 @@ namespace NewsWebsite.Data.Contracts
     {
         List<AreaViewModel> AreaFetchForPropozalBudget();
         Task<List<AreaViewModel>> AreaFetchAsync(int areaform);
+        Task<UserSignViewModel> GetUserByTocken(string tocken);
+        Task<string> AreaNameByIdAsync(int id);
+        Task<bool> SaveLisenceAsync(int userId, string lisence);
         Task<List<BudgetProcessViewModel>> BudgetProcessFetchAsync();
         Task<List<YearViewModel>> YearFetchAsync();
         Task<List<ProctorViewModel>> ProctorList();

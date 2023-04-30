@@ -85,7 +85,7 @@ namespace NewsWebsite.ViewModels.UserManager
         public int? RoleId { get; set; }
         
         [JsonIgnore,JsonPropertyName("منطقه"), Display(Name = "منطقه")]
-        public int SectionId { get; set; }
+        public int? SectionId { get; set; }
 
         [JsonPropertyName("نقش")]
         public string RoleName { get; set; }
