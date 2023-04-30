@@ -64,7 +64,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return Ok(user);
         }
 
-        [HttpPost("SignIn")]
+        [HttpPost("[Action]")]
         [AllowAnonymous]
         public virtual async Task<ApiResult<UserSignViewModel>> SignIn([FromBody] SignInBaseViewModel ViewModel)
         {
