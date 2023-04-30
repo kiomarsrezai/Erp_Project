@@ -132,10 +132,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         [HttpPost("Savelicense")]
-        public virtual async Task<ApiResult<string>> SaveLisenc(int id, string lisence)
+        public virtual async Task<ApiResult<string>> SaveLisenc([FromBody] SaveLisenceViewModel lisence)
         {
-            var user = await _Context.Users.FirstOrDefaultAsync(x => x.Id == id);
-            user.Lisence = lisence;
+            var user = await _Context.Users.FirstOrDefaultAsync(x => x.Id == lisence.Id);
+            user.Lisence = lisence.Lisence;
             await _Context.SaveChangesAsync();
             return Ok("با موفقیت انجام شد");
         }
