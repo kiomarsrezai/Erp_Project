@@ -100,7 +100,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        [HttpPost("GetUesrByTocken")]
+        [HttpPost("GetUserByTocken")]
         [AllowAnonymous]
         public virtual async Task<ApiResult<UserSignViewModel>> GetUserByTocken([FromBody] TockenViewModel tocken)
         {
