@@ -112,7 +112,7 @@ namespace NewsWebsite.Data.Repositories
             return yearViews;
         }
 
-        public async Task<string> AreaNameByIdAsync(int? id)
+        public async Task<string> AreaNameByIdAsync(int id)
         {
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             string name = "";
@@ -124,6 +124,7 @@ namespace NewsWebsite.Data.Repositories
                     sqlCommand.Parameters.AddWithValue("Id", id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
                     name= dataReader["AreaName"].ToString();
                 }
             }

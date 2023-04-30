@@ -16,6 +16,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.Data.Models;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
