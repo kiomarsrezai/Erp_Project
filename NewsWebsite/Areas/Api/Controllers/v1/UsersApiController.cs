@@ -100,9 +100,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
         [HttpGet("GetUserByTocken")]
-        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken (int id)
+        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken (string tocken)
         {
-            var user =await _uw.GetUserByTocken(id);
+            var user =await _uw.GetUserByTocken(tocken);
             if (user == null) return BadRequest("با خطا مواجه شدید");
             return Ok(user);
         }

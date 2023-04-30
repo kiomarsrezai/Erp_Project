@@ -131,7 +131,7 @@ namespace NewsWebsite.Data.Repositories
             return name;
         }
         
-        public async Task<UserSignViewModel> GetUserByTocken(int id)
+        public async Task<UserSignViewModel> GetUserByTocken(string tocken)
         {
             string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
             UserSignViewModel user = new UserSignViewModel();
@@ -140,7 +140,7 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_GetUserInfoByTocken", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.Parameters.AddWithValue("tocken", tocken);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (await dataReader.ReadAsync())
