@@ -36,7 +36,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         private readonly IjwtService _jwtService;
         private readonly NewsDBContext _Context;
         private readonly IBudget_001Rep _uw;
-        private CancellationToken cancellationToken;
 
         public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService,NewsDBContext context, IBudget_001Rep uw)
         {
@@ -81,13 +80,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                 UserSignViewModel userSignView = new UserSignViewModel()
                 {
+                    Id = User.Id,
                     FirstName =User.FirstName,
                     LastName =User.LastName,
                     Lisence =User.Lisence,
                     SectionId=User.SectionId,
                     SectionName=await _uw.AreaNameByIdAsync(User.SectionId),
-                    token= await _jwtService.GenerateTokenAsync(User),
+                    Token= await _jwtService.GenerateTokenAsync(User),
                     UserName = User.UserName,
+                    Bio = User.Bio,
                 };
                 var result = await _userManager.CheckPasswordAsync(User, ViewModel.Password);
                 if (result)
@@ -99,9 +100,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
         [HttpGet("GetUserByTocken")]
-        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken (string tocken)
+        public virtual async Task<ApiResult<UserSignViewModel>> GetUesrByTocken (int id)
         {
-            var user =await _uw.GetUserByTocken(tocken);
+            var user =await _uw.GetUserByTocken(id);
             if (user == null) return BadRequest("با خطا مواجه شدید");
             return Ok(user);
         }

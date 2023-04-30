@@ -135,6 +135,7 @@ namespace NewsWebsite.Services.Identity
                       Id = user.Id,
                       Email = user.Email,
                       UserName = user.UserName,
+                      Lisence = user.Lisence,
                       PhoneNumber = user.PhoneNumber,
                       FirstName = user.FirstName,
                       LastName = user.LastName,

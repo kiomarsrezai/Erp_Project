@@ -8,13 +8,17 @@ namespace NewsWebsite.ViewModels.Api.UsersApi
 {
     public class UserSignViewModel
     {
-        public string token { get; set; }
+        public int Id { get; set; }
+        public string Token { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Lisence { get; set; }
         public int? SectionId { get; set; }
         public string SectionName { get; set; }
+        
+        [Display(Name ="سمت")]
+        public string Bio { get; set; }
 
     }
 }

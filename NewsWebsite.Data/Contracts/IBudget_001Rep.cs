@@ -15,7 +15,7 @@ namespace NewsWebsite.Data.Contracts
     {
         List<AreaViewModel> AreaFetchForPropozalBudget();
         Task<List<AreaViewModel>> AreaFetchAsync(int areaform);
-        Task<UserSignViewModel> GetUserByTocken(string tocken);
+        Task<UserSignViewModel> GetUserByTocken(int id);
         Task<string> AreaNameByIdAsync(int id);
         Task<bool> SaveLisenceAsync(int userId, string lisence);
         Task<List<BudgetProcessViewModel>> BudgetProcessFetchAsync();

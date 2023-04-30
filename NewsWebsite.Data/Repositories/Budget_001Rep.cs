@@ -131,7 +131,7 @@ namespace NewsWebsite.Data.Repositories
             return name;
         }
         
-        public async Task<UserSignViewModel> GetUserByTocken(string tocken)
+        public async Task<UserSignViewModel> GetUserByTocken(int id)
         {
             string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
             UserSignViewModel user = new UserSignViewModel();
@@ -140,7 +140,7 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_GetUserInfoByTocken", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("areaForm", tocken);
+                    sqlCommand.Parameters.AddWithValue("id", id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (await dataReader.ReadAsync())
@@ -149,7 +149,7 @@ namespace NewsWebsite.Data.Repositories
                         user.LastName = dataReader["LastName"].ToString();
                         user.SectionId = StringExtensions.ToNullableInt(dataReader["SectionId"].ToString());
                         user.SectionName = await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
-                        user.token = dataReader["token"].ToString();
+                        user.Token = dataReader["Token"].ToString();
                         user.UserName = dataReader["UserName"].ToString();
                     }
                 }
