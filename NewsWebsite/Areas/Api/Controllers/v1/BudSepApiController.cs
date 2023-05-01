@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -255,11 +256,49 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
+        [Route("RefreshSeperator")]
+        [HttpGet]
+        public async Task<ApiResult> RefreshSeprator(RefreshFormViewModel refreshFormViewModel)
+        {
+            if (refreshFormViewModel.yearId == 32)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9900_Akh_TO_Olden_Then_Budget_1401_Main", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("areaId", refreshFormViewModel.areaId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        await sqlCommand.ExecuteReaderAsync();
+                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                    }
+                    //view["notification"] = "بروزرسانی با موفقیت انجام شد";
+                }
+            }
+            else
+            if (refreshFormViewModel.yearId == 33)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9900_Akh_TO_Olden_Then_Budget_1402_Main", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("areaId", refreshFormViewModel.areaId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        sqlCommand.ExecuteReader();
+                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                    }
+                    //view["notification"] = "بروزرسانی با موفقیت انجام شد";
+                }
+            }
+            return Ok();
+        }
+
         [Route("TaminInsert")]
         [HttpPost]
         public async Task<ApiResult> TaminInsert([FromBody] InsertTaminSepViewModel insertTaminSep)
         {
-            if (insertTaminSep.codingId ==0) return BadRequest();
+            if (insertTaminSep.codingId == 0) return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -275,7 +314,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("ReqDesc", insertTaminSep.ReqDesc);
                     sqlCommand.Parameters.AddWithValue("codingId", insertTaminSep.codingId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     TempData["notification"] = "ویرایش با موفقیت انجام شد";
                 }
             }
