@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using NewsWebsite.Common.Api;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -17,10 +18,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [ApiResultFilter]
     public class DeputyApiController : Controller
     {
+        public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         public readonly IBudget_001Rep _budgetuw;
-        public DeputyApiController(IUnitOfWork uw, IBudget_001Rep budgetuw)
+        public DeputyApiController(IUnitOfWork uw, IBudget_001Rep budgetuw,IConfiguration configuration)
         {
+            _config = configuration;
             _uw = uw;
             _budgetuw = budgetuw;
         }
@@ -56,9 +59,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             List<ProctorAreaBudgetViewModel> fecthViewModel = new List<ProctorAreaBudgetViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
@@ -21,9 +22,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [ApiResultFilter]
     public class ProjectApiController : Controller
     {
+        public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
-        public ProjectApiController(IUnitOfWork uw)
+        public ProjectApiController(IUnitOfWork uw, IConfiguration config)
         {
+            _config = config;
             _uw = uw;
         }
 
@@ -36,9 +39,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             List<ProjectViewModel> fetchViewlist = new List<ProjectViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP005_Project_Read", sqlconnect))
                 {
@@ -70,9 +71,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (id > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_Project_Insert", sqlconnect))
                     {
@@ -95,9 +94,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (id > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_Project_Delete", sqlconnect))
                     {
@@ -120,9 +117,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (id > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_Project_Update", sqlconnect))
                     {
@@ -151,8 +146,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (CommiteKindId > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
                     {
@@ -188,8 +182,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (CommiteKindId > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
                     {
@@ -225,8 +218,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (CommiteKindId > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteExecute_Modal", sqlconnect))
                     {
@@ -265,8 +257,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (id > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteDetail_Read", sqlconnect))
                     {
@@ -297,8 +288,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             List<CommiteComboboxViewModel> commiteViews = new List<CommiteComboboxViewModel>();
 
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteKind_Com", sqlconnect))
                     {

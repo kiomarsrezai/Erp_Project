@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.BudgetSeprator;
+using NewsWebsite.ViewModels.Api.UsersApi;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -231,6 +233,55 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return dataset;
 
         }
+
+        [Route("DeleteTamin")]
+        [HttpPost]
+        public virtual async Task<ApiResult> DeleteTamin([FromBody] int id)
+        {
+            if (id == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                }
+            }
+            return Ok();
+        }
+
+        [Route("TaminInsert")]
+        [HttpPost]
+        public async Task<ApiResult> TaminInsert(int yearId, int areaId, int budgetProcessId, string RequestRefStr, string RequestDate, Int64 RequestPrice, string ReqDesc, int codingId)
+        {
+            if (codingId==0) return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("RequestRefStr", RequestRefStr);
+                    sqlCommand.Parameters.AddWithValue("RequestDate", RequestDate);
+                    sqlCommand.Parameters.AddWithValue("RequestPrice", RequestPrice);
+                    sqlCommand.Parameters.AddWithValue("ReqDesc", ReqDesc);
+                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                }
+            }
+            return Ok();
+        }
+
 
     }
 
