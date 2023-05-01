@@ -14,12 +14,14 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public const string EditSuccess = "ویرایش اطلاعات با موفقیت انجام شد.";
         public const string DeleteSuccess = "حذف اطلاعات با موفقیت انجام شد.";
         public const string OperationSuccess = "عملیات با موفقیت انجام شد.";
+        
 
         public IActionResult Notification()
         {
             return Content(TempData["notification"].ToString());
         }
 
+        
         [HttpGet,AjaxOnly]
         public IActionResult DeleteGroup()
         {

@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
+using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.BudgetSeprator;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System;
-using System.Threading.Tasks;
-using NewsWebsite.Common.Api;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -18,16 +20,52 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     public class BudSepApiController : Controller
     {
         public readonly IUnitOfWork _uw;
-        public BudSepApiController(IUnitOfWork uw)
+        public readonly IConfiguration _configuration;
+        public BudSepApiController(IUnitOfWork uw, IConfiguration configuration)
         {
+            _configuration = configuration;
             _uw = uw;
         }
 
         [Route("FetchSeprator")]
         [HttpGet]
-        public async Task<IActionResult> FetchSeprators(int yearId,int areaId,int budgetprocessId)
+        public async Task<IActionResult> FetchSeprators(int yearId, int areaId, int budgetprocessId)
         {
             return Ok(await _uw.Budget_001Rep.GetAllBudgetSeprtaorAsync(yearId, areaId, budgetprocessId));
+        }
+
+        [HttpGet]
+        [Route("Details")]
+        public async Task<ApiResult<List<SepratorAreaRequestViewModel>>> Details(int yearId, int areaId, int budgetProcessId, int codingId)
+        {
+            List<SepratorAreaRequestViewModel> fecthViewModel = new List<SepratorAreaRequestViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        SepratorAreaRequestViewModel fetchView = new SepratorAreaRequestViewModel();
+                        fetchView.id = StringExtensions.ToNullableInt(dataReader["id"].ToString());
+                        fetchView.Number = dataReader["Number"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.Date = dataReader["Date"].ToString();
+                        fetchView.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
         }
 
         [HttpGet]
@@ -36,9 +74,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             List<BudgetSepTaminModal2ViewModel> fecthViewModel = new List<BudgetSepTaminModal2ViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_2", sqlconnect))
                 {
@@ -78,8 +114,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<Int64> mosavabdaily = new List<Int64>();
             List<Int64> expense = new List<Int64>();
             //List<ColumnChart> dataset = new List<ColumnChart>();
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect1 = new SqlConnection(connection))
+            using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart", sqlconnect1))
                 {
@@ -133,15 +168,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return data;
 
         }
-        
+
         [Route("DetailChartApi")]
         [HttpGet]
         public async Task<ApiResult<List<ViewModels.Fetch.ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati)
         {
             List<ViewModels.Fetch.ChartAreaViewModel> dataset = new List<ViewModels.Fetch.ChartAreaViewModel>();
-            //List<ColumnChart> dataset = new List<ColumnChart>();
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP500_Chart", sqlconnect))
                 {
@@ -155,7 +188,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("sale", sale);
                     sqlCommand.Parameters.AddWithValue("loan", loan);
                     sqlCommand.Parameters.AddWithValue("niabati", niabati);
-                    SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
 
                     while (dataReader.Read())
                     {
@@ -194,7 +227,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
 
             };
-            
+
             return dataset;
 
         }

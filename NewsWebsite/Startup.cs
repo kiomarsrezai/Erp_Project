@@ -38,7 +38,7 @@ namespace NewsWebsite
         {
             services.Configure<SiteSettings>(Configuration.GetSection(nameof(SiteSettings)));
             services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
-            services.AddDbContext<ProgramBuddbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Sqlerp")));
+            services.AddDbContext<ProgramBuddbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlErp")));
             services.AddCustomServices();
             services.AddTransient<ISecurityTrimmingService, SecurityTrimmingService>();
             services.AddTransient<IMvcActionsDiscoveryService, MvcActionsDiscoveryService>();
