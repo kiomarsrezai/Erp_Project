@@ -236,9 +236,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("DeleteTamin")]
         [HttpPost]
-        public virtual async Task<ApiResult> DeleteTamin([FromBody] int id)
+        public virtual async Task<ApiResult> DeleteTamin([FromBody] DeleteSepViewModel deleteSep)
         {
-            if (id == 0)
+            if (deleteSep.id == 0)
                 return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -246,7 +246,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.Parameters.AddWithValue("id", deleteSep.id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     TempData["notification"] = "ویرایش با موفقیت انجام شد";
@@ -257,23 +257,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("TaminInsert")]
         [HttpPost]
-        public async Task<ApiResult> TaminInsert(int yearId, int areaId, int budgetProcessId, string RequestRefStr, string RequestDate, Int64 RequestPrice, string ReqDesc, int codingId)
+        public async Task<ApiResult> TaminInsert([FromBody] InsertTaminSepViewModel insertTaminSep)
         {
-            if (codingId==0) return BadRequest();
+            if (insertTaminSep.codingId ==0) return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
-                    sqlCommand.Parameters.AddWithValue("RequestRefStr", RequestRefStr);
-                    sqlCommand.Parameters.AddWithValue("RequestDate", RequestDate);
-                    sqlCommand.Parameters.AddWithValue("RequestPrice", RequestPrice);
-                    sqlCommand.Parameters.AddWithValue("ReqDesc", ReqDesc);
-                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    sqlCommand.Parameters.AddWithValue("yearId", insertTaminSep.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", insertTaminSep.areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", insertTaminSep.budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("RequestRefStr", insertTaminSep.RequestRefStr);
+                    sqlCommand.Parameters.AddWithValue("RequestDate", insertTaminSep.RequestDate);
+                    sqlCommand.Parameters.AddWithValue("RequestPrice", insertTaminSep.RequestPrice);
+                    sqlCommand.Parameters.AddWithValue("ReqDesc", insertTaminSep.ReqDesc);
+                    sqlCommand.Parameters.AddWithValue("codingId", insertTaminSep.codingId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                     TempData["notification"] = "ویرایش با موفقیت انجام شد";
