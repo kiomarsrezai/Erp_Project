@@ -22,6 +22,7 @@ using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.DynamicAccess;
+using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.UserManager;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -99,6 +100,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
+        [Route("UserChangePassword")]
+        [HttpPost]
+        public virtual async Task<ApiResult<string>> ChangePassword([FromBody] ChangePasswordViewModel ViewModel)
+        {
+            var user = _userManager.GetById(ViewModel.Id);
+            if (user == null)
+                return BadRequest("");
+            
+            var changePassResult = await _userManager.ChangePasswordAsync(user, ViewModel.OldPassword, ViewModel.NewPassword);
+
+            if (changePassResult.Succeeded)
+                return Ok("موفق");
+            else
+                return BadRequest("ناموفق");
+        }
+
+
+        [Route("ForgetPassword")]
+        [HttpPost]
+        public virtual async Task<ApiResult<string>> ForgetPassword([FromBody] ResetPasswordViewModel ViewModel)
+        {
+            var user = await _Context.Users.FirstOrDefaultAsync(x=>x.PhoneNumber==ViewModel.PhoneNumber);
+            if (user == null)
+                return BadRequest("");
+
+            //ارسال رمز عبور که رندوم ساخته شد
+            string pass= "Aa54321";
+            //ارسال پیام برای شخص
+
+             return Ok(pass);
+        }
 
         [HttpPost("GetUserByTocken")]
         [AllowAnonymous]
@@ -128,7 +160,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            return Ok(userfech);
+            if (userfech.Id > 0)
+                return Ok(userfech);
+            else return BadRequest();
         }
 
         [HttpPost("Savelicense")]

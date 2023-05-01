@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.UserManager
+namespace NewsWebsite.ViewModels.Api.UsersApi
 {
     public class ResetPasswordViewModel
     {
         [Display(Name = "شماره همراه")]
-        public int userId { get; set; }
-        public string Email { get; set; }
-        public string NewPassword { get; set; }
+        public string PhoneNumber { get; set; }
 
     }
 }
