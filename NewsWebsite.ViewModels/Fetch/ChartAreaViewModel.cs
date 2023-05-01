@@ -7,32 +7,31 @@ namespace NewsWebsite.ViewModels.Fetch
 {
     public class ChartAreaViewModel
     {
-        [JsonPropertyName("Id")]
         public int Id { get; set; }
         public int Row { get; set; }
         public int YearId { get; set; }
         public int BudgetProcessId { get; set; }
         public int AreaId { get; set; }
 
-        [Display(Name = "مناطق"), JsonPropertyName("مناطق")]
+        [Display(Name = "مناطق")]
         public string AreaName { get; set; }
 
-        [Display(Name = "مصوب"), JsonPropertyName("مصوب")]
+        [Display(Name = "مصوب")]
         public Int64 Mosavab { get; set; }
 
-        [Display(Name = "عملکرد"), JsonPropertyName("عملکرد")]
+        [Display(Name = "عملکرد")]
         public Int64 Expense { get; set; }
 
-        [Display(Name = "مصوب روزانه"), JsonPropertyName("مصوب روزانه")]
+        [Display(Name = "مصوب روزانه")]
         public Int64 MosavabDaily { get; set; }
 
-        [Display(Name = "محقق نشده"), JsonPropertyName("محقق نشده")]
+        [Display(Name = "محقق نشده")]
         public Int64 NotGet { get; set; }
 
-        [Display(Name = "% جذب مصوب"), JsonPropertyName("% جذب مصوب")]
+        [Display(Name = "% جذب مصوب")]
         public double PercentMosavab { get; set; }
        
-        [Display(Name = "% جذب روزانه"), JsonPropertyName("% جذب روزانه")]
+        [Display(Name = "% جذب روزانه")]
         public double PercentMosavabDaily { get; set; }
 
     }

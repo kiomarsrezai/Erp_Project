@@ -10,19 +10,19 @@ namespace NewsWebsite.ViewModels.Api.Deputy
         public int ProctorId { get; set; }
         public int AreaId { get; set; }
 
-        [Display(Name = "کد بودجه"),JsonPropertyName("کد بودجه")]
+        [Display(Name = "کد بودجه")]
         public string Code { get; set; }
 
-        [Display(Name = "شرح ردیف"), JsonPropertyName("شرح ردیف")]
+        [Display(Name = "شرح ردیف")]
         public string Description { get; set; }
 
-        [Display(Name = "مصوب"), JsonPropertyName("مصوب")]
+        [Display(Name = "مصوب")]
         public Int64 Mosavab { get; set; }
 
-        [Display(Name = "عملکرد"), JsonPropertyName("عملکرد")]
+        [Display(Name = "عملکرد")]
         public Int64 Expense{ get; set; }
 
-        [Display(Name = "% جذب"), JsonPropertyName("% جذب")]
+        [Display(Name = "% جذب")]
         public double Percent { get; set; }
         
     }
