@@ -112,7 +112,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_budget_001Rep == null)
-                    _budget_001Rep = new Budget_001Rep(_budgetcontext);
+                    _budget_001Rep = new Budget_001Rep(_budgetcontext, _configuration);
 
                 return _budget_001Rep;
             }
@@ -143,7 +143,7 @@ namespace NewsWebsite.Data.UnitOfWork
             get
             {
                 if (_deputyRepository == null)
-                    _deputyRepository = new DeputyRepository(this);
+                    _deputyRepository = new DeputyRepository(this, _configuration);
                 return _deputyRepository;
             }
         
