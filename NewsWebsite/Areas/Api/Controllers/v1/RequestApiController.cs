@@ -20,14 +20,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [ApiResultFilter]
     public class RequestApiController : ControllerBase
     {
-        ProgramBuddbContext _context;
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
 
-        public RequestApiController(ProgramBuddbContext context, IUnitOfWork uw,IConfiguration configuration)
+        public RequestApiController(IUnitOfWork uw,IConfiguration configuration)
         {
             _config = configuration;
-            _context = context;
             _uw = uw;
         }
 
