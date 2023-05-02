@@ -10,6 +10,7 @@ using NewsWebsite.Common.Api;
 using System.Data.SqlClient;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Fetch;
+using Microsoft.Extensions.Configuration;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -20,8 +21,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     public class FetchController : Controller
     {
         public readonly IUnitOfWork _uw;
-        public FetchController(IUnitOfWork uw)
+        private readonly IConfiguration _config;
+        public FetchController(IUnitOfWork uw,IConfiguration configuration)
         {
+            _config = configuration;
             _uw = uw;
         }
 
@@ -32,8 +35,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             if (yearId == 0) return BadRequest("با خطا مواجه شدید");
 
             List<FetchViewModel> fecth = new List<FetchViewModel>();
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 Int64 _totalMosavab = 0; Int64 _totalExpense = 0;
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudget", sqlconnect))
@@ -78,8 +80,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             List<FetchDataBudgetViewModel> dataset = new List<FetchDataBudgetViewModel>();
             
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetDetail", sqlconnect))
                 {

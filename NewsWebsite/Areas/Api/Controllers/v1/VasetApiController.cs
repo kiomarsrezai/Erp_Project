@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
@@ -17,8 +18,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     public class VasetApiController : Controller
     {
         public readonly IUnitOfWork _uw;
-        public VasetApiController(IUnitOfWork uw)
+        private readonly IConfiguration _config;
+        public VasetApiController(IUnitOfWork uw,IConfiguration configuration)
         {
+            _config = configuration;
             _uw = uw;
         }
 
@@ -44,9 +47,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (id > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Insert", sqlconnect))
                     {
@@ -69,9 +70,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد");
             if (id > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+               
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Delete", sqlconnect))
                     {
@@ -94,9 +94,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest("با خطا مواجه شد"); 
             if (id > 0)
             {
-                string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-                //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-                using (SqlConnection sqlconnect = new SqlConnection(connection))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Update", sqlconnect))
                     {

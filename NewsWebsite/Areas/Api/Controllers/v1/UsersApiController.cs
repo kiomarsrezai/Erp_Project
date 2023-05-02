@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
@@ -20,10 +12,12 @@ using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.Api.UsersApi;
-using NewsWebsite.ViewModels.DynamicAccess;
 using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.UserManager;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -37,9 +31,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         private readonly IjwtService _jwtService;
         private readonly ProgramBuddbContext _Context;
         private readonly IBudget_001Rep _uw;
+        public readonly IConfiguration _configuration;
 
-        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService, ProgramBuddbContext context, IBudget_001Rep uw)
+
+        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService, ProgramBuddbContext context, IBudget_001Rep uw, IConfiguration configuration)
         {
+            _configuration = configuration;
             _userManager = userManager;
             _jwtService = jwtService;
             _Context = context;
@@ -106,7 +103,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var user = _userManager.GetById(ViewModel.Id);
             if (user == null)
                 return BadRequest("");
-            
+
             var changePassResult = await _userManager.ChangePasswordAsync(user, ViewModel.OldPassword, ViewModel.NewPassword);
 
             if (changePassResult.Succeeded)
@@ -120,24 +117,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public virtual async Task<ApiResult<string>> ForgetPassword([FromBody] ResetPasswordViewModel ViewModel)
         {
-            var user = await _Context.Users.FirstOrDefaultAsync(x=>x.PhoneNumber==ViewModel.PhoneNumber);
+            var user = await _Context.Users.FirstOrDefaultAsync(x => x.PhoneNumber == ViewModel.PhoneNumber);
             if (user == null)
                 return BadRequest("");
 
             //ارسال رمز عبور که رندوم ساخته شد
-            string pass= "Aa54321";
+            string pass = "Aa54321";
             //ارسال پیام برای شخص
 
-             return Ok(pass);
+            return Ok(pass);
         }
 
         [HttpPost("GetUserByTocken")]
         [AllowAnonymous]
         public virtual async Task<ApiResult<UserSignViewModel>> GetUserByTocken([FromBody] TockenViewModel tocken)
         {
-            string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
             UserSignViewModel userfech = new UserSignViewModel();
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_GetUserInfoByTocken", sqlconnect))
                 {

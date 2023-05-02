@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Data.Models;
@@ -15,8 +16,10 @@ namespace NewsWebsite.Data.Repositories
     public class DeputyRepository : IDeputyRepository
     {
         private readonly IUnitOfWork _uw;
-        public DeputyRepository(IUnitOfWork uw)
+        private readonly IConfiguration _config;
+        public DeputyRepository(IUnitOfWork uw,IConfiguration configuration)
         {
+            _config = configuration;
             this._uw = uw;
             _uw.CheckArgumentIsNull(nameof(_uw));
 
@@ -25,10 +28,7 @@ namespace NewsWebsite.Data.Repositories
         public async Task<List<DeputyViewModel>> GetAllDeputiesAsync(int yearId,int proctorId, int areaId, int budgetProcessId)
         {
             List<DeputyViewModel> fecthViewModel = new List<DeputyViewModel>();
-
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
@@ -106,9 +106,7 @@ namespace NewsWebsite.Data.Repositories
         {
             List<AreaProctorViewModel> fecthViewModel = new List<AreaProctorViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
@@ -175,10 +173,9 @@ namespace NewsWebsite.Data.Repositories
     
         public async Task<List<ProctorViewModel>> ProctorListAsync()
         {
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             List<ProctorViewModel> areaViews = new List<ProctorViewModel>();
 
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_ProctorList_Read", sqlconnect))
                 {

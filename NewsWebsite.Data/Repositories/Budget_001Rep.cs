@@ -1,22 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NewsWebsite.Common;
-using NewsWebsite.Common.Api;
+﻿using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.Data.Models;
-using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Fetch;
 using NewsWebsite.ViewModels.GeneralVm;
-using NewsWebsite.ViewModels.UserManager;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
+using Microsoft.Extensions.Configuration;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -24,20 +17,20 @@ namespace NewsWebsite.Data.Repositories
     {
         ProgramBuddbContext _context;
         public readonly IUnitOfWork _uw;
+        public readonly IConfiguration _config;
 
-        public Budget_001Rep(ProgramBuddbContext context)
+        public Budget_001Rep(ProgramBuddbContext context, IConfiguration config)
         {
+            _config = config;
             _context = context;
         }
 
         //private readonly ProgramBudDbContext context;
         public List<AreaViewModel> AreaFetchForPropozalBudget()
         {
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             List<AreaViewModel> areaViews = new List<AreaViewModel>();
 
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Area_ProposalBudget", sqlconnect))
                 {
@@ -60,11 +53,9 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<YearViewModel>> YearFetchAsync()
         {
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             List<YearViewModel> yearViews = new List<YearViewModel>();
 
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Year", sqlconnect))
                 {
@@ -87,11 +78,9 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<BudgetProcessViewModel>> BudgetProcessFetchAsync()
         {
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             List<BudgetProcessViewModel> yearViews = new List<BudgetProcessViewModel>();
 
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_BudgetSection", sqlconnect))
                 {
@@ -114,9 +103,8 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<string> AreaNameByIdAsync(int id)
         {
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             string name = "";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_AreaNameById", sqlconnect))
                 {
@@ -133,10 +121,8 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<UserSignViewModel> GetUserByTocken(string tocken)
         {
-
-            string connection = @"Data Source=172.30.30.26;User Id=sa;Password=@Tender124;Initial Catalog=ErpSettingDb;";
             UserSignViewModel user = new UserSignViewModel();
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_GetUserInfoByTocken", sqlconnect))
                 {
@@ -146,17 +132,17 @@ namespace NewsWebsite.Data.Repositories
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (await dataReader.ReadAsync())
                     {
-            //            user.FirstName = user.FirstName;
-            //user.LastName = userfetch.LastName;
-            //user.SectionId = userfetch.SectionId;
-            //user.SectionName = await AreaNameByIdAsync(userfetch.SectionId);
-            //user.Token = userfetch.Token;
-            //            user.UserName = dataReader["UserName"].ToString(); user.FirstName = dataReader["FirstName"].ToString();
-            //            user.LastName = dataReader["LastName"].ToString();
-            //            user.SectionId = StringExtensions.ToNullableInt(dataReader["SectionId"].ToString());
-            //            user.SectionName = await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
-            //            user.Token = dataReader["Token"].ToString();
-            //            user.UserName = dataReader["UserName"].ToString();
+                        //            user.FirstName = user.FirstName;
+                        //user.LastName = userfetch.LastName;
+                        //user.SectionId = userfetch.SectionId;
+                        //user.SectionName = await AreaNameByIdAsync(userfetch.SectionId);
+                        //user.Token = userfetch.Token;
+                        //            user.UserName = dataReader["UserName"].ToString(); user.FirstName = dataReader["FirstName"].ToString();
+                        //            user.LastName = dataReader["LastName"].ToString();
+                        //            user.SectionId = StringExtensions.ToNullableInt(dataReader["SectionId"].ToString());
+                        //            user.SectionName = await AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
+                        //            user.Token = dataReader["Token"].ToString();
+                        //            user.UserName = dataReader["UserName"].ToString();
                     }
                 }
             }
@@ -164,11 +150,9 @@ namespace NewsWebsite.Data.Repositories
         }
         public async Task<List<AreaViewModel>> AreaFetchAsync(int areaform)
         {
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             List<AreaViewModel> areaViews = new List<AreaViewModel>();
 
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Area", sqlconnect))
                 {
@@ -192,11 +176,10 @@ namespace NewsWebsite.Data.Repositories
 
         public async Task<List<ProctorViewModel>> ProctorList()
         {
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;Trusted_Connection=True;Integrated Security=True;";
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+           
             List<ProctorViewModel> areaViews = new List<ProctorViewModel>();
 
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_ProctorList_Read", sqlconnect))
                 {
@@ -256,9 +239,7 @@ namespace NewsWebsite.Data.Repositories
         {
             List<DeputyViewModel> fecthViewModel = new List<DeputyViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
@@ -327,9 +308,7 @@ namespace NewsWebsite.Data.Repositories
 
             List<AreaProctorViewModel> fecthViewModel = new List<AreaProctorViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
@@ -397,9 +376,7 @@ namespace NewsWebsite.Data.Repositories
         {
             List<ProctorAreaBudgetViewModel> fecthViewModel = new List<ProctorAreaBudgetViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
@@ -444,9 +421,7 @@ namespace NewsWebsite.Data.Repositories
         {
             List<BudgetSepratorViewModel> fecth = new List<BudgetSepratorViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea", sqlconnect))
                 {
