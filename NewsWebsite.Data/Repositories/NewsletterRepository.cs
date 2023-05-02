@@ -14,8 +14,8 @@ namespace NewsWebsite.Data.Repositories
     public class NewsletterRepository : INewsletterRepository
     {
 
-        private readonly NewsDBContext _context;
-        public NewsletterRepository(NewsDBContext context)
+        private readonly ProgramBuddbContext _context;
+        public NewsletterRepository(ProgramBuddbContext context)
         {
             _context = context;
         }

@@ -14,8 +14,8 @@ namespace NewsWebsite.Data.Repositories
 {
     public class TagRepository : ITagRepository
     {
-        private readonly NewsDBContext _context;
-        public TagRepository(NewsDBContext context)
+        private readonly ProgramBuddbContext _context;
+        public TagRepository(ProgramBuddbContext context)
         {
             _context = context;
         }

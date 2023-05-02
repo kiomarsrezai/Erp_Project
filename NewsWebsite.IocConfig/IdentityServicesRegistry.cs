@@ -20,7 +20,7 @@ namespace NewsWebsite.IocConfig
         public static void UseCustomIdentityServices(this IApplicationBuilder app)
         {
             app.UseAuthentication();
-            app.CallDbInitializer();
+            //app.CallDbInitializer();
         }
 
 
@@ -30,8 +30,8 @@ namespace NewsWebsite.IocConfig
             using (var scope = scopeFactory.CreateScope())
             {
                 var identityDbInitialize = scope.ServiceProvider.GetService<IIdentityDbInitializer>();
-                identityDbInitialize.Initialize();
-                identityDbInitialize.SeedData();
+                //identityDbInitialize.Initialize();
+                //identityDbInitialize.SeedData();
             }
         }
     }

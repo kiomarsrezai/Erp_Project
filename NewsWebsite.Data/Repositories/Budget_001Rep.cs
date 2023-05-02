@@ -22,7 +22,7 @@ namespace NewsWebsite.Data.Repositories
 {
     public class Budget_001Rep : IBudget_001Rep
     {
-        ProgramBuddbContext _context = new ProgramBuddbContext();
+        ProgramBuddbContext _context;
         public readonly IUnitOfWork _uw;
 
         public Budget_001Rep(ProgramBuddbContext context)

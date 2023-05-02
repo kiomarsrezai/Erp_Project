@@ -9,13 +9,13 @@ namespace NewsWebsite.Services.Contracts
         /// Applies any pending migrations for the context to the database.
         /// Will create the database if it does not already exist.
         /// </summary>
-        void Initialize();
+        //void Initialize();
 
         /// <summary>
         /// Adds some default values to the IdentityDb
         /// </summary>
-        void SeedData();
+        //void SeedData();
 
-        Task<IdentityResult> SeedDatabaseWithAdminUserAsync();
+        //Task<IdentityResult> SeedDatabaseWithAdminUserAsync();
     }
 }

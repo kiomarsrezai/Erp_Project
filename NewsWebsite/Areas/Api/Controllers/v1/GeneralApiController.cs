@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Common.Api.Attributes;
+using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.Data.Models;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
-   
-    
+
+
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
     public class GeneralApiController : ControllerBase
     {
-        ProgramBuddbContext _context = new ProgramBuddbContext();
+        ProgramBuddbContext _context;
         public readonly IUnitOfWork _uw;
 
         public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw)

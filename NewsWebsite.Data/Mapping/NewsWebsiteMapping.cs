@@ -10,10 +10,10 @@ namespace NewsWebsite.Data.Mapping
         public static void AddCustomNewsWebsiteMappings(this ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new BookmarkMapping());
+            modelBuilder.ApplyConfiguration(new VisitMapping());
             modelBuilder.ApplyConfiguration(new LikeMapping());
             modelBuilder.ApplyConfiguration(new NewsCategoryMapping());
             modelBuilder.ApplyConfiguration(new NewsTagMapping());
-            modelBuilder.ApplyConfiguration(new VisitMapping());
         }
 
     }

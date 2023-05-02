@@ -30,7 +30,7 @@ namespace NewsWebsite.Services.Identity
         private readonly IUserStore<User> _userStore;
         private readonly IEnumerable<IUserValidator<User>> _userValidators;
         private readonly IMapper _mapper;
-        private readonly NewsDBContext _context;
+        private readonly ProgramBuddbContext _context;
 
         public ApplicationUserManager(
             ApplicationIdentityErrorDescriber errors,

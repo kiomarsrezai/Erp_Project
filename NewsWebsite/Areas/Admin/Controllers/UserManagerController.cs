@@ -535,7 +535,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var viewModel = new ResetPasswordViewModel
+            var viewModel = new ResetPassViewModel
             {
                 userId = userId,
                 Email = User.Email,
@@ -551,7 +551,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel viewModel)
+        public async Task<IActionResult> ResetPassword(ResetPassViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

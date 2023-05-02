@@ -16,7 +16,6 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.Data.Models;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
@@ -36,10 +35,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         private readonly IApplicationUserManager _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IjwtService _jwtService;
-        private readonly NewsDBContext _Context;
+        private readonly ProgramBuddbContext _Context;
         private readonly IBudget_001Rep _uw;
 
-        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService, NewsDBContext context, IBudget_001Rep uw)
+        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService, ProgramBuddbContext context, IBudget_001Rep uw)
         {
             _userManager = userManager;
             _jwtService = jwtService;

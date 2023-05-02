@@ -1,20 +1,32 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using NewsWebsite.Data.Mapping;
+using NewsWebsite.Entities;
+using NewsWebsite.Entities.identity;
+using NewsWebsite.Data.Models;
 
-namespace NewsWebsite.Data.Models
+namespace NewsWebsite.Data
 {
-    public partial class ProgramBuddbContext : DbContext
+    public partial class ProgramBuddbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, IdentityUserLogin<int>, RoleClaim, IdentityUserToken<int>>
     {
-        public ProgramBuddbContext()
+        public ProgramBuddbContext(DbContextOptions<ProgramBuddbContext> options) : base(options)
         {
         }
 
-        public ProgramBuddbContext(DbContextOptions<ProgramBuddbContext> options)
-            : base(options)
-        {
-        }
-
+        public virtual DbSet<Category> Categories { set; get; }
+        public virtual DbSet<News> News { set; get; }
+        public virtual DbSet<Bookmark> Bookmarks { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Like> Likes { get; set; }
+        public virtual DbSet<NewsCategory> NewsCategories { get; set; }
+        public virtual DbSet<Newsletter> Newsletters { get; set; }
+        public virtual DbSet<NewsTag> NewsTags { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<Visit> Visits { get; set; }
+        public virtual DbSet<Video> Videos { get; set; }
         public virtual DbSet<TblAreas> TblAreas { get; set; }
         public virtual DbSet<TblBudgetDetailProject> TblBudgetDetailProject { get; set; }
         public virtual DbSet<TblBudgetDetailProjectArea> TblBudgetDetailProjectArea { get; set; }
@@ -40,6 +52,15 @@ namespace NewsWebsite.Data.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.AddCustomIdentityMappings();
+            modelBuilder.AddCustomNewsWebsiteMappings();
+            modelBuilder.Entity<Video>().Property(b => b.PublishDateTime).HasDefaultValueSql("CONVERT(DATETIME, CONVERT(VARCHAR(20),GetDate(), 120))");
+            modelBuilder.Entity<User>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(DATETIME, CONVERT(VARCHAR(20),GetDate(), 120))");
+            modelBuilder.Entity<Newsletter>().Property(b => b.RegisterDateTime).HasDefaultValueSql("CONVERT(DATETIME, CONVERT(VARCHAR(20),GetDate(), 120))");
+            modelBuilder.Entity<User>().Property(b => b.IsActive).HasDefaultValueSql("1");
+            modelBuilder.Entity<Newsletter>().Property(b => b.IsActive).HasDefaultValueSql("1");
+
             modelBuilder.Entity<TblBudgetDetailProject>(entity =>
             {
                 entity.ToTable("tblBudgetDetailProject");
@@ -206,6 +227,7 @@ namespace NewsWebsite.Data.Models
                 entity.ToTable("Tbl_Vasets");
             });
 
+           
             OnModelCreatingPartial(modelBuilder);
         }
 

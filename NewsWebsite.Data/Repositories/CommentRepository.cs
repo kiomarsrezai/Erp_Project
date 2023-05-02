@@ -9,13 +9,14 @@ using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using NewsWebsite.Data.Models;
 
 namespace NewsWebsite.Data.Repositories
 {
     public class CommentRepository : ICommentRepository
     {
-        private readonly NewsDBContext _context;
-        public CommentRepository(NewsDBContext context)
+        private readonly ProgramBuddbContext _context;
+        public CommentRepository(ProgramBuddbContext context)
         {
             _context = context;
         }

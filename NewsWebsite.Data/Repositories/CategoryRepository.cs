@@ -8,14 +8,15 @@ using NewsWebsite.ViewModels.Category;
 using NewsWebsite.Common;
 using AutoMapper;
 using System.Linq.Dynamic.Core;
+using NewsWebsite.Data.Models;
 
 namespace NewsWebsite.Data.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly NewsDBContext _context;
+        private readonly ProgramBuddbContext _context;
         private readonly IMapper _mapper;
-        public CategoryRepository(NewsDBContext context, IMapper mapper)
+        public CategoryRepository(ProgramBuddbContext context, IMapper mapper)
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NewsWebsite.Areas.Admin.Controllers;
 using NewsWebsite.Common;
+using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.Data.Models;
 using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;

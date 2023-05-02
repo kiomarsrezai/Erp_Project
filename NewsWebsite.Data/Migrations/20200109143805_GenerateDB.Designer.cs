@@ -9,7 +9,7 @@ using NewsWebsite.Data;
 
 namespace NewsWebsite.Data.Migrations
 {
-    [DbContext(typeof(NewsDBContext))]
+    [DbContext(typeof(ProgramBuddbContext))]
     [Migration("20200109143805_GenerateDB")]
     partial class GenerateDB
     {

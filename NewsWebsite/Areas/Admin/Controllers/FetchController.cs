@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.Data.Models;
 using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;

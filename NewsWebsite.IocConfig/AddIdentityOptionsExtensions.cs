@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.IocConfig
-{ 
+{
     public static class AddIdentityOptionsExtentions
     {
         public static IServiceCollection AddIdentityOptions(this IServiceCollection services)
@@ -29,7 +29,7 @@ namespace NewsWebsite.IocConfig
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(20);
                     options.Lockout.MaxFailedAccessAttempts = 3;
                 })
-             .AddEntityFrameworkStores<NewsDBContext>()
+             .AddEntityFrameworkStores<ProgramBuddbContext>()
              .AddErrorDescriber<ApplicationIdentityErrorDescriber>()
              .AddDefaultTokenProviders();
 

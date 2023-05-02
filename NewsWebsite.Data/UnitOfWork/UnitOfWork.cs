@@ -12,8 +12,8 @@ namespace NewsWebsite.Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        ProgramBuddbContext _budgetcontext = new ProgramBuddbContext();
-        public NewsDBContext _Context { get; }
+        ProgramBuddbContext _budgetcontext;
+        public ProgramBuddbContext _Context { get; }
         private IMapper _mapper;
         private ICategoryRepository _categoryRepository;
         private ITagRepository _tagRepository;
@@ -27,7 +27,7 @@ namespace NewsWebsite.Data.UnitOfWork
         private IDeputyRepository _deputyRepository;
         private readonly IConfiguration _configuration;
 
-        public UnitOfWork(NewsDBContext context, IMapper mapper, IConfiguration configuration)
+        public UnitOfWork(ProgramBuddbContext context, IMapper mapper, IConfiguration configuration)
         {
             _Context = context;
             _mapper = mapper;
@@ -36,7 +36,7 @@ namespace NewsWebsite.Data.UnitOfWork
 
         public IBaseRepository<TEntity> BaseRepository<TEntity>() where TEntity : class
         {
-            IBaseRepository<TEntity> repository = new BaseRepository<TEntity,NewsDBContext>(_Context);
+            IBaseRepository<TEntity> repository = new BaseRepository<TEntity,ProgramBuddbContext>(_Context);
             return repository;
         }
 

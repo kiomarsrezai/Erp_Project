@@ -13,8 +13,8 @@ namespace NewsWebsite.Data.Repositories
 {
     public class VideoRepository : IVideoRepository
     {
-        private readonly NewsDBContext _context;
-        public VideoRepository(NewsDBContext context)
+        private readonly ProgramBuddbContext _context;
+        public VideoRepository(ProgramBuddbContext context)
         {
             _context = context;
         }

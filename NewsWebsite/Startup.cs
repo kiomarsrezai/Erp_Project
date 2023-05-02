@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using NewsWebsite.Data;
-using NewsWebsite.Data.Models;
 using NewsWebsite.IocConfig;
 using NewsWebsite.IocConfig.Api.Middlewares;
 using NewsWebsite.IocConfig.Api.Swagger;
@@ -37,7 +36,7 @@ namespace NewsWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<SiteSettings>(Configuration.GetSection(nameof(SiteSettings)));
-            services.AddDbContext<NewsDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
+            //services.AddDbContext<ProgramBuddbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
             services.AddDbContext<ProgramBuddbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlErp")));
             services.AddCustomServices();
             services.AddTransient<ISecurityTrimmingService, SecurityTrimmingService>();

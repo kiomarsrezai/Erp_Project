@@ -8,8 +8,8 @@ using NewsWebsite.Data;
 
 namespace NewsWebsite.Data.Migrations
 {
-    [DbContext(typeof(NewsDBContext))]
-    partial class NewsDBContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ProgramBuddbContext))]
+    partial class ProgramBuddbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

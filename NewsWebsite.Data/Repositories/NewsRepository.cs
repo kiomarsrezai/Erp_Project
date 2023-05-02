@@ -18,11 +18,11 @@ namespace NewsWebsite.Data.Repositories
 {
     public class NewsRepository : INewsRepository
     {
-        private readonly NewsDBContext _context;
+        private readonly ProgramBuddbContext _context;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _uw;
-        public NewsRepository(NewsDBContext context, IMapper mapper, IConfiguration configuration, IUnitOfWork uw)
+        public NewsRepository(ProgramBuddbContext context, IMapper mapper, IConfiguration configuration, IUnitOfWork uw)
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));

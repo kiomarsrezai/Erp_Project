@@ -1,6 +1,7 @@
 ﻿@using NewsWebsite.Data.Contracts;
+    @using NewsWebsite.Data;
 @model List<NewsWebsite.ViewModels.Fetch.VasetSazmanhaViewModel>
-@inject NewsWebsite.Data.Models.ProgramBuddbContext _db
+@inject ProgramBuddbContext _db
 @inject NewsWebsite.Services.Contracts.IApplicationUserManager _unit
 
 @inject IBudget_001Rep _uw
