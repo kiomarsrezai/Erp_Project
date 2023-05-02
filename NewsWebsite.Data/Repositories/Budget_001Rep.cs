@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -437,7 +438,7 @@ namespace NewsWebsite.Data.Repositories
                         fetchView.Code = dataReader["Code"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        //fetchView.CodeVaset = dataReader["CodeVaset"].ToString();
+                        fetchView.Edit= long.Parse(dataReader["Edit"].ToString());
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
