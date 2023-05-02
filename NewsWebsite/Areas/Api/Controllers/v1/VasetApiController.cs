@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,21 +28,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("VasetGetAll")]
         [HttpGet]
-        public async Task<IActionResult> GetVasets(int yearId, int areaId, int budgetProcessId)
+        public async Task<ApiResult<List<VasetSazmanhaViewModel>>> GetVasets(int yearId, int areaId, int budgetProcessId)
         {
             return Ok(await _uw.VasetRepository.GetAllAsync(yearId, areaId, budgetProcessId));
         }
 
         [Route("GetModalVaset")]
         [HttpGet]
-        public async Task<IActionResult> GetModalVaset(int id, string code, string description, int yearId, int areaId)
+        public async Task<ApiResult<List<CodeAccUpdateViewModel>>> GetModalVaset(int id, string code, string description, int yearId, int areaId)
         {
             return Ok(await _uw.VasetRepository.ModalDetailsAsync(id, code, description, yearId, areaId));
         }
 
         [Route("InsertCodeAcc")]
         [HttpGet]
-        public async Task<IActionResult> InsertCodeAccAsync(int id)
+        public async Task<ApiResult<string>> InsertCodeAccAsync(int id)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");

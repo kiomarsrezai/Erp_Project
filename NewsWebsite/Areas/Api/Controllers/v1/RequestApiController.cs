@@ -24,8 +24,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
 
-        public RequestApiController(ProgramBuddbContext context, IUnitOfWork uw)
+        public RequestApiController(ProgramBuddbContext context, IUnitOfWork uw,IConfiguration configuration)
         {
+            _config = configuration;
             _context = context;
             _uw = uw;
         }
