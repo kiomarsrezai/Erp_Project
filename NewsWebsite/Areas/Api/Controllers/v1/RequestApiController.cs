@@ -32,25 +32,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("RequestInsert")]
         [HttpPost]
         public async Task<ApiResult<RequestAfterInsertViewModel>> RequestInsert([FromBody] RequestInsertViewModel viewModel)
-        {
+        {            
+            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
+
             if (viewModel.AreaId == 0) 
                 return BadRequest();
 
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
-                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                }
-            }
-            
-            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Insert", sqlconnect))
@@ -81,7 +68,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<RequestsViewModel>> GetRequest(RequestReadParamViewModel paramViewModel)
         {
-            List<RequestsViewModel> requestsViewModels = new List<RequestsViewModel>(); 
+            RequestsViewModel requestsViewModels = new RequestsViewModel(); 
             
             if (paramViewModel.RequestId == 0)
                 return BadRequest();
@@ -96,18 +83,51 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        RequestsViewModel request = new RequestsViewModel();
-                        request.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        requestsViewModels.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        requestsViewModels.Users = dataReader["Users"].ToString();
+                        requestsViewModels.Number= dataReader["Number"].ToString();
+                        requestsViewModels.DoingMethodId= int.Parse(dataReader["DoingMethodId"].ToString());
+                        requestsViewModels.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
+                        requestsViewModels.Id= int.Parse(dataReader["Id"].ToString());
+                        requestsViewModels.Date= dataReader["Date"].ToString();
+                        requestsViewModels.DateS= dataReader["DateS"].ToString();
+                        requestsViewModels.Description= dataReader["Description"].ToString();
+                        requestsViewModels.EstimateAmount= long.Parse(dataReader["EstimateAmount"].ToString());
+                        requestsViewModels.ExecuteDepartmanId= int.Parse(dataReader["ExecuteDepartmanId"].ToString());
+                    }
+                }
+            }
+            return Ok(requestsViewModels);
+        }
+
+        [Route("GetRequestList")]
+        [HttpGet]
+        public async Task<ApiResult<RequestSearchViewModel>> GetRequestList(RequestSearchParamViewModel paramViewModel)
+        {
+            List<RequestSearchViewModel> requestsViewModels = new List<RequestSearchViewModel>();
+
+            if (paramViewModel.ExecuteDepartmanId == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSearch_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", paramViewModel.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", paramViewModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", paramViewModel.ExecuteDepartmanId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        RequestSearchViewModel request = new RequestSearchViewModel();
                         request.Users = dataReader["Users"].ToString();
-                        request.Number= dataReader["Number"].ToString();
-                        request.DoingMethodId= int.Parse(dataReader["DoingMethodId"].ToString());
-                        request.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
-                        request.Id= int.Parse(dataReader["Id"].ToString());
-                        request.Date= dataReader["Date"].ToString();
-                        request.DateS= dataReader["DateS"].ToString();
-                        request.Description= dataReader["Description"].ToString();
-                        request.EstimateAmount= long.Parse(dataReader["EstimateAmount"].ToString());
-                        request.ExecuteDepartmanId= int.Parse(dataReader["ExecuteDepartmanId"].ToString());
+                        request.Number = dataReader["Number"].ToString();
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.DateS = dataReader["DateS"].ToString();
+                        request.Description = dataReader["Description"].ToString();
+                        request.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.Add(request);
                     }
                 }
