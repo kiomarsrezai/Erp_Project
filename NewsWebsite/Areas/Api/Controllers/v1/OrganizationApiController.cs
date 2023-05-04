@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
@@ -91,7 +92,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         OrganizationsViewModel Organization = new OrganizationsViewModel();
                         Organization.Id = int.Parse(dataReader["Id"].ToString());
                         Organization.OrgName = dataReader["OrgName"].ToString();
-                        Organization.MotherId = int.Parse(dataReader["MotherId"].ToString());
+                        Organization.MotherId = StringExtensions.ToNullableInt(dataReader["MotherId"].ToString());
                         Organization.OrgCode= dataReader["OrgCode"].ToString();
                         OrganizationsViewModels.Add(Organization);
                     }

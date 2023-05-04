@@ -7,7 +7,6 @@ namespace NewsWebsite.ViewModels.Api.Organization
 {
     public class OrganizationReadParamViewModel
     {
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
         public int AreaId { get; set; }
         
     }
