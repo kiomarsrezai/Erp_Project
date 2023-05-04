@@ -7,8 +7,8 @@ namespace NewsWebsite.ViewModels.Api.Organization
 {
     public class OrganizationInsertViewModel
     {
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
-        public int Id { get; set; }
+        public int? MotherId { get; set; }
+        public int AreaId { get; set; }
 
     }
 }

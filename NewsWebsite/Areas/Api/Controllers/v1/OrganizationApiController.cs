@@ -52,17 +52,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("OrganizationInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> GetOrganization([FromBody] OrganizationInsertViewModel paramViewModel)
+        public virtual async Task<ApiResult<string>> GetOrganization([FromBody] OrganizationInsertViewModel paramViewModel)
         {
-            if (paramViewModel.Id == 0)
-                return BadRequest("با خطا مواجه شد");
-
+            if (paramViewModel.MotherId == 0)
+                paramViewModel.MotherId = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP015_Organization_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", paramViewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("MotherId", paramViewModel.MotherId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", paramViewModel.AreaId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }
