@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NewsWebsite.Areas.Admin.Controllers;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
@@ -19,7 +20,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class OrganizationApiController : ControllerBase
+    public class OrganizationApiController : BaseController
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;

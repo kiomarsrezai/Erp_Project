@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.GeneralVm;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -39,7 +42,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetProcessFetch")]
         [HttpGet]
-        public async Task<IActionResult> BudgetProcess()
+        public async Task<ApiResult<List<BudgetProcessViewModel>>> BudgetProcess()
         {
             return Ok(await _uw.Budget_001Rep.BudgetProcessFetchAsync());
         }

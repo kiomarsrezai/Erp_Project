@@ -107,8 +107,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ChartApi")]
         [HttpGet]
-        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati)
+        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati,int? areaId=null)
         {
+            List<int> Id = new List<int>();
+            List<string> Description = new List<string>();
+            List<string> Code = new List<string>();
             List<object> data = new List<object>();
             List<string> lables = new List<string>();
             List<Int64> mosavab = new List<Int64>();
@@ -116,58 +119,117 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<double> percdaily = new List<double>();
             List<Int64> mosavabdaily = new List<Int64>();
             List<Int64> expense = new List<Int64>();
-            //List<ColumnChart> dataset = new List<ColumnChart>();
-            using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart", sqlconnect1))
-                {
-                    sqlconnect1.Open();
-                    sqlCommand1.CommandType = CommandType.StoredProcedure;
-                    sqlCommand1.Parameters.AddWithValue("YearId", yearId);
-                    sqlCommand1.Parameters.AddWithValue("CenterId", centerId);
-                    sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
-                    sqlCommand1.Parameters.AddWithValue("revenue", revenue);
-                    sqlCommand1.Parameters.AddWithValue("sale", sale);
-                    sqlCommand1.Parameters.AddWithValue("loan", loan);
-                    sqlCommand1.Parameters.AddWithValue("niabati", niabati);
-                    sqlCommand1.Parameters.AddWithValue("StructureId", StructureId);
-                    SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
+            
 
-                    while (dataReader1.Read())
+            if (areaId == null)
+            {
+                
+                //List<ColumnChart> dataset = new List<ColumnChart>();
+                using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart", sqlconnect1))
                     {
-                        double percmos = 0; double percdai = 0;
-                        lables.Add(dataReader1["AreaName"].ToString());
-                        mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
-                        mosavabdaily.Add(Int64.Parse(dataReader1["MosavabDaily"].ToString()));
-                        expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                        if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
+                        sqlconnect1.Open();
+                        sqlCommand1.CommandType = CommandType.StoredProcedure;
+                        sqlCommand1.Parameters.AddWithValue("YearId", yearId);
+                        sqlCommand1.Parameters.AddWithValue("areaId", areaId);
+                        sqlCommand1.Parameters.AddWithValue("CenterId", centerId);
+                        sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                        sqlCommand1.Parameters.AddWithValue("revenue", revenue);
+                        sqlCommand1.Parameters.AddWithValue("sale", sale);
+                        sqlCommand1.Parameters.AddWithValue("loan", loan);
+                        sqlCommand1.Parameters.AddWithValue("niabati", niabati);
+                        sqlCommand1.Parameters.AddWithValue("StructureId", StructureId);
+                        SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
+
+                        while (dataReader1.Read())
                         {
-                            percmos = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                            double percmos = 0; double percdai = 0;
+                            lables.Add(dataReader1["AreaName"].ToString());
+                            mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
+                            mosavabdaily.Add(Int64.Parse(dataReader1["MosavabDaily"].ToString()));
+                            expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
+                            expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
+                            Description.Add(dataReader1["Description"].ToString());
+                            Code.Add(dataReader1["Code"].ToString());
+                            if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
+                            {
+                                percmos = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                            }
+                            else
+                            {
+                                percmos = 0;
+                            }
+                            if (Int64.Parse(dataReader1["MosavabDaily"].ToString()) > 0)
+                            {
+                                percdai = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["MosavabDaily"].ToString()));
+                            }
+                            else
+                            {
+                                percdai = 0;
+                            }
+                            //dataset.AddRange(Int64.Parse(dataReader1["Mosavab"].ToString()), Int64.Parse(dataReader1["Expense"].ToString()), Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                         }
-                        else
-                        {
-                            percmos = 0;
-                        }
-                        if (Int64.Parse(dataReader1["MosavabDaily"].ToString()) > 0)
-                        {
-                            percdai = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["MosavabDaily"].ToString()));
-                        }
-                        else
-                        {
-                            percdai = 0;
-                        }
-                        //dataset.AddRange(Int64.Parse(dataReader1["Mosavab"].ToString()), Int64.Parse(dataReader1["Expense"].ToString()), Int64.Parse(dataReader1["MosavabDaily"].ToString()));
+
+                        data.Add(lables);
+                        data.Add(mosavab);
+                        data.Add(expense);
+                        data.Add(mosavabdaily);
+                        data.Add(percmosavab);
+                        data.Add(percdaily);
+                        data.Add(Description);
+                        data.Add(Code);
                     }
 
-                    data.Add(lables);
-                    data.Add(mosavab);
-                    data.Add(expense);
-                    data.Add(mosavabdaily);
-                    data.Add(percmosavab);
-                    data.Add(percdaily);
-                }
+                };
+            }else 
+            if (areaId>0)
+            {
+                using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart", sqlconnect1))
+                    {
+                        sqlconnect1.Open();
+                        sqlCommand1.CommandType = CommandType.StoredProcedure;
+                        sqlCommand1.Parameters.AddWithValue("YearId", yearId);
+                        sqlCommand1.Parameters.AddWithValue("areaId", areaId);
+                        sqlCommand1.Parameters.AddWithValue("CenterId", centerId);
+                        sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                        sqlCommand1.Parameters.AddWithValue("revenue", revenue);
+                        sqlCommand1.Parameters.AddWithValue("sale", sale);
+                        sqlCommand1.Parameters.AddWithValue("loan", loan);
+                        sqlCommand1.Parameters.AddWithValue("niabati", niabati);
+                        sqlCommand1.Parameters.AddWithValue("StructureId", StructureId);
+                        SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
-            };
+                        while (dataReader1.Read())
+                        {
+                            double percmos = 0; double percdai = 0;
+                            Id.Add(int.Parse(dataReader1["Id"].ToString()));
+                            Code.Add(dataReader1["Code"].ToString());
+                            Description.Add(dataReader1["Description"].ToString());
+                            mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
+                            expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
+                            if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
+                            {
+                                percmos = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                            }
+                            {
+                                percmos = 0;
+                            }
+                            //dataset.AddRange(Int64.Parse(dataReader1["Mosavab"].ToString()), Int64.Parse(dataReader1["Expense"].ToString()), Int64.Parse(dataReader1["MosavabDaily"].ToString()));
+                        }
+
+                        data.Add(Id);
+                        data.Add(Code);
+                        data.Add(Description);
+                        data.Add(mosavab);
+                        data.Add(expense);
+                        data.Add(percmosavab);
+                    }
+
+                };
+            }
             return data;
 
         }
