@@ -150,8 +150,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             mosavabdaily.Add(Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                            Description.Add(dataReader1["Description"].ToString());
-                            Code.Add(dataReader1["Code"].ToString());
+                            //Description.Add(dataReader1["Description"].ToString());
+                            //Code.Add(dataReader1["Code"].ToString());
                             if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
                                 percmos = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
@@ -183,7 +183,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                 };
             }else 
-            if (areaId>0)
+            if (areaId!=null)
             {
                 using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
                 {
@@ -204,7 +204,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         while (dataReader1.Read())
                         {
-                            double percmos = 0; double percdai = 0;
+                            double percmos = 0;
+
                             Id.Add(int.Parse(dataReader1["Id"].ToString()));
                             Code.Add(dataReader1["Code"].ToString());
                             Description.Add(dataReader1["Description"].ToString());
@@ -214,10 +215,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             {
                                 percmos = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
                             }
-                            {
-                                percmos = 0;
-                            }
-                            //dataset.AddRange(Int64.Parse(dataReader1["Mosavab"].ToString()), Int64.Parse(dataReader1["Expense"].ToString()), Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                         }
 
                         data.Add(Id);
