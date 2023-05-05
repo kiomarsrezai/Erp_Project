@@ -122,7 +122,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         RequestSearchViewModel request = new RequestSearchViewModel();
-                        request.Users = dataReader["Users"].ToString();
+                        request.Employee = dataReader["Employee"].ToString();
                         request.Number = dataReader["Number"].ToString();
                         request.Id = int.Parse(dataReader["Id"].ToString());
                         request.DateS = dataReader["DateS"].ToString();
