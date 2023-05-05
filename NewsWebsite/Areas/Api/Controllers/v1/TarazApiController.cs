@@ -32,7 +32,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("GetTaraz")]
         [HttpGet]
-        public async Task<ApiResult<TarazKolMoienViewModel>> GetTarazKol(int yearId, int areaId, long? MoienId = null, long? TafsilyId = null, int? KindId = null)
+        public async Task<ApiResult<List<TarazKolMoienViewModel>>> GetTarazKol(int yearId, int areaId, long? MoienId = null, long? TafsilyId = null, int? KindId = null)
         {
             List<TarazKolMoienViewModel> fecthkol = new List<TarazKolMoienViewModel>();
 
@@ -61,7 +61,40 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchViewKol.Bestankar = Int64.Parse(dataReader["Bestankar"].ToString());
                             fetchViewKol.BalanceBedehkar = Int64.Parse(dataReader["BalanceBedehkar"].ToString());
                             fetchViewKol.BalanceBestankar = Int64.Parse(dataReader["BalanceBestankar"].ToString());
+                            fetchViewKol.SanadNumber = "";
+                            fetchViewKol.SanadDate = "";
                             fecthkol.Add(fetchViewKol);
+                        }
+                    }
+                }
+            }
+            else
+                 if (MoienId != null && TafsilyId == null)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9900_Taraz", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                        sqlCommand.Parameters.AddWithValue("AreaId", areaId);
+                        sqlCommand.Parameters.AddWithValue("MoienId", MoienId);
+                        sqlCommand.Parameters.AddWithValue("TafsilyId", TafsilyId);
+                        sqlCommand.Parameters.AddWithValue("KindId", KindId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.Read())
+                        {
+                            TarazKolMoienViewModel fetchViewtafsily = new TarazKolMoienViewModel();
+                            fetchViewtafsily.Code = dataReader["Code"].ToString();
+                            fetchViewtafsily.Description = dataReader["Description"].ToString();
+                            fetchViewtafsily.Bedehkar = Int64.Parse(dataReader["Bedehkar"].ToString());
+                            fetchViewtafsily.Bestankar = Int64.Parse(dataReader["Bestankar"].ToString());
+                            fetchViewtafsily.BalanceBedehkar = Int64.Parse(dataReader["BalanceBedehkar"].ToString());
+                            fetchViewtafsily.BalanceBestankar = Int64.Parse(dataReader["BalanceBestankar"].ToString());
+                            fetchViewtafsily.SanadNumber = "";
+                            fetchViewtafsily.SanadDate = "";
+                            fecthkol.Add(fetchViewtafsily);
                         }
                     }
                 }
@@ -89,6 +122,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchViewtafsily.Description = dataReader["Description"].ToString();
                             fetchViewtafsily.Bedehkar = Int64.Parse(dataReader["Bedehkar"].ToString());
                             fetchViewtafsily.Bestankar = Int64.Parse(dataReader["Bestankar"].ToString());
+                            fetchViewtafsily.BalanceBedehkar = 0;
+                            fetchViewtafsily.BalanceBestankar = 0;
                             fecthkol.Add(fetchViewtafsily);
                         }
                     }

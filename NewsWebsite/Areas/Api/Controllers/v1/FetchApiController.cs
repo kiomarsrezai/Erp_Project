@@ -38,7 +38,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 Int64 _totalMosavab = 0; Int64 _totalExpense = 0;
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudget", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("YearId", yearId);
