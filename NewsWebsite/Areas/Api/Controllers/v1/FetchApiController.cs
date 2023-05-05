@@ -76,7 +76,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [HttpGet]
         [Route("FetchDetails")]
-        public async Task<ApiResult<List<FetchDataBudgetViewModel>>> FetchDetails(int yearId, int codingId)
+        public async Task<ApiResult<List<FetchDataBudgetViewModel>>> FetchDetails(int yearId, int areaId, int codingId)
         {
             List<FetchDataBudgetViewModel> dataset = new List<FetchDataBudgetViewModel>();
             
@@ -87,6 +87,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", areaId);
                     sqlCommand.Parameters.AddWithValue("CodingId", codingId);
                     SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
 
