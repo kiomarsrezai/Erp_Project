@@ -13,4 +13,8 @@
     <ProjectReference Include="..\NewsWebsite.Entities\NewsWebsite.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Api\Chart\" />
+  </ItemGroup>
+
 </Project>

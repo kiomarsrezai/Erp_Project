@@ -223,20 +223,20 @@ namespace NewsWebsite.Areas.Admin.Controllers
             return View(fecth);
         }
 
-        [HttpGet, DisplayName("درج و ویرایش")]
-        public IActionResult RenderFetch()
-        {
-            var tagViewModel = new FetchViewModel();
-            //if (fetchId>0)
-            //{
-            //    var tag = _context.fetc>().FindByIdAsync(tagId);
-            //    if (tag != null)
-            //        tagViewModel = _mapper.Map<TagViewModel>(tag);
-            //    else
-            //        ModelState.AddModelError(string.Empty, TagNotFound);
-            //}
-            return PartialView("_RenderTag", tagViewModel);
-        }
+        //[HttpGet, DisplayName("درج و ویرایش")]
+        //public IActionResult RenderFetch(int )
+        //{
+        //    var tagViewModel = new FetchViewModel();
+        //    if (fetchId > 0)
+        //    {
+        //        var tag = _context.fetc > ().FindByIdAsync(tagId);
+        //        if (tag != null)
+        //            tagViewModel = _mapper.Map<TagViewModel>(tag);
+        //        else
+        //            ModelState.AddModelError(string.Empty, TagNotFound);
+        //    }
+        //    return PartialView("_RenderTag", tagViewModel);
+        //}
 
         [HttpPost]
         public IActionResult CreateOrUpdate()

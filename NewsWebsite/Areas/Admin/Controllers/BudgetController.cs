@@ -20,14 +20,14 @@ using NewsWebsite.ViewModels.DynamicAccess;
 namespace NewsWebsite.Areas.Admin.Controllers
 {
     [DisplayName("مدیریت انواع بودجه")]
-    public class BudgetProcessTypeController : BaseController
+    public class BudgetController : BaseController
     {
         private readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
         private const string BudgetProcessNotFound = "نواع بودجه ی درخواستی یافت نشد.";
         private const string BudgetProcessDuplicate = "نام نواع بودجه تکراری است.";
         private readonly IMemoryCache _cache;
-        public BudgetProcessTypeController(IUnitOfWork uw, IMemoryCache cache, IConfiguration config)
+        public BudgetController(IUnitOfWork uw, IMemoryCache cache, IConfiguration config)
         {
             _uw = uw;
             _uw.CheckArgumentIsNull(nameof(_uw));
@@ -56,8 +56,6 @@ namespace NewsWebsite.Areas.Admin.Controllers
                 using (SqlCommand sqlCommand = new SqlCommand("SP0_BudgetPr_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    //sqlCommand.Parameters.AddWithValue("MotherId", paramViewModel.MotherId);
-                    //sqlCommand.Parameters.AddWithValue("AreaId", paramViewModel.AreaId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }
