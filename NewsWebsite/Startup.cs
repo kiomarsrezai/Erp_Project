@@ -84,11 +84,19 @@ namespace NewsWebsite
 
             app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), appBuilder =>
             {
+                DefaultFilesOptions options = new DefaultFilesOptions();
+                options.DefaultFileNames.Clear();
+                options.DefaultFileNames.Add("index.html");
+
+                app.UseDefaultFiles(options);
+
                 if (env.IsDevelopment())
                     appBuilder.UseDeveloperExceptionPage();
                 else
                     appBuilder.UseExceptionHandler("/Home/Error");
             });
+
+           
 
             app.UseStaticFiles(new StaticFileOptions
             {

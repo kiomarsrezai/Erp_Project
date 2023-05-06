@@ -15,6 +15,7 @@ using NewsWebsite.Common;
 using AutoMapper;
 using System.Linq.Dynamic.Core;
 using NewsWebsite.Data;
+using NewsWebsite.Entities;
 
 namespace NewsWebsite.Services.Identity
 {
@@ -126,8 +127,8 @@ namespace NewsWebsite.Services.Identity
         public async Task<List<UsersViewModel>> GetPaginateUsersAsync(int offset, int limit, string orderBy, string searchText)
         {
             var getDateTimesForSearch = searchText.GetDateTimeForSearch();
-            var users = await Users.Include(u => u.Roles)
-                  .Where(t => t.FirstName.Contains(searchText) || t.LastName.Contains(searchText) || t.Email.Contains(searchText) || t.UserName.Contains(searchText) || (t.RegisterDateTime >= getDateTimesForSearch.First() && t.RegisterDateTime <= getDateTimesForSearch.Last()))
+            var users = await Users.Include(u => u.Roles).Include(l => l.Section)
+                  .Where(t => t.SectionId > 1 && (t.FirstName.Contains(searchText) || t.LastName.Contains(searchText) || t.Email.Contains(searchText) || t.UserName.Contains(searchText) || (t.RegisterDateTime >= getDateTimesForSearch.First() && t.RegisterDateTime <= getDateTimesForSearch.Last())))
                   .OrderBy(orderBy)
                   .Skip(offset).Take(limit)
                   .Select(user => new UsersViewModel
@@ -135,15 +136,13 @@ namespace NewsWebsite.Services.Identity
                       Id = user.Id,
                       Email = user.Email,
                       UserName = user.UserName,
-                      Token = user.Token,
-                      Lisence = user.Lisence,
                       PhoneNumber = user.PhoneNumber,
                       FirstName = user.FirstName,
                       LastName = user.LastName,
                       IsActive = user.IsActive,
-                      SectionId = user.SectionId,
                       Image = user.Image,
-                      Bio = user.Bio,
+                      SectionId = user.SectionId,
+                      SectionName = _context.Sections.FirstOrDefault(a=>a.SectionId== user.SectionId).Name,
                       PersianBirthDate = user.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd"),
                       PersianRegisterDateTime = user.RegisterDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss"),
                       GenderName = user.Gender == GenderType.Male ? "مرد" : "زن",
@@ -217,24 +216,24 @@ namespace NewsWebsite.Services.Identity
             return await UpdateAsync(user);
         }
 
-        public User Authenticate(string username, string password)
-        {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
+        //public User Authenticate(string username, string password)
+        //{
+        //    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        //        return null;
 
-            var user = _context.Users.SingleOrDefault(x => x.UserName == username);
+        //    var user = _context.Users.SingleOrDefault(x => x.UserName == username);
 
-            // check if username exists
-            if (user == null)
-                return null;
+        //    // check if username exists
+        //    if (user == null)
+        //        return null;
 
-            // check if password is correct
-            if (!VerifyPasswordHash(password, user.passStoredHash, user.passStoredSalt))
-                return null;
+        //    // check if password is correct
+        //    if (!VerifyPasswordHash(password, user.passStoredHash, user.passStoredSalt))
+        //        return null;
 
-            // authentication successful
-            return user;
-        }
+        //    // authentication successful
+        //    return user;
+        //}
 
         public IEnumerable<User> GetAll()
         {
@@ -246,64 +245,64 @@ namespace NewsWebsite.Services.Identity
             return _context.Users.Find(id);
         }
 
-        public User Create(User user, string password)
-        {
-            // validation
-            if (string.IsNullOrWhiteSpace(password))
-                throw new Exception("Password is required");
+        //public User Create(User user, string password)
+        //{
+        //    // validation
+        //    if (string.IsNullOrWhiteSpace(password))
+        //        throw new Exception("Password is required");
 
-            if (_context.Users.Any(x => x.UserName == user.UserName))
-                throw new Exception("Username \"" + user.UserName + "\" is already taken");
+        //    if (_context.Users.Any(x => x.UserName == user.UserName))
+        //        throw new Exception("Username \"" + user.UserName + "\" is already taken");
 
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+        //    byte[] passwordHash, passwordSalt;
+        //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            user.passStoredHash = passwordHash;
-            user.passStoredSalt = passwordSalt;
+        //    user.passStoredHash = passwordHash;
+        //    user.passStoredSalt = passwordSalt;
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+        //    _context.Users.Add(user);
+        //    _context.SaveChanges();
 
-            return user;
-        }
+        //    return user;
+        //}
 
-        public void Update(User userParam, string password = null)
-        {
-            var user = _context.Users.Find(userParam.Id);
+        //public void Update(User userParam, string password = null)
+        //{
+        //    var user = _context.Users.Find(userParam.Id);
 
-            if (user == null)
-                throw new Exception("User not found");
+        //    if (user == null)
+        //        throw new Exception("User not found");
 
-            // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
-            {
-                // throw error if the new username is already taken
-                if (_context.Users.Any(x => x.UserName == userParam.UserName))
-                    throw new Exception("Username " + userParam.UserName + " is already taken");
+        //    // update username if it has changed
+        //    if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
+        //    {
+        //        // throw error if the new username is already taken
+        //        if (_context.Users.Any(x => x.UserName == userParam.UserName))
+        //            throw new Exception("Username " + userParam.UserName + " is already taken");
 
-                user.UserName = userParam.UserName;
-            }
+        //        user.UserName = userParam.UserName;
+        //    }
 
-            // update user properties if provided
-            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
-                user.FirstName = userParam.FirstName;
+        //    // update user properties if provided
+        //    if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+        //        user.FirstName = userParam.FirstName;
 
-            if (!string.IsNullOrWhiteSpace(userParam.LastName))
-                user.LastName = userParam.LastName;
+        //    if (!string.IsNullOrWhiteSpace(userParam.LastName))
+        //        user.LastName = userParam.LastName;
 
-            // update password if provided
-            if (!string.IsNullOrWhiteSpace(password))
-            {
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(password, out passwordHash, out passwordSalt);
+        //    // update password if provided
+        //    if (!string.IsNullOrWhiteSpace(password))
+        //    {
+        //        byte[] passwordHash, passwordSalt;
+        //        CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-                user.passStoredHash = passwordHash;
-                user.passStoredSalt = passwordSalt;
-            }
+        //        user.passStoredHash = passwordHash;
+        //        user.passStoredSalt = passwordSalt;
+        //    }
 
-            _context.Users.Update(user);
-            _context.SaveChanges();
-        }
+        //    _context.Users.Update(user);
+        //    _context.SaveChanges();
+        //}
 
         public void Delete(int id)
         {

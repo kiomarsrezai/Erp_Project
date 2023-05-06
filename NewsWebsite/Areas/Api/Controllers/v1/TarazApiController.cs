@@ -55,6 +55,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         while (dataReader.Read())
                         {
                             TarazKolMoienViewModel fetchViewKol = new TarazKolMoienViewModel();
+                            fetchViewKol.Levels = int.Parse(dataReader["Levels"].ToString());
                             fetchViewKol.Code = dataReader["Code"].ToString();
                             fetchViewKol.Description = dataReader["Description"].ToString();
                             fetchViewKol.Bedehkar = Int64.Parse(dataReader["Bedehkar"].ToString());
@@ -86,6 +87,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         while (dataReader.Read())
                         {
                             TarazKolMoienViewModel fetchViewtafsily = new TarazKolMoienViewModel();
+                            fetchViewtafsily.Levels = int.Parse(dataReader["Levels"].ToString());
                             fetchViewtafsily.Code = dataReader["Code"].ToString();
                             fetchViewtafsily.Description = dataReader["Description"].ToString();
                             fetchViewtafsily.Bedehkar = Int64.Parse(dataReader["Bedehkar"].ToString());
@@ -117,6 +119,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         while (dataReader.Read())
                         {
                             TarazKolMoienViewModel fetchViewtafsily = new TarazKolMoienViewModel();
+                            fetchViewtafsily.Levels = int.Parse(dataReader["Levels"].ToString());
                             fetchViewtafsily.SanadNumber= dataReader["SanadNumber"].ToString();
                             fetchViewtafsily.SanadDate = dataReader["SanadDate"].ToString();
                             fetchViewtafsily.Description = dataReader["Description"].ToString();

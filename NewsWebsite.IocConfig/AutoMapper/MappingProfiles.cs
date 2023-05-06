@@ -34,6 +34,7 @@ namespace NewsWebsite.IocConfig.AutoMapper
             CreateMap<Video, VideoViewModel>().ReverseMap();
 
             CreateMap<User, UsersViewModel>().ReverseMap()
+                  .ForMember(p => p.SectionId, opt => opt.Ignore())
                   .ForMember(p => p.News, opt => opt.Ignore())
                   .ForMember(p => p.Bookmarks, opt => opt.Ignore())
                   .ForMember(p => p.Claims, opt => opt.Ignore());

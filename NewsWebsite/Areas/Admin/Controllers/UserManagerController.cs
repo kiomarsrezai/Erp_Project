@@ -144,13 +144,13 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet,DisplayName("درج و ویرایش")]
-        public async Task<IActionResult> RenderUser(int? userId)
+        public async Task<IActionResult> RenderUser(int userId)
         {
             var user = new UsersViewModel();
             ViewBag.Roles = _roleManager.GetAllRoles();
             ViewBag.SectionId = new SelectList(await _uw.Budget_001Rep.AreaFetchAsync(3), "Id", "AreaName");
 
-            if (userId != null)
+            if (userId != 0)
             {
                 user =await _uw._Context.Users.Where(u => u.Id == userId).Select(user => new UsersViewModel
                 {
@@ -186,7 +186,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
         public async Task<IActionResult> CreateOrUpdate(UsersViewModel viewModel)
         {
             ViewBag.Roles = _roleManager.GetAllRoles();
-            if (viewModel.Id!=null)
+            if (viewModel.Id!=0)
             {
                 ModelState.Remove("Password");
                 ModelState.Remove("ConfirmPassword");
@@ -201,7 +201,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
 
                 viewModel.Roles= new List<UserRole> { new UserRole { RoleId = (int)viewModel.RoleId } };
                 viewModel.BirthDate= viewModel.PersianBirthDate.ConvertShamsiToMiladi();
-                if (viewModel.Id != null)
+                if (viewModel.Id != 0)
                 {
                     var user = await _userManager.FindByIdAsync(viewModel.Id.ToString());
                     user.FirstName = viewModel.FirstName;

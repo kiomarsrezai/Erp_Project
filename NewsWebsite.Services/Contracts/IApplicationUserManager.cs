@@ -129,11 +129,11 @@ namespace NewsWebsite.Services.Contracts
         Task<User> FindClaimsInUser(int userId);
         Task<IdentityResult> AddOrUpdateClaimsAsync(int userId, string userClaimType, IList<string> selectedUserClaimValues);
 
-        User Authenticate(string username, string password);
+        //User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User GetById(int id);
-        User Create(User user, string password);
-        void Update(User user, string password = null);
+        //User Create(User user, string password);
+        //void Update(User user, string password = null);
         void Delete(int id);
         void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
         bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);

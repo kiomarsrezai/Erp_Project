@@ -19,9 +19,8 @@ namespace NewsWebsite.Entities.identity
         public string Lisence { get; set; }
         public int SectionId { get; set; }
         public string Token { get; set; }
-        public byte[] passStoredSalt { get; set; }
-        public byte[] passStoredHash { get; set; }
 
+        public virtual Section Section { get; set; }
         public virtual ICollection<News> News { get; set; }
         public virtual ICollection<Bookmark> Bookmarks { get; set; }
         public virtual ICollection<UserRole> Roles { get; set; }

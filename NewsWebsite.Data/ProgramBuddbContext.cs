@@ -16,6 +16,7 @@ namespace NewsWebsite.Data
         {
         }
 
+        public virtual DbSet<Section> Sections { set; get; }
         public virtual DbSet<Category> Categories { set; get; }
         public virtual DbSet<News> News { set; get; }
         public virtual DbSet<Bookmark> Bookmarks { get; set; }

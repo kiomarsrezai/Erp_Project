@@ -9,7 +9,7 @@ namespace NewsWebsite.ViewModels.UserManager
 {
     public class UsersViewModel
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         public int Row { get; set; }
 
@@ -48,8 +48,6 @@ namespace NewsWebsite.ViewModels.UserManager
 
         [Display(Name = "تاریخ تولد")]
         public string PersianBirthDate { get; set; }
-        public byte[] passStoredSalt { get; set; }
-        public byte[] passStoredHash { get; set; }
         
         [Display(Name = "تاریخ عضویت"),JsonIgnore]
         public DateTime? RegisterDateTime { get; set; }
@@ -80,8 +78,11 @@ namespace NewsWebsite.ViewModels.UserManager
         [Required(ErrorMessage = "انتخاب {0} الزامی است.")]
         public int? RoleId { get; set; }
         
-        [JsonIgnore, Display(Name = "منطقه")]
+        [Display(Name = "منطقه")]
         public int? SectionId { get; set; }
+        
+        [JsonIgnore, Display(Name = "عنوان منطقه")]
+        public string SectionName { get; set; }
 
         public string RoleName { get; set; }
 

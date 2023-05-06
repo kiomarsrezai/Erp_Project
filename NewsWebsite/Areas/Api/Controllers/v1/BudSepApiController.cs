@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
@@ -144,41 +145,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         while (dataReader1.Read())
                         {
-                            double percmos = 0; double percdai = 0;
                             lables.Add(dataReader1["AreaName"].ToString());
                             mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
                             mosavabdaily.Add(Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                            expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                            //Description.Add(dataReader1["Description"].ToString());
-                            //Code.Add(dataReader1["Code"].ToString());
                             if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
-                                percmos = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString())));
                             }
                             else
                             {
-                                percmos = 0;
+                                percmosavab.Add(0);
                             }
                             if (Int64.Parse(dataReader1["MosavabDaily"].ToString()) > 0)
                             {
-                                percdai = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["MosavabDaily"].ToString()));
+                                percdaily.Add(_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["MosavabDaily"].ToString())));
                             }
                             else
                             {
-                                percdai = 0;
+                                percdaily.Add(0);
                             }
                             //dataset.AddRange(Int64.Parse(dataReader1["Mosavab"].ToString()), Int64.Parse(dataReader1["Expense"].ToString()), Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                         }
 
                         data.Add(lables);
                         data.Add(mosavab);
-                        data.Add(expense);
                         data.Add(mosavabdaily);
+                        data.Add(expense);
                         data.Add(percmosavab);
                         data.Add(percdaily);
-                        data.Add(Description);
-                        data.Add(Code);
                     }
 
                 };
@@ -204,7 +199,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         while (dataReader1.Read())
                         {
-                            double percmos = 0;
 
                             Id.Add(int.Parse(dataReader1["Id"].ToString()));
                             Code.Add(dataReader1["Code"].ToString());
@@ -213,7 +207,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                             if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
-                                percmos = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString())));
+                            }else
+                            {
+                                percmosavab.Add(0);
                             }
                         }
 
