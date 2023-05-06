@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.GeneralVm
+namespace NewsWebsite.ViewModels.Api.GeneralVm
 {
-    public class YearViewModel
+    public class AreaViewModel
     {
         public int Id { get; set; }
 
-        [Display(Name = "سال")]
-        public string YearName { get; set; }
+        [Display(Name = "منطقه")]
+        public string AreaName { get; set; }
     }
 }

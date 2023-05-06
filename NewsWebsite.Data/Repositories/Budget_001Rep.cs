@@ -2,7 +2,6 @@
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Fetch;
-using NewsWebsite.ViewModels.GeneralVm;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
+using NewsWebsite.ViewModels.Api.GeneralVm;
 
 namespace NewsWebsite.Data.Repositories
 {

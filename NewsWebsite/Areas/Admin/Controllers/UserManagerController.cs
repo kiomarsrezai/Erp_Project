@@ -17,8 +17,8 @@ using NewsWebsite.Common;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Contracts;
+using NewsWebsite.ViewModels.Api.GeneralVm;
 using NewsWebsite.ViewModels.DynamicAccess;
-using NewsWebsite.ViewModels.GeneralVm;
 using NewsWebsite.ViewModels.UserManager;
 
 namespace NewsWebsite.Areas.Admin.Controllers

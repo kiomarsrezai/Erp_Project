@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NewsWebsite.ViewModels.GeneralVm
+namespace NewsWebsite.ViewModels.Api.GeneralVm
 {
     public class BudgetProcessViewModel
     {
