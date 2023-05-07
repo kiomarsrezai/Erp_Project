@@ -36,14 +36,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<IActionResult> AreaFetch(int areaform)
         {
+
             return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
         }
 
         [Route("YearFetch")]
         [HttpGet]
-        public async Task<IActionResult> YearFetch(YearParamViewModel yearParam)
+        public async Task<ApiResult<List<YearViewModel>>> YearFetch(YearParamViewModel yearParam)
         {
-            return Ok(await _uw.Budget_001Rep.YearFetchAsync(yearParam.KindId));
+            if (yearParam.KindId==0) 
+                BadRequest();
+
+            List<YearViewModel> yearViews = new List<YearViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Year", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", yearParam.KindId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        YearViewModel fetchView = new YearViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.YearName = dataReader["YearName"].ToString();
+                        yearViews.Add(fetchView);
+
+                        //dataReader.NextResult();
+                    }
+                }
+            }
+            return Ok(yearViews);
         }
 
         [Route("BudgetProcessFetch")]
