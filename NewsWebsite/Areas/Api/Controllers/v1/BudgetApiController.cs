@@ -12,7 +12,6 @@ using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Budget;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.ViewModels.Api.Budget;
-using NewsWebsite.ViewModels.Api.GeneralVm;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -41,7 +40,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("MotherId", viewModel.MotherId);
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModel.BudgetProcessId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();

@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NewsWebsite.ViewModels.Api.GeneralVm
+namespace NewsWebsite.ViewModels.Api.Budget
 {
     public class CodingParamViewModel
     {
-        public int MotherId { get; set; }
+        public int? MotherId { get; set; }
 
         public int BudgetProcessId { get; set; }
     }

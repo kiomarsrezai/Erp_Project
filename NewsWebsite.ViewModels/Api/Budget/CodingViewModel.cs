@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NewsWebsite.ViewModels.Api.GeneralVm
+namespace NewsWebsite.ViewModels.Api.Budget
 {
     public class CodingViewModel
     {
