@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
@@ -78,39 +79,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(await _uw.Budget_001Rep.BudgetProcessFetchAsync());
         }
 
-        [Route("GetCodingList")]
-        [HttpGet]
-        public async Task<ApiResult<List<CodingViewModel>>> CodingList(CodingParamViewModel viewModel)
-        {
-            List<CodingViewModel> fecthViewModel = new List<CodingViewModel>();
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModel.BudgetProcessId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        CodingViewModel fetchView = new CodingViewModel();
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.MotherId = int.Parse(dataReader["MotherId"].ToString());
-                        fetchView.Code= dataReader["Code"].ToString();
-                        fetchView.Description= dataReader["Description"].ToString();
-                        fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
-                        fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
-                        fetchView.CodingRevenueKind= int.Parse(dataReader["RequestPrice"].ToString());
-
-                        fecthViewModel.Add(fetchView);
-                    }
-                }
-            }
-
-            return Ok(fecthViewModel);
-        }
+       
 
     }
 }

@@ -12,6 +12,7 @@ using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Budget;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.ViewModels.Api.Budget;
+using NewsWebsite.ViewModels.Api.GeneralVm;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -29,13 +30,47 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
+        [Route("GetCodingList")]
+        [HttpGet]
+        public async Task<ApiResult<List<CodingViewModel>>> GetCodingList(CodingParamViewModel viewModel)
+        {
+            List<CodingViewModel> fecthViewModel = new List<CodingViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModel.BudgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        CodingViewModel fetchView = new CodingViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.MotherId = StringExtensions.ToNullableInt(dataReader["MotherId"].ToString());
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+                        fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
+                        fetchView.CodingRevenueKind = int.Parse(dataReader["CodingRevenueKind"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+
         [Route("BudgetModal1Coding")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetViewModel>>> BudgetModalCodingList(BudgetParamModel paramModel)
+        public async Task<ApiResult<List<BudgetModalCodingViewModel>>> BudgetModalCodingList(BudgetCodingParamModel paramModel)
         {
             if (paramModel.CodeingId == 0) return BadRequest("با خطا مواجه شدید");
 
-            List<BudgetViewModel> fecth = new List<BudgetViewModel>();
+            List<BudgetModalCodingViewModel> fecth = new List<BudgetModalCodingViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding", sqlconnect))
@@ -48,7 +83,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetViewModel BudgetView = new BudgetViewModel();
+                        BudgetModalCodingViewModel BudgetView = new BudgetModalCodingViewModel();
                         //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         BudgetView.Code = dataReader["Code"].ToString();
                         BudgetView.Description = dataReader["Description"].ToString();
@@ -74,27 +109,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetModal2Project")]
         [HttpGet]
-        public async Task<IActionResult> BudgetModalProjectList(BudgetParamModel paramModel)
+        public async Task<ApiResult<List<BudgetModalProjectViewModel>>> BudgetModalProjectList(BudgetProjectParamModel paramModel)
         {
-            if (paramModel.CodeingId == 0) return BadRequest("با خطا مواجه شدید");
+            if (paramModel.Id == 0) return BadRequest("با خطا مواجه شدید");
 
-            List<BudgetViewModel> fecth = new List<BudgetViewModel>();
+            List<BudgetModalProjectViewModel> fecth = new List<BudgetModalProjectViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("CodeingId", paramModel.CodeingId);
+                    sqlCommand.Parameters.AddWithValue("Id", paramModel.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetViewModel BudgetView = new BudgetViewModel();
+                        BudgetModalProjectViewModel BudgetView = new BudgetModalProjectViewModel();
                         //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        BudgetView.Code = dataReader["Code"].ToString();
-                        BudgetView.Description = dataReader["Description"].ToString();
+                        BudgetView.Id = int.Parse(dataReader["Id"].ToString());
+                        BudgetView.ProjectId= int.Parse(dataReader["ProjectId"].ToString());
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
@@ -117,27 +150,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetModal3Area")]
         [HttpGet]
-        public async Task<IActionResult> BudgetModalAreaList(BudgetParamModel paramModel)
+        public async Task<ApiResult<List<BudgetAreaModalViewModel>>> BudgetModalAreaList(BudgetAreaParamModel paramModel)
         {
-            if (paramModel.CodeingId == 0) return BadRequest("با خطا مواجه شدید");
+            if (paramModel.Id == 0) return BadRequest("با خطا مواجه شدید");
 
-            List<BudgetViewModel> fecth = new List<BudgetViewModel>();
+            List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("CodeingId", paramModel.CodeingId);
+                    sqlCommand.Parameters.AddWithValue("Id", paramModel.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetViewModel BudgetView = new BudgetViewModel();
-                        //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        BudgetView.Code = dataReader["Code"].ToString();
-                        BudgetView.Description = dataReader["Description"].ToString();
+                        BudgetAreaModalViewModel BudgetView = new BudgetAreaModalViewModel();
+                        BudgetView.Id = int.Parse(dataReader["Id"].ToString());
+                        BudgetView.AreaName = dataReader["AreaName"].ToString();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());

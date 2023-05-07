@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Budget
 {
-    public class BudgetParamModel
+    public class BudgetCodingParamModel
     {
         public int YearId { get; set; }
         public int CodeingId{ get; set; }

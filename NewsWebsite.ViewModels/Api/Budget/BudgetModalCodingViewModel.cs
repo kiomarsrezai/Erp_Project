@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace NewsWebsite.ViewModels.Budget
 {
-    public class BudgetViewModel
+    public class BudgetModalCodingViewModel
     {
         public int Id { get; set; }
 
