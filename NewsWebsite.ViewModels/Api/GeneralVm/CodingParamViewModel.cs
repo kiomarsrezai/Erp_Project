@@ -4,7 +4,7 @@ namespace NewsWebsite.ViewModels.Api.GeneralVm
 {
     public class CodingParamViewModel
     {
-        public int Id { get; set; }
+        public int MotherId { get; set; }
 
         public int BudgetProcessId { get; set; }
     }
