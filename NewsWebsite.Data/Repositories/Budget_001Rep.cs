@@ -52,7 +52,7 @@ namespace NewsWebsite.Data.Repositories
             return areaViews;
         }
 
-        public async Task<List<YearViewModel>> YearFetchAsync()
+        public async Task<List<YearViewModel>> YearFetchAsync(int kindid)
         {
             List<YearViewModel> yearViews = new List<YearViewModel>();
 
@@ -61,6 +61,7 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Year", sqlconnect))
                 {
                     sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", kindid);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())

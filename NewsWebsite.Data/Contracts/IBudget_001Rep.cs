@@ -19,7 +19,7 @@ namespace NewsWebsite.Data.Contracts
         Task<string> AreaNameByIdAsync(int id);
         Task<bool> SaveLisenceAsync(int userId, string lisence);
         Task<List<BudgetProcessViewModel>> BudgetProcessFetchAsync();
-        Task<List<YearViewModel>> YearFetchAsync();
+        Task<List<YearViewModel>> YearFetchAsync(int kindid);
         Task<List<ProctorViewModel>> ProctorList();
         double Divivasion(double expense, double mosavab);
         List<DeputyViewModel> GetAllDeputies();

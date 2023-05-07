@@ -41,9 +41,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("YearFetch")]
         [HttpGet]
-        public async Task<IActionResult> YearFetch()
+        public async Task<IActionResult> YearFetch(YearParamViewModel yearParam)
         {
-            return Ok(await _uw.Budget_001Rep.YearFetchAsync());
+            return Ok(await _uw.Budget_001Rep.YearFetchAsync(yearParam.KindId));
         }
 
         [Route("BudgetProcessFetch")]
