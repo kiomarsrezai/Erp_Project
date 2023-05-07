@@ -124,12 +124,10 @@ namespace NewsWebsite.Services.Identity
         {
             return Users.FirstOrDefault(u => u.UserName == userName).SectionId;
         }
-        public async Task<List<UsersViewModel>> GetPaginateUsersAsync(int offset, int limit, string orderBy, string searchText)
+        public async Task<List<UsersViewModel>> GetPaginateUsersAsync(int offset, int limit,string searchText)
         {
-            var getDateTimesForSearch = searchText.GetDateTimeForSearch();
             var users = await Users.Include(u => u.Roles).Include(l => l.Section)
-                  .Where(t => t.SectionId > 1 && (t.FirstName.Contains(searchText) || t.LastName.Contains(searchText) || t.Email.Contains(searchText) || t.UserName.Contains(searchText) || (t.RegisterDateTime >= getDateTimesForSearch.First() && t.RegisterDateTime <= getDateTimesForSearch.Last())))
-                  .OrderBy(orderBy)
+                  .Where(t => t.FirstName.Contains(searchText) || t.LastName.Contains(searchText) || t.Email.Contains(searchText) || t.UserName.Contains(searchText))
                   .Skip(offset).Take(limit)
                   .Select(user => new UsersViewModel
                   {

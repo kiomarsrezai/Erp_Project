@@ -58,64 +58,19 @@ namespace NewsWebsite.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetUsers(string search, string order, int offset, int limit, string sort)
+        public async Task<JsonResult> GetUsers(string search, int offset, int limit)
         {
             List<UsersViewModel> allUsers;
-            int total = _userManager.Users.Count();
+            int _total = _userManager.Users.Count();
 
             if (string.IsNullOrWhiteSpace(search))
                 search = "";
 
             if (limit == 0)
-                limit = total;
+                limit = _total;
+             allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, search);
 
-            if (sort == "نام")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "FirstName", search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "FirstName desc", search);
-            }
-
-            else if (sort == "نام خانوادگی")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "LastName", search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "LastName desc", search);
-            }
-
-            else if (sort == "منطقه")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "SectionId", search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "SectionId desc", search);
-            }
-
-            else if (sort == "نام کاربری")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "UserName", search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "UserName desc", search);
-            }
-
-            else if (sort == "تاریخ عضویت")
-            {
-                if (order == "asc")
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "RegisterDateTime", search);
-                else
-                    allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "RegisterDateTime desc", search);
-            }
-
-            else
-                allUsers = await _userManager.GetPaginateUsersAsync(offset, limit, "RegisterDateTime desc", search);
-
-            if (search != "")
-                total = allUsers.Count();
-
-            return Json(new { total = total, rows = allUsers });
+            return Json(new {total= _total, rows = allUsers });
         }
 
         public List<AreaViewModel> AreaFetch(int areaform)

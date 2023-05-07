@@ -17,6 +17,7 @@ using NewsWebsite.ViewModels.UserManager;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -43,16 +44,63 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
+        [Route("UserListPagination")]
         [HttpGet]
         //[JwtAuthentication(Policy = ConstantPolicies.DynamicPermission)]
-        public virtual async Task<ApiResult<List<UsersViewModel>>> Get(int offset, int limit, string order, string search)
+        public virtual async Task<ApiResult<List<UsersViewModel>>> Get(int offset, int limit, string searchText="")
         {
-            if (!search.HasValue())
-                search = "";
-            return Ok(await _userManager.GetPaginateUsersAsync(offset, limit, order, search));
+            List<UsersViewModel> users;
+            if (searchText.Length > 0)
+            {
+                users = await _Context.Users.Include(u => u.Roles).Include(l => l.Section)
+                      .Where(t => t.FirstName.Contains(searchText) || t.LastName.Contains(searchText) || t.Email.Contains(searchText) || t.UserName.Contains(searchText))
+                      .Skip(offset).Take(limit)
+                      .Select(user => new UsersViewModel
+                      {
+                          Id = user.Id,
+                          Email = user.Email,
+                          UserName = user.UserName,
+                          PhoneNumber = user.PhoneNumber,
+                          FirstName = user.FirstName,
+                          LastName = user.LastName,
+                          IsActive = user.IsActive,
+                          Image = user.Image,
+                          SectionId = user.SectionId,
+                          SectionName = _Context.Sections.FirstOrDefault(a => a.SectionId == user.SectionId).Name,
+                          PersianBirthDate = user.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd"),
+                          PersianRegisterDateTime = user.RegisterDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss"),
+                          GenderName = user.Gender == GenderType.Male ? "مرد" : "زن",
+                          RoleId = user.Roles.Select(r => r.Role.Id).FirstOrDefault(),
+                          RoleName = user.Roles.Select(r => r.Role.Name).FirstOrDefault()
+                      }).AsNoTracking().ToListAsync();
+            }else
+            {
+                users = await _Context.Users.Include(u => u.Roles).Include(l => l.Section)
+                      .Skip(offset).Take(limit)
+                      .Select(user => new UsersViewModel
+                      {
+                          Id = user.Id,
+                          Email = user.Email,
+                          UserName = user.UserName,
+                          PhoneNumber = user.PhoneNumber,
+                          FirstName = user.FirstName,
+                          LastName = user.LastName,
+                          IsActive = user.IsActive,
+                          Image = user.Image,
+                          SectionId = user.SectionId,
+                          SectionName = _Context.Sections.FirstOrDefault(a => a.SectionId == user.SectionId).Name,
+                          PersianBirthDate = user.BirthDate.ConvertMiladiToShamsi("yyyy/MM/dd"),
+                          PersianRegisterDateTime = user.RegisterDateTime.ConvertMiladiToShamsi("yyyy/MM/dd ساعت HH:mm:ss"),
+                          GenderName = user.Gender == GenderType.Male ? "مرد" : "زن",
+                          RoleId = user.Roles.Select(r => r.Role.Id).FirstOrDefault(),
+                          RoleName = user.Roles.Select(r => r.Role.Name).FirstOrDefault()
+                      }).AsNoTracking().ToListAsync();
+            }
+            return Ok(users);
         }
 
-        [HttpGet("{id}")]
+        [Route("GetUser{id}")]
+        [HttpGet]
         public virtual async Task<ApiResult<UsersViewModel>> Get(int id)
         {
             var user = await _userManager.FindUserWithRolesByIdAsync(id);
