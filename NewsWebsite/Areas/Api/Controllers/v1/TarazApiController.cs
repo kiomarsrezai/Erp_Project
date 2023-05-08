@@ -32,7 +32,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("GetTaraz")]
         [HttpGet]
-        public async Task<ApiResult<List<TarazKolMoienViewModel>>> GetTarazKol(int yearId, int areaId, long? MoienId = null, long? TafsilyId = null, int? KindId = null)
+        public async Task<ApiResult<List<TarazKolMoienViewModel>>> GetTarazKol(int yearId, int areaId, long? MoienId = null, long? TafsilyId = null, int? KindId = null, int? MarkazHazine = null)
         {
             List<TarazKolMoienViewModel> fecthkol = new List<TarazKolMoienViewModel>();
 
@@ -49,6 +49,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("AreaId", areaId);
                         sqlCommand.Parameters.AddWithValue("MoienId", MoienId);
                         sqlCommand.Parameters.AddWithValue("TafsilyId", TafsilyId);
+                        sqlCommand.Parameters.AddWithValue("MarkazHazine", MarkazHazine);
                         sqlCommand.Parameters.AddWithValue("KindId", KindId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -56,6 +57,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             TarazKolMoienViewModel fetchViewKol = new TarazKolMoienViewModel();
                             fetchViewKol.Levels = int.Parse(dataReader["Levels"].ToString());
+                            fetchViewKol.MarkazHazine = null;
+                            fetchViewKol.MarkazHazineName = null;
                             fetchViewKol.Code = dataReader["Code"].ToString();
                             fetchViewKol.Description = dataReader["Description"].ToString();
                             fetchViewKol.Bedehkar = Int64.Parse(dataReader["Bedehkar"].ToString());
@@ -81,6 +84,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("AreaId", areaId);
                         sqlCommand.Parameters.AddWithValue("MoienId", MoienId);
                         sqlCommand.Parameters.AddWithValue("TafsilyId", TafsilyId);
+                        sqlCommand.Parameters.AddWithValue("MarkazHazine", MarkazHazine);
                         sqlCommand.Parameters.AddWithValue("KindId", KindId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -88,6 +92,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             TarazKolMoienViewModel fetchViewtafsily = new TarazKolMoienViewModel();
                             fetchViewtafsily.Levels = int.Parse(dataReader["Levels"].ToString());
+                            fetchViewtafsily.MarkazHazine = StringExtensions.ToNullableInt(dataReader["MarkazHazine"].ToString());
+                            fetchViewtafsily.MarkazHazineName = dataReader["MarkazHazineName"].ToString();
                             fetchViewtafsily.Code = dataReader["Code"].ToString();
                             fetchViewtafsily.Description = dataReader["Description"].ToString();
                             fetchViewtafsily.Bedehkar = Int64.Parse(dataReader["Bedehkar"].ToString());
@@ -113,6 +119,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("AreaId", areaId);
                         sqlCommand.Parameters.AddWithValue("MoienId", MoienId);
                         sqlCommand.Parameters.AddWithValue("TafsilyId", TafsilyId);
+                        sqlCommand.Parameters.AddWithValue("MarkazHazine", MarkazHazine);
                         sqlCommand.Parameters.AddWithValue("KindId", KindId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -127,6 +134,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchViewtafsily.Bestankar = Int64.Parse(dataReader["Bestankar"].ToString());
                             fetchViewtafsily.BalanceBedehkar = 0;
                             fetchViewtafsily.BalanceBestankar = 0;
+                            fetchViewtafsily.MarkazHazine = null;
+                            fetchViewtafsily.MarkazHazineName = null;
                             fecthkol.Add(fetchViewtafsily);
                         }
                     }

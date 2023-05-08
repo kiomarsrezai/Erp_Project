@@ -11,5 +11,7 @@
         public long Bestankar { get; set; }
         public long? BalanceBedehkar { get; set; }
         public long? BalanceBestankar { get; set; }
+        public int? MarkazHazine { get; set; }
+        public string MarkazHazineName { get; set; }
     }
 }
