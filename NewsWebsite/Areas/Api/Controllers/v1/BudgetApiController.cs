@@ -162,7 +162,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<BudgetModalProjectViewModel> fecth = new List<BudgetModalProjectViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2CodingProject_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", paramModel.Id);
@@ -174,6 +174,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.ProjectId= int.Parse(dataReader["ProjectId"].ToString());
+                        BudgetView.ProjectCode = int.Parse(dataReader["ProjectCode"].ToString());
+                        BudgetView.ProjectName = dataReader["ProjectName"].ToString();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
@@ -203,7 +205,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3CodingProjectArea_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", paramModel.Id);

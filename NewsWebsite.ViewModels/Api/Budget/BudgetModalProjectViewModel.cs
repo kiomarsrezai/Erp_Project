@@ -17,10 +17,8 @@ namespace NewsWebsite.ViewModels.Budget
         public Int64 Expense { get; set; }
 
         public double PercentBud { get; set; }
-        
-     
-
-
+        public int ProjectCode { get; set; }
+        public string ProjectName { get; set; }
     }
 
   
