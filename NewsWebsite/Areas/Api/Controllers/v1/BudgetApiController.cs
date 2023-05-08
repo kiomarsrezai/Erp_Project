@@ -130,7 +130,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         BudgetModalCodingViewModel BudgetView = new BudgetModalCodingViewModel();
-                        //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.Code = dataReader["Code"].ToString();
                         BudgetView.Description = dataReader["Description"].ToString();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
