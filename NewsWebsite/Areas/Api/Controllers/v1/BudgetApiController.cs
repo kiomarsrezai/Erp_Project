@@ -12,6 +12,7 @@ using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Budget;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.ViewModels.Api.Budget;
+using NewsWebsite.ViewModels.Fetch;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -27,6 +28,52 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             _config = configuration;
             _uw = uw;
+        }
+
+        [Route("FetchIndex")]
+        [HttpGet]
+        public async Task<ApiResult<List<FetchViewModel>>> FetchIndex(int yearId, int areaId, int budgetProcessId)
+        {
+            if (yearId == 0) return BadRequest("با خطا مواجه شدید");
+
+            List<FetchViewModel> fecth = new List<FetchViewModel>();
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                Int64 _totalMosavab = 0; Int64 _totalExpense = 0;
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        FetchViewModel fetchView = new FetchViewModel();
+                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        fetchView.Show = (bool)dataReader["Show"];
+                        _totalMosavab += fetchView.Mosavab;
+                        _totalExpense += fetchView.Expense;
+                        if (fetchView.Mosavab != 0)
+                        {
+                            fetchView.PercentBud = _uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Edit);
+                        }
+                        else
+                        {
+                            fetchView.PercentBud = 0;
+                        }
+                        fecth.Add(fetchView);
+                    }
+                }
+            }
+            return Ok(fecth);
         }
 
         [Route("GetCodingList")]
