@@ -114,7 +114,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<BudgetModalCodingViewModel>>> BudgetModalCodingList(BudgetCodingParamModel paramModel)
         {
-            if (paramModel.CodeingId == 0) return BadRequest("با خطا مواجه شدید");
+            if (paramModel.CodingId == 0) return BadRequest("با خطا مواجه شدید");
 
             List<BudgetModalCodingViewModel> fecth = new List<BudgetModalCodingViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -124,7 +124,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
                     sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("CodeingId", paramModel.CodeingId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", paramModel.CodingId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
