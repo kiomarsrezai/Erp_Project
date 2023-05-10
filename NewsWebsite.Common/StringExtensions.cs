@@ -16,6 +16,13 @@ namespace NewsWebsite.Common
             return null;
         }
 
+        public static long? ToNullableBigInt(this string s)
+        {
+            long i;
+            if (long.TryParse(s, out i)) return i;
+            return null;
+        }
+
         public static float? ToNullablefloat(this string s)
         {
             float i;

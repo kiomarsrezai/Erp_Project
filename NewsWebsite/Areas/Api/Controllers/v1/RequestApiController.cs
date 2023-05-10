@@ -160,13 +160,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-        [Route("GetRequestList")]
+        [Route("GetRequestTableList")]
         [HttpGet]
-        public async Task<ApiResult<RequestSearchViewModel>> GetRequestList(RequestSearchParamViewModel paramViewModel)
+        public async Task<ApiResult<List<RequestSearchViewModel>>> GetRequestTableList(RequestSearchParamViewModel paramViewModel)
         {
             List<RequestSearchViewModel> requestsViewModels = new List<RequestSearchViewModel>();
 
-            if (paramViewModel.ExecuteDepartmanId == 0)
+            if (paramViewModel.AreaId == 0)
                 return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -182,12 +182,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         RequestSearchViewModel request = new RequestSearchViewModel();
+                        request.Id = int.Parse(dataReader["Id"].ToString());
                         request.Employee = dataReader["Employee"].ToString();
                         request.Number = dataReader["Number"].ToString();
-                        request.Id = int.Parse(dataReader["Id"].ToString());
                         request.DateS = dataReader["DateS"].ToString();
                         request.Description = dataReader["Description"].ToString();
-                        request.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
+                        request.EstimateAmount = StringExtensions.ToNullableBigInt(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.Add(request);
                     }
                 }
