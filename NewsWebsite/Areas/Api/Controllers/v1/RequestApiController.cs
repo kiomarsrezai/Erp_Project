@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Request;
+using NewsWebsite.ViewModels.Api.RequestTable;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -29,9 +31,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
-        [Route("RequestInsert")]
+        [Route("RequestCreate")]
         [HttpPost]
-        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestInsert([FromBody] RequestInsertViewModel viewModel)
+        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestCreate([FromBody] RequestInsertViewModel viewModel)
         {            
             RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
 
@@ -40,7 +42,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
@@ -75,7 +77,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("RequestId", paramViewModel.RequestId);
@@ -98,6 +100,64 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok(requestsViewModels);
+        }
+
+        [Route("RequestUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestUpdate([FromBody] RequestInsertViewModel viewModel)
+        {
+            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
+
+            if (viewModel.AreaId == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
+                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        request.Users = dataReader["Users"].ToString();
+                        request.Number = dataReader["Number"].ToString();
+                        request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
+                        request.DateS = dataReader["DateS"].ToString();
+                        request.ExecuteDepartmanId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
+                    }
+                }
+            }
+            return Ok(request);
+        }
+
+        [Route("RequestDelete")]
+        [HttpPost]
+        public async Task<ApiResult> RequestDelete(int id)
+        {
+            if (id == 0)
+                return BadRequest();
+            if (id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Delete", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok();
         }
 
         [Route("GetRequestList")]
@@ -134,6 +194,130 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(requestsViewModels);
         }
+
+
+/// <summary>
+/// RequestTable CRUD
+/// </summary>
+/// 
+/// <returns></returns>
+/// 
+        [Route("RequestTableCreate")]
+        [HttpPost]
+        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestTableCreate([FromBody] RequestInsertViewModel viewModel)
+        {
+            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
+
+            if (viewModel.AreaId == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
+                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        request.Users = dataReader["Users"].ToString();
+                        request.Number = dataReader["Number"].ToString();
+                        request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
+                        request.DateS = dataReader["DateS"].ToString();
+                        request.ExecuteDepartmanId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
+                    }
+                }
+            }
+            return Ok(request);
+        }
+
+        [Route("RequestTableRead{id}")]
+        [HttpGet]
+        public async Task<ApiResult<RequestTableReadViewModel>> RequestTableRead(int id)
+        {
+            RequestTableReadViewModel requestsViewModels = new RequestTableReadViewModel();
+
+            if (id == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        requestsViewModels.Id = int.Parse(dataReader["AreaId"].ToString());
+                        requestsViewModels.OthersDescription = dataReader["Users"].ToString();
+                        requestsViewModels.Amount= StringExtensions.ToNullablefloat(dataReader["Number"].ToString());
+                        requestsViewModels.Quantity= StringExtensions.ToNullablefloat(dataReader["DoingMethodId"].ToString());
+                        requestsViewModels.Description= dataReader["ResonDoingMethod"].ToString();
+                        requestsViewModels.Price= long.Parse(dataReader["Id"].ToString());
+                    }
+                }
+            }
+            return Ok(requestsViewModels);
+        }
+
+        [Route("RequestTableUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestTableUpdate([FromBody] RequestTableUpdateParamViewModel viewModel)
+        {
+            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
+
+            if (viewModel.Id == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Update", sqlconnect))
+                {
+                    sqlCommand.Parameters.AddWithValue("yearId", viewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("areaId", viewModel.Quantity);
+                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.Price);
+                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.Description);
+                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.OthersDescription);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                }
+            }
+            return Ok(request);
+        }
+
+        [Route("RequestDelete{id}")]
+        [HttpPost]
+        public async Task<ApiResult> RequestTableDelete(int id)
+        {
+            if (id == 0)
+                return BadRequest();
+            if (id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Delete", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok();
+        }
+
+
+       
 
     }
 }

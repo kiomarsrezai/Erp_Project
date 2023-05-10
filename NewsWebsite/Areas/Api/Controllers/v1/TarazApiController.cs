@@ -73,7 +73,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             else
-                 if (MoienId != null && TafsilyId == null)
+            if (MoienId != null && TafsilyId == null)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -108,7 +108,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             else
-                 if (MoienId != null && TafsilyId != null)
+            if (MoienId != null && TafsilyId != null)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -141,6 +141,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
+
             return Ok(fecthkol);
 
         }
@@ -180,8 +181,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //    };
         //    return Ok(dataset);
         //}
-
-
 
     }
 
