@@ -202,7 +202,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<BudgetAreaModalViewModel>>> BudgetModalAreaList(BudgetAreaParamModel paramModel)
         {
-            if (paramModel.Id == 0) return BadRequest("با خطا مواجه شدید");
+            if (paramModel.YearId == 0) return BadRequest("با خطا مواجه شدید");
 
             List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -210,17 +210,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3CodingProjectArea_Read", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", paramModel.Id);
+                    sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", paramModel.CodingId);
+                    sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         BudgetAreaModalViewModel BudgetView = new BudgetAreaModalViewModel();
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
-                        BudgetView.AreaName = dataReader["AreaName"].ToString();
+                        BudgetView.AreaName = dataReader["AreaNameShort"].ToString();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        BudgetView.Supply = Int64.Parse(dataReader["Supply"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         //BudgetView.Show = (bool)dataReader["Show"];
                         if (BudgetView.Mosavab != 0)
