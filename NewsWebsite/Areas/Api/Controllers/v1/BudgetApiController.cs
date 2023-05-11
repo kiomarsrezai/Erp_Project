@@ -158,7 +158,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<BudgetModalProjectViewModel>>> BudgetModalProjectList(BudgetProjectParamModel paramModel)
         {
-            if (paramModel.Id == 0) return BadRequest("با خطا مواجه شدید");
+            if (paramModel.YearId == 0) return BadRequest("با خطا مواجه شدید");
 
             List<BudgetModalProjectViewModel> fecth = new List<BudgetModalProjectViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -166,14 +166,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2CodingProject_Read", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", paramModel.Id);
+                    sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", paramModel.CodingId);
+                    sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         BudgetModalProjectViewModel BudgetView = new BudgetModalProjectViewModel();
                         //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.ProjectId= int.Parse(dataReader["ProjectId"].ToString());
                         BudgetView.ProjectCode = int.Parse(dataReader["ProjectCode"].ToString());
                         BudgetView.ProjectName = dataReader["ProjectName"].ToString();

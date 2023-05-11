@@ -6,7 +6,7 @@ namespace NewsWebsite.ViewModels.Budget
 {
     public class BudgetModalProjectViewModel
     {
-        public int Id{ get; set; }
+        //public int Id{ get; set; }
 
         public int ProjectId { get; set; }
 
