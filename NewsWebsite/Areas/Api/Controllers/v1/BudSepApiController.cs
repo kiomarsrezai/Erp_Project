@@ -108,7 +108,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ChartApi")]
         [HttpGet]
-        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati,int? areaId=null)
+        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati,int? areaId=null,int? codingId=null)
         {
             List<int> Id = new List<int>();
             List<string> Description = new List<string>();
@@ -141,6 +141,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand1.Parameters.AddWithValue("loan", loan);
                         sqlCommand1.Parameters.AddWithValue("niabati", niabati);
                         sqlCommand1.Parameters.AddWithValue("StructureId", StructureId);
+                        sqlCommand1.Parameters.AddWithValue("codingId", codingId);
                         SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
                         while (dataReader1.Read())
@@ -200,7 +201,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         while (dataReader1.Read())
                         {
 
-                            Id.Add(int.Parse(dataReader1["Id"].ToString()));
+                            Id.Add(int.Parse(dataReader1["CodingId"].ToString()));
                             Code.Add(dataReader1["Code"].ToString());
                             Description.Add(dataReader1["Description"].ToString());
                             mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
