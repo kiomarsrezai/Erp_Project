@@ -149,17 +149,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
                             mosavabdaily.Add(Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                            if ((!string.IsNullOrEmpty(dataReader1["Mosavab"].ToString()) && Int64.Parse(dataReader1["Mosavab"].ToString())>0))
+                            if (!string.IsNullOrEmpty(dataReader1["Mosavab"].ToString()) && Int64.Parse(dataReader1["Mosavab"].ToString())>0)
                             {
-                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader1["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader1["Mosavab"].ToString())));
+                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["Mosavab"].ToString())));
                             }
                             else
                             {
                                 percmosavab.Add(0);
                             }
-                            if ((!string.IsNullOrEmpty(dataReader1["MosavabDaily"].ToString()) && Int64.Parse(dataReader1["MosavabDaily"].ToString()) > 0))
+                            if (!string.IsNullOrEmpty(dataReader1["MosavabDaily"].ToString()) && Int64.Parse(dataReader1["MosavabDaily"].ToString()) > 0)
                             {
-                                percdaily.Add(_uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader1["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader1["MosavabDaily"].ToString())));
+                                percdaily.Add(_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["MosavabDaily"].ToString())));
                             }
                             else
                             {
@@ -205,13 +205,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             Description.Add(dataReader1["Description"].ToString());
                             mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                            if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
+                            if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
-                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader1["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader1["Mosavab"].ToString())));
-                            }else
+                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString())));
+                            }
+                            else
                             {
                                 percmosavab.Add(0);
                             }
+                            
                         }
 
                         data.Add(Id);
@@ -264,17 +266,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.NotGet = Int64.Parse(dataReader["NotGet"].ToString());
 
                         row.YearId = int.Parse(dataReader["YearId"].ToString());
-                        if (row.Mosavab != 0)
+                        if (double.Parse(dataReader["Mosavab"].ToString()) > 0)
                         {
-                            row.PercentMosavab = _uw.Budget_001Rep.Divivasion(row.Expense, row.Mosavab);
+                            row.PercentMosavab = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader["Expense"].ToString()), double.Parse(dataReader["Mosavab"].ToString()));
                         }
                         else
                         {
                             row.PercentMosavab = 0;
                         }
-                        if (row.MosavabDaily != 0)
+                        if (double.Parse(dataReader["MosavabDaily"].ToString()) > 0)
                         {
-                            row.PercentMosavabDaily = _uw.Budget_001Rep.Divivasion(row.Expense, row.MosavabDaily);
+                            row.PercentMosavabDaily = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader["Expense"].ToString()), double.Parse(dataReader["MosavabDaily"].ToString()));
                         }
                         else
                         {

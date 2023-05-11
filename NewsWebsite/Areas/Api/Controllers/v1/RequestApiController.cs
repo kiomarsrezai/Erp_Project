@@ -214,11 +214,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 /// 
         [Route("RequestTableCreate")]
         [HttpPost]
-        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestTableCreate([FromBody] RequestInsertViewModel viewModel)
+        public async Task<ApiResult> RequestTableCreate([FromBody] RequestTableInsertViewModel viewModel)
         {
-            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
-
-            if (viewModel.AreaId == 0)
+            if (viewModel.RequestId == 0)
                 return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -226,25 +224,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
-                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
+                    sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
+                    sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
+                    sqlCommand.Parameters.AddWithValue("OthersDescription", viewModel.OthersDescription);
+                    sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
+                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        request.Id = int.Parse(dataReader["Id"].ToString());
-                        request.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        request.UserId = int.Parse(dataReader["UserId"].ToString());
-                        request.Number = dataReader["Number"].ToString();
-                        request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
-                        request.DateS = dataReader["DateS"].ToString();
-                        request.ExecuteDepartmanId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
-                    }
                 }
             }
-            return Ok(request);
+            return Ok();
         }
 
         [Route("RequestTableRead{id}")]

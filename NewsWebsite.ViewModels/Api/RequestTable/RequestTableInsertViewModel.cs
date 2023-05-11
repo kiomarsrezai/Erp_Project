@@ -7,26 +7,16 @@ namespace NewsWebsite.ViewModels.Api.RequestTable
 {
     public class RequestTableInsertViewModel
     {
-
-        public int yearId { get; set; }
+        public int RequestId { get; set; }
         
-        public int AreaId { get; set; }
+        public float Quantity { get; set; }
         
-        public int ExecuteDepartmanId { get; set; }
-        
-        public int UserId { get; set; }
-        
-        public int RequestKindId { get; set; }
-        
-        public int DoingMethodId { get; set; } 
+        public long Price { get; set; } 
         
         public string Description { get; set; }
         
-        public long EstimateAmount { get; set; }
+        public string OthersDescription { get; set; }
 
-        public int SuppliersId { get; set; }
-
-        public long ResonDoingMethod { get; set; }
 
     }
 }
