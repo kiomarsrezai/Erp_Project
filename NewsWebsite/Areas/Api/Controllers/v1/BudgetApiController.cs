@@ -211,7 +211,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("CodingId", paramModel.CodingId);
+                    sqlCommand.Parameters.AddWithValue("ProjectId", paramModel.ProjectId);
                     sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
