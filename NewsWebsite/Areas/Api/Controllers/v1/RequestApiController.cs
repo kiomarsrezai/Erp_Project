@@ -34,12 +34,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("RequestCreate")]
         [HttpPost]
         public async Task<ApiResult<RequestAfterInsertViewModel>> RequestCreate([FromBody] RequestInsertViewModel viewModel)
-        {            
+        {
             RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
 
-            if (viewModel.AreaId == 0) 
+            if (viewModel.AreaId == 0)
                 return BadRequest();
-
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Insert", sqlconnect))
@@ -49,21 +48,33 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
                     sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
                     sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
+                    sqlCommand.Parameters.AddWithValue("SuppliersId", viewModel.SuppliersId);
+                    sqlCommand.Parameters.AddWithValue("RequestKindId", viewModel.RequestKindId);
+                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
+                    sqlCommand.Parameters.AddWithValue("DoingMethodId", viewModel.DoingMethodId);
+                    sqlCommand.Parameters.AddWithValue("EstimateAmount", viewModel.EstimateAmount);
+                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
+                    sqlCommand.Parameters.AddWithValue("RequestKindId", viewModel.RequestKindId);
+                    sqlCommand.Parameters.AddWithValue("ResonDoingMethod", viewModel.ResonDoingMethod);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         request.Id = int.Parse(dataReader["Id"].ToString());
                         request.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        request.Users = dataReader["Users"].ToString();
+                        request.UserId = int.Parse(dataReader["UserId"].ToString());
                         request.Number = dataReader["Number"].ToString();
-                        request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
+                        request.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
                         request.DateS = dataReader["DateS"].ToString();
-                        request.ExecuteDepartmanId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
+                        request.ExecuteDepartmanId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
+                        request.DoingMethodId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
+                        request.SuppliersId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
+                        request.ExecuteDepartmanId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
+
                     }
                 }
+                return Ok(request);
             }
-            return Ok(request);
         }
 
         [Route("RequestRead")]
@@ -126,7 +137,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         request.Id = int.Parse(dataReader["Id"].ToString());
                         request.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        request.Users = dataReader["Users"].ToString();
+                        request.UserId = int.Parse(dataReader["UserId"].ToString());
                         request.Number = dataReader["Number"].ToString();
                         request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
                         request.DateS = dataReader["DateS"].ToString();
@@ -195,7 +206,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(requestsViewModels);
         }
 
-
 /// <summary>
 /// RequestTable CRUD
 /// </summary>
@@ -226,7 +236,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         request.Id = int.Parse(dataReader["Id"].ToString());
                         request.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        request.Users = dataReader["Users"].ToString();
+                        request.UserId = int.Parse(dataReader["UserId"].ToString());
                         request.Number = dataReader["Number"].ToString();
                         request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
                         request.DateS = dataReader["DateS"].ToString();

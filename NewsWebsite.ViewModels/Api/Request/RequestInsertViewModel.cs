@@ -7,21 +7,17 @@ namespace NewsWebsite.ViewModels.Api.Request
 {
     public class RequestInsertViewModel
     {
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
-        [Display(Name = "سال")]
+
         public int YearId { get; set; }
-        
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
-        [Display(Name = "منطقه")]
         public int AreaId { get; set; }
-        
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
-        [Display(Name = "واحد درخواست کننده")]
         public int ExecuteDepartmanId { get; set; }
-        
-        [Required(ErrorMessage = "وارد نمودن {0} الزامی است.")]
-        [Display(Name = "کاربر")]
         public int UserId { get; set; }
+        public int? RequestKindId { get; set; }
+        public int DoingMethodId { get; set; }
+        public string Description { get; set; }
+        public long EstimateAmount { get; set; }
+        public int? SuppliersId { get; set; }
+        public string ResonDoingMethod { get; set; }
 
     }
 }

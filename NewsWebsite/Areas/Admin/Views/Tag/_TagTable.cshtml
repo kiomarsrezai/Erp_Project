@@ -1,5 +1,5 @@
 ﻿@using NewsWebsite.Services.Contracts
-@inject ISecurityTrimmingService securityTrimmingService
+@*@inject ISecurityTrimmingService securityTrimmingService*@
 <div id="toolbar">
     <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-url="@Url.Action("RenderTag","Tag")">
         <i class="fa fa-plus"></i> | افزودن برچسب جدید
@@ -66,12 +66,12 @@
 
      function operateFormatter(value, row, index) {
         var access = "";
-        if ('@securityTrimmingService.CanUserAccess(User,"Admin","Tag","RenderTag")' == 'True') {
+        //if ('securityTrimmingService.CanUserAccess(User,"Admin","Tag","RenderTag")' == 'True') {
             access = access + '<button type="button" class="btn-link text-success" data-toggle="ajax-modal" data-url=@Url.Action("RenderTag", "Tag")?tagId=' + row.Id + ' title="ویرایش"><i class="fa fa-edit"></i></button >';
-        }
-        if ('@securityTrimmingService.CanUserAccess(User,"Admin","Tag","Delete")' == 'True') {
+        //}
+        //if ('securityTrimmingService.CanUserAccess(User,"Admin","Tag","Delete")' == 'True') {
             access = access + '<button type="button" class="btn-link text-danger" data-toggle="ajax-modal" data-url=@Url.Action("Delete", "Tag")/?tagId=' + row.Id + ' title="حذف"><i class="fa fa-trash"></i></button >';
-        }
+        //}
         return access;
     }
 
