@@ -61,14 +61,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Show = (bool)dataReader["Show"];
                         _totalMosavab += fetchView.Mosavab;
                         _totalExpense += fetchView.Expense;
-                        if (fetchView.Mosavab != 0)
+                        if ((!string.IsNullOrEmpty(dataReader["Mosavab"].ToString()) && Int64.Parse(dataReader["Mosavab"].ToString()) > 0))
                         {
-                            fetchView.PercentBud = _uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Edit);
+                            fetchView.PercentBud=_uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader["Mosavab"].ToString()));
                         }
                         else
                         {
-                            fetchView.PercentBud = 0;
+                            fetchView.PercentBud=0;
                         }
+                        
                         fecth.Add(fetchView);
                     }
                 }

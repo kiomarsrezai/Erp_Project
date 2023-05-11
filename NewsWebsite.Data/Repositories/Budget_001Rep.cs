@@ -202,7 +202,7 @@ namespace NewsWebsite.Data.Repositories
             return areaViews;
         }
 
-        public double Divivasion(double expense, double mosavab)
+        public double Divivasion(long? expense, long? mosavab)
         {
             double summry = 0;
             summry = Math.Round((double)(expense / mosavab * 100));

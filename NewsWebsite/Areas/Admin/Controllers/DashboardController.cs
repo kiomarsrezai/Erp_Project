@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
@@ -71,7 +72,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                         if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
                         {
-                            percmos = _rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                            percmos = _rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader1["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader1["Mosavab"].ToString()));
                         }
                         else
                         {
@@ -79,7 +80,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
                         }
                         if (Int64.Parse(dataReader1["MosavabDaily"].ToString()) > 0)
                         {
-                            percdai = _rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["MosavabDaily"].ToString()));
+                            percdai = _rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader1["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader1["MosavabDaily"].ToString()));
                         }
                         else
                         {
