@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Api.Abstract;
 using NewsWebsite.ViewModels.Api.GeneralVm;
+using NewsWebsite.ViewModels.Api.UsersApi;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -26,7 +28,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
 
-        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw,IConfiguration configuration)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration)
         {
             _config = configuration;
             _context = context;
@@ -41,11 +43,49 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
         }
 
+        [Route("GetAbstractList")]
+        [HttpGet]
+        public async Task<ApiResult<List<AbstractViewModel>>> AbstractList(int yearId, int KindId, int StructureId)
+        {
+            List<AbstractViewModel> abslist = new List<AbstractViewModel>();
+
+            using (SqlConnection sqlConnection = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand cmd = new SqlCommand("SP500_Abstract", sqlConnection))
+                {
+                    sqlConnection.Open();
+                    cmd.Parameters.AddWithValue("yearId", yearId);
+                    cmd.Parameters.AddWithValue("KindId", KindId);
+                    cmd.Parameters.AddWithValue("StructureId", StructureId);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await cmd.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        AbstractViewModel fetchView = new AbstractViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        fetchView.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        fetchView.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
+                        fetchView.MosavabDar_Khazane = long.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                        fetchView.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
+                        fetchView.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                        fetchView.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
+                        fetchView.balanceMosavab = long.Parse(dataReader["balanceMosavab"].ToString());
+                        abslist.Add(fetchView);
+
+                        //dataReader.NextResult();
+                    }
+                }
+            }
+
+            return Ok(abslist);
+        }
+
         [Route("YearFetch")]
         [HttpGet]
         public async Task<ApiResult<List<YearViewModel>>> YearFetch(YearParamViewModel yearParam)
         {
-            if (yearParam.KindId==0) 
+            if (yearParam.KindId == 0)
                 BadRequest();
 
             List<YearViewModel> yearViews = new List<YearViewModel>();
@@ -79,7 +119,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(await _uw.Budget_001Rep.BudgetProcessFetchAsync());
         }
 
-       
+
 
     }
 }

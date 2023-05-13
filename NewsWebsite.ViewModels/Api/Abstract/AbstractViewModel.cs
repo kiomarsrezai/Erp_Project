@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace NewsWebsite.ViewModels.Api.Abstract
+{
+    public class AbstractViewModel
+    {
+        public int Id { get; set; }
+        public string AreaName { get; set; }
+        public long MosavabRevenue { get; set; }
+        public long MosavabCurrent { get; set; }
+        public long MosavabCivil { get; set; }
+        public long MosavabFinancial { get; set; }
+        public long MosavabSanavati { get; set; }
+        public long MosavabPayMotomarkez { get; set; }
+        public long MosavabDar_Khazane { get; set; }
+        public long balanceMosavab { get; set; }
+    }
+}

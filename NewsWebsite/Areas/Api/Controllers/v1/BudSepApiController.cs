@@ -233,7 +233,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("DetailChartApi")]
         [HttpGet]
-        public async Task<ApiResult<List<ViewModels.Fetch.ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati)
+        public async Task<ApiResult<List<ViewModels.Fetch.ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? codingId = null)
         {
             List<ViewModels.Fetch.ChartAreaViewModel> dataset = new List<ViewModels.Fetch.ChartAreaViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -250,6 +250,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("sale", sale);
                     sqlCommand.Parameters.AddWithValue("loan", loan);
                     sqlCommand.Parameters.AddWithValue("niabati", niabati);
+                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
 
                     while (dataReader.Read())
