@@ -49,7 +49,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         SupplyViewModel fetchView = new SupplyViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.Name = dataReader["Name"].ToString();
+                        fetchView.Name = dataReader["CompanyKindName"].ToString();
 
                         fecthViewModel.Add(fetchView);
                     }
@@ -75,7 +75,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         SuppliersCoViewModel fetchView = new SuppliersCoViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.CompanyKindName = dataReader["Name"].ToString();
+                        fetchView.CompanyKindName = dataReader["CompanyKindName"].ToString();
 
                         fecthViewModel.Add(fetchView);
                     }
