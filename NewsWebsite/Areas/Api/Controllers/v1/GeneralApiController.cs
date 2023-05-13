@@ -63,6 +63,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         AbstractViewModel fetchView = new AbstractViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.AreaName = dataReader["AreaName"].ToString();
                         fetchView.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
                         fetchView.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
                         fetchView.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
@@ -71,6 +72,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
                         fetchView.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
                         fetchView.balanceMosavab = long.Parse(dataReader["balanceMosavab"].ToString());
+                        fetchView.Resoures = long.Parse(dataReader["Resoures"].ToString());
                         abslist.Add(fetchView);
 
                         //dataReader.NextResult();

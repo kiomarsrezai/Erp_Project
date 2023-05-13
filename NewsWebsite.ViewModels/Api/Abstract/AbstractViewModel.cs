@@ -11,6 +11,7 @@ namespace NewsWebsite.ViewModels.Api.Abstract
         public long MosavabRevenue { get; set; }
         public long MosavabCurrent { get; set; }
         public long MosavabCivil { get; set; }
+        public long Resoures { get; set; }
         public long MosavabFinancial { get; set; }
         public long MosavabSanavati { get; set; }
         public long MosavabPayMotomarkez { get; set; }
