@@ -9,5 +9,6 @@ namespace NewsWebsite.ViewModels.Api.Budget
         public int YearId { get; set; }
         public int AreaId { get; set; }
         public int ProjectId { get; set; }
+        public int CodingId { get; set; }
     }
 }
