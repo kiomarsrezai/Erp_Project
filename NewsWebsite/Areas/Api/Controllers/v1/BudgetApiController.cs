@@ -275,7 +275,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<BudgetModalProjectViewModel> fecth = new List<BudgetModalProjectViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2CodingCoding_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2CodingProject_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
@@ -291,18 +291,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         //BudgetView.CodingCode = int.Parse(dataReader["CodingCode"].ToString());
                         //BudgetView.CodingName = dataReader["CodingName"].ToString();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        BudgetView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        BudgetView.ProjectCode = dataReader["ProjectCode"].ToString();
+                        BudgetView.ProjectName = dataReader["ProjectName"].ToString();
                         //BudgetView.Show = (bool)dataReader["Show"];
-                        if (BudgetView.Mosavab != 0)
-                        {
-                            BudgetView.PercentBud = _uw.Budget_001Rep.Divivasion(BudgetView.Expense, BudgetView.Mosavab);
-                        }
-                        else
-                        {
-                            BudgetView.PercentBud = 0;
-                        }
+                       
                         fecth.Add(BudgetView);
                     }
                 }
