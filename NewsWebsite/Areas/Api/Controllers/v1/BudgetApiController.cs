@@ -315,7 +315,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3CodingCodingArea_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3CodingProjectArea_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
