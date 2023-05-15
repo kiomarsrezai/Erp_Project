@@ -246,7 +246,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.Code = dataReader["Code"].ToString();
                         BudgetView.Description = dataReader["Description"].ToString();
-                        //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        BudgetView.CodingId= int.Parse(dataReader["CodingId"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());

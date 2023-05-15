@@ -16,7 +16,7 @@ namespace NewsWebsite.ViewModels.Budget
 
         //[Display(Name = "سطح")]
         //public int LevelNumber { get; set; }
-        //public int CodingId { get; set; }
+        public int CodingId { get; set; }
 
         [Display(Name = "مصوب")]
         public Int64 Mosavab { get; set; }
