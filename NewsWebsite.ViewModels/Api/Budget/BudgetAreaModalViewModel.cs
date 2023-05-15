@@ -8,7 +8,7 @@ namespace NewsWebsite.ViewModels.Budget
     {
         public int Id{ get; set; }
 
-        public string AreaName { get; set; }
+        public string AreaNameShort { get; set; }
 
         public Int64 Mosavab { get; set; }
 
