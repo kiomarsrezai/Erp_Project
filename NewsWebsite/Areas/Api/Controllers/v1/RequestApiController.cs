@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
@@ -7,11 +8,11 @@ using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
+using NewsWebsite.ViewModels.Api.Budget;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.RequestTable;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -26,11 +27,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
 
-        public RequestApiController(IUnitOfWork uw,IConfiguration configuration)
+        public RequestApiController(IUnitOfWork uw, IConfiguration configuration)
         {
             _config = configuration;
             _uw = uw;
         }
+
 
         [Route("RequestCreate")]
         [HttpPost]
@@ -80,12 +82,51 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
+        [Route("RequestBudgetConnect")]
+        [HttpGet]
+        public async Task<ActionResult<BudgetConnectOutputDTO>> GetBudgetConnect(BudgetConnectInputDTO viewModelDTO)
+        {
+            List<BudgetConnectOutputDTO> requestlst = new List<BudgetConnectOutputDTO>();
+
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetConnect_Read", sqlconnect))
+                {
+
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AreaId", viewModelDTO.AreaId);
+                    sqlCommand.Parameters.AddWithValue("YearId", viewModelDTO.YearId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModelDTO.BudgetProcessId);
+
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetConnectOutputDTO req = new BudgetConnectOutputDTO();
+
+                        req.Id = int.Parse(dataReader["Id"].ToString());
+                        req.ProctorName = dataReader["ProctorName "].ToString();
+                        req.Code= dataReader["Code"].ToString();
+                        req.Description= dataReader["Description"].ToString();
+                        req.Mosavab= long.Parse(dataReader["Mosavab"].ToString());
+                        req.ProctorId= int.Parse(dataReader["ProctorId"].ToString());
+
+                        requestlst.Add(req);
+                    }
+                }
+
+                return Ok(requestlst);
+            }
+
+        }
+
         [Route("RequestRead")]
         [HttpGet]
         public async Task<ApiResult<RequestsViewModel>> GetRequest(RequestReadParamViewModel paramViewModel)
         {
-            RequestsViewModel requestsViewModels = new RequestsViewModel(); 
-            
+            RequestsViewModel requestsViewModels = new RequestsViewModel();
+
             if (paramViewModel.RequestId == 0)
                 return BadRequest();
 
@@ -152,40 +193,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(request);
         }
 
-        [Route("RequestDelete")]
-        [HttpPost]
-        public async Task<ApiResult> RequestDelete(int id)
-        {
-            if (id == 0)
-                return BadRequest();
-            if (id > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Delete", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
-                }
-            }
-            return Ok();
-        }
-
-
-        /// <summary>
-        /// RequestTable CRUD
-        /// </summary>
-        /// 
-        /// <returns></returns>
-        /// 
-
-        [Route("GetRequestTableList")]
+        [Route("GetRequestList")]
         [HttpGet]
-        public async Task<ApiResult<List<RequestSearchViewModel>>> GetRequestTableList(RequestSearchParamViewModel paramViewModel)
+        public async Task<ApiResult<List<RequestSearchViewModel>>> GetRequestList(RequestSearchParamViewModel paramViewModel)
         {
             List<RequestSearchViewModel> requestsViewModels = new List<RequestSearchViewModel>();
 
@@ -217,6 +227,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(requestsViewModels);
         }
+        //[Route("RequestDelete")]
+        //[HttpPost]
+        //public async Task<ApiResult> RequestDelete(int id)
+        //{
+        //    if (id == 0)
+        //        return BadRequest();
+        //    if (id > 0)
+        //    {
+        //        using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+        //        {
+        //            using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Delete", sqlconnect))
+        //            {
+        //                sqlconnect.Open();
+        //                sqlCommand.Parameters.AddWithValue("id", id);
+        //                sqlCommand.CommandType = CommandType.StoredProcedure;
+        //                SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //                sqlconnect.Close();
+        //            }
+        //        }
+        //    }
+        //    return Ok();
+        //}
+
+
+        /// <summary>
+        /// RequestTable CRUD
+        /// </summary>
+        /// 
+        /// <returns></returns>
+        /// 
+
+
 
         [Route("RequestTableCreate")]
         [HttpPost]
@@ -263,10 +305,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         requestsViewModels.Id = int.Parse(dataReader["AreaId"].ToString());
                         requestsViewModels.OthersDescription = dataReader["Users"].ToString();
-                        requestsViewModels.Amount= StringExtensions.ToNullablefloat(dataReader["Number"].ToString());
-                        requestsViewModels.Quantity= StringExtensions.ToNullablefloat(dataReader["DoingMethodId"].ToString());
-                        requestsViewModels.Description= dataReader["ResonDoingMethod"].ToString();
-                        requestsViewModels.Price= long.Parse(dataReader["Id"].ToString());
+                        requestsViewModels.Amount = StringExtensions.ToNullablefloat(dataReader["Number"].ToString());
+                        requestsViewModels.Quantity = StringExtensions.ToNullablefloat(dataReader["DoingMethodId"].ToString());
+                        requestsViewModels.Description = dataReader["ResonDoingMethod"].ToString();
+                        requestsViewModels.Price = long.Parse(dataReader["Id"].ToString());
                     }
                 }
             }
@@ -322,7 +364,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-       
+
 
     }
 }

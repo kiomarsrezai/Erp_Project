@@ -159,6 +159,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("code", budgetCodingInsert.code);
                         sqlCommand.Parameters.AddWithValue("show", budgetCodingInsert.show);
                         sqlCommand.Parameters.AddWithValue("crud", budgetCodingInsert.crud);
+                        sqlCommand.Parameters.AddWithValue("description", budgetCodingInsert.description);
                         sqlCommand.Parameters.AddWithValue("levelNumber", budgetCodingInsert.levelNumber);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -210,6 +211,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("show", budgetCodingUpdate.show);
                         sqlCommand.Parameters.AddWithValue("crud", budgetCodingUpdate.crud);
                         sqlCommand.Parameters.AddWithValue("levelNumber", budgetCodingUpdate.levelNumber);
+                        sqlCommand.Parameters.AddWithValue("description", budgetCodingUpdate.description);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     }

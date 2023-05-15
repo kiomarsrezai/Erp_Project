@@ -20,6 +20,9 @@ namespace NewsWebsite.ViewModels.Api.Request
         public string Description { get; set; }
         public long EstimateAmount { get; set; }
         public string ResonDoingMethod { get; set; }
+        public int RequestKindId { get; set; }
+        public int SuppliersId { get; set; }
+        public string SuppliersName { get; set; }
 
     }
 }
