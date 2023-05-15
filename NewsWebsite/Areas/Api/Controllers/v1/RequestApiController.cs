@@ -41,7 +41,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
@@ -53,8 +53,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
                     sqlCommand.Parameters.AddWithValue("DoingMethodId", viewModel.DoingMethodId);
                     sqlCommand.Parameters.AddWithValue("EstimateAmount", viewModel.EstimateAmount);
-                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
-                    sqlCommand.Parameters.AddWithValue("RequestKindId", viewModel.RequestKindId);
                     sqlCommand.Parameters.AddWithValue("ResonDoingMethod", viewModel.ResonDoingMethod);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
