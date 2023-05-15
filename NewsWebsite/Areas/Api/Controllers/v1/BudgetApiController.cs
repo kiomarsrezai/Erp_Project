@@ -268,11 +268,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetModal2Coding")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetModalCodingViewModel>>> BudgetModal2Coding(BudgetCodingParamModel paramModel)
+        public async Task<ApiResult<List<BudgetModalProjectViewModel>>> BudgetModal2Coding(BudgetCodingParamModel paramModel)
         {
             if (paramModel.YearId == 0) return BadRequest("با خطا مواجه شدید");
 
-            List<BudgetModalCodingViewModel> fecth = new List<BudgetModalCodingViewModel>();
+            List<BudgetModalProjectViewModel> fecth = new List<BudgetModalProjectViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2CodingCoding_Read", sqlconnect))
@@ -285,7 +285,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetModalCodingViewModel BudgetView = new BudgetModalCodingViewModel();
+                        BudgetModalProjectViewModel BudgetView = new BudgetModalProjectViewModel();
                         //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         //BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         //BudgetView.CodingCode = int.Parse(dataReader["CodingCode"].ToString());
