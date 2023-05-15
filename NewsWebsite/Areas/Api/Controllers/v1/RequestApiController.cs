@@ -6,6 +6,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.RequestTable;
 using System.Collections.Generic;
@@ -48,26 +49,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
                     sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
                     sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
-                    sqlCommand.Parameters.AddWithValue("SuppliersId", viewModel.SuppliersId);
                     sqlCommand.Parameters.AddWithValue("RequestKindId", viewModel.RequestKindId);
-                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
                     sqlCommand.Parameters.AddWithValue("DoingMethodId", viewModel.DoingMethodId);
+                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
                     sqlCommand.Parameters.AddWithValue("EstimateAmount", viewModel.EstimateAmount);
+                    sqlCommand.Parameters.AddWithValue("SuppliersId", viewModel.SuppliersId);
                     sqlCommand.Parameters.AddWithValue("ResonDoingMethod", viewModel.ResonDoingMethod);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.YearId = int.Parse(dataReader["YearId"].ToString());
                         request.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        request.Employee = dataReader["Employee"].ToString();
+                        request.RequestKindId = int.Parse(dataReader["RequestKindId"].ToString());
                         request.UserId = int.Parse(dataReader["UserId"].ToString());
+                        request.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
                         request.Number = dataReader["Number"].ToString();
+                        request.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
+                        request.Description = dataReader["Description"].ToString();
                         request.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
                         request.DateS = dataReader["DateS"].ToString();
                         request.ExecuteDepartmanId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
-                        request.DoingMethodId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
-                        request.SuppliersId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
-                        request.ExecuteDepartmanId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
+                        request.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
 
                     }
                 }
@@ -86,7 +91,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("RequestId", paramViewModel.RequestId);
@@ -94,17 +99,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
+                        requestsViewModels.Id = int.Parse(dataReader["Id"].ToString());
+                        requestsViewModels.YearId = int.Parse(dataReader["YearId"].ToString());
                         requestsViewModels.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        requestsViewModels.Users = dataReader["Users"].ToString();
-                        requestsViewModels.Number= dataReader["Number"].ToString();
-                        requestsViewModels.DoingMethodId= int.Parse(dataReader["DoingMethodId"].ToString());
+                        requestsViewModels.ExecuteDepartmanId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
+                        requestsViewModels.Employee = dataReader["Employee"].ToString();
+                        requestsViewModels.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
+                        requestsViewModels.Number = dataReader["Number"].ToString();
+                        requestsViewModels.Date = dataReader["Date"].ToString();
+                        requestsViewModels.DateS = dataReader["DateS"].ToString();
+                        requestsViewModels.Description = dataReader["Description"].ToString();
+                        requestsViewModels.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
-                        requestsViewModels.Id= int.Parse(dataReader["Id"].ToString());
-                        requestsViewModels.Date= dataReader["Date"].ToString();
-                        requestsViewModels.DateS= dataReader["DateS"].ToString();
-                        requestsViewModels.Description= dataReader["Description"].ToString();
-                        requestsViewModels.EstimateAmount= long.Parse(dataReader["EstimateAmount"].ToString());
-                        requestsViewModels.ExecuteDepartmanId= int.Parse(dataReader["ExecuteDepartmanId"].ToString());
                     }
                 }
             }
@@ -169,6 +175,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
+
+        /// <summary>
+        /// RequestTable CRUD
+        /// </summary>
+        /// 
+        /// <returns></returns>
+        /// 
+
         [Route("GetRequestTableList")]
         [HttpGet]
         public async Task<ApiResult<List<RequestSearchViewModel>>> GetRequestTableList(RequestSearchParamViewModel paramViewModel)
@@ -204,12 +218,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(requestsViewModels);
         }
 
-/// <summary>
-/// RequestTable CRUD
-/// </summary>
-/// 
-/// <returns></returns>
-/// 
         [Route("RequestTableCreate")]
         [HttpPost]
         public async Task<ApiResult> RequestTableCreate([FromBody] RequestTableInsertViewModel viewModel)
@@ -290,7 +298,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(request);
         }
 
-        [Route("RequestDelete{id}")]
+        [Route("RequestTableDelete{id}")]
         [HttpPost]
         public async Task<ApiResult> RequestTableDelete(int id)
         {

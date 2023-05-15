@@ -49,7 +49,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         SupplyViewModel fetchView = new SupplyViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.Name = dataReader["CompanyKindName"].ToString();
+                        fetchView.Name = dataReader["Name"].ToString();
 
                         fecthViewModel.Add(fetchView);
                     }

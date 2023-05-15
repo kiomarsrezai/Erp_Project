@@ -8,19 +8,12 @@ namespace NewsWebsite.ViewModels.Api.Request
     public class RequestsViewModel
     {
         public int Id { get; set; }
-
-        [Display(Name = "سال")]
         public int YearId { get; set; }
-        
-        [Display(Name = "منطقه")]
         public int AreaId { get; set; }
-        
-        [Display(Name = "واحد درخواست کننده")]
-        public int ExecuteDepartmanId { get; set; }
-        
-        [Display(Name = "کاربر")]
-        public string Users { get; set; }
+        public int? ExecuteDepartmanId { get; set; }
+        public string Employee { get; set; }
         public int DoingMethodId { get; set; }
+        public string Users { get; set; }
         public string Number { get; set; }
         public string Date { get; set; }
         public string DateS { get; set; }
