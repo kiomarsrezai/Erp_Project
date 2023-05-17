@@ -33,7 +33,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
-
         [Route("RequestCreate")]
         [HttpPost]
         public async Task<ApiResult<RequestAfterInsertViewModel>> RequestCreate([FromBody] RequestInsertViewModel viewModel)
@@ -106,7 +105,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetConnectOutputDTO req = new BudgetConnectOutputDTO();
 
                         req.Id = int.Parse(dataReader["Id"].ToString());
-                        req.ProctorName = dataReader["ProctorName "].ToString();
+                        req.ProctorName = dataReader["ProctorName"].ToString();
                         req.Code= dataReader["Code"].ToString();
                         req.Description= dataReader["Description"].ToString();
                         req.Mosavab= long.Parse(dataReader["Mosavab"].ToString());
@@ -227,6 +226,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(requestsViewModels);
         }
+        
         //[Route("RequestDelete")]
         //[HttpPost]
         //public async Task<ApiResult> RequestDelete(int id)
@@ -250,15 +250,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //    return Ok();
         //}
 
-
         /// <summary>
         /// RequestTable CRUD
         /// </summary>
         /// 
         /// <returns></returns>
         /// 
-
-
 
         [Route("RequestTableCreate")]
         [HttpPost]
@@ -362,9 +359,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok();
         }
-
-
-
 
     }
 }

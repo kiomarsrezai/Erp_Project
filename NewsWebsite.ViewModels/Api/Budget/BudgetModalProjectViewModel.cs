@@ -19,6 +19,7 @@ namespace NewsWebsite.ViewModels.Budget
         //public double PercentBud { get; set; }
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
+        public string AreaName { get; set; }
     }
 
   

@@ -4,11 +4,11 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Budget
 {
-    public class BudgetModal2ProjectParamModel
+    public class BudgetModal1CodingParamModel
     {
         public int YearId { get; set; }
-        public int AreaId { get; set; }
-        public int CodingId { get; set; }
+        public int CodingId{ get; set; }
+        public int AreaId{ get; set; }
 
     }
 }
