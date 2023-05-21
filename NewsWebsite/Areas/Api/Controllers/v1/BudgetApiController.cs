@@ -78,6 +78,41 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecth);
         }
 
+        [Route("GetBudgetSearchCodingModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetSearchCodingViewModel>>> GetBudgetSearchCodingModalList(int budgetProcessId, int motherid, int yearId, int areaId)
+        {
+            List<BudgetSearchCodingViewModel> fecthViewModel = new List<BudgetSearchCodingViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1CodingSearch", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("MotherId", motherid);
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetSearchCodingViewModel fetchView = new BudgetSearchCodingViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+                        fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
+                        fetchView.Show = bool.Parse(dataReader["Show"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+
         [Route("GetCodingList")]
         [HttpGet]
         public async Task<ApiResult<List<CodingViewModel>>> GetCodingList(CodingParamViewModel viewModel)
@@ -103,41 +138,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
                         fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
                         fetchView.CodingRevenueKind = int.Parse(dataReader["CodingRevenueKind"].ToString());
-
-                        fecthViewModel.Add(fetchView);
-                    }
-                }
-            }
-
-            return Ok(fecthViewModel);
-        }
-
-        [Route("GetBudgetSearchCodingModal")]
-        [HttpGet]
-        public async Task<ApiResult<List<BudgetSearchCodingViewModel>>> GetBudgetSearchCodingModalList(int budgetProcessId,int motherid,int yearId,int areaId)
-        {
-            List<BudgetSearchCodingViewModel> fecthViewModel = new List<BudgetSearchCodingViewModel>();
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1CodingSearch", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
-                    sqlCommand.Parameters.AddWithValue("MotherId", motherid);
-                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        BudgetSearchCodingViewModel fetchView = new BudgetSearchCodingViewModel();
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
-                        fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
-                        fetchView.Show = bool.Parse(dataReader["Show"].ToString());
 
                         fecthViewModel.Add(fetchView);
                     }
@@ -250,7 +250,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.Code = dataReader["Code"].ToString();
                         BudgetView.Description = dataReader["Description"].ToString();
-                        BudgetView.CodingId= int.Parse(dataReader["CodingId"].ToString());
+                        BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
@@ -268,6 +268,80 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok(fecth);
+        }
+
+        [Route("BudgteModal1CodingInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgteModal1CodingInsert([FromBody] BudgetModal1CodingInsertParamModel budgetCodingInsert)
+        {
+            if (budgetCodingInsert.CodingId == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (budgetCodingInsert.CodingId > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("CodingId", budgetCodingInsert.CodingId);
+                        sqlCommand.Parameters.AddWithValue("areaId", budgetCodingInsert.areaId);
+                        sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetCodingInsert.BudgetProcessId);
+                        sqlCommand.Parameters.AddWithValue("yearId", budgetCodingInsert.yearId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok("با موفقیت انجام شد");
+        }
+     
+        [Route("BudgteModal1CodingUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgteModal1CodingUpdate([FromBody] BudgetModal1CodingUpdateParamModel budgetCodingUpdate)
+        {
+            if (budgetCodingUpdate.id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (budgetCodingUpdate.id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Update", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", budgetCodingUpdate.id);
+                        sqlCommand.Parameters.AddWithValue("mosavabPublic", budgetCodingUpdate.mosavabPublic);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    }
+                }
+
+            }
+            return Ok("با موفقیت انجام شد");
+
+        }
+
+        [Route("BudgteModal1CodingDelete{id}")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgteModal1CodingDelete([FromBody] int id)
+        {
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Delete", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok("با موفقیت انجام شد");
         }
 
         [Route("BudgetModal2Coding")]
@@ -300,7 +374,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.ProjectName = dataReader["ProjectName"].ToString();
                         BudgetView.AreaName = dataReader["AreaName"].ToString();
                         //BudgetView.Show = (bool)dataReader["Show"];
-                       
+
                         fecth.Add(BudgetView);
                     }
                 }
@@ -308,48 +382,118 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecth);
         }
 
-        [Route("BudgetModal3Area")]
+        [Route("BudgetModal2ProjectSearch")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetAreaModalViewModel>>> BudgetModal3Area(BudgetModal3AreaParamModel paramModel)
+        public async Task<ApiResult<List<BudgetModal2ProjectSearchViewModal>>> BudgetModal2ProjectSearch(BudgetModal2ProjectSearchParamViewModal searchParamViewModal)
         {
-            if (paramModel.YearId == 0) return BadRequest("با خطا مواجه شدید");
+            List<BudgetModal2ProjectSearchViewModal> BudgetViews = new List<BudgetModal2ProjectSearchViewModal>();
 
-            List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            if (searchParamViewModal.areaId == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (searchParamViewModal.areaId > 0)
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Read", sqlconnect))
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("CodingId", paramModel.CodingId);
-                    sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
-                    sqlCommand.Parameters.AddWithValue("ProjectId", paramModel.ProjectId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2ProjectSearch", sqlconnect))
                     {
-                        BudgetAreaModalViewModel BudgetView = new BudgetAreaModalViewModel();
-                        BudgetView.Id = int.Parse(dataReader["Id"].ToString());
-                        BudgetView.AreaNameShort = dataReader["AreaNameShort"].ToString();
-                        //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
-                        BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
-                        BudgetView.Supply = Int64.Parse(dataReader["Supply"].ToString());
-                        BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        //BudgetView.Show = (bool)dataReader["Show"];
-                        if (BudgetView.Mosavab != 0)
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("areaId", searchParamViewModal.areaId);
+                        sqlCommand.Parameters.AddWithValue("yearId", searchParamViewModal.yearId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.Read())
                         {
-                            BudgetView.PercentBud = _uw.Budget_001Rep.Divivasion(BudgetView.Expense, BudgetView.Mosavab);
+                            BudgetModal2ProjectSearchViewModal BudgetView = new BudgetModal2ProjectSearchViewModal();
+
+                            BudgetView.Id = int.Parse(dataReader["Id"].ToString());
+                            BudgetView.ProjectCode = dataReader["ProjectCode"].ToString();
+                            BudgetView.ProjectName = dataReader["ProjectName"].ToString();
+
+                            BudgetViews.Add(BudgetView);
                         }
-                        else
-                        {
-                            BudgetView.PercentBud = 0;
-                        }
-                        fecth.Add(BudgetView);
+                        sqlconnect.Close();
                     }
                 }
             }
-            return Ok(fecth);
+            return Ok(BudgetViews);
+        }
+    
+        [Route("BudgteModal2ProjectInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgteModal2ProjectInsert([FromBody] BudgetModal2ProjectInsertParamModel budgetCodingInsert)
+        {
+            if (budgetCodingInsert.ProgramOperationDetailsId == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (budgetCodingInsert.ProgramOperationDetailsId > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("BudgetDetailId", budgetCodingInsert.BudgetDetailId);
+                        sqlCommand.Parameters.AddWithValue("AreaId", budgetCodingInsert.AreaId);
+                        sqlCommand.Parameters.AddWithValue("YearId", budgetCodingInsert.YearId);
+                        sqlCommand.Parameters.AddWithValue("ProgramOperationDetailsId", budgetCodingInsert.ProgramOperationDetailsId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok("با موفقیت انجام شد");
+        }
+
+        [Route("BudgteModal2ProjectUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgteModal2ProjectUpdate([FromBody] BudgetModal2ProjectUpdateParamModel budgetCodingUpdate)
+        {
+            if (budgetCodingUpdate.yearId == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (budgetCodingUpdate.yearId > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Update", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", budgetCodingUpdate.Id);
+                        //sqlCommand.Parameters.AddWithValue("areaGlobalId", budgetCodingUpdate.areaGlobalId);
+                        //sqlCommand.Parameters.AddWithValue("codingId", budgetCodingUpdate.codingId);
+                        //sqlCommand.Parameters.AddWithValue("areaId", budgetCodingUpdate.areaId);
+                        sqlCommand.Parameters.AddWithValue("Mosavab", budgetCodingUpdate.Mosavab);
+                        //sqlCommand.Parameters.AddWithValue("projectId", budgetCodingUpdate.projectId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    }
+                }
+
+            }
+            return Ok("با موفقیت انجام شد");
+
+        }
+
+        [Route("BudgteModal2ProjectDelete{id}")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgteModal2ProjectDelete([FromBody] int id)
+        {
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Delete", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok("با موفقیت انجام شد");
         }
 
         [Route("BudgteCodingInsert")]
@@ -431,178 +575,95 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
 
         }
-
-        /// <summary>
-        /// Modal1Codin
-        /// </summary>
-        /// <param name="budgetCodingInsert"></param>
-        /// <returns></returns>
-        /// 
-        [Route("BudgteModal1CodingInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal1CodingInsert([FromBody] BudgetModal1CodingInsertParamModel budgetCodingInsert)
-        {
-            if (budgetCodingInsert.CodingId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (budgetCodingInsert.CodingId > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("CodingId", budgetCodingInsert.CodingId);
-                        sqlCommand.Parameters.AddWithValue("areaId", budgetCodingInsert.areaId);
-                        sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetCodingInsert.BudgetProcessId);
-                        sqlCommand.Parameters.AddWithValue("yearId", budgetCodingInsert.yearId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
-                }
-            }
-            return Ok("با موفقیت انجام شد");
-        }
-
-        [Route("BudgteModal1CodingDelete{id}")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal1CodingDelete([FromBody] int id)
-        {
-            if (id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (id > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Delete", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
-                }
-            }
-            return Ok("با موفقیت انجام شد");
-        }
-
-        [Route("BudgteModal1CodingUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal1CodingUpdate([FromBody] BudgetModal1CodingUpdateParamModel budgetCodingUpdate)
-        {
-            if (budgetCodingUpdate.id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (budgetCodingUpdate.id > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Update", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", budgetCodingUpdate.id);
-                        sqlCommand.Parameters.AddWithValue("mosavabPublic", budgetCodingUpdate.mosavabPublic);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    }
-                }
-
-            }
-            return Ok("با موفقیت انجام شد");
-
-        }
-
-        [Route("BudgteModal2ProjectInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal2ProjectInsert([FromBody] BudgetModal2ProjectInsertParamModel budgetCodingInsert)
-        {
-            if (budgetCodingInsert.ProgramOperationDetailsId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (budgetCodingInsert.ProgramOperationDetailsId > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("BudgetDetailId", budgetCodingInsert.BudgetDetailId);
-                        sqlCommand.Parameters.AddWithValue("AreaId", budgetCodingInsert.AreaId);
-                        sqlCommand.Parameters.AddWithValue("YearId", budgetCodingInsert.YearId);
-                        sqlCommand.Parameters.AddWithValue("ProgramOperationDetailsId", budgetCodingInsert.ProgramOperationDetailsId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
-                }
-            }
-            return Ok("با موفقیت انجام شد");
-        }
-
-        [Route("BudgetModal2ProjectSearch")]
+       
+        [Route("BudgetModal3AreaRead")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetModal2ProjectSearchViewModal>>> BudgetModal2ProjectSearch(BudgetModal2ProjectSearchParamViewModal searchParamViewModal)
+        public async Task<ApiResult<List<BudgetAreaModalViewModel>>> BudgetModal3AreaRead(BudgetModal3AreaParamModel paramModel)
         {
-            List<BudgetModal2ProjectSearchViewModal> BudgetViews = new List<BudgetModal2ProjectSearchViewModal>();
+            if (paramModel.YearId == 0) return BadRequest("با خطا مواجه شدید");
 
-            if (searchParamViewModal.areaId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (searchParamViewModal.areaId > 0)
+            List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Read", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2ProjectSearch", sqlconnect))
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", paramModel.CodingId);
+                    sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
+                    sqlCommand.Parameters.AddWithValue("ProjectId", paramModel.ProjectId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
                     {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("areaId", searchParamViewModal.areaId);
-                        sqlCommand.Parameters.AddWithValue("yearId", searchParamViewModal.yearId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (dataReader.Read())
+                        BudgetAreaModalViewModel BudgetView = new BudgetAreaModalViewModel();
+                        BudgetView.Id = int.Parse(dataReader["Id"].ToString());
+                        BudgetView.AreaNameShort = dataReader["AreaNameShort"].ToString();
+                        //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        BudgetView.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                        BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        //BudgetView.Show = (bool)dataReader["Show"];
+                        if (BudgetView.Mosavab != 0)
                         {
-                            BudgetModal2ProjectSearchViewModal BudgetView = new BudgetModal2ProjectSearchViewModal();
-                           
-                            BudgetView.Id = int.Parse(dataReader["Id"].ToString());
-                            BudgetView.ProjectCode = dataReader["ProjectCode"].ToString();
-                            BudgetView.ProjectName = dataReader["ProjectName"].ToString();
-
-                            BudgetViews.Add(BudgetView);
+                            BudgetView.PercentBud = _uw.Budget_001Rep.Divivasion(BudgetView.Expense, BudgetView.Mosavab);
                         }
-                        sqlconnect.Close();
+                        else
+                        {
+                            BudgetView.PercentBud = 0;
+                        }
+                        fecth.Add(BudgetView);
                     }
                 }
             }
-            return Ok(BudgetViews);
+            return Ok(fecth);
         }
 
-        [Route("BudgteModal2ProjectUpdate")]
+        [Route("BudgetModal3AreaUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal2ProjectUpdate([FromBody] BudgetModal2ProjectUpdateParamModel budgetCodingUpdate)
+        public async Task<ApiResult<string>> BudgetModal3AreaUpdate([FromBody] int Id,int mosavab)
         {
-            if (budgetCodingUpdate.yearId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (budgetCodingUpdate.yearId > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Update", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", budgetCodingUpdate.Id);
-                        sqlCommand.Parameters.AddWithValue("areaGlobalId", budgetCodingUpdate.areaGlobalId);
-                        sqlCommand.Parameters.AddWithValue("codingId", budgetCodingUpdate.codingId);
-                        sqlCommand.Parameters.AddWithValue("areaId", budgetCodingUpdate.areaId);
-                        sqlCommand.Parameters.AddWithValue("Mosavab", budgetCodingUpdate.Mosavab);
-                        sqlCommand.Parameters.AddWithValue("projectId", budgetCodingUpdate.projectId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    }
-                }
+            if (Id == 0) return BadRequest("با خطا مواجه شدید");
 
+            List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", Id);
+                    sqlCommand.Parameters.AddWithValue("Mosavab", mosavab);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                }
+            }
+            return Ok(fecth);
+        }
+        
+        [Route("BudgetModal3AreaDelete{id}")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgetModal3AreaInsert([FromBody] int id)
+        {
+            if (id == 0) return BadRequest("با خطا مواجه شدید");
+
+            List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                }
             }
             return Ok("با موفقیت انجام شد");
-
         }
+
+      
+
     }
 
-  
+
 }
