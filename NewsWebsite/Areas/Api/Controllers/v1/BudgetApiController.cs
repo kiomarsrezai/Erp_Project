@@ -114,7 +114,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("GetBudgetSearchCodingModal")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetSearchCodingViewModel>>> GetBudgetSearchCodingModalList(int budgetProcessId)
+        public async Task<ApiResult<List<BudgetSearchCodingViewModel>>> GetBudgetSearchCodingModalList(int budgetProcessId,int motherid,int yearId,int areaId)
         {
             List<BudgetSearchCodingViewModel> fecthViewModel = new List<BudgetSearchCodingViewModel>();
 
@@ -124,6 +124,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("MotherId", motherid);
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -313,7 +316,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3CodingProjectArea_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
@@ -512,19 +515,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> BudgteModal2ProjectInsert([FromBody] BudgetModal2ProjectInsertParamModel budgetCodingInsert)
         {
-            if (budgetCodingInsert.CodingId == 0)
+            if (budgetCodingInsert.ProgramOperationDetailsId == 0)
                 return BadRequest("با خطا مواجه شد");
-            if (budgetCodingInsert.CodingId > 0)
+            if (budgetCodingInsert.ProgramOperationDetailsId > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Insert", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("CodingId", budgetCodingInsert.CodingId);
+                        sqlCommand.Parameters.AddWithValue("BudgetDetailId", budgetCodingInsert.BudgetDetailId);
                         sqlCommand.Parameters.AddWithValue("AreaId", budgetCodingInsert.AreaId);
                         sqlCommand.Parameters.AddWithValue("YearId", budgetCodingInsert.YearId);
-                        sqlCommand.Parameters.AddWithValue("Id", budgetCodingInsert.Id);
+                        sqlCommand.Parameters.AddWithValue("ProgramOperationDetailsId", budgetCodingInsert.ProgramOperationDetailsId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         sqlconnect.Close();
