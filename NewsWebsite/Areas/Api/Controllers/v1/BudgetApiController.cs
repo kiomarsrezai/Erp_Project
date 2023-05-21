@@ -587,6 +587,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Update", sqlconnect))
                     {
                         sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", budgetCodingUpdate.Id);
                         sqlCommand.Parameters.AddWithValue("areaGlobalId", budgetCodingUpdate.areaGlobalId);
                         sqlCommand.Parameters.AddWithValue("codingId", budgetCodingUpdate.codingId);
                         sqlCommand.Parameters.AddWithValue("areaId", budgetCodingUpdate.areaId);

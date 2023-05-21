@@ -6,6 +6,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetProject
 {
     public class BudgetModal2ProjectUpdateParamModel
     {
+        public int Id { get; set; }
         public int areaGlobalId { get; set; }
         public int yearId { get; set; }
         public int codingId { get; set; }
