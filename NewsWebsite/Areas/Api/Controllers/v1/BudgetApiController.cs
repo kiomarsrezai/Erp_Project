@@ -5,6 +5,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget;
+using NewsWebsite.ViewModels.Api.Budget.BudgetArea;
 using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Budget;
@@ -323,7 +324,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteModal1CodingDelete{id}")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal1CodingDelete([FromBody] int id)
+        public async Task<ApiResult<string>> BudgteModal1CodingDelete(int id)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -448,9 +449,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> BudgteModal2ProjectUpdate([FromBody] BudgetModal2ProjectUpdateParamModel budgetCodingUpdate)
         {
-            if (budgetCodingUpdate.yearId == 0)
+            if (budgetCodingUpdate.Id == 0)
                 return BadRequest("با خطا مواجه شد");
-            if (budgetCodingUpdate.yearId > 0)
+            if (budgetCodingUpdate.Id > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -475,7 +476,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteModal2ProjectDelete{id}")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal2ProjectDelete([FromBody] int id)
+        public async Task<ApiResult<string>> BudgteModal2ProjectDelete(int id)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -526,7 +527,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteCodingDelete{id}")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteCodingDelete([FromBody] int id)
+        public async Task<ApiResult<string>> BudgteCodingDelete(int id)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -622,38 +623,41 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetModal3AreaUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgetModal3AreaUpdate([FromBody] int Id,int mosavab)
+        public async Task<ApiResult<string>> BudgetModal3AreaUpdate([FromBody] BudgetModal3AreaUpdateParam updateParam)
         {
-            if (Id == 0) return BadRequest("با خطا مواجه شدید");
+            if (updateParam.Id == 0) return BadRequest("با خطا مواجه شدید");
 
-            List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Update", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", Id);
-                    sqlCommand.Parameters.AddWithValue("Mosavab", mosavab);
+                    sqlCommand.Parameters.AddWithValue("Id", updateParam.Id);
+                    sqlCommand.Parameters.AddWithValue("Mosavab", updateParam.mosavab);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }
             }
-            return Ok(fecth);
+            return Ok("با موفقیت انجام شد");
         }
         
-        [Route("BudgetModal3AreaDelete{id}")]
+        [Route("BudgetModal3AreaInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgetModal3AreaInsert([FromBody] int id)
+        public async Task<ApiResult<string>> BudgetModal3AreaInsert([FromBody] BudgetModal3ParamAreaInsert areaInsert)
         {
-            if (id == 0) return BadRequest("با خطا مواجه شدید");
+            if (areaInsert.areaPublicId == 0) return BadRequest("با خطا مواجه شدید");
 
             List<BudgetAreaModalViewModel> fecth = new List<BudgetAreaModalViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Delete", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", id);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaInsert.areaId);
+                    sqlCommand.Parameters.AddWithValue("projectId", areaInsert.projectId);
+                    sqlCommand.Parameters.AddWithValue("codingId", areaInsert.codingId);
+                    sqlCommand.Parameters.AddWithValue("yearId", areaInsert.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaPublicId", areaInsert.areaPublicId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }
@@ -661,8 +665,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
-      
-
+        
     }
 
 
