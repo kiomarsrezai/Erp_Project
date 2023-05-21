@@ -291,6 +291,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         BudgetModalProjectViewModel BudgetView = new BudgetModalProjectViewModel();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
@@ -537,7 +538,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
-        [Route("SP001_BudgetModal2ProjectSearch")]
+        [Route("BudgetModal2ProjectSearch")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetModal2ProjectSearchViewModal>>> BudgetModal2ProjectSearch(BudgetModal2ProjectSearchParamViewModal searchParamViewModal)
         {
