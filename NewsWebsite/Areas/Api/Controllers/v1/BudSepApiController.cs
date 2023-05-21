@@ -231,6 +231,54 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+        [Route("Chart_Ravand")]
+        [HttpGet]
+        public async Task<ApiResult<List<object>>> Chart_RavandApi(int budgetProcessId, int areaId)
+        {
+            List<object> data = new List<object>();
+            List<string> yearName = new List<string>();
+            List<string> yearId = new List<string>();
+            List<Int64> mosavab = new List<Int64>();
+            List<double> percmosavab = new List<double>();
+            List<Int64> edit = new List<Int64>();
+            List<Int64> expense = new List<Int64>();
+
+
+                //List<ColumnChart> dataset = new List<ColumnChart>();
+                using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart_Ravand", sqlconnect1))
+                    {
+                        sqlconnect1.Open();
+                        sqlCommand1.CommandType = CommandType.StoredProcedure;
+                        sqlCommand1.Parameters.AddWithValue("areaId", areaId);
+                        sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                        SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
+
+                        while (dataReader1.Read())
+                        {
+                            yearId.Add(dataReader1["yearId"].ToString());
+                            yearName.Add(dataReader1["YearName"].ToString());
+                            mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
+                            edit.Add(Int64.Parse(dataReader1["Edit"].ToString()));
+                            expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
+                        }
+
+                        data.Add(yearId);
+                        data.Add(mosavab);
+                        data.Add(yearName);
+                        data.Add(expense);
+                        data.Add(percmosavab);
+                        data.Add(edit);
+                    }
+
+                };
+
+            return data;
+
+        }
+
+
         [Route("DetailChartApi")]
         [HttpGet]
         public async Task<ApiResult<List<ViewModels.Fetch.ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? codingId = null)
