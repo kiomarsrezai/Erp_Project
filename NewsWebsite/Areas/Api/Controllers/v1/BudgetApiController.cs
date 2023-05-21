@@ -665,7 +665,28 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
-        
+        [Route("BudgetModal3AreaDelete{id}")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgteModal3AreaDelete(int id)
+        {
+            if (id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("[SP001_BudgetModal3Area_Delete]", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+            }
+            return Ok("با موفقیت انجام شد");
+        }
     }
 
 
