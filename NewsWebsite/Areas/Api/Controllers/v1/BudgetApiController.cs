@@ -105,7 +105,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.ProctorName = dataReader["ProctorName"].ToString();
                         fetchView.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
-                        fetchView.Show = bool.Parse(dataReader["Show"].ToString());
+                        fetchView.Show = StringExtensions.ToNullablebool(dataReader["Show"].ToString());
                         fetchView.Mosavab = long.Parse(dataReader["Mosavab"].ToString());
 
                         fecthViewModel.Add(fetchView);

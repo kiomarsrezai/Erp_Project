@@ -9,6 +9,13 @@ namespace NewsWebsite.Common
             return ignoreWhiteSpace ? !string.IsNullOrWhiteSpace(value) : !string.IsNullOrEmpty(value);
         }
 
+        public static bool? ToNullablebool(this string s)
+        {
+            bool i;
+            if (bool.TryParse(s, out i)) return i;
+            return null;
+        }
+        
         public static int? ToNullableInt(this string s)
         {
             int i;
