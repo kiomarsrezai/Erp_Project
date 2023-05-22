@@ -106,7 +106,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.ProctorName = dataReader["ProctorName"].ToString();
                         fetchView.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
                         fetchView.Show = bool.Parse(dataReader["Show"].ToString());
-                        fetchView.Mosavab = long.Parse(dataReader["CodingRevenueKind"].ToString());
+                        fetchView.Mosavab = long.Parse(dataReader["Mosavab"].ToString());
 
                         fecthViewModel.Add(fetchView);
                     }
@@ -130,7 +130,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("id", updateParamViewModel.id);
-                        sqlCommand.Parameters.AddWithValue("description", updateParamViewModel.ProctorId);
+                        sqlCommand.Parameters.AddWithValue("ProctorId", updateParamViewModel.ProctorId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     }
