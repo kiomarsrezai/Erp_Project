@@ -93,7 +93,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("YearId", viewModel.YearId);
                     sqlCommand.Parameters.AddWithValue("AreaId", viewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("CodingId", viewModel.CodingId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModel.BudgetProcessId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
