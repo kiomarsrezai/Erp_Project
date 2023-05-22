@@ -278,7 +278,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-
         [Route("DetailChartApi")]
         [HttpGet]
         public async Task<ApiResult<List<ViewModels.Fetch.ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? codingId = null)

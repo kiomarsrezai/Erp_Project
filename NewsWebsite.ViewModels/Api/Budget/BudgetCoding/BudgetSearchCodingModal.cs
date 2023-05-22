@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Api.Budget
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
 {
     public class BudgetSearchCodingModal
     {
@@ -19,22 +19,22 @@ namespace NewsWebsite.ViewModels.Api.Budget
         //public int CodingId { get; set; }
 
         [Display(Name = "مصوب")]
-        public Int64 Mosavab { get; set; }
+        public long Mosavab { get; set; }
 
         [Display(Name = "اصلاح بودجه")]
-        public Int64 Edit { get; set; }
-        
+        public long Edit { get; set; }
+
         [Display(Name = "عملکرد")]
-        public Int64 Expense { get; set; }
+        public long Expense { get; set; }
 
         [Display(Name = "% درصد")]
         public double PercentBud { get; set; }
-        
-     
+
+
 
 
     }
 
-  
+
 
 }

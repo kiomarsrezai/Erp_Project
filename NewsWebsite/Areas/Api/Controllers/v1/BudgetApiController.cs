@@ -228,6 +228,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+        [Route("BudgetCodingMainModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<CodingMainModalViewModel>>> BudgetCodingMainModal(int yearId,int areaId,int budgetProcessId)
+        {
+            List<CodingMainModalViewModel> fecthViewModel = new List<CodingMainModalViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("BudgetCodingMainModal", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        CodingMainModalViewModel fetchView = new CodingMainModalViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+
         [Route("BudgetModal1Coding")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetModalCodingViewModel>>> BudgetModal1Coding(BudgetModal1CodingParamModel paramModel)

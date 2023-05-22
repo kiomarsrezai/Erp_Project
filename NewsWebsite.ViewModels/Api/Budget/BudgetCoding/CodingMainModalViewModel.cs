@@ -1,12 +1,13 @@
-﻿namespace NewsWebsite.ViewModels.Api.Budget
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
 {
-    public class BudgetSearchCodingViewModel
+    public class CodingMainModalViewModel
     {
+
         public int Id { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
         public int levelNumber { get; set; }
-        public bool Crud { get; set; }
-        public bool Show { get; set; }
     }
 }
