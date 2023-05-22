@@ -7,6 +7,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget;
 using NewsWebsite.ViewModels.Api.Budget.BudgetArea;
 using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
+using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Budget;
 using NewsWebsite.ViewModels.Fetch;
@@ -77,6 +78,67 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok(fecth);
+        }
+
+        [Route("BudgetConnectRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetConnect_ReadViewModel>>> BudgetConnectRead(BudgetConnect_ReadParamViewModel viewModel)
+        {
+            List<BudgetConnect_ReadViewModel> fecthViewModel = new List<BudgetConnect_ReadViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetConnect_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", viewModel.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", viewModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", viewModel.CodingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetConnect_ReadViewModel fetchView = new BudgetConnect_ReadViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.ProctorId = StringExtensions.ToNullableInt(dataReader["ProctorId"].ToString());
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.ProctorName = dataReader["ProctorName"].ToString();
+                        fetchView.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
+                        fetchView.Show = bool.Parse(dataReader["Show"].ToString());
+                        fetchView.Mosavab = long.Parse(dataReader["CodingRevenueKind"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+
+        [Route("BudgetConnectUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgetConnectUpdate([FromBody] BudgetConnectUpdateParamViewModel updateParamViewModel)
+        {
+            if (updateParamViewModel.id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (updateParamViewModel.id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetConnect_Update", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", updateParamViewModel.id);
+                        sqlCommand.Parameters.AddWithValue("description", updateParamViewModel.ProctorId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    }
+                }
+
+            }
+            return Ok("با موفقیت انجام شد");
+
         }
 
         [Route("GetBudgetSearchCodingModal")]

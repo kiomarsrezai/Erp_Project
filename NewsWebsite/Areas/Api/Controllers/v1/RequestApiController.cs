@@ -8,7 +8,7 @@ using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
-using NewsWebsite.ViewModels.Api.Budget;
+using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.RequestTable;
 using System.Collections.Generic;
@@ -79,45 +79,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
                 return Ok(request);
             }
-        }
-
-        [Route("RequestBudgetConnect")]
-        [HttpGet]
-        public async Task<ActionResult<BudgetConnectOutputDTO>> GetBudgetConnect(BudgetConnectInputDTO viewModelDTO)
-        {
-            List<BudgetConnectOutputDTO> requestlst = new List<BudgetConnectOutputDTO>();
-
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetConnect_Read", sqlconnect))
-                {
-
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AreaId", viewModelDTO.AreaId);
-                    sqlCommand.Parameters.AddWithValue("YearId", viewModelDTO.YearId);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModelDTO.BudgetProcessId);
-
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        BudgetConnectOutputDTO req = new BudgetConnectOutputDTO();
-
-                        req.Id = int.Parse(dataReader["Id"].ToString());
-                        req.ProctorName = dataReader["ProctorName"].ToString();
-                        req.Code= dataReader["Code"].ToString();
-                        req.Description= dataReader["Description"].ToString();
-                        req.Mosavab= long.Parse(dataReader["Mosavab"].ToString());
-                        req.ProctorId= int.Parse(dataReader["ProctorId"].ToString());
-
-                        requestlst.Add(req);
-                    }
-                }
-
-                return Ok(requestlst);
-            }
-
         }
 
         [Route("RequestRead")]
