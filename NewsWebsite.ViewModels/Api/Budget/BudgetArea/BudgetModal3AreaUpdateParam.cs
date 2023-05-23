@@ -3,6 +3,6 @@
     public class BudgetModal3AreaUpdateParam
     {
         public int Id { get; set; }
-        public int mosavab { get; set; }
+        public long mosavab { get; set; }
     }
 }

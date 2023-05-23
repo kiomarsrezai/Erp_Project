@@ -292,7 +292,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetCodingMainModal")]
         [HttpGet]
-        public async Task<ApiResult<List<CodingMainModalViewModel>>> BudgetCodingMainModal(int yearId,int areaId,int budgetProcessId)
+        public async Task<ApiResult<List<CodingMainModalViewModel>>> BudgetCodingMainModal(int yearId, int areaId, int budgetProcessId)
         {
             List<CodingMainModalViewModel> fecthViewModel = new List<CodingMainModalViewModel>();
 
@@ -369,28 +369,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> BudgteModal1CodingInsert([FromBody] BudgetModal1CodingInsertParamModel budgetCodingInsert)
         {
-            if (budgetCodingInsert.CodingId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (budgetCodingInsert.CodingId > 0)
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Insert", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Insert", sqlconnect))
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("CodingId", budgetCodingInsert.CodingId);
+                    sqlCommand.Parameters.AddWithValue("areaId", budgetCodingInsert.areaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetCodingInsert.BudgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("yearId", budgetCodingInsert.yearId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
                     {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("CodingId", budgetCodingInsert.CodingId);
-                        sqlCommand.Parameters.AddWithValue("areaId", budgetCodingInsert.areaId);
-                        sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetCodingInsert.BudgetProcessId);
-                        sqlCommand.Parameters.AddWithValue("yearId", budgetCodingInsert.yearId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
                 }
             }
-            return Ok("با موفقیت انجام شد");
+            if (!string.IsNullOrEmpty(readercount)) return BadRequest(readercount);
+            else
+                return Ok("با موفقیت انجام شد");
         }
-     
+
         [Route("BudgteModal1CodingUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> BudgteModal1CodingUpdate([FromBody] BudgetModal1CodingUpdateParamModel budgetCodingUpdate)
@@ -512,7 +513,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(BudgetViews);
         }
-    
+
         [Route("BudgteModal2ProjectInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> BudgteModal2ProjectInsert([FromBody] BudgetModal2ProjectInsertParamModel budgetCodingInsert)
@@ -670,7 +671,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
 
         }
-       
+
         [Route("BudgetModal3AreaRead")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetAreaModalViewModel>>> BudgetModal3AreaRead(BudgetModal3AreaParamModel paramModel)
@@ -734,7 +735,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok("با موفقیت انجام شد");
         }
-        
+
         [Route("BudgetModal3AreaInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> BudgetModal3AreaInsert([FromBody] BudgetModal3ParamAreaInsert areaInsert)
