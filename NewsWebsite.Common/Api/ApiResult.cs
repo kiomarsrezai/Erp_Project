@@ -11,16 +11,18 @@ namespace NewsWebsite.Common.Api
     public class ApiResult
     {
         public bool IsSuccess { get; set; }
+        public bool? IsDb { get; set; }
         public ApiResultStatusCode StatusCode { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Message { get; set; }
 
-        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, List<string> message = null)
+        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, List<string> message = null,bool Isdb=false)
         {
             IsSuccess = isSuccess;
             StatusCode = statusCode;
             Message = message ?? statusCode.ToDisplay();
+            IsDb = Isdb;
         }
 
         #region Implicit Operators
@@ -103,6 +105,11 @@ namespace NewsWebsite.Common.Api
         {
             return new ApiResult<TData>(false, ApiResultStatusCode.BadRequest, null);
         }
+
+        //public static implicit operator ApiResult<TData>(BadRequestResult result)
+        //{
+        //    return new ApiResult<TData>(false, ApiResultStatusCode.DataBaseError, null);
+        //}
 
         public static implicit operator ApiResult<TData>(BadRequestObjectResult result)
         {

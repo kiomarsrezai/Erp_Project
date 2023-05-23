@@ -20,6 +20,7 @@ namespace NewsWebsite.ViewModels.Budget
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         public string AreaName { get; set; }
+        public int AreaId { get; set; }
     }
 
   

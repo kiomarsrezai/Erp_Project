@@ -16,7 +16,10 @@ namespace NewsWebsite.Common.Api
 
         [Display(Name = "پارامتر های ارسالی معتبر نیستند")]
         BadRequest = 2,
-
+        
+        [Display(Name = "خطای بانک اطلاعاتی")]
+        DataBaseError = 401,
+        
         [Display(Name = "یافت نشد")]
         NotFound = 3,
 

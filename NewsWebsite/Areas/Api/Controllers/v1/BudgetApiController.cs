@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
@@ -387,9 +389,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (!string.IsNullOrEmpty(readercount)) return BadRequest(readercount);
-            else
-                return Ok("با موفقیت انجام شد");
+            while (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد"); 
+            {
+               return BadRequest(readercount);
+            }
         }
 
         [Route("BudgteModal1CodingUpdate")]
@@ -421,10 +424,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> BudgteModal1CodingDelete(int id)
         {
-            if (id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (id > 0)
-            {
+            
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Delete", sqlconnect))
@@ -436,13 +436,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlconnect.Close();
                     }
                 }
-            }
             return Ok("با موفقیت انجام شد");
         }
 
-        [Route("BudgetModal2Coding")]
+        [Route("BudgetModal2CodingRead")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetModalProjectViewModel>>> BudgetModal2Coding(BudgetModal1CodingParamModel paramModel)
+        public async Task<ApiResult<List<BudgetModalProjectViewModel>>> BudgetModal2CodingRead(BudgetModal1CodingParamModel paramModel)
         {
             if (paramModel.YearId == 0) return BadRequest("با خطا مواجه شدید");
 
@@ -469,6 +468,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.ProjectCode = dataReader["ProjectCode"].ToString();
                         BudgetView.ProjectName = dataReader["ProjectName"].ToString();
                         BudgetView.AreaName = dataReader["AreaName"].ToString();
+                        BudgetView.AreaId = int.Parse(dataReader["AreaId"].ToString());
                         //BudgetView.Show = (bool)dataReader["Show"];
 
                         fecth.Add(BudgetView);
@@ -684,6 +684,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Read", sqlconnect))
                 {
                     sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("areaPublicId", paramModel.areaPublicId);
                     sqlCommand.Parameters.AddWithValue("AreaId", paramModel.AreaId);
                     sqlCommand.Parameters.AddWithValue("CodingId", paramModel.CodingId);
                     sqlCommand.Parameters.AddWithValue("YearId", paramModel.YearId);
