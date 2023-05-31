@@ -280,7 +280,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ChartBudgetDeviation")]
         [HttpGet]
-        public async Task<ApiResult<List<object>>> Chart_BudgetDeviation(int areaId, int yeaId)
+        public async Task<ApiResult<List<object>>> Chart_BudgetDeviation(int areaId, int yearId)
         {
             List<object> data = new List<object>();
             List<string> areaname = new List<string>();
@@ -297,7 +297,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect1.Open();
                     sqlCommand1.CommandType = CommandType.StoredProcedure;
                     sqlCommand1.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand1.Parameters.AddWithValue("yeaId", yeaId);
+                    sqlCommand1.Parameters.AddWithValue("yeaId", yearId);
                     SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
                     while (dataReader1.Read())
