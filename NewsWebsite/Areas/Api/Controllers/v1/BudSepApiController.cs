@@ -280,7 +280,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ChartBudgetDeviation")]
         [HttpGet]
-        public async Task<ApiResult<List<object>>> Chart_BudgetDeviation(int areaId, int yeaId,int KindId)
+        public async Task<ApiResult<List<object>>> Chart_BudgetDeviation(int areaId, int yeaId)
         {
             List<object> data = new List<object>();
             List<string> areaname = new List<string>();
