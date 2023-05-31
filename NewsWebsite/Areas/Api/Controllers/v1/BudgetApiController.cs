@@ -84,52 +84,53 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecth);
         }
 
-        [Route("BudgetMotherId")]
-        [HttpGet]
-        public async Task<ApiResult<List<FetchViewModel>>> BudegetIndex(int yearId, int areaId, int budgetProcessId)
-        {
-            if (yearId == 0) return BadRequest("با خطا مواجه شدید");
+        //[Route("BudgetMotherId")]
+        //[HttpGet]
+        //public async Task<ApiResult<List<FetchViewModel>>> BudegetIndex(int yearId, int areaId, int budgetProcessId)
+        //{
+        //    if (yearId == 0) return BadRequest("با خطا مواجه شدید");
 
-            List<FetchViewModel> fecth = new List<FetchViewModel>();
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                Int64 _totalMosavab = 0; Int64 _totalExpense = 0;
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", yearId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        FetchViewModel fetchView = new FetchViewModel();
-                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        fetchView.Show = (bool)dataReader["Show"];
-                        _totalMosavab += fetchView.Mosavab;
-                        _totalExpense += fetchView.Expense;
-                        if ((!string.IsNullOrEmpty(dataReader["Mosavab"].ToString()) && Int64.Parse(dataReader["Mosavab"].ToString()) > 0))
-                        {
-                            fetchView.PercentBud = _uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader["Mosavab"].ToString()));
-                        }
-                        else
-                        {
-                            fetchView.PercentBud = 0;
-                        }
+        //    List<FetchViewModel> fecth = new List<FetchViewModel>();
+        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+        //    {
+        //        Int64 _totalMosavab = 0; Int64 _totalExpense = 0;
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.Parameters.AddWithValue("YearId", yearId);
+        //            sqlCommand.Parameters.AddWithValue("AreaId", areaId);
+        //            sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //            while (dataReader.Read())
+        //            {
+        //                FetchViewModel fetchView = new FetchViewModel();
+        //                fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
+        //                fetchView.Code = dataReader["Code"].ToString();
+        //                fetchView.Description = dataReader["Description"].ToString();
+        //                fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+        //                fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+        //                fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+        //                fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+        //                fetchView.Show = (bool)dataReader["Show"];
+        //                fetchView.MotherId = StringExtensions.ToNullableInt(dataReader["MotherId"].ToString());
+        //                _totalMosavab += fetchView.Mosavab;
+        //                _totalExpense += fetchView.Expense;
+        //                if ((!string.IsNullOrEmpty(dataReader["Mosavab"].ToString()) && Int64.Parse(dataReader["Mosavab"].ToString()) > 0))
+        //                {
+        //                    fetchView.PercentBud = _uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader["Mosavab"].ToString()));
+        //                }
+        //                else
+        //                {
+        //                    fetchView.PercentBud = 0;
+        //                }
 
-                        fecth.Add(fetchView);
-                    }
-                }
-            }
-            return Ok(fecth);
-        }
+        //                fecth.Add(fetchView);
+        //            }
+        //        }
+        //    }
+        //    return Ok(fecth);
+        //}
 
         [Route("BudgetConnectRead")]
         [HttpGet]

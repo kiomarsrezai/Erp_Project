@@ -34,7 +34,7 @@ namespace NewsWebsite.ViewModels.Fetch
         public Int64 TotalMosavab { get; set; }
         public Int64 TotalExpense { get; set; }
         public bool Crud { get; set; }
-        public int MotherId { get; set; }
+        public int? MotherId { get; set; }
     }
 
   

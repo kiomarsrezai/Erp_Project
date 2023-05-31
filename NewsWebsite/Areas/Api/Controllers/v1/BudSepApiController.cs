@@ -280,15 +280,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ChartBudgetDeviation")]
         [HttpGet]
-        public async Task<ApiResult<List<object>>> Chart_BudgetDeviation(int areaId, int yearId)
+        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> Chart_BudgetDeviation(int areaId, int yearId)
         {
-            List<object> data = new List<object>();
-            List<string> areaname = new List<string>();
-            List<string> code = new List<string>();
-            List<string> description = new List<string>();
-            List<Int64> mosavab = new List<Int64>();
-            List<double> percmosavab = new List<double>();
-            List<Int64> expense = new List<Int64>();
+            List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
+           
 
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -302,27 +297,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                     while (dataReader1.Read())
                     {
-                        areaname.Add(dataReader1["AreaName"].ToString());
-                        code.Add(dataReader1["Code"].ToString());
-                        description.Add(dataReader1["Description"].ToString());
-                        mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
-                        expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
+                        ChartBudgetDeviationViewModel row = new ChartBudgetDeviationViewModel();
+                        row.areaname=dataReader1["AreaName"].ToString();
+                        row.code=dataReader1["Code"].ToString();
+                        row.description=dataReader1["Description"].ToString();
+                        row.mosavab=Int64.Parse(dataReader1["Mosavab"].ToString());
+                        row.expense=Int64.Parse(dataReader1["Expense"].ToString());
                         if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                         {
-                            percmosavab.Add(_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString())));
+                            row.percmosavab=_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
                         }
                         else
                         {
-                            percmosavab.Add(0);
+                            row.percmosavab = 0;
                         }
+                        
+                        data.Add(row);
+
                     }
-                   
-                    data.Add(areaname);
-                    data.Add(code);
-                    data.Add(description);
-                    data.Add(mosavab);
-                    data.Add(expense);
-                    data.Add(percmosavab);
+
                 }
 
             };
