@@ -7,20 +7,12 @@ namespace NewsWebsite.ViewModels.Api.BudgetSeprator
 {
     public class ChartBudgetDeviationViewModel
     {
-        public string areaname;
-        public string code;
-        public string description;
-        public long mosavab;
-        public long expense;
-        public double percmosavab;
+        public string areaname { get; set; }
+        public string code { get; set; }
+        public string description { get; set; }
+        public long mosavab { get; set; }
+        public long expense { get; set; }
+        public double percmosavab { get; set; }
 
-        [Display(Name = "سال")]
-        public string AreaName { get; set; }
-
-        [Display(Name = "منطقه")]
-        public int AreaId { get; set; } 
-        
-        [Display(Name = "نوع بودجه")]
-        public int BudgetProcessId { get; set; }
     }
 }
