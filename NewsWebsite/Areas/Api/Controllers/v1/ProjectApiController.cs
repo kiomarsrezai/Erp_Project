@@ -374,7 +374,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProgramOperationUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> ProgramOperationUpdate(int Id, int ScaleId)
+        public async Task<ApiResult<string>> ProgramOperationUpdate([FromBody] int Id, int ScaleId)
         {
             if (Id == 0)
                 return BadRequest("با خطا مواجه شد");
