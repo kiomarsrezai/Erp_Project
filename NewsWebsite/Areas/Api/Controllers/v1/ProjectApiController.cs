@@ -332,5 +332,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ScaleCom);
         }
 
+        [Route("ProgramOperationUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> ProgramOperationUpdate(int Id, int ScaleId)
+        {
+            if (Id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (Id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_ProgramOperation_Update", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", Id);
+                        sqlCommand.Parameters.AddWithValue("ScaleId", ScaleId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+
+                    }
+                }
+
+            }
+            return Ok("بروزرسانی انجام شد");
+        }
+
     }
 }
