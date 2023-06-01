@@ -345,7 +345,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Report_ProjectScale", sqlconnect))
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("YearId", yearId);
