@@ -80,7 +80,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchViewKol.ProjectCode = dataReader["ProjectCode"].ToString();
                         fetchViewKol.ProjectName = dataReader["ProjectName"].ToString();
                         fetchViewKol.ProjectScaleName = dataReader["ProjectScaleName"].ToString();
-                        fetchViewKol.ProjectScaleId = int.Parse(dataReader["ProjectScaleId"].ToString());
+                        fetchViewKol.ProjectScaleId = StringExtensions.ToNullableInt(dataReader["ProjectScaleId"].ToString());
                         fecthkol.Add(fetchViewKol);
                     }
                 }
