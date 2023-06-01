@@ -1,12 +1,8 @@
-﻿using NewsWebsite.Common.Api;
-using NewsWebsite.Entities.identity;
+﻿using NewsWebsite.ViewModels.Api.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.GeneralVm;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Fetch;
-using NewsWebsite.ViewModels.UserManager;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Data.Contracts
