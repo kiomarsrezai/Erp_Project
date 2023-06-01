@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.GeneralVm;
+using NewsWebsite.ViewModels.Api.BudgetSeprator;
 
 namespace NewsWebsite.Data.Repositories
 {

@@ -35,6 +35,7 @@ namespace NewsWebsite.ViewModels.Api.BudgetSeprator
 
         public bool Crud { get; set; }
         public int budgetProcessId { get; set; }
+        public long Edit { get; set; }
     }
     //public enum Sectios
     //{

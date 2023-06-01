@@ -5,6 +5,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Api.BudgetSeprator;
 using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;

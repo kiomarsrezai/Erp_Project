@@ -6,6 +6,7 @@ using NewsWebsite.Common.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
+using NewsWebsite.ViewModels.Api.BudgetSeprator;
 using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;
