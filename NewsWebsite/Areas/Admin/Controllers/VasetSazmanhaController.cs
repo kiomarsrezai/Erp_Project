@@ -136,7 +136,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_RequestModal", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_RequestModal", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);

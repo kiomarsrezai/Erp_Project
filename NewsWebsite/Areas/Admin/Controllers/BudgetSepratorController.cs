@@ -49,7 +49,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.Add(YearId);
@@ -185,7 +185,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
@@ -221,7 +221,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_2", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_2", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
@@ -254,7 +254,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
@@ -283,7 +283,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Delete", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", id);
@@ -312,7 +312,7 @@ namespace NewsWebsite.Areas.Admin.Controllers
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
             using (SqlConnection sqlconnect = new SqlConnection(connection))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.Add(YearId);

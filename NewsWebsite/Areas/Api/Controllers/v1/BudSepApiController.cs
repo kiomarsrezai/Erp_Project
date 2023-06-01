@@ -47,7 +47,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
@@ -81,7 +81,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_2", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_2", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
@@ -398,7 +398,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Delete", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", deleteSep.id);
@@ -456,7 +456,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetSepratorArea_TaminModal_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", insertTaminSep.yearId);
