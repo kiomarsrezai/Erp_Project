@@ -7,6 +7,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Api.Commite;
 using NewsWebsite.ViewModels.Project;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -330,6 +331,45 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
 
             return Ok(ScaleCom);
+        }
+
+        [Route("ProjectReportScale")]
+        [HttpGet]
+        public async Task<ApiResult<List<ProjectReportScaleViewModel>>> ProjectReportScale(int yearId,int areaId,int scaleId)
+        {
+            List<ProjectReportScaleViewModel> commiteViews = new List<ProjectReportScaleViewModel>();
+
+            if (yearId == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (yearId > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                        sqlCommand.Parameters.AddWithValue("AreaId", areaId);
+                        sqlCommand.Parameters.AddWithValue("ScaleId", scaleId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ProjectReportScaleViewModel commiteView = new ProjectReportScaleViewModel();
+                            commiteView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
+                            commiteView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                            commiteView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                            commiteView.ProjectCode = dataReader["ProjectCode"].ToString();
+                            commiteView.ProjectName = dataReader["ProjectName"].ToString();
+                            commiteViews.Add(commiteView);
+
+                        }
+
+                    }
+                }
+
+            }
+            return Ok(commiteViews);
         }
 
         [Route("ProgramOperationUpdate")]
