@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Api.BudgetSeprator
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
 {
     public class SepratorAreaRequestViewModel
     {
@@ -10,16 +10,16 @@ namespace NewsWebsite.ViewModels.Api.BudgetSeprator
         public string Number { get; set; }
 
         [Display(Name = "عنوان")]
-        public string Description { get; set; } 
-        
+        public string Description { get; set; }
+
         [Display(Name = "تاریخ")]
         public string Date { get; set; }
 
         [Display(Name = "مبلغ")]
-        public Int64 EstimateAmount { get; set; }
+        public long EstimateAmount { get; set; }
         public int? id { get; set; }
 
     }
-   
+
 
 }

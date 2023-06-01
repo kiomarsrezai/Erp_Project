@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Api.BudgetSeprator
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
 {
     public class BudgetSepratorViewModel
     {
@@ -12,8 +12,8 @@ namespace NewsWebsite.ViewModels.Api.BudgetSeprator
         public string Code { get; set; }
 
         [Display(Name = "عنوان")]
-        public string Description { get; set; } 
-        
+        public string Description { get; set; }
+
         [Display(Name = "کد حسابداری")]
         public string CodeVaset { get; set; }
         public int CodingId { get; set; }
@@ -22,13 +22,13 @@ namespace NewsWebsite.ViewModels.Api.BudgetSeprator
         public int LevelNumber { get; set; }
 
         [Display(Name = "مصوب")]
-        public Int64 Mosavab { get; set; }
+        public long Mosavab { get; set; }
 
         [Display(Name = "عملکرد")]
-        public Int64 Expense { get; set; }
-        
+        public long Expense { get; set; }
+
         [Display(Name = "تامین اعتبار")]
-        public Int64 CreditAmount { get; set; }
+        public long CreditAmount { get; set; }
 
         [Display(Name = "% درصد")]
         public double PercentBud { get; set; }

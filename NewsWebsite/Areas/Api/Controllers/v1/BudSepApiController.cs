@@ -1,20 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.ViewModels.Api.BudgetSeprator;
-using NewsWebsite.ViewModels.Api.UsersApi;
+using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -109,7 +105,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ChartApi")]
         [HttpGet]
-        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati,int? areaId=null,int? codingId=null)
+        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? areaId = null, int? codingId = null)
         {
             List<int> Id = new List<int>();
             List<string> Description = new List<string>();
@@ -121,11 +117,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<double> percdaily = new List<double>();
             List<Int64> mosavabdaily = new List<Int64>();
             List<Int64> expense = new List<Int64>();
-            
+
 
             if (areaId == null)
             {
-                
+
                 //List<ColumnChart> dataset = new List<ColumnChart>();
                 using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
                 {
@@ -151,7 +147,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
                             mosavabdaily.Add(Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                            if (!string.IsNullOrEmpty(dataReader1["Mosavab"].ToString()) && Int64.Parse(dataReader1["Mosavab"].ToString())>0)
+                            if (!string.IsNullOrEmpty(dataReader1["Mosavab"].ToString()) && Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
                                 percmosavab.Add(_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["Mosavab"].ToString())));
                             }
@@ -179,8 +175,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
 
                 };
-            }else 
-            if (areaId!=null)
+            }
+            else
+            if (areaId != null)
             {
                 using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
                 {
@@ -215,7 +212,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             {
                                 percmosavab.Add(0);
                             }
-                            
+
                         }
 
                         data.Add(Id);
@@ -245,35 +242,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<Int64> expense = new List<Int64>();
 
 
-                //List<ColumnChart> dataset = new List<ColumnChart>();
-                using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            //List<ColumnChart> dataset = new List<ColumnChart>();
+            using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart_Ravand", sqlconnect1))
                 {
-                    using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart_Ravand", sqlconnect1))
+                    sqlconnect1.Open();
+                    sqlCommand1.CommandType = CommandType.StoredProcedure;
+                    sqlCommand1.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                    SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
+
+                    while (dataReader1.Read())
                     {
-                        sqlconnect1.Open();
-                        sqlCommand1.CommandType = CommandType.StoredProcedure;
-                        sqlCommand1.Parameters.AddWithValue("areaId", areaId);
-                        sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
-                        SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
-
-                        while (dataReader1.Read())
-                        {
-                            yearId.Add(dataReader1["yearId"].ToString());
-                            yearName.Add(dataReader1["YearName"].ToString());
-                            mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
-                            edit.Add(Int64.Parse(dataReader1["Edit"].ToString()));
-                            expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
-                        }
-
-                        data.Add(yearId);
-                        data.Add(mosavab);
-                        data.Add(yearName);
-                        data.Add(expense);
-                        data.Add(percmosavab);
-                        data.Add(edit);
+                        yearId.Add(dataReader1["yearId"].ToString());
+                        yearName.Add(dataReader1["YearName"].ToString());
+                        mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
+                        edit.Add(Int64.Parse(dataReader1["Edit"].ToString()));
+                        expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                     }
 
-                };
+                    data.Add(yearId);
+                    data.Add(mosavab);
+                    data.Add(yearName);
+                    data.Add(expense);
+                    data.Add(percmosavab);
+                    data.Add(edit);
+                }
+
+            };
 
             return data;
 
@@ -284,7 +281,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> Chart_BudgetDeviation(int areaId, int yearId)
         {
             List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
-           
+
 
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -299,20 +296,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader1.Read())
                     {
                         ChartBudgetDeviationViewModel row = new ChartBudgetDeviationViewModel();
-                        row.areaname=dataReader1["AreaName"].ToString();
-                        row.code=dataReader1["Code"].ToString();
-                        row.description=dataReader1["Description"].ToString();
-                        row.mosavab=Int64.Parse(dataReader1["Mosavab"].ToString());
-                        row.expense=Int64.Parse(dataReader1["Expense"].ToString());
+                        row.areaname = dataReader1["AreaName"].ToString();
+                        row.code = dataReader1["Code"].ToString();
+                        row.description = dataReader1["Description"].ToString();
+                        row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
+                        row.expense = Int64.Parse(dataReader1["Expense"].ToString());
                         if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                         {
-                            row.percmosavab=_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                            row.percmosavab = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
                         }
                         else
                         {
                             row.percmosavab = 0;
                         }
-                        
+
                         data.Add(row);
 
                     }

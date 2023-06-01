@@ -4,14 +4,12 @@ using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Api.Commite;
 using NewsWebsite.ViewModels.Project;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -111,7 +109,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> Update(int id,string projectName,string projectCode,int motherId)
+        public async Task<ApiResult<string>> Update(int id, string projectName, string projectCode, int motherId)
         {
             if (id == 0)
                 return BadRequest("با خطا مواجه شد");
@@ -141,7 +139,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<List<CommiteModalViewModel>>> Commite_Modal(int CommiteKindId, int YearId)
         {
             List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
-            
+
             if (CommiteKindId == 0)
                 return BadRequest("با خطا مواجه شد");
             if (CommiteKindId > 0)
@@ -160,7 +158,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             CommiteModalViewModel commiteView = new CommiteModalViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
                             commiteView.dates = dataReader["dates"].ToString();
-                            commiteView.number= dataReader["number"].ToString();
+                            commiteView.number = dataReader["number"].ToString();
                             commiteViews.Add(commiteView);
 
                         }
@@ -177,7 +175,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<List<CommiteModalViewModel>>> CommiteDetail_Insert(int CommiteKindId, int YearId)
         {
             List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
-            
+
             if (CommiteKindId == 0)
                 return BadRequest("با خطا مواجه شد");
             if (CommiteKindId > 0)
@@ -196,7 +194,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             CommiteModalViewModel commiteView = new CommiteModalViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
                             commiteView.dates = dataReader["dates"].ToString();
-                            commiteView.number= dataReader["number"].ToString();
+                            commiteView.number = dataReader["number"].ToString();
                             commiteViews.Add(commiteView);
 
                         }
@@ -232,9 +230,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
                             commiteView.FirstName = dataReader["FirstName"].ToString();
                             commiteView.LastName = dataReader["LastName"].ToString();
-                            commiteView.DateStart= dataReader["DateStart"].ToString();
+                            commiteView.DateStart = dataReader["DateStart"].ToString();
                             commiteView.DateEnd = dataReader["DateEnd"].ToString();
-                            commiteView.Responsibility= dataReader["Responsibility"].ToString();
+                            commiteView.Responsibility = dataReader["Responsibility"].ToString();
                             commiteViews.Add(commiteView);
 
                         }
@@ -280,33 +278,59 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok(commiteViews);
-        }  
-        
+        }
+
         [Route("ProjectCommiteKindCombo")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteComboboxViewModel>>> CommiteKindCombo()
         {
             List<CommiteComboboxViewModel> commiteViews = new List<CommiteComboboxViewModel>();
 
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteKind_Com", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteKind_Com", sqlconnect))
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (await dataReader.ReadAsync())
                     {
-                        sqlconnect.Open();
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
                         CommiteComboboxViewModel commiteView = new CommiteComboboxViewModel();
-                            commiteView.Id = int.Parse(dataReader["Id"].ToString());
-                            commiteView.CommiteName = dataReader["CommiteName"].ToString();
-                            commiteViews.Add(commiteView);
-                        }
+                        commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                        commiteView.CommiteName = dataReader["CommiteName"].ToString();
+                        commiteViews.Add(commiteView);
                     }
                 }
-            
+            }
+
             return Ok(commiteViews);
-        } 
+        }
+
+        [Route("ProjectScaleCom")]
+        [HttpGet]
+        public async Task<ApiResult<List<ProjectScaleComViewModel>>> ProjectScaleCom()
+        {
+            List<ProjectScaleComViewModel> ScaleCom = new List<ProjectScaleComViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectScale_Com", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (await dataReader.ReadAsync())
+                    {
+                        ProjectScaleComViewModel ScaleComview = new ProjectScaleComViewModel();
+                        ScaleComview.Id = int.Parse(dataReader["Id"].ToString());
+                        ScaleComview.ProjectScaleName = dataReader["ProjectScaleName"].ToString();
+                        ScaleCom.Add(ScaleComview);
+                    }
+                }
+            }
+
+            return Ok(ScaleCom);
+        }
 
     }
 }

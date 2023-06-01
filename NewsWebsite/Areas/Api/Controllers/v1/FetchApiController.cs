@@ -1,16 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.ViewModels.Api.BudgetSeprator;
-using System.Collections.Generic;
-using System.Data;
-using System;
-using System.Threading.Tasks;
-using NewsWebsite.Common.Api;
-using System.Data.SqlClient;
-using NewsWebsite.Common;
-using NewsWebsite.ViewModels.Fetch;
-using Microsoft.Extensions.Configuration;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -22,20 +13,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
-        public FetchController(IUnitOfWork uw,IConfiguration configuration)
+        public FetchController(IUnitOfWork uw, IConfiguration configuration)
         {
             _config = configuration;
             _uw = uw;
         }
 
-       
+
 
         //[HttpGet]
         //[Route("FetchDetails")]
         //public async Task<ApiResult<List<FetchDataBudgetViewModel>>> FetchDetails(int yearId, int areaId, int codingId)
         //{
         //    List<FetchDataBudgetViewModel> dataset = new List<FetchDataBudgetViewModel>();
-            
+
         //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
         //    {
         //        using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetDetail", sqlconnect))

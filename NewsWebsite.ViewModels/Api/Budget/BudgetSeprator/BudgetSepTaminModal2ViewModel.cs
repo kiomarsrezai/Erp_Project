@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Api.BudgetSeprator
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
 {
     public class BudgetSepTaminModal2ViewModel
     {

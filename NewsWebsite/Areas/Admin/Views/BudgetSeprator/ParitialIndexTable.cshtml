@@ -1,8 +1,9 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @*@inject NewsWebsite.Common.StringExtensions*@
 @using NewsWebsite.Data.Contracts;
-   @using NewsWebsite.Data;
-@model List<NewsWebsite.ViewModels.Api.BudgetSeprator.BudgetSepratorViewModel>
+@using NewsWebsite.Data;
+@using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
+@model List<BudgetSepratorViewModel>
 @inject ProgramBuddbContext _db
 @{
     ViewData["Title"] = "FetchData";

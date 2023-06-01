@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.Api.BudgetSeprator
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
 {
     public class SepratorBaseViewModel
     {
@@ -11,8 +11,8 @@ namespace NewsWebsite.ViewModels.Api.BudgetSeprator
         public int YearId { get; set; }
 
         [Display(Name = "منطقه")]
-        public int AreaId { get; set; } 
-        
+        public int AreaId { get; set; }
+
         [Display(Name = "نوع بودجه")]
         public int BudgetProcessId { get; set; }
     }

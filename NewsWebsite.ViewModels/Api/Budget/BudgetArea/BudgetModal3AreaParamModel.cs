@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.Api.Budget
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetArea
 {
     public class BudgetModal3AreaParamModel
     {

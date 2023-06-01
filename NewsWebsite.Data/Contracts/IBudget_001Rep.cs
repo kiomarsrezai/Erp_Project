@@ -1,4 +1,4 @@
-﻿using NewsWebsite.ViewModels.Api.BudgetSeprator;
+﻿using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.GeneralVm;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Fetch;
