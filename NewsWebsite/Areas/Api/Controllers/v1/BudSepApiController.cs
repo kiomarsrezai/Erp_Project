@@ -541,18 +541,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAreaProjectModal2")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetSepratorAreaProjectModal2ViewModel>>> BudgetSepratorAreaProjectModal2(int yearId, int areaId, int codingId)
+        public async Task<ApiResult<List<BudgetSepratorAreaProjectModal2ViewModel>>> BudgetSepratorAreaProjectModal2(int yearId, int areaId)
         {
             List<BudgetSepratorAreaProjectModal2ViewModel> fecthViewModel = new List<BudgetSepratorAreaProjectModal2ViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_Project_Modal2", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_Project_Modal_2", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
                     sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    //sqlCommand.Parameters.AddWithValue("codingId", codingId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
