@@ -8,4 +8,15 @@
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
     }
+
+    public class ProgramOperationUpdateViewModel
+    {
+        public int Id { get; set; }
+        public int ScaleId { get; set; }
+    }
+    public class ProjectScaleComViewModel
+    {
+        public int Id { get; set; }
+        public string ProjectScaleName { get; set; }
+    }
 }

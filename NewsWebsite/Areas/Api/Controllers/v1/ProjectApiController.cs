@@ -374,19 +374,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProgramOperationUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> ProgramOperationUpdate([FromBody] int Id, int ScaleId)
+        public async Task<ApiResult<string>> ProgramOperationUpdate([FromBody] ProgramOperationUpdateViewModel programOperationUpdate)
         {
-            if (Id == 0)
+            if (programOperationUpdate.Id == 0)
                 return BadRequest("با خطا مواجه شد");
-            if (Id > 0)
+            if (programOperationUpdate.Id > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_ProgramOperation_Update", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", Id);
-                        sqlCommand.Parameters.AddWithValue("ScaleId", ScaleId);
+                        sqlCommand.Parameters.AddWithValue("Id", programOperationUpdate.Id);
+                        sqlCommand.Parameters.AddWithValue("ScaleId", programOperationUpdate.ScaleId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
 

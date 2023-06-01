@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Budget
+namespace NewsWebsite.ViewModels.Api.Projects
 {
     public class BudgetModalProjectViewModel
     {
@@ -10,11 +10,11 @@ namespace NewsWebsite.ViewModels.Budget
 
         public int ProjectId { get; set; }
 
-        public Int64 Mosavab { get; set; }
+        public long Mosavab { get; set; }
 
-        public Int64 Edit { get; set; }
-        
-        public Int64 Expense { get; set; }
+        public long Edit { get; set; }
+
+        public long Expense { get; set; }
 
         //public double PercentBud { get; set; }
         public string ProjectCode { get; set; }
@@ -23,6 +23,6 @@ namespace NewsWebsite.ViewModels.Budget
         public int AreaId { get; set; }
     }
 
-  
+
 
 }

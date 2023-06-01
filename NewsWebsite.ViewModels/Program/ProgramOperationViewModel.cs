@@ -10,6 +10,6 @@ namespace NewsWebsite.ViewModels.Program
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         public int? ProjectScaleId { get; set; }
-        public string? ProjectScaleName { get; set; }
+        public string ProjectScaleName { get; set; }
     }
 }
