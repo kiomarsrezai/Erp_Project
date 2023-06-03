@@ -2,7 +2,7 @@
 {
     public class BudgetSepratorCreaditorCom
     {
-        public string creaditorName;
+        public string creaditorName { get; set; }
 
         public int Id { get; set; }
     }
