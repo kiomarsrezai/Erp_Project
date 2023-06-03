@@ -15,6 +15,7 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Request\" />
+    <Folder Include="UploadedFiles\" />
     <Folder Include="ViewModels\Api\Budget\BudgetSeprator\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
@@ -130,6 +131,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>

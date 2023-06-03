@@ -677,17 +677,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAreaCreaditorUpdate")]
         [HttpPost]
-        public async Task<ApiResult> SepratorAreaCreaditorUpdate([FromBody] BudgetSepratorAreaProjectModalUpdateViewModel modalUpdateViewModel)
+        public async Task<ApiResult> SepratorAreaCreaditorUpdate([FromBody] BudgetSepratorAreaCreaditorUpdate modalUpdateViewModel)
         {
-            if (modalUpdateViewModel.BudgetDetailPrjectId == 0) return BadRequest();
+            if (modalUpdateViewModel.Id == 0) return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Update", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("BudgetDetailPrjectId", modalUpdateViewModel.BudgetDetailPrjectId);
-                    sqlCommand.Parameters.AddWithValue("ProgramOperationDetailId", modalUpdateViewModel.ProgramOperationDetailId);
+                    sqlCommand.Parameters.AddWithValue("Id", modalUpdateViewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("MosavabCreaditor", modalUpdateViewModel.MosavabCreaditor);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     TempData["notification"] = "ویرایش با موفقیت انجام شد";
