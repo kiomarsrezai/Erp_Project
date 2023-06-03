@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -39,7 +40,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<ApiResult<string>> UploadFile(FileUploadModel fileUpload)
+        public async Task<ApiResult<string>> UploadFile([FromBody] FileUploadModel fileUpload)
         {
             string issuccess="ناموفق";
 

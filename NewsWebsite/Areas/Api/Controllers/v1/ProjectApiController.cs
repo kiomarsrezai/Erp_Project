@@ -8,12 +8,14 @@ using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Api.Commite;
+using NewsWebsite.ViewModels.Api.UploadFile;
 using NewsWebsite.ViewModels.Project;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -67,19 +69,66 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fetchViewlist);
         }
 
+        [HttpPost]
+        [Route("upload")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ApiResult<string>> UploadForm([FromQuery] string username)
+        {
+            var request = HttpContext.Request;
+
+            if (request.Form.Files.Count > 0)
+            {
+                var filename = request.Form.Files[0].FileName;
+                var extension = filename.Substring(filename.LastIndexOf(".")).ToLower();
+                if (!string.IsNullOrEmpty(extension) && extension.Equals(".mp4"))
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        request.Form.Files[0].CopyTo(memoryStream);
+
+                        // Upload the file if less than 2 MB
+                        if (memoryStream.Length < 2097152)
+                        {
+                            //string check = Service.CheckifValid(username);
+                            //if (check.Equals("ok"))
+                            //{
+                                //Process the stream and pass the data to the back-end in the Service Layer.
+                                var result =await FileExtensions.UploadFileAsync(request.Form.Files[0], username);
+                            //}
+                            //else
+                            //{
+                            return Ok("");
+                            //}
+                        }
+                        else
+                        {
+                            return BadRequest("File size too large");
+                        }
+                    }
+                }
+                else
+                {
+                    return BadRequest("File format not recognised.");
+                }
+            }
+            return Ok("");
+            //Other ToDos...
+        }
+
+        [Produces("application/json")]
         [Route("UploadFiles")]
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<ApiResult> UploadProjectFiles(int projectId,List<IFormFileCollection> formFiles)
+        public async Task<ApiResult> UploadProjectFiles([FromBody] FileUploadModel uploadModel)
         {
             try
             {
-                var file=Request.Form.Files[0];
-                var folderName = Path.Combine($"{_webHostEnvironment.WebRootPath}/Resources/Project/{projectId}/");
+                var file= uploadModel.FormFile;
+                var folderName = Path.Combine($"{_webHostEnvironment.WebRootPath}/Resources/Project/{uploadModel.ProjectId}/");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var fullPath = Path.Combine(pathToSave, file.FileName);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
                        await file.CopyToAsync(stream);

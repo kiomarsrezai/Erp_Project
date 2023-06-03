@@ -41,6 +41,7 @@ namespace NewsWebsite
             services.AddCustomServices();
             services.AddTransient<ISecurityTrimmingService, SecurityTrimmingService>();
             services.AddTransient<IMvcActionsDiscoveryService, MvcActionsDiscoveryService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddCustomIdentityServices();
             services.AddAutoMapper();
             services.AddScheduler();
