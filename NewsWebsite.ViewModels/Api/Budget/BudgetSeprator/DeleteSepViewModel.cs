@@ -7,7 +7,6 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
 {
     public class DeleteSepViewModel
     {
-        [Display(Name = "شناسه")]
         public int id { get; set; }
 
     }

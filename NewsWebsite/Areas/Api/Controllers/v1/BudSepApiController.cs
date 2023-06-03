@@ -589,8 +589,132 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
+        [Route("BudgetSepratorCreaditorRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetSepratorCreaditorRead>>> GetBudgetSepratorCreaditorRead(int yearId, int areaId , int budgetProcessId)
+        {
+            List<BudgetSepratorCreaditorRead> fecthViewModel = new List<BudgetSepratorCreaditorRead>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                     sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetSepratorCreaditorRead fetchView = new BudgetSepratorCreaditorRead();
+                        fetchView.Id = StringExtensions.ToNullableInt(dataReader["Id"].ToString());
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                  
 
 
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+       
+        [Route("BudgetSeperatorCreaditorCom")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetSepratorCreaditorCom>>> GetBudgetSepratorCreaditorCom()
+        {
+            List<BudgetSepratorCreaditorCom> fecthViewModel = new List<BudgetSepratorCreaditorCom>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_Creaditor_Com", sqlconnect))
+                {
+                    sqlconnect.Open();
+                     sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetSepratorCreaditorCom fetchView = new BudgetSepratorCreaditorCom();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.creaditorName = dataReader["creaditorName"].ToString();
+                  
+
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+
+        [Route("SepratorAreaCreaditorInsert")]
+        [HttpPost]
+        public async Task<ApiResult> SepratorAreaCreaditorInsert([FromBody] SepratorAreaCreaditorInsert modalUpdateViewModel)
+        {
+            if (modalUpdateViewModel.BudgetDetailProjectAreaId == 0) return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaId", modalUpdateViewModel.BudgetDetailProjectAreaId);
+                    sqlCommand.Parameters.AddWithValue("CreaditorId", modalUpdateViewModel.CreaditorId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                }
+            }
+            return Ok();
+        }
+
+        [Route("BudgetSepratorAreaCreaditorUpdate")]
+        [HttpPost]
+        public async Task<ApiResult> SepratorAreaCreaditorUpdate([FromBody] BudgetSepratorAreaProjectModalUpdateViewModel modalUpdateViewModel)
+        {
+            if (modalUpdateViewModel.BudgetDetailPrjectId == 0) return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("BudgetDetailPrjectId", modalUpdateViewModel.BudgetDetailPrjectId);
+                    sqlCommand.Parameters.AddWithValue("ProgramOperationDetailId", modalUpdateViewModel.ProgramOperationDetailId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                }
+            }
+            return Ok();
+        }
+
+        [Route("SepratorAreaCreaditorDelete")]
+        [HttpPost]
+        public virtual async Task<ApiResult> SepratorAreaCreaditorDelete([FromBody] DeleteSepViewModel deleteSep)
+        {
+            if (deleteSep.id == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", deleteSep.id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                }
+            }
+            return Ok();
+        }
     }
 
 

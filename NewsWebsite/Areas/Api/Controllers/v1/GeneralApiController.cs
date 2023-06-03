@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
@@ -38,11 +39,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadFile([FromBody] FileUploadModel fileUpload)
+        public async Task<ApiResult> UploadFile(FileUploadModel fileUpload)
         {
-            if (CheckIfExcelFile(fileUpload.FormFile))
+            bool issuccess=false;
+
+            if (await WriteFile(fileUpload.FormFile,fileUpload.ProjectId))
             {
-                await WriteFile(fileUpload.FormFile, fileUpload.ProjectId);
+               issuccess =true;
             }
             else
             {
@@ -53,16 +56,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
         private bool CheckIfExcelFile(IFormFile file)
         {
-            var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-            return (extension == ".Mkv" || extension == ".Mp4" || extension == ".Png" || extension == ".JpG" || extension == ".Gif"); // Change the extension based on your need
+            var extension = FileExtensions.GetContentType(file.FileName);
+            return (extension == "Mkv" || extension == "Mp4" || extension == "Png" || extension == "JpG" || extension == "Gif"); // Change the extension based on your need
         }
 
         private async Task<bool> WriteFile(IFormFile file, int projectId)
         {
             bool isSaveSuccess = false;
             string fileName;
-            try
-            {
+            //try
+            //{
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
@@ -78,14 +81,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
+
                 }
 
                 isSaveSuccess = true;
-            }
-            catch (Exception e)
-            {
-                //log error
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    //log error
+            //}
 
             return isSaveSuccess;
         }
