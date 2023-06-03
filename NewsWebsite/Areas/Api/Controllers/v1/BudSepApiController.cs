@@ -322,6 +322,63 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+
+
+        //[Route("ChartBudgetShare")]
+        //[HttpGet]
+        //public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>>GetBudgetShare(int areaId, int yearId , int kindId)
+        //{
+        //    List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
+
+
+        //    using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand1 = new SqlCommand("SP500_BudgetShare", sqlconnect1))
+        //        {
+        //            sqlconnect1.Open();
+        //            sqlCommand1.CommandType = CommandType.StoredProcedure;
+        //            sqlCommand1.Parameters.AddWithValue("areaId", areaId);
+        //            sqlCommand1.Parameters.AddWithValue("yeaId", yearId);
+        //            sqlCommand1.Parameters.AddWithValue("KindId", kindId);
+        //            SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
+
+        //            while (dataReader1.Read())
+        //            {
+        //                ChartBudgetDeviationViewModel row = new ChartBudgetDeviationViewModel();
+        //                row.code = dataReader1["Code"].ToString();
+        //                row.description = dataReader1["Description"].ToString();
+        //                row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
+        //                row.expense = Int64.Parse(dataReader1["Expense"].ToString());
+        //                row.AreaName = dataReader1["AreaName"].ToString();
+                  
+
+        //                data.Add(row);
+
+        //            }
+
+        //        }
+
+        //    };
+
+        //    return data;
+
+        //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [Route("DetailChartApi")]
         [HttpGet]
         public async Task<ApiResult<List<ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? codingId = null)
