@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text.Json.Serialization;
 
 namespace NewsWebsite.ViewModels.Project
@@ -19,7 +22,7 @@ namespace NewsWebsite.ViewModels.Project
         [Display(Name = "منطقه")]
         public int? AreaId { get; set; }
         public float? Weight { get; set; }
-
+        public List<IFormFile> FileList { get; set; }
     }
    
     //public enum Sectios

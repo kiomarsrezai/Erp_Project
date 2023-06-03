@@ -298,6 +298,5 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         // private helper methods
 
-
     }
 }

@@ -7,18 +7,20 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.Services.Api;
 using NewsWebsite.ViewModels.Api.Abstract;
 using NewsWebsite.ViewModels.Api.GeneralVm;
+using NewsWebsite.ViewModels.Api.UploadFile;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
-
-
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
@@ -27,12 +29,77 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         ProgramBuddbContext _context;
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
+        private readonly IFileService _uploadService;
 
-        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration, IFileService uploadService)
         {
             _config = configuration;
             _context = context;
             _uw = uw;
+            _uploadService = uploadService;
+        }
+
+
+
+        /// <summary>
+        /// Multiple File Upload
+        /// </summary>
+        /// <paramnamefile></param>
+        /// <returns></returns>
+        [Route("UploadFile")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UploadFile([FromBody] FileUploadModel fileUpload)
+        {
+            if (CheckIfExcelFile(fileUpload.FormFile))
+            {
+                await WriteFile(fileUpload.FormFile,fileUpload.ProjectId);
+            }
+            else
+            {
+                return BadRequest(new { message = "فایل نامعتبر می باشد" });
+            }
+
+            return Ok();
+        }
+        private bool CheckIfExcelFile(IFormFile file)
+        {
+            var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+            return (extension == ".Mkv" || extension == ".Mp4" || extension == ".Png" || extension == ".JpG" || extension == ".Gif"); // Change the extension based on your need
+        }
+
+        private async Task<bool> WriteFile(IFormFile file, int projectId)
+        {
+            bool isSaveSuccess = false;
+            string fileName;
+            try
+            {
+                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+                fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
+
+                var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(),"\\");
+
+                if (!Directory.Exists(pathBuilt))
+                {
+                    Directory.CreateDirectory(pathBuilt);
+                }
+
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\",projectId.ToString(), "\\", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                isSaveSuccess = true;
+            }
+            catch (Exception e)
+            {
+                //log error
+            }
+
+            return isSaveSuccess;
         }
 
         [Route("AreaFetch")]

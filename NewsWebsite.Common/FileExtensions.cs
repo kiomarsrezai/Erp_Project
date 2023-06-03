@@ -124,13 +124,7 @@ namespace NewsWebsite.Common
         {
             bool isvalid = false;
 
-            byte[] chkBytejpg = { 255, 216, 255 };
-            byte[] chkBytebmp = { 66, 77 };
-            byte[] chkBytegif = { 71, 73, 70, 56 };
-            byte[] chkBytepng = { 137, 80, 78, 71 };
-
-
-            ImageFileExtension imgfileExtn = ImageFileExtension.none;
+           ImageFileExtension imgfileExtn = ImageFileExtension.none;
 
             if (fileContentType.Contains("jpg") | fileContentType.Contains("jpeg"))
             {
@@ -149,80 +143,6 @@ namespace NewsWebsite.Common
                 imgfileExtn = ImageFileExtension.gif;
             }
 
-            if (imgfileExtn == ImageFileExtension.jpg || imgfileExtn == ImageFileExtension.jpeg)
-            {
-                if (bytFile.Length >= 4)
-                {
-                    int j = 0;
-                    for (int i = 0; i <= 2; i++)
-                    {
-                        if (bytFile[i] == chkBytejpg[i])
-                        {
-                            j = j + 1;
-                            if (j == 3)
-                            {
-                                isvalid = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            else if (imgfileExtn == ImageFileExtension.png)
-            {
-                if (bytFile.Length >= 4)
-                {
-                    int j = 0;
-                    for (int i = 0; i <= 3; i++)
-                    {
-                        if (bytFile[i] == chkBytepng[i])
-                        {
-                            j = j + 1;
-                            if (j == 4)
-                            {
-                                isvalid = true;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (imgfileExtn == ImageFileExtension.bmp)
-            {
-                if (bytFile.Length >= 4)
-                {
-                    int j = 0;
-                    for (int i = 0; i <= 1; i++)
-                    {
-                        if (bytFile[i] == chkBytebmp[i])
-                        {
-                            j = j + 1;
-                            if (j == 2)
-                            {
-                                isvalid = true;
-                            }
-                        }
-                    }
-                }
-            }
-            else if (imgfileExtn == ImageFileExtension.gif)
-            {
-                if (bytFile.Length >= 4)
-                {
-                    int j = 0;
-                    for (int i = 0; i <= 1; i++)
-                    {
-                        if (bytFile[i] == chkBytegif[i])
-                        {
-                            j = j + 1;
-                            if (j == 2)
-                            {
-                                isvalid = true;
-                            }
-                        }
-                    }
-                }
-            }
             return isvalid;
         }
 

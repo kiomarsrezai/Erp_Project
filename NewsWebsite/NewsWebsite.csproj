@@ -17,6 +17,7 @@
     <Folder Include="Areas\Admin\Views\Request\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
+    <Folder Include="wwwroot\Resources\Project\" />
   </ItemGroup>
 
   <ItemGroup>

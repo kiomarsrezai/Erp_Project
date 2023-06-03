@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
@@ -11,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -23,6 +27,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public ProjectApiController(IUnitOfWork uw, IConfiguration config)
         {
             _config = config;
@@ -60,6 +65,36 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok(fetchViewlist);
+        }
+
+        [Route("UploadFiles")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ApiResult> UploadProjectFiles(int projectId,List<IFormFileCollection> formFiles)
+        {
+            try
+            {
+                var file=Request.Form.Files[0];
+                var folderName = Path.Combine($"{_webHostEnvironment.WebRootPath}/Resources/Project/{projectId}/");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                       await file.CopyToAsync(stream);
+                    }
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Route("ProjectInsert")]
