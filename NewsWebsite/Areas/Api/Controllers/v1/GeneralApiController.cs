@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
@@ -11,12 +10,10 @@ using NewsWebsite.Services.Api;
 using NewsWebsite.ViewModels.Api.Abstract;
 using NewsWebsite.ViewModels.Api.GeneralVm;
 using NewsWebsite.ViewModels.Api.UploadFile;
-using NewsWebsite.ViewModels.Api.UsersApi;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -29,23 +26,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         ProgramBuddbContext _context;
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
-        private readonly IFileService _uploadService;
 
-        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration, IFileService uploadService)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration)
         {
             _config = configuration;
             _context = context;
             _uw = uw;
-            _uploadService = uploadService;
         }
 
-
-
-        /// <summary>
-        /// Multiple File Upload
-        /// </summary>
-        /// <paramnamefile></param>
-        /// <returns></returns>
         [Route("UploadFile")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -54,7 +42,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             if (CheckIfExcelFile(fileUpload.FormFile))
             {
-                await WriteFile(fileUpload.FormFile,fileUpload.ProjectId);
+                await WriteFile(fileUpload.FormFile, fileUpload.ProjectId);
             }
             else
             {
@@ -78,14 +66,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
-                var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(),"\\");
+                var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(), "\\");
 
                 if (!Directory.Exists(pathBuilt))
                 {
                     Directory.CreateDirectory(pathBuilt);
                 }
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\",projectId.ToString(), "\\", fileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(), "\\", fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
