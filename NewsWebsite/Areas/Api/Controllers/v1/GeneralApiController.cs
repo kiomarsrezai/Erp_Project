@@ -39,20 +39,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<ApiResult> UploadFile(FileUploadModel fileUpload)
+        public async Task<ApiResult<string>> UploadFile(FileUploadModel fileUpload)
         {
-            bool issuccess=false;
+            string issuccess="ناموفق";
 
             if (await WriteFile(fileUpload.FormFile,fileUpload.ProjectId))
             {
-               issuccess =true;
+               issuccess ="موفق";
             }
             else
             {
                 return BadRequest(new { message = "فایل نامعتبر می باشد" });
             }
 
-            return Ok();
+            return Ok(issuccess);
         }
         private bool CheckIfExcelFile(IFormFile file)
         {

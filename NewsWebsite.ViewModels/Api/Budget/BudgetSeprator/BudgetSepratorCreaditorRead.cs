@@ -2,10 +2,11 @@
 {
     public class BudgetSepratorCreaditorRead
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public long Mosavab { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
         public long Expense { get; set; }
+        public int LevelNumber { get; set; }
     }
 }
