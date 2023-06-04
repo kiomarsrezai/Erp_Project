@@ -647,7 +647,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-        [Route("BudgetSepratorCreaditorRead")]
+        [Route("BudgetSepratorDepartmantRead")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetSepratorDepartmantRead>>> GetBudgetSepratorDepartmantRead(int yearId, int areaId , int budgetProcessId)
         {
@@ -685,7 +685,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
        
 
-        [Route("BudgetSeperatorCreaditorCom")]
+        [Route("BudgetSeperatorDepartmentCom")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetSepratorCreaditorCom>>> GetBudgetSepratorCreaditorCom()
         {
@@ -714,7 +714,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
-        [Route("SepratorAreaDepartmanInsert")]
+        [Route("SepratorAreaDepartmentInsert")]
         [HttpPost]
         public async Task<ApiResult> SepratorAreaDepartmanInsert([FromBody] SepratorAreaDepartmantInsert modalUpdateViewModel)
         {
@@ -759,7 +759,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-        [Route("SepratorAreaCreaditorDelete")]
+        [Route("SepratorAreaDepartmentDelete")]
         [HttpPost]
         public virtual async Task<ApiResult> SepratorAreaCreaditorDelete([FromBody] DeleteSepViewModel deleteSep)
         {
