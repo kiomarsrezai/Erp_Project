@@ -10,6 +10,7 @@
         public string Description { get; set; }
         public long Expense { get; set; }
         public int LevelNumber { get; set; }
+        public bool Crud { get; set; }
 
 
     }

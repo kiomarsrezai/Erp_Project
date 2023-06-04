@@ -673,6 +673,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        fetchView.Crud = (bool)dataReader["Crud"];
 
                         fecthViewModel.Add(fetchView);
                     }
