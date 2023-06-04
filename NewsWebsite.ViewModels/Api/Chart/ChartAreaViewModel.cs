@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Fetch
+namespace NewsWebsite.ViewModels.Api.Chart
 {
     public class ChartAreaViewModel
     {
@@ -17,20 +17,20 @@ namespace NewsWebsite.ViewModels.Fetch
         public string AreaName { get; set; }
 
         [Display(Name = "مصوب")]
-        public Int64 Mosavab { get; set; }
+        public long Mosavab { get; set; }
 
         [Display(Name = "عملکرد")]
-        public Int64 Expense { get; set; }
+        public long Expense { get; set; }
 
         [Display(Name = "مصوب روزانه")]
-        public Int64 MosavabDaily { get; set; }
+        public long MosavabDaily { get; set; }
 
         [Display(Name = "محقق نشده")]
-        public Int64 NotGet { get; set; }
+        public long NotGet { get; set; }
 
         [Display(Name = "% جذب مصوب")]
         public double PercentMosavab { get; set; }
-       
+
         [Display(Name = "% جذب روزانه")]
         public double PercentMosavabDaily { get; set; }
 

@@ -25,11 +25,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class BudgetController : Controller
+    public class BudgetApiController : Controller
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
-        public BudgetController(IUnitOfWork uw, IConfiguration configuration)
+        public BudgetApiController(IUnitOfWork uw, IConfiguration configuration)
         {
             _config = configuration;
             _uw = uw;

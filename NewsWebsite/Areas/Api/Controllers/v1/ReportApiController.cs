@@ -10,10 +10,10 @@ using NewsWebsite.Data.Contracts;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.ViewModels.Api.Report;
 using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
-using NewsWebsite.ViewModels.Fetch;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Abstract;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
+using NewsWebsite.ViewModels.Api.Chart;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -213,7 +213,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand1 = new SqlCommand("SP500_BudgetShare", sqlconnect1))
+                using (SqlCommand sqlCommand1 = new SqlCommand("SP500_BudgetDeviation", sqlconnect1))
                 {
                     sqlconnect1.Open();
                     sqlCommand1.CommandType = CommandType.StoredProcedure;
@@ -324,7 +324,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? codingId = null)
         {
-            List<ViewModels.Fetch.ChartAreaViewModel> dataset = new List<ViewModels.Fetch.ChartAreaViewModel>();
+            List<ChartAreaViewModel> dataset = new List<ChartAreaViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP500_Chart", sqlconnect))
@@ -344,7 +344,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                     while (dataReader.Read())
                     {
-                        ViewModels.Fetch.ChartAreaViewModel row = new ViewModels.Fetch.ChartAreaViewModel();
+                        ChartAreaViewModel row = new ChartAreaViewModel();
 
                         row.Id = int.Parse(dataReader["AreaId"].ToString());
                         row.Row = int.Parse(dataReader["AreaId"].ToString());

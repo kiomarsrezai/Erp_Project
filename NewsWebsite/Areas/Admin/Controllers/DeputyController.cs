@@ -3,7 +3,7 @@ using NewsWebsite.Areas.Admin.Controllers;
 using NewsWebsite.Common;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.ViewModels.Fetch;
+using NewsWebsite.ViewModels.Api.Report;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

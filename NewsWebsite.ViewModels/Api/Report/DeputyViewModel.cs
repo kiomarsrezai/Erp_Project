@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Fetch
+namespace NewsWebsite.ViewModels.Api.Report
 {
     public class DeputyViewModel
     {
@@ -16,25 +16,25 @@ namespace NewsWebsite.ViewModels.Fetch
         public string ProctorName { get; set; }
 
         [Display(Name = "مصوب هزینه ای")]
-        public Int64 MosavabCurrent { get; set; }
+        public long MosavabCurrent { get; set; }
 
         [Display(Name = "مصوب هزینه ای")]
         public string MosavabCurrentStr { get; set; }
 
         [Display(Name = "مصوب هزینه ای")]
-        public Int64 ExpenseCurrent { get; set; }
+        public long ExpenseCurrent { get; set; }
 
         [Display(Name = "عملکرد هزینه ای")]
         public string ExpenseCurrentStr { get; set; }
 
         [Display(Name = "مصوب سرمایه ای")]
-        public Int64 MosavabCivil { get; set; }
+        public long MosavabCivil { get; set; }
 
         [Display(Name = "مصوب سرمایه ای")]
         public string MosavabCivilStr { get; set; }
 
         [Display(Name = "عملکرد سرمایه ای")]
-        public Int64 ExpenseCivil { get; set; }
+        public long ExpenseCivil { get; set; }
 
         [Display(Name = "عملکرد سرمایه ای")]
         public string ExpenseCivilStr { get; set; }
@@ -44,16 +44,16 @@ namespace NewsWebsite.ViewModels.Fetch
         [Display(Name = "جذب هزینه ای")]
         public string PercentCurrentStr { get; set; }
 
-        public double PercentCivil { get; set; } 
-      
+        public double PercentCivil { get; set; }
+
         [Display(Name = "جذب سرمایه ای")]
         public string PercentCivilStr { get; set; }
 
         public double PercentTotal { get; set; }
-       
+
         [Display(Name = "جذب کل")]
         public string PercentTotalStr { get; set; }
-       
+
         //[System.Text.Json.Serialization.JsonIgnore]
         //public List<AreaProctorViewModel> areaProctors { get; set; } 
     }

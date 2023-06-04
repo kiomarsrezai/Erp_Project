@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Fetch
+namespace NewsWebsite.ViewModels.Api.Report
 {
     public class ProctorAreaBudgetViewModel
     {
@@ -10,21 +10,15 @@ namespace NewsWebsite.ViewModels.Fetch
         public int ProctorId { get; set; }
         public int AreaId { get; set; }
 
-        [Display(Name = "کد بودجه"),JsonPropertyName("کد بودجه")]
         public string Code { get; set; }
 
-        [Display(Name = "شرح ردیف"), JsonPropertyName("شرح ردیف")]
         public string Description { get; set; }
+        public long Mosavab { get; set; }
 
-        [Display(Name = "مصوب"), JsonPropertyName("مصوب")]
-        public Int64 Mosavab { get; set; }
+        public long Expense { get; set; }
 
-        [Display(Name = "عملکرد"), JsonPropertyName("عملکرد")]
-        public Int64 Expense{ get; set; }
-
-        [Display(Name = "% جذب"), JsonPropertyName("% جذب")]
         public double Percent { get; set; }
-        
+
     }
     //public enum Sectios
     //{

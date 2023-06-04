@@ -1,7 +1,7 @@
 ﻿using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.GeneralVm;
+using NewsWebsite.ViewModels.Api.Report;
 using NewsWebsite.ViewModels.Api.UsersApi;
-using NewsWebsite.ViewModels.Fetch;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

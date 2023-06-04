@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NewsWebsite.ViewModels.Fetch
+namespace NewsWebsite.ViewModels.Api.Report
 {
     public class AreaProctorViewModel
     {
@@ -16,25 +16,25 @@ namespace NewsWebsite.ViewModels.Fetch
         public string AreaName { get; set; }
 
         [Display(Name = "مصوب هزینه ای")]
-        public Int64 MosavabCurrent { get; set; }
+        public long MosavabCurrent { get; set; }
 
         [Display(Name = "مصوب هزینه ای")]
         public string MosavabCurrentStr { get; set; }
 
         [Display(Name = "مصوب هزینه ای")]
-        public Int64 ExpenseCurrent { get; set; }
+        public long ExpenseCurrent { get; set; }
 
         [Display(Name = "عملکرد هزینه ای")]
         public string ExpenseCurrentStr { get; set; }
 
         [Display(Name = "مصوب سرمایه ای")]
-        public Int64 MosavabCivil { get; set; }
+        public long MosavabCivil { get; set; }
 
         [Display(Name = "مصوب سرمایه ای")]
         public string MosavabCivilStr { get; set; }
 
         [Display(Name = "عملکرد سرمایه ای")]
-        public Int64 ExpenseCivil { get; set; }
+        public long ExpenseCivil { get; set; }
 
         [Display(Name = "عملکرد سرمایه ای")]
         public string ExpenseCivilStr { get; set; }

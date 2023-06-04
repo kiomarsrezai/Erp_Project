@@ -15,12 +15,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class TaminEtebarController : Controller
+    public class TaminEtebarApiController : Controller
     {
         public readonly IUnitOfWork _uw;
         public readonly IConfiguration _configuration;
 
-        public TaminEtebarController(IUnitOfWork uw, IConfiguration configuration)
+        public TaminEtebarApiController(IUnitOfWork uw, IConfiguration configuration)
         {
             _uw = uw;
             _configuration = configuration;

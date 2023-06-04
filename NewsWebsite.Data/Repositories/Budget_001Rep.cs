@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.UsersApi;
-using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.GeneralVm;
 using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
+using NewsWebsite.ViewModels.Api.Report;
 
 namespace NewsWebsite.Data.Repositories
 {
