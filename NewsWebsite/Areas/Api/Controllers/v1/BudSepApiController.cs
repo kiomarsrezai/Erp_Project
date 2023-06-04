@@ -323,8 +323,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-
-
         //[Route("ChartBudgetShare")]
         //[HttpGet]
         //public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>>GetBudgetShare(int areaId, int yearId , int kindId)
@@ -364,21 +362,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //    return data;
 
         //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         [Route("DetailChartApi")]
         [HttpGet]
@@ -683,7 +666,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             return Ok(fecthViewModel);
         }
-       
 
         [Route("BudgetSeperatorDepartmentCom")]
         [HttpGet]
@@ -780,7 +762,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-
         [Route("SepratorAreaDepartmentModal")]
         [HttpGet]
         public async Task<ApiResult<List<SepratorAreaDepartmentModalViewModel>>> GetSepratorAreaDepartmentModal(int yearId, int areaId, int codingId , int projectId)
@@ -801,7 +782,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         SepratorAreaDepartmentModalViewModel fetchView = new SepratorAreaDepartmentModalViewModel();
-                        fetchView.Id = int.Parse(dataReader["CodingId"].ToString());
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
                         fetchView.DepartmanName = dataReader["DepartmanName"].ToString();
                         fetchView.MosavabDepartman = Int64.Parse(dataReader["MosavabDepartman"].ToString());
 
