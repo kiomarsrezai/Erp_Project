@@ -1,6 +1,6 @@
 ﻿namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
 {
-    public class BudgetSepratorCreaditorRead
+    public class BudgetSepratorDepartmantRead
     {
         public int CodingId { get; set; }
         public int ProjectId { get; set; }

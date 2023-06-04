@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
@@ -648,13 +649,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorCreaditorRead")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetSepratorCreaditorRead>>> GetBudgetSepratorCreaditorRead(int yearId, int areaId , int budgetProcessId)
+        public async Task<ApiResult<List<BudgetSepratorDepartmantRead>>> GetBudgetSepratorDepartmantRead(int yearId, int areaId , int budgetProcessId)
         {
-            List<BudgetSepratorCreaditorRead> fecthViewModel = new List<BudgetSepratorCreaditorRead>();
+            List<BudgetSepratorDepartmantRead> fecthViewModel = new List<BudgetSepratorDepartmantRead>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartment_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
@@ -664,7 +665,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetSepratorCreaditorRead fetchView = new BudgetSepratorCreaditorRead();
+                        BudgetSepratorDepartmantRead fetchView = new BudgetSepratorDepartmantRead();
                         fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         fetchView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                         fetchView.Code = dataReader["Code"].ToString();
@@ -683,6 +684,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
        
+
         [Route("BudgetSeperatorCreaditorCom")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetSepratorCreaditorCom>>> GetBudgetSepratorCreaditorCom()
@@ -712,19 +714,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
-        [Route("SepratorAreaCreaditorInsert")]
+        [Route("SepratorAreaDepartmanInsert")]
         [HttpPost]
-        public async Task<ApiResult> SepratorAreaCreaditorInsert([FromBody] SepratorAreaCreaditorInsert modalUpdateViewModel)
+        public async Task<ApiResult> SepratorAreaDepartmanInsert([FromBody] SepratorAreaDepartmantInsert modalUpdateViewModel)
         {
-            if (modalUpdateViewModel.BudgetDetailProjectAreaId == 0) return BadRequest();
+          //  if (modalUpdateViewModel.departmanId == 0) return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaId", modalUpdateViewModel.BudgetDetailProjectAreaId);
-                    sqlCommand.Parameters.AddWithValue("CreaditorId", modalUpdateViewModel.CreaditorId);
+                    sqlCommand.Parameters.AddWithValue("yearId", modalUpdateViewModel.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", modalUpdateViewModel.areaId);
+                    sqlCommand.Parameters.AddWithValue("codingId", modalUpdateViewModel.codingId);
+                    sqlCommand.Parameters.AddWithValue("projectId", modalUpdateViewModel.projectId);
+                    sqlCommand.Parameters.AddWithValue("departmanId", modalUpdateViewModel.departmanId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     TempData["notification"] = "ویرایش با موفقیت انجام شد";
@@ -735,13 +740,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAreaCreaditorUpdate")]
         [HttpPost]
-        public async Task<ApiResult> SepratorAreaCreaditorUpdate([FromBody] BudgetSepratorAreaCreaditorUpdate modalUpdateViewModel)
+        public async Task<ApiResult> SepratorAreaDepartmentUpdate([FromBody] BudgetSepratorAreaDepartmantUpdate modalUpdateViewModel)
         {
             if (modalUpdateViewModel.Id == 0) return BadRequest();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Update", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Update", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", modalUpdateViewModel.Id);
@@ -763,7 +768,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaCreaditor_Delete", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartment_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", deleteSep.id);
@@ -774,6 +779,44 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok();
         }
+
+
+        [Route("SepratorAreaDepartmentModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<SepratorAreaDepartmentModalViewModel>>> GetSepratorAreaDepartmentModal(int yearId, int areaId, int codingId , int projectId)
+        {
+            List<SepratorAreaDepartmentModalViewModel> fecthViewModel = new List<SepratorAreaDepartmentModalViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDetpartmant_Modal", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("@codingId", codingId);
+                    sqlCommand.Parameters.AddWithValue("@projectId", projectId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        SepratorAreaDepartmentModalViewModel fetchView = new SepratorAreaDepartmentModalViewModel();
+                        fetchView.Id = int.Parse(dataReader["CodingId"].ToString());
+                        fetchView.DepartmanName = dataReader["DepartmanName"].ToString();
+                        fetchView.MosavabDepartman = Int64.Parse(dataReader["MosavabDepartman"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+
+
+
+
+
     }
 
 

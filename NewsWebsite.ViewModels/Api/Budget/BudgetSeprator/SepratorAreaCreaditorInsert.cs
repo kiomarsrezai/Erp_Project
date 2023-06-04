@@ -1,8 +1,12 @@
 ﻿namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
 {
-    public class SepratorAreaCreaditorInsert
+    public class SepratorAreaDepartmantInsert
     {
-        public int BudgetDetailProjectAreaId { get; set; }
-        public int CreaditorId { get; set; }
+        public int yearId { get; set; }
+        public int areaId { get; set; }
+        public int codingId { get; set; }
+        public int projectId { get; set; }
+        public int departmanId { get; set; }
+
     }
 }
