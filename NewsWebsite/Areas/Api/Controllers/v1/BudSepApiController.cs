@@ -732,7 +732,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", modalUpdateViewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("MosavabDepartmentId", modalUpdateViewModel.MosavabDepartmentId);
+                    sqlCommand.Parameters.AddWithValue("MosavabDepartment", modalUpdateViewModel.MosavabDepartment);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     TempData["notification"] = "ویرایش با موفقیت انجام شد";
