@@ -206,7 +206,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetDeviation")]
         [HttpGet]
-        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> BudgetDeviation(int areaId, int yearId,int kindId)
+        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> BudgetDeviation(int areaId, int yearId)
         {
             List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
 
