@@ -103,45 +103,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
         }
 
-        [Route("GetAbstractList")]
-        [HttpGet]
-        public async Task<ApiResult<List<AbstractViewModel>>> AbstractList(int yearId, int KindId, int StructureId)
-        {
-            List<AbstractViewModel> abslist = new List<AbstractViewModel>();
-
-            using (SqlConnection sqlConnection = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand cmd = new SqlCommand("SP500_Abstract", sqlConnection))
-                {
-                    sqlConnection.Open();
-                    cmd.Parameters.AddWithValue("yearId", yearId);
-                    cmd.Parameters.AddWithValue("KindId", KindId);
-                    cmd.Parameters.AddWithValue("StructureId", StructureId);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await cmd.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        AbstractViewModel fetchView = new AbstractViewModel();
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.AreaName = dataReader["AreaName"].ToString();
-                        fetchView.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
-                        fetchView.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
-                        fetchView.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
-                        fetchView.MosavabDar_Khazane = long.Parse(dataReader["MosavabDar_Khazane"].ToString());
-                        fetchView.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
-                        fetchView.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
-                        fetchView.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
-                        fetchView.balanceMosavab = long.Parse(dataReader["balanceMosavab"].ToString());
-                        fetchView.Resoures = long.Parse(dataReader["Resoures"].ToString());
-                        abslist.Add(fetchView);
-
-                        //dataReader.NextResult();
-                    }
-                }
-            }
-
-            return Ok(abslist);
-        }
+        
 
         [Route("YearFetch")]
         [HttpGet]

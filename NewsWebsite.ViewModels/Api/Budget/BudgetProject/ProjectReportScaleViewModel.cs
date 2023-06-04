@@ -1,5 +1,14 @@
 ﻿namespace NewsWebsite.ViewModels.Api.Budget.BudgetProject
 {
+    public class ProgramOperationViewModel
+    {
+        public int Id { get; set; }
+        public string ProjectCode { get; set; }
+        public string ProjectName { get; set; }
+        public int? ProjectScaleId { get; set; }
+        public string ProjectScaleName { get; set; }
+    }
+
     public class ProjectReportScaleViewModel
     {
         public int ProjectId { get; set; }

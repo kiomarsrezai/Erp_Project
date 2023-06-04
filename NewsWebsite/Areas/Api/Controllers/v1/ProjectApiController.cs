@@ -374,69 +374,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ScaleCom);
         }
 
-        [Route("ProjectReportScale")]
-        [HttpGet]
-        public async Task<ApiResult<List<ProjectReportScaleViewModel>>> ProjectReportScale(int yearId,int areaId,int scaleId)
-        {
-            List<ProjectReportScaleViewModel> commiteViews = new List<ProjectReportScaleViewModel>();
+       
 
-            if (yearId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (yearId > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Report_ProjectScale", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("YearId", yearId);
-                        sqlCommand.Parameters.AddWithValue("AreaId", areaId);
-                        sqlCommand.Parameters.AddWithValue("ScaleId", scaleId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            ProjectReportScaleViewModel commiteView = new ProjectReportScaleViewModel();
-                            commiteView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
-                            commiteView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                            commiteView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                            commiteView.ProjectCode = dataReader["ProjectCode"].ToString();
-                            commiteView.ProjectName = dataReader["ProjectName"].ToString();
-                            commiteViews.Add(commiteView);
-
-                        }
-
-                    }
-                }
-
-            }
-            return Ok(commiteViews);
-        }
-
-        [Route("ProgramOperationUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> ProgramOperationUpdate([FromBody] ProgramOperationUpdateViewModel programOperationUpdate)
-        {
-            if (programOperationUpdate.Id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (programOperationUpdate.Id > 0)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_ProgramOperation_Update", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", programOperationUpdate.Id);
-                        sqlCommand.Parameters.AddWithValue("ScaleId", programOperationUpdate.ScaleId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-
-                    }
-                }
-
-            }
-            return Ok("بروزرسانی انجام شد");
-        }
+        
 
     }
 }

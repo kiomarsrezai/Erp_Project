@@ -1,19 +1,16 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
+using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
+using NewsWebsite.ViewModels.Program;
 using System.Collections.Generic;
 using System.Data;
-using System;
-using System.Threading.Tasks;
-using NewsWebsite.Common.Api;
 using System.Data.SqlClient;
-using NewsWebsite.Common;
-using Microsoft.Extensions.Configuration;
-using NewsWebsite.ViewModels.Api.Taraz;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Newtonsoft.Json;
-using NewsWebsite.ViewModels.Program;
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -37,30 +34,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             List<ProgramViewModel> fecthkol = new List<ProgramViewModel>();
 
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP005_Program", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Program", sqlconnect))
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
                     {
-                        sqlconnect.Open();
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (dataReader.Read())
-                        {
                         ProgramViewModel fetchViewKol = new ProgramViewModel();
-                            fetchViewKol.Id = int.Parse(dataReader["Id"].ToString());
-                            fetchViewKol.ProgramName= dataReader["ProgramName"].ToString();
-                            fecthkol.Add(fetchViewKol);
-                        }
+                        fetchViewKol.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchViewKol.ProgramName = dataReader["ProgramName"].ToString();
+                        fecthkol.Add(fetchViewKol);
                     }
                 }
-           
+            }
+
             return Ok(fecthkol);
 
         }
 
         [Route("ProgramOperation")]
         [HttpGet]
-        public async Task<ApiResult<List<ProgramOperationViewModel>>> ProgramOperation(int ProgramId,int areaId)
+        public async Task<ApiResult<List<ProgramOperationViewModel>>> ProgramOperation(int ProgramId, int areaId)
         {
             List<ProgramOperationViewModel> fecthkol = new List<ProgramOperationViewModel>();
 
@@ -90,6 +87,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+        [Route("ProgramOperationUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> ProgramOperationUpdate([FromBody] ProgramOperationUpdateViewModel programOperationUpdate)
+        {
+            if (programOperationUpdate.Id == 0)
+                return BadRequest("با خطا مواجه شد");
+            if (programOperationUpdate.Id > 0)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_ProgramOperation_Update", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", programOperationUpdate.Id);
+                        sqlCommand.Parameters.AddWithValue("ScaleId", programOperationUpdate.ScaleId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+
+                    }
+                }
+
+            }
+            return Ok("بروزرسانی انجام شد");
+        }
+
     }
-    
+
 }
