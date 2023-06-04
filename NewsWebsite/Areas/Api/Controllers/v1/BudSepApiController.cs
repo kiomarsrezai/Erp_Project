@@ -665,14 +665,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         BudgetSepratorCreaditorRead fetchView = new BudgetSepratorCreaditorRead();
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        fetchView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                         fetchView.Code = dataReader["Code"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.Project = dataReader["Project"].ToString();
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                  
-
 
                         fecthViewModel.Add(fetchView);
                     }
