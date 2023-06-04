@@ -218,7 +218,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect1.Open();
                     sqlCommand1.CommandType = CommandType.StoredProcedure;
                     sqlCommand1.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand1.Parameters.AddWithValue("yeaId", yearId);
+                    sqlCommand1.Parameters.AddWithValue("yearId", yearId);
                     SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
                     while (dataReader1.Read())
@@ -250,7 +250,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-        [Route("ChartBudgetShare")]
+        [Route("BudgetShare")]
         [HttpGet]
         public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> GetBudgetShare(int areaId, int yearId, int kindId)
         {
@@ -264,7 +264,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect1.Open();
                     sqlCommand1.CommandType = CommandType.StoredProcedure;
                     sqlCommand1.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand1.Parameters.AddWithValue("yeaId", yearId);
+                    sqlCommand1.Parameters.AddWithValue("yearId", yearId);
                     sqlCommand1.Parameters.AddWithValue("KindId", kindId);
                     SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
