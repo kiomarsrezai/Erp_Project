@@ -20,6 +20,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IUnitOfWork _uw;
         public readonly IConfiguration _configuration;
 
+        public ReportApiController(IUnitOfWork uw, IConfiguration configuration)
+        {
+            _uw = uw;
+            _configuration = configuration;
+        }
+
         [Route("ChartApi")]
         [HttpGet]
         public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? areaId = null, int? codingId = null)

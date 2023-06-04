@@ -22,7 +22,7 @@ namespace NewsWebsite.ViewModels.Project
         [Display(Name = "منطقه")]
         public int? AreaId { get; set; }
         public float? Weight { get; set; }
-        public List<IFormFile> FileList { get; set; }
+        //public List<IFormFile> FileList { get; set; }
     }
    
     //public enum Sectios

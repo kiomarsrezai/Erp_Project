@@ -20,6 +20,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IUnitOfWork _uw;
         public readonly IConfiguration _configuration;
 
+        public TaminEtebarController(IUnitOfWork uw, IConfiguration configuration)
+        {
+            _uw = uw;
+            _configuration = configuration;
+        }
+
         [HttpGet]
         [Route("Taminetebarat")]
         public async Task<ApiResult<List<BudgetSepTaminModal2ViewModel>>> Taminetebarat(int yearId, int areaId, int budgetProcessId)
