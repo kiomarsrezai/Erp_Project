@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
+namespace NewsWebsite.ViewModels.Api.Report
 {
     public class ChartBudgetDeviationViewModel
     {
-        public string areaname { get; set; }
+        public string AreaName { get; set; }
         public string code { get; set; }
         public string description { get; set; }
         public long mosavab { get; set; }
