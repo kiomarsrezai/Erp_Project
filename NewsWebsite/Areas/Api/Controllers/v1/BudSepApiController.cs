@@ -720,7 +720,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-        [Route("BudgetSepratorAreaCreaditorUpdate")]
+        [Route("BudgetSepratorAreaDepartmantUpdate")]
         [HttpPost]
         public async Task<ApiResult> SepratorAreaDepartmentUpdate([FromBody] BudgetSepratorAreaDepartmantUpdate modalUpdateViewModel)
         {
@@ -732,7 +732,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", modalUpdateViewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("MosavabCreaditor", modalUpdateViewModel.MosavabCreaditor);
+                    sqlCommand.Parameters.AddWithValue("MosavabDepartmentId", modalUpdateViewModel.MosavabDepartmentId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     TempData["notification"] = "ویرایش با موفقیت انجام شد";

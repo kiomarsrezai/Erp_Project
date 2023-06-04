@@ -3,6 +3,6 @@
     public class BudgetSepratorAreaDepartmantUpdate
     {
         public int Id { get; set; }
-        public long MosavabCreaditor { get; set; }
+        public long MosavabDepartmentId { get; set; }
     }
 }
