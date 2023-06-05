@@ -215,32 +215,28 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
         //بعد از نمایش لیست پیمانکاران در اکشن قبلی و پس از زدن دکمه تایید نام پیمانکار در فرم درخواست تغییر می کند
-        //public async Task<ApiResult<RequestSuppliersUpdateViewModel>> SupplierstUpdate([FromBody] RequestInsertViewModel viewModel)
-        //{
-        //    RequestSuppliersUpdateViewModel request = new RequestSuppliersUpdateViewModel();
+        public async Task<ApiResult<RequestSuppliersUpdateViewModel>> SupplierstUpdate([FromBody] RequestSuppliersUpdateParameterViewModel viewModel)
+        {
+            RequestSuppliersUpdateViewModel request = new RequestSuppliersUpdateViewModel();
 
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSuppliersSearch_Update", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
-        //            sqlCommand.Parameters.AddWithValue("SuppliersId", viewModel.SuppliersId);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //            while (dataReader.Read())
-        //            {
-        //                request.Id = int.Parse(dataReader["Id"].ToString());
-        //                request.AreaId = int.Parse(dataReader["AreaId"].ToString());
-        //                request.UserId = int.Parse(dataReader["UserId"].ToString());
-        //                request.Number = dataReader["Number"].ToString();
-        //                request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
-        //                request.DepartmentId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
-        //            }
-        //        }
-        //    }
-        //    return Ok(request);
-        //}
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSuppliersSearch_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
+                    sqlCommand.Parameters.AddWithValue("SuppliersId", viewModel.SuppliersId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        request.RequestId = int.Parse(dataReader["RequestId"].ToString());
+                        request.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                    }
+                }
+            }
+            return Ok(request);
+        }
 
 
 
