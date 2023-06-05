@@ -393,8 +393,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         SepratorAreaDepartmentModalViewModel fetchView = new SepratorAreaDepartmentModalViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.DepartmanName = dataReader["DepartmanName"].ToString();
-                        fetchView.MosavabDepartman = Int64.Parse(dataReader["MosavabDepartman"].ToString());
+                        fetchView.DepartmentName = dataReader["DepartmentName"].ToString();
+                        fetchView.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
 
                         fecthViewModel.Add(fetchView);
                     }
