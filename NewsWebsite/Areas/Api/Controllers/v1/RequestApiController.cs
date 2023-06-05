@@ -325,7 +325,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         request.Id = int.Parse(dataReader["Id"].ToString());
-                        request.Quantity = float.Parse(dataReader["Quantity"].ToString());
+                        request.Quantity = (double.Parse(dataReader["Quantity"].ToString()));
                         request.Price = int.Parse(dataReader["Price"].ToString());
                         request.Description = dataReader["Description"].ToString();
                         request.scale = dataReader["scale"].ToString();
@@ -335,14 +335,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(request);
         }
-
-
-
-
-
-
-
-
 
 
         [Route("RequestTableDelete{id}")]

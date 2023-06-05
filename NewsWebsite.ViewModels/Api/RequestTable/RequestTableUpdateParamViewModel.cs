@@ -9,7 +9,7 @@ namespace NewsWebsite.ViewModels.Api.RequestTable
     {
 
         public int Id { get; set; }
-        public float Quantity { get; set; }
+        public double Quantity { get; set; }
         public Int64 Price { get; set; }
         public string scale { get; set; }
         public string Description { get; set; }
