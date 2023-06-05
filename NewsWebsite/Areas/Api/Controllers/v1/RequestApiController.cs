@@ -102,7 +102,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         requestsViewModels.Id = int.Parse(dataReader["Id"].ToString());
                         requestsViewModels.YearId = int.Parse(dataReader["YearId"].ToString());
                         requestsViewModels.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        requestsViewModels.ExecuteDepartmanId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
+                        requestsViewModels.DepartmentId = StringExtensions.ToNullableInt(dataReader["ExecuteDepartmanId"].ToString());
                         requestsViewModels.Employee = dataReader["Employee"].ToString();
                         requestsViewModels.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
                         requestsViewModels.Number = dataReader["Number"].ToString();
@@ -133,7 +133,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
                     sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.ExecuteDepartmanId);
+                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.DepartmentId);
                     sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -144,8 +144,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.UserId = int.Parse(dataReader["UserId"].ToString());
                         request.Number = dataReader["Number"].ToString();
                         request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
-                        request.DateS = dataReader["DateS"].ToString();
-                        request.ExecuteDepartmanId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
+                        request.DepartmentId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
                     }
                 }
             }
