@@ -304,30 +304,71 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        [Route("RequestTableUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestTableUpdate([FromBody] RequestTableUpdateParamViewModel viewModel)
-        {
-            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
+        //[Route("RequestTableUpdate")]
+        //[HttpPost]
+        //public async Task<ApiResult<RequestAfterInsertViewModel>> RequestTableUpdate([FromBody] RequestTableUpdateParamViewModel viewModel)
+        //{
+        //    RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
 
-            if (viewModel.Id == 0)
-                return BadRequest();
+        //    if (viewModel.Id == 0)
+        //        return BadRequest();
+
+        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Update", sqlconnect))
+        //        {
+        //            sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
+        //            sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
+        //            sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
+        //            sqlCommand.Parameters.AddWithValue("Scale", viewModel.scale);
+        //            sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
+        //            sqlCommand.Parameters.AddWithValue("OthersDescription", viewModel.OthersDescription);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //        }
+        //    }
+        //    return Ok(request);
+        //}
+
+        public async Task<ApiResult<RequestTableUpdateViewModel>> RequestUpdate([FromBody] RequestTableUpdateViewModel viewModel)
+        {
+            RequestTableUpdateViewModel request = new RequestTableUpdateViewModel();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Update", sqlconnect))
                 {
-                    sqlCommand.Parameters.AddWithValue("yearId", viewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("areaId", viewModel.Quantity);
-                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.Price);
-                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.Description);
-                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.OthersDescription);
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
+                    sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
+                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
+                    sqlCommand.Parameters.AddWithValue("scale", viewModel.scale);
+                    sqlCommand.Parameters.AddWithValue("OthersDescription", viewModel.OthersDescription);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.Quantity = float.Parse(dataReader["Quantity"].ToString());
+                        request.Price = int.Parse(dataReader["Price"].ToString());
+                        request.Description = dataReader["Description"].ToString();
+                        request.scale = dataReader["scale"].ToString();
+                        request.OthersDescription = dataReader["OthersDescription"].ToString();
+                    }
                 }
             }
             return Ok(request);
         }
+
+
+
+
+
+
+
+
+
 
         [Route("RequestTableDelete{id}")]
         [HttpPost]
