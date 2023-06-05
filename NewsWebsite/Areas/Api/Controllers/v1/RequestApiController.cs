@@ -214,14 +214,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(fecthViewModel);
         }
-//بعد از نمایش لیست پیمانکاران در اکشن قبلی و پس از زدن دکمه تایید نام پیمانکار در فرم درخواست تغییر می کند
-        public async Task<ApiResult<RequestSuppliersUpdateViewModel>> SupplierstUpdate([FromBody] RequestInsertViewModel viewModel)
+        //بعد از نمایش لیست پیمانکاران در اکشن قبلی و پس از زدن دکمه تایید نام پیمانکار در فرم درخواست تغییر می کند
+        //public async Task<ApiResult<RequestSuppliersUpdateViewModel>> SupplierstUpdate([FromBody] RequestInsertViewModel viewModel)
         //{
         //    RequestSuppliersUpdateViewModel request = new RequestSuppliersUpdateViewModel();
 
         //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
         //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("", sqlconnect))
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSuppliersSearch_Update", sqlconnect))
         //        {
         //            sqlconnect.Open();
         //            sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
