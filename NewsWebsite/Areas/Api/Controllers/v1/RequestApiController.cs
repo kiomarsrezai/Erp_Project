@@ -109,7 +109,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         requestsViewModels.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
                         requestsViewModels.Number = dataReader["Number"].ToString();
                         requestsViewModels.Date = dataReader["Date"].ToString();
-                        requestsViewModels.DateS = dataReader["DateS"].ToString();
                         requestsViewModels.Description = dataReader["Description"].ToString();
                         requestsViewModels.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
