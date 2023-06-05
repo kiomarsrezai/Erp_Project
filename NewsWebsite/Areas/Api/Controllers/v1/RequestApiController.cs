@@ -419,6 +419,60 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+      //نمایش ردیف های بودجه مربوط به درخواست که در تب ردیف بودجه نمایش داده می شود
+        [Route("RequestBudgetReadTab")]
+        [HttpGet]
+        public async Task<ApiResult<List<RequestBudgetSearchViewModel>>> GetRequestBudgetTab(RequestBudgetSearchParamViewModel paramViewModel)
+        {
+            List<RequestBudgetSearchViewModel> requestsViewModels = new List<RequestBudgetSearchViewModel>();
+
+            if (paramViewModel.AreaId == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudgetSearchModal_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", paramViewModel.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", paramViewModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("departmentId", paramViewModel.DepartmentId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        RequestBudgetSearchViewModel request = new RequestBudgetSearchViewModel();
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.YearName = dataReader["YearName"].ToString();
+                        request.Code = dataReader["Code"].ToString();
+                        request.Description = dataReader["Description"].ToString();
+                        request.Project = dataReader["Project"].ToString();
+                        request.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
+                        requestsViewModels.Add(request);
+                    }
+                }
+            }
+            return Ok(requestsViewModels);
+        }
+
+        //اضافه کردن  ردیف بودجه در فرم درخواست
+        [Route("RequestBudgetInsertTab")]
+        [HttpPost]
+        public async Task<ApiResult> RequestBudgetInsertTab([FromBody] RequestBudgetInsertTabViewModel viewModel)
+        {
+             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudget_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
+                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaDepartmentId", viewModel.BudgetDetailProjectAreaDepartmentId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                }
+            }
+            return Ok();
+        }
 
 
 
