@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿//using AutoMapper.Configuration;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
+using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.RequestTable;
 using System.Collections.Generic;
@@ -187,34 +189,58 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        //[Route("RequestSuppliersSearch")]
-        //[HttpGet]
-        //public async Task<ApiResult<List<RequestSuppliersSearchViewModel>>> GetRequestSuppliersSearc(RequestSuppliersSearchViewModel )
+//مدال لیست پیمانکاران را نمایش می دهد
+        [Route("RequestSuppliersSearch")]
+        [HttpGet]
+        public async Task<ApiResult<List<RequestSuppliersSearchViewModel>>> GetSuppliers()
+        {
+            List<RequestSuppliersSearchViewModel> fecthViewModel = new List<RequestSuppliersSearchViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSuppliersSearch_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        RequestSuppliersSearchViewModel Suppliers = new RequestSuppliersSearchViewModel();
+                        Suppliers.Id = int.Parse(dataReader["Id"].ToString());
+                        Suppliers.SuppliersName = dataReader["SuppliersName"].ToString();
+                        fecthViewModel.Add(Suppliers);
+                    }
+                }
+            }
+            return Ok(fecthViewModel);
+        }
+//بعد از نمایش لیست پیمانکاران در اکشن قبلی و پس از زدن دکمه تایید نام پیمانکار در فرم درخواست تغییر می کند
+        public async Task<ApiResult<RequestSuppliersUpdateViewModel>> SupplierstUpdate([FromBody] RequestInsertViewModel viewModel)
         //{
-        //    List<RequestSuppliersSearchViewModel> requestsViewModels = new List<RequestSuppliersSearchViewModel>();
+        //    RequestSuppliersUpdateViewModel request = new RequestSuppliersUpdateViewModel();
 
         //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
         //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSuppliersSearch_Read", sqlconnect))
+        //        using (SqlCommand sqlCommand = new SqlCommand("", sqlconnect))
         //        {
         //            sqlconnect.Open();
+        //            sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
+        //            sqlCommand.Parameters.AddWithValue("SuppliersId", viewModel.SuppliersId);
         //            sqlCommand.CommandType = CommandType.StoredProcedure;
         //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
         //            while (dataReader.Read())
         //            {
-        //                RequestSuppliersSearchViewModel Suppliers = new RequestSuppliersSearchViewModel();
-        //                Suppliers.Id = int.Parse(dataReader["Id"].ToString());
-        //                Suppliers.SuppliersName = dataReader["SuppliersName"].ToString();
-        //                requestsViewModels.Add(request);
+        //                request.Id = int.Parse(dataReader["Id"].ToString());
+        //                request.AreaId = int.Parse(dataReader["AreaId"].ToString());
+        //                request.UserId = int.Parse(dataReader["UserId"].ToString());
+        //                request.Number = dataReader["Number"].ToString();
+        //                request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
+        //                request.DepartmentId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
         //            }
         //        }
         //    }
-        //    return Ok(requestsViewModels);
+        //    return Ok(request);
         //}
-
-
-
-
 
 
 
