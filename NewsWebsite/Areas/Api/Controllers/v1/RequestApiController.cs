@@ -48,7 +48,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
                     sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("DepartmanId", viewModel.DepartmanId);
+                    sqlCommand.Parameters.AddWithValue("DepartmentId", viewModel.DepartmentId);
                     sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
                     sqlCommand.Parameters.AddWithValue("RequestKindId", viewModel.RequestKindId);
                     sqlCommand.Parameters.AddWithValue("DoingMethodId", viewModel.DoingMethodId);
@@ -71,7 +71,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
                         request.Description = dataReader["Description"].ToString();
                         request.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
-                        request.DepartmanId = StringExtensions.ToNullableInt(dataReader["DepartmanId"].ToString());
+                        request.DepartmentId = StringExtensions.ToNullableInt(dataReader["DepartmentId"].ToString());
                         request.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
 
                     }
@@ -186,6 +186,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(requestsViewModels);
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         //[Route("RequestDelete")]
         //[HttpPost]
