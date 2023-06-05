@@ -104,7 +104,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         requestsViewModels.Id = int.Parse(dataReader["Id"].ToString());
                         requestsViewModels.YearId = int.Parse(dataReader["YearId"].ToString());
                         requestsViewModels.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        requestsViewModels.DepartmentId = StringExtensions.ToNullableInt(dataReader["DepartmanId"].ToString());
+                        requestsViewModels.DepartmentId = StringExtensions.ToNullableInt(dataReader["DepartmentId"].ToString());
                         requestsViewModels.Employee = dataReader["Employee"].ToString();
                         requestsViewModels.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
                         requestsViewModels.Number = dataReader["Number"].ToString();
