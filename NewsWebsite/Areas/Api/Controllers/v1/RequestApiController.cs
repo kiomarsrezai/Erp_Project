@@ -293,6 +293,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
                     sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
                     sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
+                    sqlCommand.Parameters.AddWithValue("Scale", viewModel.Scale);
                     sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
                     sqlCommand.Parameters.AddWithValue("OthersDescription", viewModel.OthersDescription);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
