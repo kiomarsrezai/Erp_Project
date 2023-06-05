@@ -154,7 +154,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(request);
         }
 
-        [Route("GetRequestList")]
+        [Route("RequestSearch")]
         [HttpGet]
         public async Task<ApiResult<List<RequestSearchViewModel>>> GetRequestList(RequestSearchParamViewModel paramViewModel)
         {
@@ -170,7 +170,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", paramViewModel.YearId);
                     sqlCommand.Parameters.AddWithValue("AreaId", paramViewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", paramViewModel.ExecuteDepartmanId);
+                    sqlCommand.Parameters.AddWithValue("DepartmentId", paramViewModel.DepartmentId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -179,7 +179,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.Id = int.Parse(dataReader["Id"].ToString());
                         request.Employee = dataReader["Employee"].ToString();
                         request.Number = dataReader["Number"].ToString();
-                        request.DateS = dataReader["DateS"].ToString();
+                        request.Date = dataReader["Date"].ToString();
                         request.Description = dataReader["Description"].ToString();
                         request.EstimateAmount = StringExtensions.ToNullableBigInt(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.Add(request);

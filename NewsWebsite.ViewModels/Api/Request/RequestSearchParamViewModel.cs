@@ -14,7 +14,7 @@ namespace NewsWebsite.ViewModels.Api.Request
         public int AreaId { get; set; }
         
         [Display(Name = "واحد درخواست کننده")]
-        public int ExecuteDepartmanId { get; set; }
+        public int DepartmentId { get; set; }
 
     }
 }
