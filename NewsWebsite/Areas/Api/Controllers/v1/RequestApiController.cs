@@ -488,6 +488,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-
+        // حذف ردیف بودجه در تب درخواست
+        [Route("RequestBudgetDelete")]
+        [HttpPost]
+        public async Task<ApiResult> RequestBudgetDelete([FromBody] RequestBudgetDeleteViewModel viewModel)
+        {
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudget_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                }
+            }
+            return Ok();
+        }
     }
 }
