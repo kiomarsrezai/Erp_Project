@@ -13,6 +13,7 @@ using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
 using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.RequestTable;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -144,7 +145,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.RequestKindId = int.Parse(dataReader["RequestKindId"].ToString());
                         request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
                         request.Description = dataReader["Description"].ToString();
-                        request.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
+                        request.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
                         request.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
                         request.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
                     }
