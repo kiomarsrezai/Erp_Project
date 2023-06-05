@@ -10,11 +10,10 @@ namespace NewsWebsite.ViewModels.Api.Request
         public int Id { get; set; }
         public int YearId { get; set; }
         public int AreaId { get; set; }
-        public int? ExecuteDepartmanId { get; set; }
+        public int? DepartmanId { get; set; }
         public string Employee { get; set; }
         public int? DoingMethodId { get; set; }
         public string Number { get; set; }
-        public string DateS { get; set; }
         public int RequestKindId { get; set; }
         public int? SuppliersId { get; set; }
         public string Description { get; set; }
