@@ -422,26 +422,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
       //نمایش ردیف های بودجه مربوط به درخواست که در تب ردیف بودجه نمایش داده می شود
         [Route("RequestBudgetReadTab")]
         [HttpGet]
-        public async Task<ApiResult<List<RequestBudgetSearchViewModel>>> GetRequestBudgetTab(RequestBudgetSearchParamViewModel paramViewModel)
+        public async Task<ApiResult<List<RequestBudgetReadTabViewModel>>> GetRequestBudgetTab(RequestBudgetTabReadParamViewModel paramViewModel)
         {
-            List<RequestBudgetSearchViewModel> requestsViewModels = new List<RequestBudgetSearchViewModel>();
-
-            if (paramViewModel.AreaId == 0)
-                return BadRequest();
+            List<RequestBudgetReadTabViewModel> requestsViewModels = new List<RequestBudgetReadTabViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudgetSearchModal_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudgetReadTab_Read", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", paramViewModel.YearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", paramViewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("departmentId", paramViewModel.DepartmentId);
+                    sqlCommand.Parameters.AddWithValue("RequestId", paramViewModel.RequestId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        RequestBudgetSearchViewModel request = new RequestBudgetSearchViewModel();
+                        RequestBudgetReadTabViewModel request = new RequestBudgetReadTabViewModel();
                         request.Id = int.Parse(dataReader["Id"].ToString());
                         request.YearName = dataReader["YearName"].ToString();
                         request.Code = dataReader["Code"].ToString();

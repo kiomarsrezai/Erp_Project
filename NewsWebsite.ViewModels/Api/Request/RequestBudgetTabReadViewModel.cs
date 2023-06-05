@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Request
 {
-    public class RequestBudgetTabViewModel
+    public class RequestBudgetReadTabViewModel
     {
         public int Id { get; set; }
         public string YearName { get; set; }
