@@ -279,9 +279,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         /// <returns></returns>
         /// 
 
-        [Route("RequestTableCreate")]
+        [Route("RequestTableInsert")]
         [HttpPost]
-        public async Task<ApiResult> RequestTableCreate([FromBody] RequestTableInsertViewModel viewModel)
+        public async Task<ApiResult> RequestTableInsert([FromBody] RequestTableInsertViewModel viewModel)
         {
             if (viewModel.RequestId == 0)
                 return BadRequest();
@@ -292,10 +292,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
+                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
+                    sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
                     sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
                     sqlCommand.Parameters.AddWithValue("OthersDescription", viewModel.OthersDescription);
-                    sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
-                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }
@@ -335,6 +335,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(requestsTable);
         }
+
 
         [Route("RequestTableUpdate")]
         [HttpPost]
