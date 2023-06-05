@@ -303,33 +303,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-
-        //[Route("RequestTableUpdate")]
-        //[HttpPost]
-        //public async Task<ApiResult<RequestAfterInsertViewModel>> RequestTableUpdate([FromBody] RequestTableUpdateParamViewModel viewModel)
-        //{
-        //    RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
-
-        //    if (viewModel.Id == 0)
-        //        return BadRequest();
-
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Update", sqlconnect))
-        //        {
-        //            sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
-        //            sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
-        //            sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
-        //            sqlCommand.Parameters.AddWithValue("Scale", viewModel.scale);
-        //            sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
-        //            sqlCommand.Parameters.AddWithValue("OthersDescription", viewModel.OthersDescription);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //        }
-        //    }
-        //    return Ok(request);
-        //}
-
+        [Route("RequestTableUpdatet")]
+        [HttpPost]
         public async Task<ApiResult<RequestTableUpdateViewModel>> RequestUpdate([FromBody] RequestTableUpdateViewModel viewModel)
         {
             RequestTableUpdateViewModel request = new RequestTableUpdateViewModel();
@@ -340,10 +315,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
-                    sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
                     sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
+                    sqlCommand.Parameters.AddWithValue("Quantity", viewModel.Quantity);
                     sqlCommand.Parameters.AddWithValue("scale", viewModel.scale);
+                    sqlCommand.Parameters.AddWithValue("Price", viewModel.Price);
                     sqlCommand.Parameters.AddWithValue("OthersDescription", viewModel.OthersDescription);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
