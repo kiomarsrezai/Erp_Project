@@ -279,6 +279,76 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         /// <returns></returns>
         /// 
 
+        //نمایش لیست درخواست های جدولی
+        [Route("RequestTableRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<RequestTableReadViewModel>>> RequestTableRead(RequestTableReadParamViewModel paramViewModel )
+        {
+            List<RequestTableReadViewModel> requestsTable = new List<RequestTableReadViewModel>();
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", paramViewModel.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        RequestTableReadViewModel request = new RequestTableReadViewModel();
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.Description = dataReader["Description"].ToString();
+                        request.Scale = dataReader["Scale"].ToString();
+                        request.Quantity = StringExtensions.ToNullablefloat(dataReader["Quantity"].ToString());
+                        request.Price = Int64.Parse(dataReader["Price"].ToString());
+                        request.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                        request.OthersDescription = dataReader["OthersDescription"].ToString();
+  
+                    }
+                }
+            }
+            return Ok(requestsTable);
+        }
+
+        //public async Task<ApiResult<List<RequestSearchViewModel>>> GetRequestList(RequestSearchParamViewModel paramViewModel)
+        //{
+        //    List<RequestSearchViewModel> requestsViewModels = new List<RequestSearchViewModel>();
+
+
+        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSearch_Read", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.Parameters.AddWithValue("yearId", paramViewModel.YearId);
+        //            sqlCommand.Parameters.AddWithValue("AreaId", paramViewModel.AreaId);
+        //            sqlCommand.Parameters.AddWithValue("DepartmentId", paramViewModel.DepartmentId);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //            while (dataReader.Read())
+        //            {
+        //                RequestSearchViewModel request = new RequestSearchViewModel();
+        //                request.Id = int.Parse(dataReader["Id"].ToString());
+        //                request.Employee = dataReader["Employee"].ToString();
+        //                request.Number = dataReader["Number"].ToString();
+        //                request.Date = dataReader["Date"].ToString();
+        //                request.Description = dataReader["Description"].ToString();
+        //                request.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
+        //                requestsViewModels.Add(request);
+        //            }
+        //        }
+        //    }
+        //    return Ok(requestsViewModels);
+        //}
+
+
+
+
+
+
+
+
+
         [Route("RequestTableInsert")]
         [HttpPost]
         public async Task<ApiResult> RequestTableInsert([FromBody] RequestTableInsertViewModel viewModel)
@@ -301,39 +371,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok();
-        }
-
-        [Route("RequestTableRead")]
-        [HttpGet]
-        public async Task<ApiResult<RequestTableReadViewModel>> RequestTableRead(int id)
-        {
-            RequestTableReadViewModel requestsTable = new RequestTableReadViewModel();
-
-            if (id == 0)
-                return BadRequest();
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Read", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", id);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        requestsTable.Id = int.Parse(dataReader["Id"].ToString());
-                        requestsTable.Description = dataReader["Description"].ToString();
-                        requestsTable.Scale = dataReader["Scale"].ToString();
-                        requestsTable.Quantity = StringExtensions.ToNullablefloat(dataReader["Quantity"].ToString());
-                        requestsTable.Price = Int64.Parse(dataReader["Price"].ToString());
-                        requestsTable.Amount = Int64.Parse(dataReader["Amount"].ToString());
-                        requestsTable.OthersDescription = dataReader["OthersDescription"].ToString();
-  
-                    }
-                }
-            }
-            return Ok(requestsTable);
         }
 
 
