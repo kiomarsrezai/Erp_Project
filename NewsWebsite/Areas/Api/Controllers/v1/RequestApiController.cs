@@ -469,24 +469,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-        ////اصلاح مبلغ ردیف بودجه در تب درخواست
-        //[Route("RequestBudgetInsertTab")]
-        //[HttpPost]
-        //public async Task<ApiResult> RequestBudgetUpdateTab([FromBody] RequestBudgetInsertTabViewModel viewModel)
-        //{
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudget_Insert", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
-        //            sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaDepartmentId", viewModel.BudgetDetailProjectAreaDepartmentId);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //        }
-        //    }
-        //    return Ok();
-        //}
+        //اصلاح مبلغ ردیف بودجه در تب درخواست
+        [Route("RequestBudgetUpdateTab")]
+        [HttpPost]
+        public async Task<ApiResult> RequestBudgetUpdateTab([FromBody] RequestBudgetUpdateTabViewModel viewModel)
+        {
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudget_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("MosavabDepartment", viewModel.MosavabDepartment);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                }
+            }
+            return Ok();
+        }
 
 
     }
