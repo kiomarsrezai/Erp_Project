@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -14,7 +15,13 @@ namespace NewsWebsite.ViewModels.Api.Request
         public int DoingMethodId { get; set; }
         public string Users { get; set; }
         public string Number { get; set; }
-        public string Date { get; set; }
+
+        [JsonIgnore]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime Date { get; set; }
+        
+        public string DateShamsi { get; set; }
         public string Description { get; set; }
         public long EstimateAmount { get; set; }
         public string ResonDoingMethod { get; set; }

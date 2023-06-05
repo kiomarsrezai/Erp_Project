@@ -110,7 +110,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         requestsViewModels.Employee = dataReader["Employee"].ToString();
                         requestsViewModels.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
                         requestsViewModels.Number = dataReader["Number"].ToString();
-                        requestsViewModels.Date = dataReader["Date"].ToString();
+                        requestsViewModels.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/mm/dd");
                         requestsViewModels.Description = dataReader["Description"].ToString();
                         requestsViewModels.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
@@ -191,7 +191,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-//مدال لیست پیمانکاران را نمایش می دهد
+        //مدال لیست پیمانکاران را نمایش می دهد
         [Route("RequestSuppliersSearch")]
         [HttpGet]
         public async Task<ApiResult<List<RequestSuppliersSearchViewModel>>> GetSuppliers()
@@ -217,6 +217,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
         //بعد از نمایش لیست پیمانکاران در اکشن قبلی و پس از زدن دکمه تایید نام پیمانکار در فرم درخواست تغییر می کند
+
+        [Route("RequestSupplierstUpdate")]
+        [HttpGet]
         public async Task<ApiResult<RequestSuppliersUpdateViewModel>> SupplierstUpdate([FromBody] RequestSuppliersUpdateParameterViewModel viewModel)
         {
             RequestSuppliersUpdateViewModel request = new RequestSuppliersUpdateViewModel();
@@ -419,7 +422,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-      //نمایش ردیف های بودجه مربوط به درخواست که در تب ردیف بودجه نمایش داده می شود
+        //نمایش ردیف های بودجه مربوط به درخواست که در تب ردیف بودجه نمایش داده می شود
         [Route("RequestBudgetReadTab")]
         [HttpGet]
         public async Task<ApiResult<List<RequestBudgetReadTabViewModel>>> GetRequestBudgetTab(RequestBudgetTabReadParamViewModel paramViewModel)
@@ -455,7 +458,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult> RequestBudgetInsertTab([FromBody] RequestBudgetInsertTabViewModel viewModel)
         {
-             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudget_Insert", sqlconnect))
                 {
