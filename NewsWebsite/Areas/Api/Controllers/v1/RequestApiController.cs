@@ -182,7 +182,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.Number = dataReader["Number"].ToString();
                         request.Date = dataReader["Date"].ToString();
                         request.Description = dataReader["Description"].ToString();
-                        request.EstimateAmount = StringExtensions.ToNullableBigInt(dataReader["EstimateAmount"].ToString());
+                        request.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.Add(request);
                     }
                 }
