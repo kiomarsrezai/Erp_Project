@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Writers;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
@@ -306,7 +307,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<RequestTableReadViewModel>> RequestTableRead(int id)
         {
-            RequestTableReadViewModel requestsViewModels = new RequestTableReadViewModel();
+            RequestTableReadViewModel requestsTable = new RequestTableReadViewModel();
 
             if (id == 0)
                 return BadRequest();
@@ -321,16 +322,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        requestsViewModels.Id = int.Parse(dataReader["AreaId"].ToString());
-                        requestsViewModels.OthersDescription = dataReader["Users"].ToString();
-                        requestsViewModels.Amount = StringExtensions.ToNullablefloat(dataReader["Number"].ToString());
-                        requestsViewModels.Quantity = StringExtensions.ToNullablefloat(dataReader["DoingMethodId"].ToString());
-                        requestsViewModels.Description = dataReader["ResonDoingMethod"].ToString();
-                        requestsViewModels.Price = long.Parse(dataReader["Id"].ToString());
+                        requestsTable.Id = int.Parse(dataReader["Id"].ToString());
+                        requestsTable.Description = dataReader["Description"].ToString();
+                        requestsTable.Sclae = dataReader["Sclae"].ToString();
+                        requestsTable.Quantity = StringExtensions.ToNullablefloat(dataReader["Quantity"].ToString());
+                        requestsTable.Price = Int64.Parse(dataReader["Price"].ToString());
+                        requestsTable.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                        requestsTable.OthersDescription = dataReader["OthersDescription"].ToString();
+  
                     }
                 }
             }
-            return Ok(requestsViewModels);
+            return Ok(requestsTable);
         }
 
         [Route("RequestTableUpdate")]
