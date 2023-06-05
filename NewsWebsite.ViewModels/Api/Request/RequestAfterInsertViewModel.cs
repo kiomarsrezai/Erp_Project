@@ -14,6 +14,8 @@ namespace NewsWebsite.ViewModels.Api.Request
         public string Employee { get; set; }
         public int? DoingMethodId { get; set; }
         public string Number { get; set; }
+        public string Date { get; set; }
+
         public int RequestKindId { get; set; }
         public int? SuppliersId { get; set; }
         public string Description { get; set; }

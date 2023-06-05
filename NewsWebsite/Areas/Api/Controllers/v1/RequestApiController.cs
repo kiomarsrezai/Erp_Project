@@ -69,8 +69,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.Employee = dataReader["Employee"].ToString();
                         request.RequestKindId = int.Parse(dataReader["RequestKindId"].ToString());
                         request.UserId = int.Parse(dataReader["UserId"].ToString());
-                        request.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
+                        request.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
                         request.Number = dataReader["Number"].ToString();
+                        request.Date = dataReader["Date"].ToString();
                         request.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
                         request.Description = dataReader["Description"].ToString();
                         request.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
@@ -376,6 +377,51 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok();
         }
+
+
+
+
+
+        //نمایش لیست ردیف های بودجه که در اختیار واحد درخواست کننده می باشد
+        [Route("RequestBudgetSearchModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<RequestBudgetSearchViewModel>>> GetRequestBudget(RequestBudgetSearchParamViewModel paramViewModel)
+        {
+            List<RequestBudgetSearchViewModel> requestsViewModels = new List<RequestBudgetSearchViewModel>();
+
+            if (paramViewModel.AreaId == 0)
+                return BadRequest();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudgetSearchModal_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", paramViewModel.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", paramViewModel.AreaId);
+                    sqlCommand.Parameters.AddWithValue("departmentId", paramViewModel.DepartmentId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        RequestBudgetSearchViewModel request = new RequestBudgetSearchViewModel();
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.YearName = dataReader["YearName"].ToString();
+                        request.Code = dataReader["Code"].ToString();
+                        request.Description = dataReader["Description"].ToString();
+                        request.Project = dataReader["Project"].ToString();
+                        request.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
+                        requestsViewModels.Add(request);
+                    }
+                }
+            }
+            return Ok(requestsViewModels);
+        }
+
+
+
+
+
 
     }
 }
