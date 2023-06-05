@@ -7,6 +7,6 @@ namespace NewsWebsite.ViewModels.Api.Request
     public class RequestBudgetUpdateTabViewModel
     {
         public int Id { get; set; }
-        public Int64 MosavabDepartment { get; set; }
+        public Int64 RequestBudgetAmount { get; set; }
     }
 }

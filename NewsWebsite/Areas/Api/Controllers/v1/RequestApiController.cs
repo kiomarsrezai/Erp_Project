@@ -382,9 +382,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-
-
-
         //نمایش لیست ردیف های بودجه که در اختیار واحد درخواست کننده می باشد
         [Route("RequestBudgetSearchModal")]
         [HttpGet]
@@ -454,7 +451,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         //اضافه کردن  ردیف بودجه در فرم درخواست
-        [Route("RequestBudgetInsertTab")]
+        [Route("RequestBudgetInsert")]
         [HttpPost]
         public async Task<ApiResult> RequestBudgetInsertTab([FromBody] RequestBudgetInsertTabViewModel viewModel)
         {
@@ -473,7 +470,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         //اصلاح مبلغ ردیف بودجه در تب درخواست
-        [Route("RequestBudgetUpdateTab")]
+        [Route("RequestBudgetUpdate")]
         [HttpPost]
         public async Task<ApiResult> RequestBudgetUpdateTab([FromBody] RequestBudgetUpdateTabViewModel viewModel)
         {
@@ -483,7 +480,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("MosavabDepartment", viewModel.MosavabDepartment);
+                    sqlCommand.Parameters.AddWithValue("RequestBudgetAmount", viewModel.RequestBudgetAmount);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }
