@@ -303,7 +303,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok();
         }
 
-        [Route("RequestTableRead{id}")]
+        [Route("RequestTableRead")]
         [HttpGet]
         public async Task<ApiResult<RequestTableReadViewModel>> RequestTableRead(int id)
         {
