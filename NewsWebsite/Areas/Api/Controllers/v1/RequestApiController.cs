@@ -120,32 +120,33 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("RequestUpdate")]
         [HttpPost]
-        public async Task<ApiResult<RequestAfterInsertViewModel>> RequestUpdate([FromBody] RequestInsertViewModel viewModel)
+        public async Task<ApiResult<RequestUpdateViewModel>> RequestUpdate([FromBody] RequestUpdateViewModel viewModel)
         {
-            RequestAfterInsertViewModel request = new RequestAfterInsertViewModel();
-
-            if (viewModel.AreaId == 0)
-                return BadRequest();
+            RequestUpdateViewModel request = new RequestUpdateViewModel();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Update", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_Request_Update", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", viewModel.YearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", viewModel.AreaId);
-                    sqlCommand.Parameters.AddWithValue("ExecuteDepartmanId", viewModel.DepartmentId);
-                    sqlCommand.Parameters.AddWithValue("UserId", viewModel.UserId);
+                    sqlCommand.Parameters.AddWithValue("Id", viewModel.Id);
+                    sqlCommand.Parameters.AddWithValue("RequestKindId", viewModel.RequestKindId);
+                    sqlCommand.Parameters.AddWithValue("DoingMethodId", viewModel.DoingMethodId);
+                    sqlCommand.Parameters.AddWithValue("Description", viewModel.Description);
+                    sqlCommand.Parameters.AddWithValue("EstimateAmount", viewModel.EstimateAmount);
+                    sqlCommand.Parameters.AddWithValue("SuppliersId", viewModel.SuppliersId);
+                    sqlCommand.Parameters.AddWithValue("ResonDoingMethod", viewModel.ResonDoingMethod);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         request.Id = int.Parse(dataReader["Id"].ToString());
-                        request.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        request.UserId = int.Parse(dataReader["UserId"].ToString());
-                        request.Number = dataReader["Number"].ToString();
+                        request.RequestKindId = int.Parse(dataReader["RequestKindId"].ToString());
                         request.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
-                        request.DepartmentId = int.Parse(dataReader["ExecuteDepartmanId"].ToString());
+                        request.Description = dataReader["Description"].ToString();
+                        request.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
+                        request.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                        request.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
                     }
                 }
             }
