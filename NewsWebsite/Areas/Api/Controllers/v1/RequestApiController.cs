@@ -186,19 +186,42 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(requestsViewModels);
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+        //[Route("RequestSuppliersSearch")]
+        //[HttpGet]
+        //public async Task<ApiResult<List<RequestSuppliersSearchViewModel>>> GetRequestSuppliersSearc(RequestSuppliersSearchViewModel )
+        //{
+        //    List<RequestSuppliersSearchViewModel> requestsViewModels = new List<RequestSuppliersSearchViewModel>();
+
+        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestSuppliersSearch_Read", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //            while (dataReader.Read())
+        //            {
+        //                RequestSuppliersSearchViewModel Suppliers = new RequestSuppliersSearchViewModel();
+        //                Suppliers.Id = int.Parse(dataReader["Id"].ToString());
+        //                Suppliers.SuppliersName = dataReader["SuppliersName"].ToString();
+        //                requestsViewModels.Add(request);
+        //            }
+        //        }
+        //    }
+        //    return Ok(requestsViewModels);
+        //}
+
+
+
+
+
+
+
+
+
+
         //[Route("RequestDelete")]
         //[HttpPost]
         //public async Task<ApiResult> RequestDelete(int id)
