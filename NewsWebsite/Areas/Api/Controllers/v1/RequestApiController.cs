@@ -324,7 +324,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         requestsTable.Id = int.Parse(dataReader["Id"].ToString());
                         requestsTable.Description = dataReader["Description"].ToString();
-                        requestsTable.Sclae = dataReader["Sclae"].ToString();
+                        requestsTable.Scale = dataReader["Scale"].ToString();
                         requestsTable.Quantity = StringExtensions.ToNullablefloat(dataReader["Quantity"].ToString());
                         requestsTable.Price = Int64.Parse(dataReader["Price"].ToString());
                         requestsTable.Amount = Int64.Parse(dataReader["Amount"].ToString());
