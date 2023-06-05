@@ -420,7 +420,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
         //نمایش ردیف های بودجه مربوط به درخواست که در تب ردیف بودجه نمایش داده می شود
-        [Route("RequestBudgetReadTab")]
+        [Route("RequestBudgetRead")]
         [HttpGet]
         public async Task<ApiResult<List<RequestBudgetReadTabViewModel>>> GetRequestBudgetTab(RequestBudgetTabReadParamViewModel paramViewModel)
         {
@@ -428,7 +428,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudgetReadTab_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestBudgetRead_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("RequestId", paramViewModel.RequestId);
@@ -442,7 +442,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.Code = dataReader["Code"].ToString();
                         request.Description = dataReader["Description"].ToString();
                         request.Project = dataReader["Project"].ToString();
-                        request.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
+                        request.RequestBudgetAmount = Int64.Parse(dataReader["RequestBudgetAmount"].ToString());
                         requestsViewModels.Add(request);
                     }
                 }
