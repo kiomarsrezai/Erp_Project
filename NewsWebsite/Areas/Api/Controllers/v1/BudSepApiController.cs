@@ -157,7 +157,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAreaProjectModal")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetSepratorAreaProjectModalViewModel>>> BudgetSepratorAreaProjectModal(int yearId, int areaId, int codingId)
+        public async Task<ApiResult<List<BudgetSepratorAreaProjectModalViewModel>>> BudgetSepratorAreaProjectModal(int yearId, int areaId, int codingId , int BudgetProcessId)
         {
             List<BudgetSepratorAreaProjectModalViewModel> fecthViewModel = new List<BudgetSepratorAreaProjectModalViewModel>();
 
@@ -168,16 +168,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
                     sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", BudgetProcessId);
                     sqlCommand.Parameters.AddWithValue("codingId", codingId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
                         BudgetSepratorAreaProjectModalViewModel fetchView = new BudgetSepratorAreaProjectModalViewModel();
-                        fetchView.Id = StringExtensions.ToNullableInt(dataReader["Id"].ToString());
+                        fetchView.ProjectId =  int.Parse(dataReader["ProjectId"].ToString());
                         fetchView.ProjectCode = dataReader["ProjectCode"].ToString();
                         fetchView.ProjectName = dataReader["ProjectName"].ToString();
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Mosavab = Int64.Parse(dataReader["Expense"].ToString());
 
                         fecthViewModel.Add(fetchView);
                     }
