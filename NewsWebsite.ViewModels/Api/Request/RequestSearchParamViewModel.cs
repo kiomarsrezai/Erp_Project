@@ -11,7 +11,7 @@ namespace NewsWebsite.ViewModels.Api.Request
         public int YearId { get; set; }
         
         [Display(Name = "منطقه")]
-        public int AreaId { get; set; }
+        public int? AreaId { get; set; }
         
         [Display(Name = "واحد درخواست کننده")]
         public int DepartmentId { get; set; }

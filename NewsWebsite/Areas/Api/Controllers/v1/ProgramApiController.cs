@@ -74,6 +74,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         ProgramOperationViewModel fetchViewKol = new ProgramOperationViewModel();
                         fetchViewKol.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchViewKol.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                         fetchViewKol.ProjectCode = dataReader["ProjectCode"].ToString();
                         fetchViewKol.ProjectName = dataReader["ProjectName"].ToString();
                         fetchViewKol.ProjectScaleName = dataReader["ProjectScaleName"].ToString();
@@ -82,33 +83,26 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-
             return Ok(fecthkol);
-
         }
 
         [Route("ProgramOperationUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> ProgramOperationUpdate([FromBody] ProgramOperationUpdateViewModel programOperationUpdate)
         {
-            if (programOperationUpdate.Id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (programOperationUpdate.Id > 0)
-            {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_ProgramOperation_Update", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", programOperationUpdate.Id);
+                        sqlCommand.Parameters.AddWithValue("ProjectId", programOperationUpdate.ProjectId);
                         sqlCommand.Parameters.AddWithValue("ScaleId", programOperationUpdate.ScaleId);
+                        sqlCommand.Parameters.AddWithValue("ProjectName", programOperationUpdate.ProjectName);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
 
                     }
                 }
-
-            }
             return Ok("بروزرسانی انجام شد");
         }
 
