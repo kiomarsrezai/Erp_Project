@@ -22,6 +22,6 @@ namespace NewsWebsite.ViewModels.Api.Request
         public long EstimateAmount { get; set; }
         public string ResonDoingMethod { get; set; }
         public int UserId { get; set; }
-
+        public string DateShamsi { get; set; }
     }
 }

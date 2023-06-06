@@ -73,6 +73,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
                         request.Number = dataReader["Number"].ToString();
                         request.Date = dataReader["Date"].ToString();
+                        request.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/MM/dd");
                         request.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
                         request.Description = dataReader["Description"].ToString();
                         request.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
@@ -182,6 +183,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.Employee = dataReader["Employee"].ToString();
                         request.Number = dataReader["Number"].ToString();
                         request.Date = dataReader["Date"].ToString();
+                        request.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/MM/dd");
                         request.Description = dataReader["Description"].ToString();
                         request.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.Add(request);

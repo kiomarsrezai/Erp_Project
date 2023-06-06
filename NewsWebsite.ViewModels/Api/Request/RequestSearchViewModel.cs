@@ -13,6 +13,6 @@ namespace NewsWebsite.ViewModels.Api.Request
         public string Date { get; set; }
         public string Description { get; set; }
         public Int64? EstimateAmount { get; set; }
-
+        public string DateShamsi { get; set; }
     }
 }
