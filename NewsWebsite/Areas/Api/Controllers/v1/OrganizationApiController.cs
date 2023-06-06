@@ -31,7 +31,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
-        [Route("OrganizationDelete")]
+        [Route("DepartmentDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> OrganizationDelete([FromBody] OrganizationDelParamViewModel viewModel)
         {            
@@ -40,7 +40,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP015_Organization_Delete", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_Department_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", viewModel.Id);
@@ -51,7 +51,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
-        [Route("OrganizationInsert")]
+        [Route("DepartmentInsert")]
         [HttpPost]
         public virtual async Task<ApiResult<string>> GetOrganization([FromBody] OrganizationInsertViewModel paramViewModel)
         {
@@ -59,7 +59,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 paramViewModel.MotherId = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP015_Organization_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_Department_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("MotherId", paramViewModel.MotherId);
@@ -71,7 +71,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
-        [Route("GetOrganizationList")]
+        [Route("DepartmentRead")]
         [HttpGet]
         public async Task<ApiResult<List<OrganizationsViewModel>>> GetOrganizationList(OrganizationReadParamViewModel paramViewModel)
         {
@@ -82,7 +82,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP015_Organization_Read", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_Department_Read", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("AreaId", paramViewModel.AreaId);
@@ -92,9 +92,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         OrganizationsViewModel Organization = new OrganizationsViewModel();
                         Organization.Id = int.Parse(dataReader["Id"].ToString());
-                        Organization.OrgName = dataReader["OrgName"].ToString();
+                        Organization.DepartmentName = dataReader["DepartmentName"].ToString();
                         Organization.MotherId = StringExtensions.ToNullableInt(dataReader["MotherId"].ToString());
-                        Organization.OrgCode= dataReader["OrgCode"].ToString();
+                        Organization.DepartmentCode = dataReader["DepartmentCode"].ToString();
                         OrganizationsViewModels.Add(Organization);
                     }
                 }
@@ -102,7 +102,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(OrganizationsViewModels);
         }
 
-        [Route("OrganizationUpdate")]
+        [Route("DepartmentUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> OrganizationUpadte([FromBody] OrganizationUpdateViewModel paramViewModel)
         {
@@ -111,12 +111,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     paramViewModel.MotherId=null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP015_Organization_Update", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_Department_Update", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", paramViewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("OrgName", paramViewModel.OrgName);
-                    sqlCommand.Parameters.AddWithValue("OrgCode", paramViewModel.OrgCode);
+                    sqlCommand.Parameters.AddWithValue("DepartmentName", paramViewModel.DepartmentName);
+                    sqlCommand.Parameters.AddWithValue("DepartmentCode", paramViewModel.DepartmentCode);
                     sqlCommand.Parameters.AddWithValue("MotherId", paramViewModel.MotherId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();

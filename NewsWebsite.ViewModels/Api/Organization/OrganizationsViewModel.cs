@@ -9,8 +9,8 @@ namespace NewsWebsite.ViewModels.Api.Organization
     {
         public int Id { get; set; }
         public int? MotherId { get; set; }
-        public string OrgCode { get; set; }
-        public string OrgName { get; set; }
+        public string DepartmentCode { get; set; }
+        public string DepartmentName { get; set; }
         
 
     }

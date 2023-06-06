@@ -285,39 +285,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-        [HttpGet]
-        [Route("Details")]
-        public async Task<ApiResult<List<SepratorAreaRequestViewModel>>> Details(int yearId, int areaId, int budgetProcessId, int codingId)
-        {
-            List<SepratorAreaRequestViewModel> fecthViewModel = new List<SepratorAreaRequestViewModel>();
-
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
-                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        SepratorAreaRequestViewModel fetchView = new SepratorAreaRequestViewModel();
-                        fetchView.id = StringExtensions.ToNullableInt(dataReader["id"].ToString());
-                        fetchView.Number = dataReader["Number"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.Date = dataReader["Date"].ToString();
-                        fetchView.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
-
-                        fecthViewModel.Add(fetchView);
-                    }
-                }
-            }
-
-            return Ok(fecthViewModel);
-        }
+       
 
         [Route("DetailChartApi")]
         [HttpGet]
