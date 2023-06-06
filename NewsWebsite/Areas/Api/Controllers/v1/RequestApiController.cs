@@ -116,6 +116,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         requestsViewModels.Description = dataReader["Description"].ToString();
                         requestsViewModels.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
+                        requestsViewModels.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                        requestsViewModels.SuppliersName = dataReader["SuppliersName"].ToString();
                     }
                 }
             }
