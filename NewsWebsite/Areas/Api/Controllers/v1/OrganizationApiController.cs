@@ -92,9 +92,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         OrganizationsViewModel Organization = new OrganizationsViewModel();
                         Organization.Id = int.Parse(dataReader["Id"].ToString());
-                        Organization.OrgName = dataReader["OrgName"].ToString();
+                        Organization.DepartmentName = dataReader["DepartmentName"].ToString();
                         Organization.MotherId = StringExtensions.ToNullableInt(dataReader["MotherId"].ToString());
-                        Organization.OrgCode= dataReader["OrgCode"].ToString();
+                        Organization.DepartmentCode = dataReader["DepartmentCode"].ToString();
                         OrganizationsViewModels.Add(Organization);
                     }
                 }
@@ -115,8 +115,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", paramViewModel.Id);
-                    sqlCommand.Parameters.AddWithValue("OrgName", paramViewModel.OrgName);
-                    sqlCommand.Parameters.AddWithValue("OrgCode", paramViewModel.OrgCode);
+                    sqlCommand.Parameters.AddWithValue("DepartmentName", paramViewModel.DepartmentName);
+                    sqlCommand.Parameters.AddWithValue("DepartmentCode", paramViewModel.DepartmentCode);
                     sqlCommand.Parameters.AddWithValue("MotherId", paramViewModel.MotherId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
