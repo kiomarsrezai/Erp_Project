@@ -33,7 +33,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<IActionResult> FetchSeprators(int yearId, int areaId, int budgetprocessId)
         {
-            string readercount = null;
             List<BudgetSepratorViewModel> fecth = new List<BudgetSepratorViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -47,9 +46,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                        else
-                        {
                             BudgetSepratorViewModel fetchView = new BudgetSepratorViewModel();
                             fetchView.Code = dataReader["Code"].ToString();
                             fetchView.Description = dataReader["Description"].ToString();
@@ -71,22 +67,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 fetchView.PercentBud = 0;
                             }
                             fecth.Add(fetchView);
-                        }
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok(fecth);
-            else
-                return BadRequest(readercount);
+            return Ok(fecth);
         }
 
         [Route("DeleteTamin")]
         [HttpPost]
-        public virtual async Task<ApiResult> DeleteTamin([FromBody] DeleteSepViewModel deleteSep)
+        public virtual async Task<ApiResult<string>> DeleteTamin([FromBody] DeleteSepViewModel deleteSep)
         {
-            if (deleteSep.id == 0)
-                return BadRequest();
-
+            string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_Delete", sqlconnect))
@@ -95,10 +86,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("id", deleteSep.id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
             }
-            return Ok();
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
         [Route("RefreshSeperator")]
@@ -171,7 +167,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<List<SepratorAreaRequestViewModel>>> Details(int yearId, int areaId, int budgetProcessId, int codingId)
         {
             List<SepratorAreaRequestViewModel> fecthViewModel = new List<SepratorAreaRequestViewModel>();
-
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal", sqlconnect))
@@ -196,7 +191,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-
             return Ok(fecthViewModel);
         }
 
@@ -205,7 +199,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<List<BudgetSepTaminModal2ViewModel>>> Taminetebarat(int yearId, int areaId, int budgetProcessId)
         {
             List<BudgetSepTaminModal2ViewModel> fecthViewModel = new List<BudgetSepTaminModal2ViewModel>();
-
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_2", sqlconnect))
@@ -230,7 +223,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-
             return Ok(fecthViewModel);
         }
 
