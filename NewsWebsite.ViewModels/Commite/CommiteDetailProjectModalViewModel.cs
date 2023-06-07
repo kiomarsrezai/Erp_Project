@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewsWebsite.ViewModels.Project
+namespace NewsWebsite.ViewModels.Commite
 {
     public class CommiteDetailProjectModalViewModel
     {
