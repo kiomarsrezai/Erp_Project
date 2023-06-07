@@ -294,6 +294,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
 
+
+
+
+
         [Route("ProjectExecute_Modal")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int CommiteKindId)
@@ -345,7 +349,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteDetail_Read", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Read", sqlconnect))
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("Id", id);
