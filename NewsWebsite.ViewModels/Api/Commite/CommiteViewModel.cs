@@ -7,11 +7,10 @@ namespace NewsWebsite.ViewModels.Api.Commite
     public class CommiteViewModel
     {
         public int Id { get; set; }
+        public int? Row { get; set; }
         public int? ProjectId { get; set; }
         public string Description { get; set; }
         public string ProjectName { get; set; }
-        public string CommiteName { get; set; }
-        public int? CommiteKindId { get; set; }
 
     }
 }

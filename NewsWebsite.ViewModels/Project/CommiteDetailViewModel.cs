@@ -24,7 +24,7 @@ namespace NewsWebsite.ViewModels.Project
     {
         public int Id { get; set; }
         public int Row { get; set; }
-        public int Description { get; set; }
+        public string Description { get; set; }
         public int ProjectId { get; set; }
 
     }

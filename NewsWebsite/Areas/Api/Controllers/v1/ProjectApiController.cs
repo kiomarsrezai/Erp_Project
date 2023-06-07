@@ -208,47 +208,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
-        [Route("ProjectExecute_Modal")]
+        [Route("CommiteDetailRead")]
         [HttpGet]
-        public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int CommiteKindId)
+        public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id)
         {
-            List<CommiteExecuteModalViewModel> commiteViews = new List<CommiteExecuteModalViewModel>();
+            List<CommiteViewModel> commiteViews = new List<CommiteViewModel>();
 
-            if (CommiteKindId == 0)
+            if (id == 0)
                 return BadRequest("با خطا مواجه شد");
-            if (CommiteKindId > 0)
+            if (id > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteExecute_Modal", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Read", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
+                        sqlCommand.Parameters.AddWithValue("Id", id);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            CommiteExecuteModalViewModel commiteView = new CommiteExecuteModalViewModel();
+                            CommiteViewModel commiteView = new CommiteViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
-                            commiteView.FirstName = dataReader["FirstName"].ToString();
-                            commiteView.LastName = dataReader["LastName"].ToString();
-                            commiteView.DateStart = dataReader["DateStart"].ToString();
-                            commiteView.DateEnd = dataReader["DateEnd"].ToString();
-                            commiteView.Responsibility = dataReader["Responsibility"].ToString();
+                            commiteView.Row =       StringExtensions.ToNullableInt(dataReader["Row"].ToString());
+                            commiteView.ProjectId = StringExtensions.ToNullableInt(dataReader["ProjectId"].ToString());
+                            commiteView.Description = dataReader["Description"].ToString();
+                            commiteView.ProjectName = dataReader["ProjectName"].ToString();
                             commiteViews.Add(commiteView);
-
                         }
-
                     }
-                    sqlconnect.Close();
                 }
-
             }
             return Ok(commiteViews);
         }
-
-        [Route("CommiteDetailRead")]
-        [HttpGet]
 
         [Route("CommiteDetailInsert")]
         [HttpPost]
@@ -333,39 +325,41 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
 
-
-
-
-
-        public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id)
+        [Route("ProjectExecute_Modal")]
+        [HttpGet]
+        public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int CommiteKindId)
         {
-            List<CommiteViewModel> commiteViews = new List<CommiteViewModel>();
+            List<CommiteExecuteModalViewModel> commiteViews = new List<CommiteExecuteModalViewModel>();
 
-            if (id == 0)
+            if (CommiteKindId == 0)
                 return BadRequest("با خطا مواجه شد");
-            if (id > 0)
+            if (CommiteKindId > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Read", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteExecute_Modal", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", id);
+                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            CommiteViewModel commiteView = new CommiteViewModel();
+                            CommiteExecuteModalViewModel commiteView = new CommiteExecuteModalViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
-                            commiteView.ProjectId = StringExtensions.ToNullableInt(dataReader["ProjectId"].ToString());
-                            commiteView.CommiteKindId = StringExtensions.ToNullableInt(dataReader["CommiteKindId"].ToString());
-                            commiteView.CommiteName = dataReader["CommiteName"].ToString();
-                            commiteView.Description = dataReader["Description"].ToString();
-                            commiteView.ProjectName = dataReader["ProjectName"].ToString();
+                            commiteView.FirstName = dataReader["FirstName"].ToString();
+                            commiteView.LastName = dataReader["LastName"].ToString();
+                            commiteView.DateStart = dataReader["DateStart"].ToString();
+                            commiteView.DateEnd = dataReader["DateEnd"].ToString();
+                            commiteView.Responsibility = dataReader["Responsibility"].ToString();
                             commiteViews.Add(commiteView);
+
                         }
+
                     }
+                    sqlconnect.Close();
                 }
+
             }
             return Ok(commiteViews);
         }
