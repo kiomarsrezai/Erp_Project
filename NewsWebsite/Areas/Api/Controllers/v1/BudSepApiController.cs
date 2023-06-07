@@ -253,9 +253,50 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-
             return Ok(fecthViewModel);
         }
+
+
+
+        //[Route("BudgetSepratorChangeCoding")]
+        //[HttpPost]
+        //public async Task<ApiResult> ChangeCoding([FromBody] InsertTaminSepViewModel insertTaminSep)
+        //{
+        //    if (insertTaminSep.codingId == 0) return BadRequest();
+
+        //    using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_Insert", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.Parameters.AddWithValue("yearId", insertTaminSep.yearId);
+        //            sqlCommand.Parameters.AddWithValue("areaId", insertTaminSep.areaId);
+        //            sqlCommand.Parameters.AddWithValue("budgetProcessId", insertTaminSep.budgetProcessId);
+        //            sqlCommand.Parameters.AddWithValue("RequestRefStr", insertTaminSep.RequestRefStr);
+        //            sqlCommand.Parameters.AddWithValue("RequestDate", insertTaminSep.RequestDate);
+        //            sqlCommand.Parameters.AddWithValue("RequestPrice", insertTaminSep.RequestPrice);
+        //            sqlCommand.Parameters.AddWithValue("ReqDesc", insertTaminSep.ReqDesc);
+        //            sqlCommand.Parameters.AddWithValue("codingId", insertTaminSep.codingId);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //            TempData["notification"] = "ویرایش با موفقیت انجام شد";
+        //        }
+        //    }
+        //    return Ok();
+        //}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         [Route("BudgetSepratorAreaProjectModal2")]
         [HttpGet]
