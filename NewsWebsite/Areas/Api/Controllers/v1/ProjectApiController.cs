@@ -208,96 +208,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
-        [Route("CommiteDetailInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> CommiteDetailInsert([FromBody] CommiteDetailInsertParamViewModel insert)
-        {
-            string readercount = null;
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Row", insert.Row);
-                    sqlCommand.Parameters.AddWithValue("CommiteId", insert.CommiteId);
-                    sqlCommand.Parameters.AddWithValue("Description", insert.Description);
-                    sqlCommand.Parameters.AddWithValue("ProjectId", insert.ProjectId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-
-
-        [Route("CommiteDetailUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> CommiteDetailUpdate([FromBody] CommiteDetailUpdateParamViewModel update)
-        {
-            string readercount = null;
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", update.Id);
-                    sqlCommand.Parameters.AddWithValue("Row", update.Row);
-                    sqlCommand.Parameters.AddWithValue("Description", update.Description);
-                    sqlCommand.Parameters.AddWithValue("ProjectId", update.ProjectId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-
-        [Route("CommiteDetailDelete")]
-        [HttpPost]
-        public async Task<ApiResult<string>> CommiteDetailDelete([FromBody] CommiteDetailDeleteParamViewModel delete)
-        {
-            string readercount = null;
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Delete", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", delete.Id);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-
-
-
-
-
-
         [Route("ProjectExecute_Modal")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteExecuteModalViewModel>>> CommiteExecute_Modal(int CommiteKindId)
@@ -339,6 +249,94 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("CommiteDetailRead")]
         [HttpGet]
+
+        [Route("CommiteDetailInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> CommiteDetailInsert([FromBody] CommiteDetailInsertParamViewModel insert)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Row", insert.Row);
+                    sqlCommand.Parameters.AddWithValue("CommiteId", insert.CommiteId);
+                    sqlCommand.Parameters.AddWithValue("Description", insert.Description);
+                    sqlCommand.Parameters.AddWithValue("ProjectId", insert.ProjectId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("CommiteDetailUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> CommiteDetailUpdate([FromBody] CommiteDetailUpdateParamViewModel update)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", update.Id);
+                    sqlCommand.Parameters.AddWithValue("Row", update.Row);
+                    sqlCommand.Parameters.AddWithValue("Description", update.Description);
+                    sqlCommand.Parameters.AddWithValue("ProjectId", update.ProjectId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("CommiteDetailDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> CommiteDetailDelete([FromBody] CommiteDetailDeleteParamViewModel delete)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", delete.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
+
+
+
+
+
         public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id)
         {
             List<CommiteViewModel> commiteViews = new List<CommiteViewModel>();
