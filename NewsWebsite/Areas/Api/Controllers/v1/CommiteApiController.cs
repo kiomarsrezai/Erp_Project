@@ -6,7 +6,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Commite;
-using NewsWebsite.ViewModels.Project;
+using NewsWebsite.ViewModels.Commite;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -289,13 +289,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
-
-
-
-
-
-
         [Route("CommiteEmployee")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteEmployeeViewModel>>> CommiteEmployee()
@@ -322,14 +315,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(commiteViews);
         }
-
-
-
-
-
-
-
-
 
         [Route("CommiteKindCombo")]
         [HttpGet]
