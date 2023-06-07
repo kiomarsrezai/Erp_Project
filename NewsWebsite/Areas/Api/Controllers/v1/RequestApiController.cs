@@ -444,7 +444,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("RequestId", viewModel.RequestId);
-                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaDepartmentId", viewModel.BudgetDetailProjectAreaDepartmentId);
+                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaId", viewModel.BudgetDetailProjectAreatId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }

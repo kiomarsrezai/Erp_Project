@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Project
 {
-    public class CommiteDetailWbsModalViewModel
+    public class CommiteDetailWbsReadViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -16,7 +16,7 @@ namespace NewsWebsite.ViewModels.Project
     }
 
 
-    public class CommiteDetailWbsModalParamViewModel
+    public class CommiteDetailWbsReadParamViewModel
     {
         public int CommiteDetailId { get; set; }
     }

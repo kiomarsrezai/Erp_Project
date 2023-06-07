@@ -206,11 +206,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
-        [Route("CommiteDetailWbsModal")]
+        [Route("CommiteDetailWbsRead")]
         [HttpGet]
-        public async Task<ApiResult<List<CommiteDetailWbsModalViewModel>>> GetCommiteDetailWbsModal(CommiteDetailWbsModalParamViewModel param)
+        public async Task<ApiResult<List<CommiteDetailWbsReadViewModel>>> GetCommiteDetailWbsModal(CommiteDetailWbsReadParamViewModel param)
         {
-            List<CommiteDetailWbsModalViewModel> commiteViews = new List<CommiteDetailWbsModalViewModel>();
+            List<CommiteDetailWbsReadViewModel> commiteViews = new List<CommiteDetailWbsReadViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -222,7 +222,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            CommiteDetailWbsModalViewModel commiteView = new CommiteDetailWbsModalViewModel();
+                            CommiteDetailWbsReadViewModel commiteView = new CommiteDetailWbsReadViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
                             commiteView.FirstName = dataReader["FirstName"].ToString();
                             commiteView.LastName = dataReader["LastName"].ToString();
@@ -239,33 +239,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
-        [Route("CommiteDetailWbsInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> GetCommiteDetailWbsInsert([FromBody] CommiteDetail_Wbs_insertParam_ViewModel param)
-        {
-            string readercount = null;
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailWbs_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("CommiteDetailId", param.CommiteDetailId);
-                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
-                    sqlCommand.Parameters.AddWithValue("DateStart", param.DateStart);
-                    sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
+      
 
 
 
