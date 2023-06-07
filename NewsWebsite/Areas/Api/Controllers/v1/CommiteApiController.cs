@@ -274,6 +274,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", Param.Id);
                     sqlCommand.Parameters.AddWithValue("Description", Param.Description);
+                    sqlCommand.Parameters.AddWithValue("ProjectId", Param.ProjectId);
                     sqlCommand.Parameters.AddWithValue("DateStart", Param.DateStart);
                     sqlCommand.Parameters.AddWithValue("DateEnd", Param.DateEnd);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
