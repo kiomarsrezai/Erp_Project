@@ -243,7 +243,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailWbs_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("CommiteDetailId", insert.CommiteDetailId);
