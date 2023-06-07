@@ -247,7 +247,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.ProjectCode = dataReader["ProjectCode"].ToString();
                         fetchView.ProjectName = dataReader["ProjectName"].ToString();
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Mosavab = Int64.Parse(dataReader["Expense"].ToString());
+                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
 
                         fecthViewModel.Add(fetchView);
                     }
