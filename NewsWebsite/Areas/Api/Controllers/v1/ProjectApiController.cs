@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AutoMapper.Configuration;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
+using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.Commite;
 using NewsWebsite.ViewModels.Api.UploadFile;
 using NewsWebsite.ViewModels.Project;
@@ -176,7 +178,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-        [Route("ProjectCommitModal")]
+        [Route("CommiteModal")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteModalViewModel>>> Commite_Modal(int CommiteKindId, int YearId)
         {
@@ -212,41 +214,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
-        [Route("ProjectCommiteDetailInsert")]
+        [Route("CommiteDetailInsert")]
         [HttpPost]
-        public async Task<ApiResult<List<CommiteModalViewModel>>> CommiteDetail_Insert(int CommiteKindId, int YearId)
+        public async Task<ApiResult> CommiteDetailInsert([FromBody] CommiteDetailInsertParamViewModel insert)
         {
-            List<CommiteModalViewModel> commiteViews = new List<CommiteModalViewModel>();
-
-            if (CommiteKindId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (CommiteKindId > 0)
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteDetail_Insert", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Commite_Modal", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("CommiteKindId", CommiteKindId);
-                        sqlCommand.Parameters.AddWithValue("YearId", YearId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            CommiteModalViewModel commiteView = new CommiteModalViewModel();
-                            commiteView.Id = int.Parse(dataReader["Id"].ToString());
-                            commiteView.dates = dataReader["dates"].ToString();
-                            commiteView.number = dataReader["number"].ToString();
-                            commiteViews.Add(commiteView);
-
-                        }
-
-                    }
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Row", insert.Row);
+                    sqlCommand.Parameters.AddWithValue("CommiteId", insert.CommiteId);
+                    sqlCommand.Parameters.AddWithValue("Description", insert.Description);
+                    sqlCommand.Parameters.AddWithValue("ProjectId", insert.ProjectId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
                 }
-
             }
-            return Ok(commiteViews);
+            return Ok();
         }
+
 
         [Route("ProjectExecute_Modal")]
         [HttpGet]
@@ -287,7 +275,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
-        [Route("ProjectGetCommiteDetail")]
+        [Route("CommiteDetailRead")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id)
         {
@@ -322,7 +310,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
-        [Route("ProjectCommiteKindCombo")]
+        [Route("CommiteKindCombo")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteComboboxViewModel>>> CommiteKindCombo()
         {
