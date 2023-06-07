@@ -240,7 +240,7 @@ namespace NewsWebsite.Data.Repositories
             return fecthViewModel;
         }
 
-        public List<DeputyViewModel> GetAllDeputies()
+        public List<DeputyViewModel> GetAllDeputies(int yearId)
         {
             List<DeputyViewModel> fecthViewModel = new List<DeputyViewModel>();
 
@@ -249,7 +249,7 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", 32);
+                    sqlCommand.Parameters.AddWithValue("YearId", yearId);
                     sqlCommand.Parameters.AddWithValue("ProctorId", 0);
                     sqlCommand.Parameters.AddWithValue("AreaId", 0);
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", 0);
@@ -308,7 +308,7 @@ namespace NewsWebsite.Data.Repositories
             return fecthViewModel;
         }
 
-        public List<AreaProctorViewModel> ProctorArea(int Id)
+        public List<AreaProctorViewModel> ProctorArea(int yearId,int Id)
         {
 
             List<AreaProctorViewModel> fecthViewModel = new List<AreaProctorViewModel>();
@@ -318,7 +318,7 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", 32);
+                    sqlCommand.Parameters.AddWithValue("YearId", yearId);
                     sqlCommand.Parameters.AddWithValue("ProctorId", Id);
                     sqlCommand.Parameters.AddWithValue("AreaId", 0);
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", 0);
