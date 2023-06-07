@@ -5,15 +5,11 @@ using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Api.Commite;
-using NewsWebsite.ViewModels.Api.UploadFile;
 using NewsWebsite.ViewModels.Project;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -87,7 +83,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             CommiteViewModel commiteView = new CommiteViewModel();
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
-                            commiteView.Row =       StringExtensions.ToNullableInt(dataReader["Row"].ToString());
+                            commiteView.Row = StringExtensions.ToNullableInt(dataReader["Row"].ToString());
                             commiteView.ProjectId = StringExtensions.ToNullableInt(dataReader["ProjectId"].ToString());
                             commiteView.Description = dataReader["Description"].ToString();
                             commiteView.ProjectName = dataReader["ProjectName"].ToString();
@@ -239,9 +235,70 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("CommiteDetailWbsInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> CommiteDetailWbsInsert([FromBody] CommiteDetail_Wbs_insertParam_ViewModel insert)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("CommiteDetailId", insert.CommiteDetailId);
+                    sqlCommand.Parameters.AddWithValue("UserId", insert.UserId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("CommiteDetailWbsUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> CommiteDetailWbsUpdate([FromBody] CommiteDetail_Wbs_UpdateParam_ViewModel Param)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailWbs_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", Param.Id);
+                    sqlCommand.Parameters.AddWithValue("Description", Param.Description);
+                    sqlCommand.Parameters.AddWithValue("DateStart", Param.DateStart);
+                    sqlCommand.Parameters.AddWithValue("DateEnd", Param.DateEnd);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
+
+
+
+
+
+
         [Route("CommiteEmployee")]
         [HttpGet]
-        public async Task<ApiResult<List<CommiteEmployeeViewModel>>> CommiteKindCombo()
+        public async Task<ApiResult<List<CommiteEmployeeViewModel>>> CommiteEmployee()
         {
             List<CommiteEmployeeViewModel> commiteViews = new List<CommiteEmployeeViewModel>();
 
