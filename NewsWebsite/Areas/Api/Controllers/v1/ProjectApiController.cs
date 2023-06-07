@@ -1,6 +1,4 @@
-﻿using AutoMapper.Configuration;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
@@ -8,7 +6,6 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
-using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.Commite;
 using NewsWebsite.ViewModels.Api.UploadFile;
 using NewsWebsite.ViewModels.Project;
@@ -17,9 +14,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -73,7 +67,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-     
+
 
         [Produces("application/json")]
         [Route("UploadFiles")]
@@ -82,7 +76,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             try
             {
-                var file= uploadModel.FormFile;
+                var file = uploadModel.FormFile;
                 var folderName = Path.Combine($"{_webHostEnvironment.WebRootPath}/Resources/Project/{uploadModel.ProjectId}/");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
@@ -90,7 +84,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     var fullPath = Path.Combine(pathToSave, file.FileName);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
-                       await file.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                     }
                     return Ok();
                 }
@@ -216,8 +210,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("CommiteDetailInsert")]
         [HttpPost]
-        public async Task<ApiResult> CommiteDetailInsert([FromBody] CommiteDetailInsertParamViewModel insert)
+        public async Task<ApiResult<string>> CommiteDetailInsert([FromBody] CommiteDetailInsertParamViewModel insert)
         {
+            string readercount = null;
+
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP005_CommiteDetail_Insert", sqlconnect))
@@ -229,10 +225,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("ProjectId", insert.ProjectId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
             }
-            return Ok();
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
 
@@ -362,9 +363,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ScaleCom);
         }
 
-       
 
-        
+
+
 
     }
 }

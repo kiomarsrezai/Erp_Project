@@ -39,7 +39,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<FetchViewModel>>> FetchIndex(int yearId, int areaId, int budgetProcessId)
         {
-            string readercount = null;
             List<FetchViewModel> fecth = new List<FetchViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -54,8 +53,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        if (dataReader.VisibleFieldCount > 1)
-                        {
+                       
                             FetchViewModel fetchView = new FetchViewModel();
                             fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                             fetchView.Code = dataReader["Code"].ToString();
@@ -79,18 +77,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             }
 
                             fecth.Add(fetchView);
-                        }
-                        else
-                           if (dataReader.VisibleFieldCount !> 1)
-                        {
-                            readercount = dataReader["Message_DB"].ToString(); 
-                        }
 
                     }
                 }
-                if (string.IsNullOrEmpty(readercount)) return Ok(fecth);
-                else
-                    return BadRequest(readercount);
+                return Ok(fecth);
+ 
             }
         }
 
