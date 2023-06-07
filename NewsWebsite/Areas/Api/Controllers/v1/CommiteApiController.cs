@@ -234,13 +234,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                     sqlconnect.Close();
                 }
-
             }
             return Ok(commiteViews);
         }
 
-      
 
+        [Route("CommiteEmployee")]
+        [HttpGet]
+        public async Task<ApiResult<List<CommiteEmployeeViewModel>>> CommiteKindCombo()
+        {
+            List<CommiteEmployeeViewModel> commiteViews = new List<CommiteEmployeeViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_Employee", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (await dataReader.ReadAsync())
+                    {
+                        CommiteEmployeeViewModel commiteView = new CommiteEmployeeViewModel();
+                        commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                        commiteView.FirstName = dataReader["FirstName"].ToString();
+                        commiteView.LastName = dataReader["LastName"].ToString();
+                        commiteView.Bio = dataReader["Bio"].ToString();
+                        commiteViews.Add(commiteView);
+                    }
+                }
+            }
+            return Ok(commiteViews);
+        }
 
 
 
@@ -272,7 +296,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-
             return Ok(commiteViews);
         }
 
