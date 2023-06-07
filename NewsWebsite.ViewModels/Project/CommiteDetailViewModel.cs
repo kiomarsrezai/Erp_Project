@@ -32,7 +32,17 @@ namespace NewsWebsite.ViewModels.Project
     public class CommiteDetailDeleteParamViewModel
     {
         public int Id { get; set; }
-
     }
+
+
+    public class CommiteDetailProjectModalViewModel
+    {
+        public int Id { get; set; }
+        public string ProjectCode { get; set; }
+        public string ProjectName { get; set; }
+    }
+
+
+    
 
 }

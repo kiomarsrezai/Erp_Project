@@ -213,10 +213,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id)
         {
             List<CommiteViewModel> commiteViews = new List<CommiteViewModel>();
-
-            if (id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (id > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -322,6 +318,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+
+
+        [Route("CommiteDetailProjectModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<CommiteDetailProjectModalViewModel>>> GetCommiteDetailProjectModal()
+        {
+            List<CommiteDetailProjectModalViewModel> commiteViews = new List<CommiteDetailProjectModalViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetail_ProjectModal_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (await dataReader.ReadAsync())
+                    {
+                        CommiteDetailProjectModalViewModel commiteView = new CommiteDetailProjectModalViewModel();
+                        commiteView.Id = int.Parse(dataReader["Id"].ToString());
+                        commiteView.ProjectCode = dataReader["ProjectCode"].ToString();
+                        commiteView.ProjectName = dataReader["ProjectName"].ToString();
+                        commiteViews.Add(commiteView);
+                    }
+                }
+            }
+            return Ok(commiteViews);
+        }
+
 
 
 
