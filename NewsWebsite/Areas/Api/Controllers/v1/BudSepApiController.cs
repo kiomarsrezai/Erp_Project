@@ -129,7 +129,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.ExecuteReader();
                         ViewBag.alertsucces = "بروزرسانی انجام شد";
                     }
-                    //view["notification"] = "بروزرسانی با موفقیت انجام شد";
                 }
             }
             return Ok();
@@ -137,10 +136,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("TaminInsert")]
         [HttpPost]
-        public async Task<ApiResult> TaminInsert([FromBody] InsertTaminSepViewModel insertTaminSep)
+        public async Task<ApiResult<string>> TaminInsert([FromBody] InsertTaminSepViewModel insertTaminSep)
         {
-            if (insertTaminSep.codingId == 0) return BadRequest();
-
+            string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_TaminModal_Insert", sqlconnect))
@@ -156,10 +154,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("codingId", insertTaminSep.codingId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
             }
-            return Ok();
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
         [HttpGet]
@@ -326,10 +329,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAreaProjectModal_Update")]
         [HttpPost]
-        public async Task<ApiResult> BudgetSepratorAreaProjectModal_Update([FromBody] BudgetSepratorAreaProjectModalUpdateViewModel modalUpdateViewModel)
+        public async Task<ApiResult<string>> BudgetSepratorAreaProjectModal_Update([FromBody] BudgetSepratorAreaProjectModalUpdateViewModel modalUpdateViewModel)
         {
-            if (modalUpdateViewModel.BudgetDetailPrjectId == 0) return BadRequest();
-
+            string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_BudgetSepratorArea_Project_Modal_Update", sqlconnect))
@@ -339,10 +341,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("ProgramOperationDetailId", modalUpdateViewModel.ProgramOperationDetailId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
             }
-            return Ok();
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
         [Route("BudgetSepratorDepartmantRead")]
@@ -413,10 +420,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("SepratorAreaDepartmentInsert")]
         [HttpPost]
-        public async Task<ApiResult> SepratorAreaDepartmanInsert([FromBody] SepratorAreaDepartmantInsert modalUpdateViewModel)
+        public async Task<ApiResult<string>> SepratorAreaDepartmanInsert([FromBody] SepratorAreaDepartmantInsert modalUpdateViewModel)
         {
-            //  if (modalUpdateViewModel.departmanId == 0) return BadRequest();
-
+            string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
@@ -429,18 +435,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("departmanId", modalUpdateViewModel.departmanId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
             }
-            return Ok();
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
         [Route("BudgetSepratorAreaDepartmantUpdate")]
         [HttpPost]
-        public async Task<ApiResult> SepratorAreaDepartmentUpdate([FromBody] BudgetSepratorAreaDepartmantUpdate modalUpdateViewModel)
+        public async Task<ApiResult<string>> SepratorAreaDepartmentUpdate([FromBody] BudgetSepratorAreaDepartmantUpdate modalUpdateViewModel)
         {
-            if (modalUpdateViewModel.Id == 0) return BadRequest();
-
+            string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Update", sqlconnect))
@@ -450,19 +460,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("MosavabDepartment", modalUpdateViewModel.MosavabDepartment);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
             }
-            return Ok();
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
         [Route("SepratorAreaDepartmentDelete")]
         [HttpPost]
         public virtual async Task<ApiResult> SepratorAreaCreaditorDelete([FromBody] DeleteSepViewModel deleteSep)
         {
-            if (deleteSep.id == 0)
-                return BadRequest();
-
+            string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartment_Delete", sqlconnect))
@@ -471,10 +484,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("id", deleteSep.id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
             }
-            return Ok();
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
         [Route("SepratorAreaDepartmentModal")]
