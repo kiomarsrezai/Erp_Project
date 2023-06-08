@@ -474,7 +474,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("SepratorAreaDepartmentDelete")]
         [HttpPost]
-        public virtual async Task<ApiResult> SepratorAreaCreaditorDelete([FromBody] DeleteSepViewModel deleteSep)
+        public virtual async Task<ApiResult<string>> SepratorAreaCreaditorDelete([FromBody] DeleteSepViewModel deleteSep)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))

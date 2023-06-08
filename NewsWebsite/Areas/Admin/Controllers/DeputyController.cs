@@ -27,13 +27,7 @@ namespace NewsWebSite.Areas.Admin.Controllers
             _uw = uw;
         }
 
-        [HttpGet]
-        public IActionResult Index(DeputyViewModel deputyView)
-        {
-            //var deputys = _uw.GetAllDeputies();
 
-            return View();
-        }
 
         [HttpGet]
         public IActionResult ShowModal()
@@ -77,64 +71,8 @@ namespace NewsWebSite.Areas.Admin.Controllers
         //}
 
         //[HttpGet]
-        [DisplayName("مشاهده جزئیات")]
-        public IActionResult Details(int Id)
-        {
-            List<AreaProctorViewModel> fecthViewModel = new List<AreaProctorViewModel>();
 
-            fecthViewModel = _uw.ProctorArea(Id);
-            
-            return PartialView(fecthViewModel);
-        }
 
         //[HttpGet]
-        [DisplayName("مشاهده جزئیات")]
-        public IActionResult FnProctorAreaBudget(int yId, int pId, int aId, int bId)
-        {
-            //List<ProctorAreaBudgetViewModel> _proctorAreaBudgets = new List<ProctorAreaBudgetViewModel>();
-
-            //_proctorAreaBudgets = await _uw.budgetViewModels(yearId, proctorId, areaId, budgetProcessId);
-
-            List<ProctorAreaBudgetViewModel> fecthViewModel = new List<ProctorAreaBudgetViewModel>();
-
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
-            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", yId);
-                    sqlCommand.Parameters.AddWithValue("ProctorId", pId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", aId);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", bId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
-                    while (dataReader.Read())
-                    {
-                        ProctorAreaBudgetViewModel fetchView = new ProctorAreaBudgetViewModel();
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-
-                        if (fetchView.Percent != 0)
-                        {
-                            fetchView.Percent = _uw.Divivasion(fetchView.Expense, fetchView.Mosavab);
-                        }
-                        else
-                        {
-                            fetchView.Percent = 0;
-                        }
-
-                        fecthViewModel.Add(fetchView);
-
-                        //dataReader.NextResult();
-                    }
-                    //TempData["budgetSeprator"] = fecthViewModel;
-                }
-            }
-            return PartialView(fecthViewModel);
-        }
     }
 }
