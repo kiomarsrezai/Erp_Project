@@ -30,9 +30,9 @@ namespace NewsWebSite.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Index(DeputyViewModel deputyView)
         {
-            var deputys = _uw.GetAllDeputies();
+            //var deputys = _uw.GetAllDeputies();
 
-            return View(deputys);
+            return View();
         }
 
         [HttpGet]
@@ -42,39 +42,39 @@ namespace NewsWebSite.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult GetDeputies(string search, string order, int offset, int limit, string sort)
-        {
-            List<DeputyViewModel> data;
-            int total = _uw.GetAllDeputies().Count();
-            if (!search.HasValue())
-                search = "";
+        //[HttpGet]
+        //public IActionResult GetDeputies(string search, string order, int offset, int limit, string sort)
+        //{
+        //    List<DeputyViewModel> data;
+        //    int total = _uw.GetAllDeputies().Count();
+        //    if (!search.HasValue())
+        //        search = "";
 
-            if (limit == 0)
-                limit = total;
+        //    if (limit == 0)
+        //        limit = total;
 
-            if (sort == "متولی")
-            {
-                if (order == "asc")
-                    data = _uw.GetAllDeputiesAsync(offset, limit, "ProctorName", search);
-                else
-                    data = _uw.GetAllDeputiesAsync(offset, limit, "ProctorName desc", search);
-            }
+        //    if (sort == "متولی")
+        //    {
+        //        if (order == "asc")
+        //            data = _uw.GetAllDeputiesAsync(offset, limit, "ProctorName", search);
+        //        else
+        //            data = _uw.GetAllDeputiesAsync(offset, limit, "ProctorName desc", search);
+        //    }
 
-            else
-                data = _uw.GetAllDeputiesAsync(offset, limit, "ProctorName", search);
+        //    else
+        //        data = _uw.GetAllDeputiesAsync(offset, limit, "ProctorName", search);
 
-            if (search != "")
-                total = data.Count();
+        //    if (search != "")
+        //        total = data.Count();
 
-            return Json(new { total = total, rows = data });
+        //    return Json(new { total = total, rows = data });
 
-            //int total = 0;
-            //List<DeputyViewModel> _fecthViewModel = new List<DeputyViewModel>();
-            //_fecthViewModel = _uw.GetAllDeputies(32);
-            //total = _fecthViewModel.Count();
-            //return Json(new { total = total, rows = _fecthViewModel });
-        }
+        //    //int total = 0;
+        //    //List<DeputyViewModel> _fecthViewModel = new List<DeputyViewModel>();
+        //    //_fecthViewModel = _uw.GetAllDeputies(32);
+        //    //total = _fecthViewModel.Count();
+        //    //return Json(new { total = total, rows = _fecthViewModel });
+        //}
 
         //[HttpGet]
         [DisplayName("مشاهده جزئیات")]

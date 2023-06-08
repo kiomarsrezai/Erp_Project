@@ -212,35 +212,35 @@ namespace NewsWebsite.Data.Repositories
             return summry;
         }
 
-        public List<DeputyViewModel> GetAllDeputiesAsync(int offset, int limit, string Orderby, string searchText)
-        {
-            List<DeputyViewModel> fecthViewModel = GetAllDeputies().Where(c => c.ProctorName.Contains(searchText))
-                                   .Skip(offset).Take(limit)
-                                   .Select(t => new DeputyViewModel
-                                   {
-                                       Id = t.Id,
-                                       ProctorName = t.ProctorName,
-                                       PercentTotalStr = t.PercentTotalStr,
-                                       PercentTotal = t.PercentTotal,
-                                       ExpenseCivil = t.ExpenseCivil,
-                                       ExpenseCivilStr = t.ExpenseCivilStr,
-                                       ExpenseCurrent = t.ExpenseCurrent,
-                                       ExpenseCurrentStr = t.ExpenseCurrentStr,
-                                       MosavabCivil = t.MosavabCivil,
-                                       MosavabCivilStr = t.MosavabCivilStr,
-                                       MosavabCurrentStr = t.MosavabCurrentStr,
-                                       PercentCivil = t.PercentCivil,
-                                       PercentCivilStr = t.PercentCivilStr,
-                                       PercentCurrent = t.PercentCurrent,
-                                       PercentCurrentStr = t.PercentCurrentStr
-                                   }).ToList();
-            foreach (var item in fecthViewModel)
-                item.Row = ++offset;
+        //public List<DeputyViewModel> GetAllDeputiesAsync(int offset, int limit, string Orderby, string searchText)
+        //{
+        //    List<DeputyViewModel> fecthViewModel = GetAllDeputies().Where(c => c.ProctorName.Contains(searchText))
+        //                           .Skip(offset).Take(limit)
+        //                           .Select(t => new DeputyViewModel
+        //                           {
+        //                               Id = t.Id,
+        //                               ProctorName = t.ProctorName,
+        //                               PercentTotalStr = t.PercentTotalStr,
+        //                               PercentTotal = t.PercentTotal,
+        //                               ExpenseCivil = t.ExpenseCivil,
+        //                               ExpenseCivilStr = t.ExpenseCivilStr,
+        //                               ExpenseCurrent = t.ExpenseCurrent,
+        //                               ExpenseCurrentStr = t.ExpenseCurrentStr,
+        //                               MosavabCivil = t.MosavabCivil,
+        //                               MosavabCivilStr = t.MosavabCivilStr,
+        //                               MosavabCurrentStr = t.MosavabCurrentStr,
+        //                               PercentCivil = t.PercentCivil,
+        //                               PercentCivilStr = t.PercentCivilStr,
+        //                               PercentCurrent = t.PercentCurrent,
+        //                               PercentCurrentStr = t.PercentCurrentStr
+        //                           }).ToList();
+        //    foreach (var item in fecthViewModel)
+        //        item.Row = ++offset;
 
-            return fecthViewModel;
-        }
+        //    return fecthViewModel;
+        //}
 
-        public List<DeputyViewModel> GetAllDeputies()
+        public List<DeputyViewModel> GetAllDeputies(int YearId)
         {
             List<DeputyViewModel> fecthViewModel = new List<DeputyViewModel>();
 
@@ -249,7 +249,7 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", 32);
+                    sqlCommand.Parameters.AddWithValue("YearId", YearId);
                     sqlCommand.Parameters.AddWithValue("ProctorId", 0);
                     sqlCommand.Parameters.AddWithValue("AreaId", 0);
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", 0);
@@ -308,7 +308,7 @@ namespace NewsWebsite.Data.Repositories
             return fecthViewModel;
         }
 
-        public List<AreaProctorViewModel> ProctorArea(int Id)
+        public List<AreaProctorViewModel> ProctorArea(int YearId, int Id)
         {
 
             List<AreaProctorViewModel> fecthViewModel = new List<AreaProctorViewModel>();
@@ -318,7 +318,7 @@ namespace NewsWebsite.Data.Repositories
                 using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", 32);
+                    sqlCommand.Parameters.AddWithValue("YearId", YearId);
                     sqlCommand.Parameters.AddWithValue("ProctorId", Id);
                     sqlCommand.Parameters.AddWithValue("AreaId", 0);
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", 0);
@@ -411,12 +411,8 @@ namespace NewsWebsite.Data.Repositories
                         {
                             fetchView.Percent = 0;
                         }
-
                         fecthViewModel.Add(fetchView);
-
-                        //dataReader.NextResult();
                     }
-                    //TempData["budgetSeprator"] = fecthViewModel;
                 }
                 return fecthViewModel;
             }
