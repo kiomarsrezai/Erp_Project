@@ -345,9 +345,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult> RequestTableDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
-            if (id == 0)
+            if (param.Id == 0)
                 return BadRequest();
-            if (id > 0)
+            if (param.Id > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
