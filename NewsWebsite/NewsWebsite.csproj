@@ -14,7 +14,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\Request\" />
     <Folder Include="UploadedFiles\" />
     <Folder Include="ViewModels\Api\Budget\BudgetSeprator\" />
     <Folder Include="wwwroot\avatars\" />
@@ -23,12 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Areas\Admin\Views\Dashboard\Index.cshtml" />
-    <None Include="Areas\Admin\Views\News\CreateOrUpdate.cshtml" />
-    <None Include="Areas\Admin\Views\News\Index.cshtml" />
-    <None Include="Areas\Admin\Views\News\_DeleteConfirmation.cshtml" />
-    <None Include="Areas\Admin\Views\News\_NewsTable.cshtml" />
-    <None Include="Areas\Admin\Views\News\_SubCategories.cshtml" />
     <None Include="wwwroot\CacheFiles\assets\vendor\bootstrap-table\dist\bootstrap-table-locale-all.js" />
     <None Include="wwwroot\CacheFiles\assets\vendor\bootstrap-table\dist\bootstrap-table-locale-all.min.js" />
     <None Include="wwwroot\CacheFiles\assets\vendor\bootstrap-table\dist\bootstrap-table.js" />

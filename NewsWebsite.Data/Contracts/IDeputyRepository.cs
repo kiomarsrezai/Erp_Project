@@ -8,11 +8,11 @@ namespace NewsWebsite.Data.Contracts
 {
     public interface IDeputyRepository
     {
-        Task<List<DeputyViewModel>> GetAllDeputiesAsync(int yearId,int proctorId, int areaId, int budgetProcessId);
-        Task<List<AreaProctorViewModel>> GetProctorAreaAsync(int id);
-        
+        //Task<List<DeputyViewModel>> GetAllDeputiesAsync(int yearId, int proctorId, int areaId, int budgetProcessId);
+        //Task<List<AreaProctorViewModel>> GetProctorAreaAsync(int id);
+
         //مودال اول
-        Task<List<AreaProctorViewModel>> ProctorAreaAsync(int Id);
+        //Task<List<AreaProctorViewModel>> ProctorAreaAsync(int Id);
         Task<List<ProctorViewModel>> ProctorListAsync();
 
 

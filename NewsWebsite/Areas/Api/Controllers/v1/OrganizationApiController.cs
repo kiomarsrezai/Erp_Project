@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using NewsWebsite.Areas.Admin.Controllers;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
-using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Organization;
 using System.Collections.Generic;
@@ -20,12 +17,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class OrganizationApiController : BaseController
+    public class OrganizationApiController : Controller
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
 
-        public OrganizationApiController(IUnitOfWork uw,IConfiguration configuration)
+        public OrganizationApiController(IUnitOfWork uw, IConfiguration configuration)
         {
             _config = configuration;
             _uw = uw;
@@ -34,8 +31,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("DepartmentDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> OrganizationDelete([FromBody] OrganizationDelParamViewModel viewModel)
-        {            
-            if (viewModel.Id == 0) 
+        {
+            if (viewModel.Id == 0)
                 return BadRequest("با خطا مواجه شد");
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -108,7 +105,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
 
             if (paramViewModel.MotherId == 0)
-                    paramViewModel.MotherId=null;
+                paramViewModel.MotherId = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP003_Department_Update", sqlconnect))

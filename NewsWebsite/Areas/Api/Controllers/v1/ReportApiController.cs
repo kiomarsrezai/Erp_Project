@@ -434,11 +434,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-        [Route("ProctorBudget")]
+        [Route("Proctor")]
         [HttpGet]
-        public async Task<ApiResult<List<ViewModels.Api.Deputy.DeputyViewModel>>> GetAllDeputy(ProctorParamViewModel ViewModel)
+        public async Task<ApiResult<List<Proctor1ViewModel1>>> GetAllDeputy(ProctorParamViewModel ViewModel)
         {
-            List<DeputyViewModel> fecthViewModel = new List<DeputyViewModel>();
+            List<Proctor1ViewModel1> fecthViewModel = new List<Proctor1ViewModel1>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -453,50 +453,55 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        DeputyViewModel fetchView = new DeputyViewModel();
-                        fetchView.ProctorName = dataReader["ProctorName"].ToString();
-                        fetchView.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
-                        fetchView.MosavabCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCurrent"].ToString())));
-                        fetchView.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
-                        fetchView.MosavabCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCivil"].ToString())));
-                        fetchView.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
-                        fetchView.ExpenseCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCurrent"].ToString())));
-                        fetchView.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
-                        fetchView.ExpenseCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCivil"].ToString())));
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.Row = int.Parse(dataReader["Id"].ToString());
+                        Proctor1ViewModel1 row = new Proctor1ViewModel1();
+                        row.Id = int.Parse(dataReader["Id"].ToString());
+                        row.ProctorName = dataReader["ProctorName"].ToString();
+                        row.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        row.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
 
-                        if (fetchView.MosavabCurrent != 0)
+                        row.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
+                        //fetchView.MosavabCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCurrent"].ToString())));
+                    
+                        //fetchView.MosavabCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCivil"].ToString())));
+                      
+                        //fetchView.ExpenseCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCurrent"].ToString())));
+                      
+                        //fetchView.ExpenseCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCivil"].ToString())));
+                    
+                        //fetchView.Row = int.Parse(dataReader["Id"].ToString());
+
+                        if (row.MosavabCurrent != 0)
                         {
-                            fetchView.PercentCurrent = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent, fetchView.MosavabCurrent);
-                            fetchView.PercentCurrentStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent, fetchView.MosavabCurrent).ToString()) + "%";
+                            row.PercentCurrent = _uw.Budget_001Rep.Divivasion(row.ExpenseCurrent, row.MosavabCurrent);
+                            //row.PercentCurrentStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent, fetchView.MosavabCurrent).ToString()) + "%";
                         }
                         else
                         {
-                            fetchView.MosavabCurrent = 0;
+                            row.MosavabCurrent = 0;
                         }
 
 
-                        if (fetchView.MosavabCivil != 0)
+                        if (row.MosavabCivil != 0)
                         {
-                            fetchView.PercentCivil = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil, fetchView.MosavabCivil);
-                            fetchView.PercentCivilStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil, fetchView.MosavabCivil).ToString()) + "%";
+                            row.PercentCivil = _uw.Budget_001Rep.Divivasion(row.ExpenseCivil, row.MosavabCivil);
+                            //row.PercentCivilStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil, fetchView.MosavabCivil).ToString()) + "%";
                         }
                         else
-                        { fetchView.PercentCivil = 0; }
+                        { row.PercentCivil = 0; }
 
 
-                        if (fetchView.MosavabCurrent + fetchView.MosavabCivil != 0)
+                        if (row.MosavabCurrent + row.MosavabCivil != 0)
                         {
-                            fetchView.PercentTotal = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil + fetchView.ExpenseCurrent, fetchView.MosavabCivil + fetchView.MosavabCurrent);
-                            fetchView.PercentTotalStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil + fetchView.ExpenseCurrent, fetchView.MosavabCivil + fetchView.MosavabCurrent).ToString()) + "%";
+                            row.PercentTotal = _uw.Budget_001Rep.Divivasion(row.ExpenseCivil + row.ExpenseCurrent, row.MosavabCivil + row.MosavabCurrent);
+                            //fetchView.PercentTotalStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil + fetchView.ExpenseCurrent, fetchView.MosavabCivil + fetchView.MosavabCurrent).ToString()) + "%";
                         }
                         else
                         {
-                            fetchView.PercentTotal = 0;
+                            row.PercentTotal = 0;
                         }
 
-                        fecthViewModel.Add(fetchView);
+                        fecthViewModel.Add(row);
                     }
                 }
             }
@@ -504,11 +509,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
-        [Route("ProctorAreaBudget")]
+        [Route("ProctorArea")]
         [HttpGet]
         public async Task<ApiResult<List<AreaProctorViewModel>>> ProctorAreaBudget(ProctorParamViewModel viewModel)
         {
-            List<ProctorAreaBudgetViewModel> fecthViewModel = new List<ProctorAreaBudgetViewModel>();
+            List<AreaProctorViewModel> fecthViewModel = new List<AreaProctorViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -523,23 +528,41 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        ProctorAreaBudgetViewModel fetchView = new ProctorAreaBudgetViewModel();
+                        AreaProctorViewModel fetchView = new AreaProctorViewModel();
                         fetchView.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        fetchView.ProctorId = int.Parse(dataReader["ProctorId"].ToString());
-                        fetchView.YearId = int.Parse(dataReader["YearId"].ToString());
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.Mosavab = long.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Expense = long.Parse(dataReader["Expense"].ToString());
-
-                        if (fetchView.Percent != 0)
+                        fetchView.AreaName = dataReader["AreaName"].ToString();
+                        fetchView.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        fetchView.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
+                        if (fetchView.MosavabCurrent != 0)
                         {
-                            fetchView.Percent = _uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Mosavab);
+                            fetchView.PercentCurrent = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent, fetchView.MosavabCurrent);
                         }
                         else
                         {
-                            fetchView.Percent = 0;
+                            fetchView.PercentCurrent = 0;
                         }
+
+                        fetchView.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        fetchView.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
+
+                        if (fetchView.MosavabCivil != 0)
+                        {
+                            fetchView.PercentCivil = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil, fetchView.MosavabCivil);
+                        }
+                        else
+                        {
+                            fetchView.PercentCivil = 0;
+                        }
+
+                        if (fetchView.MosavabCurrent +fetchView.MosavabCivil != 0)
+                        {
+                            fetchView.PercentTotal = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent + fetchView.ExpenseCivil, fetchView.MosavabCurrent + fetchView.MosavabCivil);
+                        }
+                        else
+                        {
+                            fetchView.PercentTotal = 0;
+                        }
+
                         fecthViewModel.Add(fetchView);
                     }
                 }
@@ -547,60 +570,60 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
-        [Route("ProctorList")]
-        [HttpGet]
-        public async Task<IActionResult> ProctorList()
-        {
-            return Ok(await _uw.DeputyRepository.ProctorListAsync());
-        }
+        //[Route("ProctorList")]
+        //[HttpGet]
+        //public async Task<IActionResult> ProctorList()
+        //{
+        //    return Ok(await _uw.DeputyRepository.ProctorListAsync());
+        //}
 
-        [Route("ProctorAreaBudgetDetail")]
-        [HttpGet]
-        public async Task<ApiResult<List<ProctorAreaBudgetViewModel>>> ProctorAreaBudgetDetail(ProctorParamViewModel viewModel)
-        {
-            if (viewModel.yearId == 0 | viewModel.areaId == 0 | viewModel.proctorId == 0)
-            {
-                return BadRequest("با خطا مواجه شدید");
-            }
-            List<ProctorAreaBudgetViewModel> fecthViewModel = new List<ProctorAreaBudgetViewModel>();
+        //[Route("ProctorAreaBudgetDetail")]
+        //[HttpGet]
+        //public async Task<ApiResult<List<ProctorAreaBudgetViewModel>>> ProctorAreaBudgetDetail(ProctorParamViewModel viewModel)
+        //{
+        //    if (viewModel.yearId == 0 | viewModel.areaId == 0 | viewModel.proctorId == 0)
+        //    {
+        //        return BadRequest("با خطا مواجه شدید");
+        //    }
+        //    List<ProctorAreaBudgetViewModel> fecthViewModel = new List<ProctorAreaBudgetViewModel>();
 
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", viewModel.yearId);
-                    sqlCommand.Parameters.AddWithValue("ProctorId", viewModel.proctorId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", viewModel.areaId);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModel.budgetprocessId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        ProctorAreaBudgetViewModel fetchView = new ProctorAreaBudgetViewModel();
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+        //    using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.Parameters.AddWithValue("YearId", viewModel.yearId);
+        //            sqlCommand.Parameters.AddWithValue("ProctorId", viewModel.proctorId);
+        //            sqlCommand.Parameters.AddWithValue("AreaId", viewModel.areaId);
+        //            sqlCommand.Parameters.AddWithValue("BudgetProcessId", viewModel.budgetprocessId);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //            while (dataReader.Read())
+        //            {
+        //                ProctorAreaBudgetViewModel fetchView = new ProctorAreaBudgetViewModel();
+        //                fetchView.Code = dataReader["Code"].ToString();
+        //                fetchView.Description = dataReader["Description"].ToString();
+        //                fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+        //                fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
 
-                        if (fetchView.Percent != 0)
-                        {
-                            fetchView.Percent = _uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Mosavab);
-                        }
-                        else
-                        {
-                            fetchView.Percent = 0;
-                        }
+        //                if (fetchView.Percent != 0)
+        //                {
+        //                    fetchView.Percent = _uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Mosavab);
+        //                }
+        //                else
+        //                {
+        //                    fetchView.Percent = 0;
+        //                }
 
-                        fecthViewModel.Add(fetchView);
+        //                fecthViewModel.Add(fetchView);
 
-                        //dataReader.NextResult();
-                    }
-                    //TempData["budgetSeprator"] = fecthViewModel;
-                }
-            }
-            return Ok(fecthViewModel);
-        }
+        //                //dataReader.NextResult();
+        //            }
+        //            //TempData["budgetSeprator"] = fecthViewModel;
+        //        }
+        //    }
+        //    return Ok(fecthViewModel);
+        //}
 
         [Route("AbstractList")]
         [HttpGet]
