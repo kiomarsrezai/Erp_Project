@@ -394,6 +394,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.Description = dataReader["Description"].ToString();
                         request.Project = dataReader["Project"].ToString();
                         request.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
+                        request.BudgetProcessId = int.Parse(dataReader["BudgetProcessId"].ToString());
                         requestsViewModels.Add(request);
                     }
                 }

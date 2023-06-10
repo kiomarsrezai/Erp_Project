@@ -12,6 +12,8 @@ namespace NewsWebsite.ViewModels.Api.Request
         public string Description { get; set; }
         public string Project { get; set; }
         public Int64 MosavabDepartment { get; set; }
+        public int BudgetProcessId { get; set; }
+
 
     }
 }
