@@ -589,7 +589,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP501_Proctor", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_Proctor", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("YearId", viewModel.yearId);
