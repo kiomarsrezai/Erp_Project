@@ -343,7 +343,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("RequestTableDelete")]
         [HttpPost]
-        public async Task<ApiResult> RequestTableDelete([FromBody] int id)
+        public async Task<ApiResult> RequestTableDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
             if (id == 0)
                 return BadRequest();
@@ -354,7 +354,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestTable_Delete", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.Parameters.AddWithValue("id", param.Id);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         sqlconnect.Close();
