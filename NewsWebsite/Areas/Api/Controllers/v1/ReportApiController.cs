@@ -205,8 +205,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             percentSale.Add(0);
                         }
-
-
                         row.MosavabLoan = Int64.Parse(dataReader1["MosavabLoan"].ToString());
                         row.ExpenseLoan = Int64.Parse(dataReader1["ExpenseLoan"].ToString());
                         if (!string.IsNullOrEmpty(dataReader1["MosavabLoan"].ToString()) &&
@@ -218,8 +216,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             percentLoan.Add(0);
                         }
-
-
                         row.MosavabDaryaftAzKhazane = Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString());
                         row.ExpenseDaryaftAzKhazane = Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString());
 
@@ -231,7 +227,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             percentDaryaftAzKhazane.Add(0);
                         }
-
 
                         row.MosavabKol = Int64.Parse(dataReader1["MosavabKol"].ToString());
                         row.ExpenseKol = Int64.Parse(dataReader1["ExpenseKol"].ToString());
