@@ -160,12 +160,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<Chart_RevenueKindModalViewModel>>> ChartRevenueKindModal(int yearId, int StructureId)
         {
-            List<double> percentRevenue = new List<double>();
-            List<double> percentSale = new List<double>();
-            List<double> percentLoan = new List<double>();
-            List<double> percentDaryaftAzKhazane = new List<double>();
-            List<double> percentKol = new List<double>();
-
             List<Chart_RevenueKindModalViewModel> data = new List<Chart_RevenueKindModalViewModel>();
 
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -185,47 +179,46 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.AreaName = dataReader1["AreaName"].ToString();
                         row.MosavabRevenue = Int64.Parse(dataReader1["MosavabRevenue"].ToString());
                         row.ExpenseRevenue = Int64.Parse(dataReader1["ExpenseRevenue"].ToString());
-                           if (!string.IsNullOrEmpty(dataReader1["MosavabRevenue"].ToString()) && 
-                                 Int64.Parse(dataReader1["MosavabRevenue"].ToString()) > 0)
+                           if (!string.IsNullOrEmpty(dataReader1["MosavabRevenue"].ToString()) && Int64.Parse(dataReader1["MosavabRevenue"].ToString()) > 0)
                             {
-                            percentRevenue.Add(_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["ExpenseRevenue"].ToString()), long.Parse(dataReader1["MosavabRevenue"].ToString())));
+                            row.percentRevenue=_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["ExpenseRevenue"].ToString()), long.Parse(dataReader1["MosavabRevenue"].ToString()));
                             }
                             else
                             {
-                            percentRevenue.Add(0);
+                            row.percentRevenue =0;
                             }
                         row.MosavabSale = Int64.Parse(dataReader1["MosavabSale"].ToString());
                         row.ExpenseSale = Int64.Parse(dataReader1["ExpenseSale"].ToString());
                         if (!string.IsNullOrEmpty(dataReader1["MosavabSale"].ToString()) &&
                                  Int64.Parse(dataReader1["MosavabSale"].ToString()) > 0)
                         {
-                            percentSale.Add(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseSale"].ToString()), Int64.Parse(dataReader1["MosavabSale"].ToString())));
+                            row.percentSale =(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseSale"].ToString()), Int64.Parse(dataReader1["MosavabSale"].ToString())));
                         }
                         else
                         {
-                            percentSale.Add(0);
+                            row.percentSale = 0;
                         }
                         row.MosavabLoan = Int64.Parse(dataReader1["MosavabLoan"].ToString());
                         row.ExpenseLoan = Int64.Parse(dataReader1["ExpenseLoan"].ToString());
                         if (!string.IsNullOrEmpty(dataReader1["MosavabLoan"].ToString()) &&
                               Int64.Parse(dataReader1["MosavabLoan"].ToString()) > 0)
                         {
-                            percentLoan.Add(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseLoan"].ToString()), Int64.Parse(dataReader1["MosavabLoan"].ToString())));
+                            row.percentLoan =(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseLoan"].ToString()), Int64.Parse(dataReader1["MosavabLoan"].ToString())));
                         }
                         else
                         {
-                            percentLoan.Add(0);
+                            row.percentLoan = 0;
                         }
                         row.MosavabDaryaftAzKhazane = Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString());
                         row.ExpenseDaryaftAzKhazane = Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString());
 
                         if (!string.IsNullOrEmpty(dataReader1["MosavabDaryaftAzKhazane"].ToString()) && Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString()) > 0)
                         {
-                            percentDaryaftAzKhazane.Add(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString()), Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString())));
+                            row.percentDaryaftAzKhazane = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString()), Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString())));
                         }
                         else
                         {
-                            percentDaryaftAzKhazane.Add(0);
+                            row.percentDaryaftAzKhazane=0;
                         }
 
                         row.MosavabKol = Int64.Parse(dataReader1["MosavabKol"].ToString());
@@ -233,11 +226,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (!string.IsNullOrEmpty(dataReader1["MosavabKol"].ToString()) && Int64.Parse(dataReader1["MosavabKol"].ToString()) > 0)
                         {
-                            percentKol.Add(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseKol"].ToString()), Int64.Parse(dataReader1["MosavabKol"].ToString())));
+                            row.percentKol =(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseKol"].ToString()), Int64.Parse(dataReader1["MosavabKol"].ToString())));
                         }
                         else
                         {
-                            percentKol.Add(0);
+                            row.percentKol = 0;
                         }
 
                         data.Add(row);
@@ -606,7 +599,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
 
-                        if (fetchView.Percent != 0)
+                        if (fetchView.Mosavab != 0)
                         {
                             fetchView.Percent = _uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Mosavab);
                         }

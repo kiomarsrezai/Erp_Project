@@ -18,5 +18,11 @@ namespace NewsWebsite.ViewModels.Api.Report
         public Int64 ExpenseDaryaftAzKhazane { get; set; }
         public Int64 MosavabKol { get; set; }
         public Int64 ExpenseKol { get; set; }
+        public double percentRevenue { get; set; }
+        public double percentSale { get; set; }
+        public double percentLoan { get; set; }
+        public double percentDaryaftAzKhazane { get; set; }
+        public double percentKol { get; set; }
     }
 }
+
