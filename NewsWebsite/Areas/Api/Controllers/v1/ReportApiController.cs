@@ -223,9 +223,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.MosavabDaryaftAzKhazane = Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString());
                         row.ExpenseDaryaftAzKhazane = Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString());
 
-                        if (!string.IsNullOrEmpty(dataReader1["percentDaryaftAzKhazane"].ToString()) && Int64.Parse(dataReader1["percentDaryaftAzKhazane"].ToString()) > 0)
+                        if (!string.IsNullOrEmpty(dataReader1["MosavabDaryaftAzKhazane"].ToString()) && Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString()) > 0)
                         {
-                            percentDaryaftAzKhazane.Add(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString()), Int64.Parse(dataReader1["percentDaryaftAzKhazane"].ToString())));
+                            percentDaryaftAzKhazane.Add(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString()), Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString())));
                         }
                         else
                         {
