@@ -335,7 +335,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetShare")]
         [HttpGet]
-        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> GetBudgetShare([FromBody] ChartBudgetDeviationParamViewModel param)
+        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> GetBudgetShare(ChartBudgetDeviationParamViewModel param)
         {
             List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
