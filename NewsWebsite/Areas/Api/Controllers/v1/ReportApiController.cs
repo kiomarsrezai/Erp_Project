@@ -335,7 +335,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetShare")]
         [HttpGet]
-        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> GetBudgetShare(int areaId, int yearId, int kindId)
+        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> GetBudgetShare([FromBody] ChartBudgetDeviationParamViewModel param)
         {
             List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -344,9 +344,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect1.Open();
                     sqlCommand1.CommandType = CommandType.StoredProcedure;
-                    sqlCommand1.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand1.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand1.Parameters.AddWithValue("KindId", kindId);
+                    sqlCommand1.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand1.Parameters.AddWithValue("yearId", param.yearId);
+                    sqlCommand1.Parameters.AddWithValue("KindId", param.kindId);
+                    sqlCommand1.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
                     SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
                     while (dataReader1.Read())

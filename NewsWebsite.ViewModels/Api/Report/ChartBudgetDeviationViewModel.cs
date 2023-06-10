@@ -15,4 +15,16 @@ namespace NewsWebsite.ViewModels.Api.Report
         public double percmosavab { get; set; }
 
     }
+
+    public class ChartBudgetDeviationParamViewModel
+    {
+        public int yearId { get; set; }
+        public int areaId { get; set; }
+        public int kindId { get; set; }
+        public int BudgetProcessId { get; set; }
+   
+
+    }
+
+  
 }
