@@ -12,6 +12,7 @@ using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
 using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Api.Projects;
+using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;
@@ -275,7 +276,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("CodingDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> CodingDelete(int CodingDeleteid)
+        public async Task<ApiResult<string>> CodingDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -283,7 +284,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", CodingDeleteid);
+                    sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -452,7 +453,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteModal1CodingDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal1CodingDelete([FromBody] int id)
+        public async Task<ApiResult<string>> BudgteModal1CodingDelete([FromBody] RequestBudgetDeleteViewModel param )
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -460,7 +461,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -596,7 +597,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteModal2ProjectDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal2ProjectDelete([FromBody] int id)
+        public async Task<ApiResult<string>> BudgteModal2ProjectDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -604,7 +605,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -649,7 +650,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteCodingDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteCodingDelete([FromBody] int id)
+        public async Task<ApiResult<string>> BudgteCodingDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -657,7 +658,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -799,7 +800,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetModal3AreaDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal3AreaDelete([FromBody] int id)
+        public async Task<ApiResult<string>> BudgteModal3AreaDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
 
             string readercount = null;
@@ -808,7 +809,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("[SP001_BudgetModal3Area_Delete]", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())

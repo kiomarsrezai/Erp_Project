@@ -341,9 +341,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        [Route("RequestTableDelete{id}")]
+        [Route("RequestTableDelete")]
         [HttpPost]
-        public async Task<ApiResult> RequestTableDelete(int id)
+        public async Task<ApiResult> RequestTableDelete([FromBody] int id)
         {
             if (id == 0)
                 return BadRequest();
