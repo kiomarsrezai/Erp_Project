@@ -269,7 +269,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            if (string.IsNullOrEmpty(readercount)) 
+                return Ok("با موفقیت انجام شد");
             else
                 return BadRequest(readercount);
         }
