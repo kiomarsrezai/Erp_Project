@@ -7,6 +7,7 @@ using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
 using NewsWebsite.ViewModels.Api.Commite;
+using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.UploadFile;
 using NewsWebsite.ViewModels.Project;
 using System;
@@ -151,28 +152,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectOrgDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> Delete(int id)
+        public async Task<ApiResult<string>> Delete([FromBody] RequestBudgetDeleteViewModel param)
         {
-            if (id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (id > 0)
-            {
+           
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectOrg_Delete", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.Parameters.AddWithValue("id", param.Id);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         sqlconnect.Close();
                     }
                 }
-            }
-            return Ok("با موفقیت انجام شد");
+                      return Ok("با موفقیت انجام شد");
         }
 
         [Route("ProjectScaleCom")]
+        [HttpGet]
         [HttpGet]
         public async Task<ApiResult<List<ProjectScaleComViewModel>>> ProjectScaleCom()
         {
@@ -252,6 +250,50 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok("با موفقیت انجام شد");
+        }
+
+
+        [Route("ProjectTableUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> UpdateTableProject(ProjectTableUpdateParamViewModel param)
+        {
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectTable_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("ProjectCode", param.ProjectCode);
+                    sqlCommand.Parameters.AddWithValue("ProjectName", param.ProjectName);
+                    sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
+                    sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
+                    sqlCommand.Parameters.AddWithValue("ProjectScaleId", param.ProjectScaleId);
+                    sqlCommand.Parameters.AddWithValue("AreaArray", param.AreaArray);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    sqlconnect.Close();
+                }
+            }
+            return Ok("با موفقیت انجام شد");
+        }
+
+        [Route("ProjectTableDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> FnProjectTableDelete([FromBody] RequestBudgetDeleteViewModel param)
+        {
+         
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectTable_Delete", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", param.Id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+                return Ok("با موفقیت انجام شد");
         }
     }
 }

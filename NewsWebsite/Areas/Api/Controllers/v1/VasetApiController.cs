@@ -30,7 +30,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<VasetSazmanhaViewModel>>> GetVasets(int yearId, int areaId, int budgetProcessId)
         {
-            return Ok(await _uw.VasetRepository.GetAllAsync(yearId, areaId, budgetProcessId));
+            List<VasetSazmanhaViewModel> fecthViewModel = new List<VasetSazmanhaViewModel>();
+
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        VasetSazmanhaViewModel fetchView = new VasetSazmanhaViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.CodeAcc = dataReader["CodeAcc"].ToString();
+                        fetchView.TitleAcc = dataReader["TitleAcc"].ToString();
+                        fetchView.PercentBud = int.Parse(dataReader["PercentBud"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                        //dataReader.NextResult();
+                    }
+                    //TempData["budgetSeprator"] = fecthViewModel;
+                }
+            }
+            return Ok(fecthViewModel);
         }
 
         [Route("GetModalVaset")]
