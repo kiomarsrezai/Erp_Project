@@ -230,14 +230,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectTableInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> InsertTableProject(ProjectTableInsertParamViewModel param)
+        public async Task<ApiResult<string>> InsertTableProject([FromBody] ProjectTableInsertParamViewModel param)
         {
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectTable_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("ProjectCode", param.ProjectCode);
                     sqlCommand.Parameters.AddWithValue("ProjectName", param.ProjectName);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
                     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
@@ -254,7 +253,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ProjectTableUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> UpdateTableProject(ProjectTableUpdateParamViewModel param)
+        public async Task<ApiResult<string>> UpdateTableProject([FromBody] ProjectTableUpdateParamViewModel param)
         {
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
