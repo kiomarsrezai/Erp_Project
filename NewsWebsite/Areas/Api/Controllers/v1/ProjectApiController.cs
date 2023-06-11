@@ -154,23 +154,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> Delete([FromBody] RequestBudgetDeleteViewModel param)
         {
-           
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectOrg_Delete", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectOrg_Delete", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", param.Id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    sqlconnect.Close();
                 }
-                      return Ok("با موفقیت انجام شد");
+            }
+            return Ok("با موفقیت انجام شد");
         }
 
         [Route("ProjectScaleCom")]
-        [HttpGet]
         [HttpGet]
         public async Task<ApiResult<List<ProjectScaleComViewModel>>> ProjectScaleCom()
         {
@@ -281,19 +280,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> FnProjectTableDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
-         
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectTable_Delete", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectTable_Delete", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", param.Id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    sqlconnect.Close();
                 }
-                return Ok("با موفقیت انجام شد");
+            }
+            return Ok("با موفقیت انجام شد");
         }
     }
 }

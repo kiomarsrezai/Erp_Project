@@ -112,6 +112,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         requestsViewModels.Employee = dataReader["Employee"].ToString();
                         requestsViewModels.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
                         requestsViewModels.Number = dataReader["Number"].ToString();
+                        requestsViewModels.Date = DateTime.Parse(dataReader["Date"].ToString());
                         requestsViewModels.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/MM/dd");
                         requestsViewModels.Description = dataReader["Description"].ToString();
                         requestsViewModels.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());

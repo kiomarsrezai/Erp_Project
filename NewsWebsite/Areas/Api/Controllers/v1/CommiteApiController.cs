@@ -6,7 +6,9 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Commite;
+using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Commite;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -223,7 +225,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             commiteView.FirstName = dataReader["FirstName"].ToString();
                             commiteView.LastName = dataReader["LastName"].ToString();
                             commiteView.DateStart = dataReader["DateStart"].ToString();
+                            commiteView.DateStartShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["DateStart"].ToString()), "yyyy/MM/dd");
                             commiteView.DateEnd = dataReader["DateEnd"].ToString();
+                            commiteView.DatteEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
                             commiteView.Responsibility = dataReader["Responsibility"].ToString();
                             commiteViews.Add(commiteView);
                         }
@@ -274,8 +278,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", Param.Id);
                     sqlCommand.Parameters.AddWithValue("Description", Param.Description);
-                    sqlCommand.Parameters.AddWithValue("DateStart", Param.DateStart);
-                    sqlCommand.Parameters.AddWithValue("DateEnd", Param.DateEnd);
+                    sqlCommand.Parameters.AddWithValue("DateStart", (DateTime.Parse(Param.DateStart), "yyyy/MM/dd"));
+                    sqlCommand.Parameters.AddWithValue("DateEnd", (DateTime.Parse(Param.DateEnd), "yyyy/MM/dd"));
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())

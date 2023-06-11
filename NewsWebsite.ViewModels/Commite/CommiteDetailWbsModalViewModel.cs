@@ -13,6 +13,8 @@ namespace NewsWebsite.ViewModels.Commite
         public string Responsibility { get; set; }
         public string DateStart { get; set; }
         public string DateEnd { get; set; }
+        public string DateStartShamsi { get; set; }
+        public string DatteEndShamsi { get; set; }
     }
 
 
