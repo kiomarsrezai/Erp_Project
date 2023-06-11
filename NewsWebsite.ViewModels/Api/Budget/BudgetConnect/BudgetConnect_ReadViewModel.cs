@@ -13,7 +13,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
         public string ProctorName { get; set; }
         public bool? Show { get; set; }
         public long Mosavab { get; set; }
-        public int CodingNatureId { get; set; }
+        public int? CodingNatureId { get; set; }
         public string CodingNatureName { get; set; }
 
     }

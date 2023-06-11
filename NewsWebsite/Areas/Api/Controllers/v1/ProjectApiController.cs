@@ -35,7 +35,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-
         [Produces("application/json")]
         [Route("UploadFiles")]
         [HttpPost, DisableRequestSizeLimit]
@@ -123,31 +122,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
+
         [Route("ProjectOrgUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> Update(int id, string projectName, string projectCode, int motherId)
+        public async Task<ApiResult<string>> Update(ProjectOrgUpdateParamViewModel param)
         {
-            if (id == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (id > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP005_ProjectOrg_Update", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
-                        sqlCommand.Parameters.AddWithValue("ProjectName", projectName);
-                        sqlCommand.Parameters.AddWithValue("ProjectCode", projectCode);
-                        sqlCommand.Parameters.AddWithValue("MotherId", motherId);
+                        sqlCommand.Parameters.AddWithValue("id", param.Id);
+                        sqlCommand.Parameters.AddWithValue("ProjectName", param.projectName);
+                        sqlCommand.Parameters.AddWithValue("ProjectCode", param.projectCode);
+                        sqlCommand.Parameters.AddWithValue("MotherId", param.motherId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     }
                 }
-
             }
             return Ok("با موفقیت انجام شد");
-
         }
 
 
@@ -169,6 +164,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok("با موفقیت انجام شد");
         }
+
 
         [Route("ProjectScaleCom")]
         [HttpGet]
@@ -228,6 +224,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(fetchViewlist);
         }
+
 
         [Route("ProjectTableInsert")]
         [HttpPost]
@@ -289,6 +286,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
 
         [Route("ProjectTableDelete")]
         [HttpPost]

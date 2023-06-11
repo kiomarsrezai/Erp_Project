@@ -113,8 +113,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.ProctorName = dataReader["ProctorName"].ToString();
                         fetchView.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
                         fetchView.Show = StringExtensions.ToNullablebool(dataReader["Show"].ToString());
-                        fetchView.Mosavab = long.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.CodingNatureId = int.Parse(dataReader["CodingNatureId"].ToString());
+                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.CodingNatureId = StringExtensions.ToNullableInt(dataReader["CodingNatureId"].ToString());
                         fetchView.CodingNatureName = dataReader["CodingNatureName"].ToString();
 
                         fecthViewModel.Add(fetchView);
