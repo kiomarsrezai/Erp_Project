@@ -217,8 +217,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         data.Id = int.Parse(dataReader["Id"].ToString());
                         data.ProjectCode = dataReader["ProjectCode"].ToString();
                         data.ProjectName = dataReader["ProjectName"].ToString();
-                        data.DateFrom = dataReader["DateFrom"].ToString();
-                        data.DateEnd = dataReader["DateEnd"].ToString();
+                        data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
+                        data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
                         data.AreaArray = dataReader["AreaArray"].ToString();
                         data.ProjectScaleId = int.Parse(dataReader["ProjectScaleId"].ToString());
                         data.ProjectScaleName = dataReader["ProjectScaleName"].ToString();

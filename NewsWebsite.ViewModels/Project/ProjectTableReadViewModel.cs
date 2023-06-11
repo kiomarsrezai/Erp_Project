@@ -10,7 +10,9 @@ namespace NewsWebsite.ViewModels.Project
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
         public string DateFrom { get; set; }
+        public string DateFromShamsi { get; set; }
         public string DateEnd { get; set; }
+        public string DateEndShamsi { get; set; }
         public string AreaArray { get; set; }
         public int ProjectScaleId { get; set; }
         public string ProjectScaleName { get; set; }
