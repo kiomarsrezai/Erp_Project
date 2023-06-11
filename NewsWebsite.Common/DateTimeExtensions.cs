@@ -60,12 +60,20 @@ namespace NewsWebsite.Common
 
             return new List<DateTime?>() { startDateTime, endDateTime };
         }
+
+        public static string GetDateMilady(string text)
+        {
+            DateTime date = Convert.ToDateTime(text);
+            string item = date.ToShortDateString();
+
+            return item;
+        }
     }
 
     public class DateTimeResult
     {
         public bool IsShamsi { get; set; }
-        public DateTime? MiladiDate { get; set; }
+        public DateTime MiladiDate { get; set; }
         public string searchText { get; set; }
     }
 

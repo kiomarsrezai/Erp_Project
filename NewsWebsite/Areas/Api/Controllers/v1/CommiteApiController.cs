@@ -278,8 +278,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", Param.Id);
                     sqlCommand.Parameters.AddWithValue("Description", Param.Description);
-                    sqlCommand.Parameters.AddWithValue("DateStart", (DateTime.Parse(Param.DateStart), "yyyy/MM/dd"));
-                    sqlCommand.Parameters.AddWithValue("DateEnd", (DateTime.Parse(Param.DateEnd), "yyyy/MM/dd"));
+                    sqlCommand.Parameters.AddWithValue("DateStart", DateTime.Parse(Param.DateStart).Date);
+                    sqlCommand.Parameters.AddWithValue("DateEnd", DateTime.Parse(Param.DateEnd).Date);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
