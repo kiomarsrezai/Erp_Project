@@ -166,6 +166,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", updateParamViewModel.id);
                     sqlCommand.Parameters.AddWithValue("ProctorId", updateParamViewModel.ProctorId);
+                    sqlCommand.Parameters.AddWithValue("CodingNatureId", updateParamViewModel.CodingNatureId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
