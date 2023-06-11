@@ -294,7 +294,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
-
+        [Route("CodingUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgetSepratorAreaProjectModal_Update([FromBody] CodingUpdateParamViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_Coding_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+                    sqlCommand.Parameters.AddWithValue("Code", param.Code);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
         [Route("BudgetSepratorAreaProjectModal2")]
         [HttpGet]

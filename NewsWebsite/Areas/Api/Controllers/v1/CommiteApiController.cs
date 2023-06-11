@@ -289,6 +289,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+        [Route("CommiteDetailWbsDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> CommiteDetailWbsDelete([FromBody] CommiteDetailDeleteParamViewModel delete)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailWbs_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", delete.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
         [Route("CommiteEmployee")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteEmployeeViewModel>>> CommiteEmployee()
@@ -343,3 +368,4 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
     }
 }
+
