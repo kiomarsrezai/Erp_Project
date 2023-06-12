@@ -69,7 +69,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetEditInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> Ac_BudgetEditInsert(BudgetEditInsertParamViewModel param)
+        public async Task<ApiResult<string>> Ac_BudgetEditInsert([FromBody] BudgetEditInsertParamViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -95,7 +95,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetEditUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> Ac_BudgetEditUpdate(BudgetEditUpdateParamViewModel param)
+        public async Task<ApiResult<string>> Ac_BudgetEditUpdate([FromBody] BudgetEditUpdateParamViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -123,7 +123,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetEditDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> Ac_BudgetEditDelete(DeletePublicParamViewModel param)
+        public async Task<ApiResult<string>> Ac_BudgetEditDelete([FromBody] DeletePublicParamViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
