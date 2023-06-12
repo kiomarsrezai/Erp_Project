@@ -13,6 +13,7 @@ using NewsWebsite.ViewModels.Api.Public;
 using NewsWebsite.ViewModels.Api.Budget.BudgetEdit;
 using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
 using NewsWebsite.Common.Api.Attributes;
+using NewsWebsite.Common;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -51,7 +52,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         BudgetEditReadViewModel data = new BudgetEditReadViewModel();
-                        data.Id = int.Parse(dataReader["Id"].ToString());
+                        data.Id = StringExtensions.ToNullableInt(dataReader["Id"].ToString());
                         data.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
                         data.Code = dataReader["Code"].ToString();
                         data.Description = dataReader["Description"].ToString();

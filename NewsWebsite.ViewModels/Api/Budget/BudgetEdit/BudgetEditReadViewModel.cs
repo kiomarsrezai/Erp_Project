@@ -6,7 +6,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetEdit
 {
     public class BudgetEditReadViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public int BudgetDetailId { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
