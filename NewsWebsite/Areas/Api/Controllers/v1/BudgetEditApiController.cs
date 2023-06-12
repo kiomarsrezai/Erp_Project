@@ -129,7 +129,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP007_Edit_Update", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP007_Edit_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
