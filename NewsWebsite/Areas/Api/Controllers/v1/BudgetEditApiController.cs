@@ -18,7 +18,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 {
    
     [Route("api/[controller]")]
-    [ApiController]
+    //[ApiController]
     [ApiVersion("1")]
     [ApiResultFilter]
     public class BudgetEditApiController : ControllerBase
