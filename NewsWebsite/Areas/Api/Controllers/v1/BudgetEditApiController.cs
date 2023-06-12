@@ -17,7 +17,7 @@ using NewsWebsite.Common.Api.Attributes;
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
    
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     //[ApiController]
     [ApiVersion("1")]
     [ApiResultFilter]
