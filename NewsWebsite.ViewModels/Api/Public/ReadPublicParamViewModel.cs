@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Public
 {
-    public class InsertPublicParamViewModel
+    public class ReadPublicParamViewModel
     {
         public int yearId { get; set; }
         public int areaId { get; set; }

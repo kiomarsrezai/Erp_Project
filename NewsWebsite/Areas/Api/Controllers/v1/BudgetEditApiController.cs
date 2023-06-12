@@ -12,12 +12,15 @@ using System.Data.SqlClient;
 using NewsWebsite.ViewModels.Api.Public;
 using NewsWebsite.ViewModels.Api.Budget.BudgetEdit;
 using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
+using NewsWebsite.Common.Api.Attributes;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
    
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1")]
+    [ApiResultFilter]
     public class BudgetEditApiController : ControllerBase
     { 
         public readonly IUnitOfWork _uw;
@@ -31,7 +34,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetEditRead")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetEditReadViewModel>>> Ac_BudgetEditRead(InsertPublicParamViewModel param)
+        public async Task<ApiResult<List<BudgetEditReadViewModel>>> Ac_BudgetEditRead(ReadPublicParamViewModel param)
         {
             List<BudgetEditReadViewModel> ViewModel = new List<BudgetEditReadViewModel>();
 
