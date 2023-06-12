@@ -57,8 +57,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         data.Code = dataReader["Code"].ToString();
                         data.Description = dataReader["Description"].ToString();
                         data.MosavabPublic = Int64.Parse(dataReader["MosavabPublic"].ToString());
-                        data.Decrease = Int64.Parse(dataReader["Decrease"].ToString());
-                        data.Increase = Int64.Parse(dataReader["Increase"].ToString());
+                        data.Decrease = StringExtensions.ToNullableInt(dataReader["Decrease"].ToString());
+                        data.Increase = StringExtensions.ToNullableInt(dataReader["Increase"].ToString());
 
                         ViewModel.Add(data);
                     }
