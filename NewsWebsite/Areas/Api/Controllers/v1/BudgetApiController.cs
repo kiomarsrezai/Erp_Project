@@ -271,7 +271,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) 
+            if (string.IsNullOrEmpty(readercount))
                 return Ok("با موفقیت انجام شد");
             else
                 return BadRequest(readercount);
@@ -456,7 +456,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteModal1CodingDelete")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal1CodingDelete([FromBody] RequestBudgetDeleteViewModel param )
+        public async Task<ApiResult<string>> BudgteModal1CodingDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -479,7 +479,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         [Route("BudgetModal2CodingRead")]
-        [HttpGet]
         [HttpGet]
         public async Task<ApiResult<List<BudgetModalProjectViewModel>>> BudgetModal2CodingRead(BudgetModal1CodingParamModel paramModel)
         {

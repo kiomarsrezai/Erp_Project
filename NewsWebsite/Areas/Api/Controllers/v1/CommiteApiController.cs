@@ -224,6 +224,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             commiteView.Id = int.Parse(dataReader["Id"].ToString());
                             commiteView.FirstName = dataReader["FirstName"].ToString();
                             commiteView.LastName = dataReader["LastName"].ToString();
+                            commiteView.Description = dataReader["Description"].ToString();
                             commiteView.DateStart = dataReader["DateStart"].ToString();
                             commiteView.DateStartShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["DateStart"].ToString()), "yyyy/MM/dd");
                             commiteView.DateEnd = dataReader["DateEnd"].ToString();
