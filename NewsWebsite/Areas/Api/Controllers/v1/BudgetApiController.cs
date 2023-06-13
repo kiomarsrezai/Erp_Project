@@ -236,7 +236,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
                         fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
-                        fetchView.CodingRevenueKind = int.Parse(dataReader["CodingRevenueKind"].ToString());
+                        fetchView.CodingKindId = int.Parse(dataReader["CodingKindId"].ToString());
 
                         fecthViewModel.Add(fetchView);
                     }
@@ -248,7 +248,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("CodingInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> InsertCoding(BudgetCodingInsertParamModel budgetCodingInsert)
+        public async Task<ApiResult<string>> InsertCoding(BudgetCodingInsertParamModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -256,12 +256,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("MotherId", budgetCodingInsert.MotherId);
-                    sqlCommand.Parameters.AddWithValue("code", budgetCodingInsert.code);
-                    sqlCommand.Parameters.AddWithValue("show", budgetCodingInsert.show);
-                    sqlCommand.Parameters.AddWithValue("crud", budgetCodingInsert.crud);
-                    sqlCommand.Parameters.AddWithValue("description", budgetCodingInsert.description);
-                    sqlCommand.Parameters.AddWithValue("levelNumber", budgetCodingInsert.levelNumber);
+                    sqlCommand.Parameters.AddWithValue("MotherId", param.MotherId);
+                    sqlCommand.Parameters.AddWithValue("code", param.code);
+                    sqlCommand.Parameters.AddWithValue("show", param.show);
+                    sqlCommand.Parameters.AddWithValue("crud", param.crud);
+                    sqlCommand.Parameters.AddWithValue("description", param.description);
+                    sqlCommand.Parameters.AddWithValue("levelNumber", param.levelNumber);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())

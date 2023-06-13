@@ -12,6 +12,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
         public bool show { get; set; }
         public bool crud { get; set; }
         public int levelNumber { get; set; }
+        public int BudgetProcessId { get; set; }
 
     }
 }
