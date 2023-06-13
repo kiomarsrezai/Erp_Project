@@ -52,8 +52,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         BudgetEditReadViewModel data = new BudgetEditReadViewModel();
-                        data.Id = StringExtensions.ToNullableInt(dataReader["Id"].ToString());
-                        data.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
+                        data.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         data.Code = dataReader["Code"].ToString();
                         data.Description = dataReader["Description"].ToString();
                         data.MosavabPublic = Int64.Parse(dataReader["MosavabPublic"].ToString());
