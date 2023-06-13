@@ -68,9 +68,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.MotherId = StringExtensions.ToNullableInt(dataReader["MotherId"].ToString());
                         _totalMosavab += fetchView.Mosavab;
                         _totalExpense += fetchView.Expense;
-                        if ((!string.IsNullOrEmpty(dataReader["Mosavab"].ToString()) && Int64.Parse(dataReader["Mosavab"].ToString()) > 0))
+                        if ((!string.IsNullOrEmpty(dataReader["Edit"].ToString()) && Int64.Parse(dataReader["Edit"].ToString()) > 0))
                         {
-                            fetchView.PercentBud = _uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader["Mosavab"].ToString()));
+                            fetchView.PercentBud = _uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString()));
                         }
                         else
                         {
