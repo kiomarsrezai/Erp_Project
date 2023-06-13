@@ -14,15 +14,13 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
         [Display(Name = "عنوان")]
         public string Description { get; set; }
 
-        //[Display(Name = "سطح")]
-        //public int LevelNumber { get; set; }
         public int CodingId { get; set; }
 
         [Display(Name = "مصوب")]
         public long Mosavab { get; set; }
 
         [Display(Name = "اصلاح بودجه")]
-        public long Edit { get; set; }
+        public Int64 EditPublic { get; set; }
 
         [Display(Name = "عملکرد")]
         public long Expense { get; set; }

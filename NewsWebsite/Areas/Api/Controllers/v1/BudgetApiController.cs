@@ -382,7 +382,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.Description = dataReader["Description"].ToString();
                         BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        BudgetView.EditPublic = Int64.Parse(dataReader["EditPublic"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         //BudgetView.Show = (bool)dataReader["Show"];
                         if (BudgetView.Mosavab != 0)
