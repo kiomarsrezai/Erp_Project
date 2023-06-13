@@ -501,7 +501,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        BudgetView.EditProject = Int64.Parse(dataReader["EditProject"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         BudgetView.ProjectCode = dataReader["ProjectCode"].ToString();
                         BudgetView.ProjectName = dataReader["ProjectName"].ToString();

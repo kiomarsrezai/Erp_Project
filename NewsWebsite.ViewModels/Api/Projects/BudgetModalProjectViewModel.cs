@@ -12,7 +12,7 @@ namespace NewsWebsite.ViewModels.Api.Projects
 
         public long Mosavab { get; set; }
 
-        public long Edit { get; set; }
+        public long EditProject { get; set; }
 
         public long Expense { get; set; }
 
