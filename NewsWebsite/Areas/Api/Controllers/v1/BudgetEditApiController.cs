@@ -59,6 +59,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         data.MosavabPublic = Int64.Parse(dataReader["MosavabPublic"].ToString());
                         data.Decrease = StringExtensions.ToNullableInt(dataReader["Decrease"].ToString());
                         data.Increase = StringExtensions.ToNullableInt(dataReader["Increase"].ToString());
+                        data.Edit = Int64.Parse(dataReader["Edit"].ToString());
 
                         ViewModel.Add(data);
                     }
@@ -147,6 +148,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+
 
     }
 

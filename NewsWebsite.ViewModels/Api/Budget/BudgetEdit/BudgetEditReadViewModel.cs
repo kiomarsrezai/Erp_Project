@@ -13,5 +13,6 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetEdit
         public Int64 MosavabPublic { get; set; }
         public Int64? Decrease { get; set; }
         public Int64? Increase { get; set; }
+        public Int64 Edit { get; set; }
     }
 }
