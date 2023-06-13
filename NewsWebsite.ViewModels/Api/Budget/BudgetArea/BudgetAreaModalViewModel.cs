@@ -8,11 +8,11 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetArea
     {
         public int Id { get; set; }
 
-        public string AreaNameShort { get; set; }
+        public string AreaName { get; set; }
 
         public long Mosavab { get; set; }
 
-        public long Edit { get; set; }
+        public long EditArea { get; set; }
 
         public long Expense { get; set; }
 

@@ -725,10 +725,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         BudgetAreaModalViewModel BudgetView = new BudgetAreaModalViewModel();
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
-                        BudgetView.AreaNameShort = dataReader["AreaNameShort"].ToString();
+                        BudgetView.AreaName = dataReader["AreaName"].ToString();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        BudgetView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        BudgetView.EditArea = Int64.Parse(dataReader["EditArea"].ToString());
                         BudgetView.Supply = Int64.Parse(dataReader["Supply"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         //BudgetView.Show = (bool)dataReader["Show"];
