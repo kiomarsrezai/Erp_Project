@@ -574,7 +574,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgteModal2ProjectUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgteModal2ProjectUpdate([FromBody] BudgetModal2ProjectUpdateParamModel budgetCodingUpdate)
+        public async Task<ApiResult<string>> BudgteModal2ProjectUpdate([FromBody] BudgetModal2ProjectUpdateParamModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -582,8 +582,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Update", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", budgetCodingUpdate.Id);
-                    sqlCommand.Parameters.AddWithValue("Mosavab", budgetCodingUpdate.Mosavab);
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
+                    sqlCommand.Parameters.AddWithValue("EditProject", param.EditProject);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
