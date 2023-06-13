@@ -749,7 +749,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetModal3AreaUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgetModal3AreaUpdate([FromBody] BudgetModal3AreaUpdateParam updateParam)
+        public async Task<ApiResult<string>> BudgetModal3AreaUpdate([FromBody] BudgetModal3AreaUpdateParam param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -757,8 +757,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal3Area_Update", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", updateParam.Id);
-                    sqlCommand.Parameters.AddWithValue("Mosavab", updateParam.mosavab);
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("Mosavab", param.mosavab);
+                    sqlCommand.Parameters.AddWithValue("EditArea", param.EditArea);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
