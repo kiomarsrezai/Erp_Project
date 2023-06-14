@@ -391,6 +391,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             CommiteDetailAcceptReadViewModel data = new CommiteDetailAcceptReadViewModel();
                             data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.UserId = int.Parse(dataReader["UserId"].ToString());
                             data.FirstName = dataReader["FirstName"].ToString();
                             data.LastName = dataReader["LastName"].ToString();
                             data.Resposibility = dataReader["Resposibility"].ToString();
