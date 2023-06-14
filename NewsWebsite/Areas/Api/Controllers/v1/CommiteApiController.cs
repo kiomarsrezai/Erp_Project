@@ -371,6 +371,44 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
+
+        [Route("CommiteDetailAcceptRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<CommiteDetailAcceptReadViewModel>>> Ac_CommiteDetailAcceptRead(CommiteDetailAcceptReadParamViewModel param)
+        {
+            List<CommiteDetailAcceptReadViewModel> commiteAcceptView = new List<CommiteDetailAcceptReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailAccept_Modal", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("CommiteDetailId", param.CommiteDetailId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            CommiteDetailAcceptReadViewModel data = new CommiteDetailAcceptReadViewModel();
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.FirstName = dataReader["FirstName"].ToString();
+                            data.LastName = dataReader["LastName"].ToString();
+                            data.Resposibility = dataReader["Resposibility"].ToString();
+                            data.DateAccept = dataReader["DateAccept"].ToString();
+                            data.DateAcceptShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateAccept"].ToString()), "yyyy/MM/dd");
+                            commiteAcceptView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(commiteAcceptView);
+        }
+
+
+
+
+
+    
     }
 }
 

@@ -11,5 +11,6 @@ namespace NewsWebsite.ViewModels.Api.GeneralVm
 
         [Display(Name = "منطقه")]
         public string AreaName { get; set; }
+        public string AreaNameShort { get; set; }
     }
 }

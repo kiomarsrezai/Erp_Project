@@ -23,6 +23,12 @@ namespace NewsWebsite.Common
             return null;
         }
 
+        public static DateTime? ToNullableDatetime(this string s)
+        {
+            DateTime i;
+            if (DateTime.TryParse(s, out i)) return i;
+            return null;
+        }
         public static long? ToNullableBigInt(this string s)
         {
             long i;

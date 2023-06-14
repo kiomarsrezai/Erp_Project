@@ -25,4 +25,8 @@ namespace NewsWebsite.ViewModels.Commite
     {
         public int CommiteDetailId { get; set; }
     }
+
+
+
+
 }

@@ -170,6 +170,7 @@ namespace NewsWebsite.Data.Repositories
                         AreaViewModel fetchView = new AreaViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
                         fetchView.AreaName = dataReader["AreaName"].ToString();
+                        fetchView.AreaNameShort = dataReader["AreaNameShort"].ToString();
                         areaViews.Add(fetchView);
 
                         //dataReader.NextResult();
