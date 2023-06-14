@@ -6,6 +6,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Commite;
+using NewsWebsite.ViewModels.Api.Public;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Commite;
 using System;
@@ -405,10 +406,81 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("CommiteDetailAcceptInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_CommiteDetailAcceptInsert([FromBody] CommiteDetail_Wbs_insertParam_ViewModel param)
+        {
+            string readercount = null;
 
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailWbs_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("CommiteDetailId", param.CommiteDetailId);
+                    sqlCommand.Parameters.AddWithValue("UserId", param.UserId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
+        [Route("CommiteDetailAcceptUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_CommiteDetailAcceptUpdate([FromBody] CommiteDetailAcceptUpdateViewModel Param)
+        {
+            string readercount = null;
 
-    
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailAccept_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", Param.Id);
+                     sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("CommiteDetailAcceptDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_CommiteDetailAcceptDelete([FromBody] DeletePublicParamViewModel Param)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailAccept_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", Param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
     }
 }
 
