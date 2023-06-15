@@ -61,12 +61,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
                             data.DateEnd = dataReader["DateEnd"].ToString();
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
-                            data.Amount =Int64.Parse(dataReader["Amount"].ToString());
-                            data.Surplus = int.Parse(dataReader["Surplus"].ToString());
-                            data.Final =bool.Parse(dataReader["Final"].ToString());
+                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
+                            data.Final = bool.Parse(dataReader["Final"].ToString());
                             ContractView.Add(data);
                         }
-    }
+                    }
                     sqlconnect.Close();
                 }
             }
@@ -105,86 +105,89 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractSearchView);
         }
 
-        //[Route("CommiteDetailEstimatetInsert")]
-        //[HttpPost]
-        //public async Task<ApiResult<string>> Ac_CommiteDetailEstimatetInsert([FromBody] CommiteDetailEstimatetInsertParamViewModel param)
-        //{
-        //    string readercount = null;
+        [Route("ContractInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractInsert([FromBody] ContractInsertParamViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("Number", param.Number);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
+                    sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
+                    sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
+                    sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailEstimate_Insert", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.Parameters.AddWithValue("CommiteDetailId", param.CommiteDetailId);
-        //            sqlCommand.Parameters.AddWithValue("Description", param.Description);
-        //            sqlCommand.Parameters.AddWithValue("Quantity", param.Quantity);
-        //            sqlCommand.Parameters.AddWithValue("Price", param.Price);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //            while (dataReader.Read())
-        //            {
-        //                if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-        //            }
-        //        }
-        //    }
-        //    if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-        //    else
-        //        return BadRequest(readercount);
-        //}
+        [Route("ContractUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractUpdate([FromBody] ContractUpdateParamViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("Number", param.Number);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
+                    sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
+                    sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
+                    sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+        [Route("ContractDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractDelete([FromBody] PublicParamIdViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
-        //[Route("CommiteDetailEstimateUpdate")]
-        //[HttpPost]
-        //public async Task<ApiResult<string>> Ac_CommiteDetailEstimateUpdate([FromBody] CommiteDetailEstimatetUpdateParamViewModel param)
-        //{
-        //    string readercount = null;
-
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailEstimate_Update", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.Parameters.AddWithValue("Id", param.Id);
-        //            sqlCommand.Parameters.AddWithValue("Description", param.Description);
-        //            sqlCommand.Parameters.AddWithValue("Quantity", param.Quantity);
-        //            sqlCommand.Parameters.AddWithValue("Price", param.Price);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //            while (dataReader.Read())
-        //            {
-        //                if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-        //            }
-        //        }
-        //    }
-        //    if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-        //    else
-        //        return BadRequest(readercount);
-        //}
-
-        //[Route("CommiteDetailEstimateDelete")]
-        //[HttpPost]
-        //public async Task<ApiResult<string>> Ac_CommiteDetailEstimateDelete([FromBody] DeletePublicParamViewModel Param)
-        //{
-        //    string readercount = null;
-
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailEstimate_Delete", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.Parameters.AddWithValue("Id", Param.Id);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //            while (dataReader.Read())
-        //            {
-        //                if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-        //            }
-        //        }
-        //    }
-        //    if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-        //    else
-        //        return BadRequest(readercount);
-        //}
 
     }
 }
