@@ -117,6 +117,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
                     sqlCommand.Parameters.AddWithValue("Number", param.Number);
+                    sqlCommand.Parameters.AddWithValue("Date", param.Date);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
                     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
@@ -147,6 +148,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
                     sqlCommand.Parameters.AddWithValue("Number", param.Number);
+                    sqlCommand.Parameters.AddWithValue("Date", param.Date);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
                     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
@@ -164,6 +166,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+        
         [Route("ContractDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractDelete([FromBody] PublicParamIdViewModel param)
@@ -188,6 +191,36 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
+        [Route("Contract_Request_Search")]
+        [HttpGet]
+        public async Task<ApiResult<List<ContractRequestSearchViewModel>>> Ac_Contract_Request_Search(ContractRequestSearchParamViewModel param)
+        {
+            List<ContractRequestSearchViewModel> ContractSearchView = new List<ContractRequestSearchViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Request_Search", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                        sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ContractRequestSearchViewModel data = new ContractRequestSearchViewModel();
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.Number = dataReader["Number"].ToString();
+                            data.Date = dataReader["Date"].ToString();
+                            data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                            data.Description = dataReader["Description"].ToString();
+                            ContractSearchView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(ContractSearchView);
+        }
     }
 }
