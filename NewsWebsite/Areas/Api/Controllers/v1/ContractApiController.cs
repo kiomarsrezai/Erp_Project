@@ -61,7 +61,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
                             data.DateEnd = dataReader["DateEnd"].ToString();
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
-                            data.Amount = int.Parse(dataReader["Amount"].ToString());
+                            data.Amount =Int64.Parse(dataReader["Amount"].ToString());
                             data.Surplus = int.Parse(dataReader["Surplus"].ToString());
                             data.Final =bool.Parse(dataReader["Final"].ToString());
                             ContractView.Add(data);
