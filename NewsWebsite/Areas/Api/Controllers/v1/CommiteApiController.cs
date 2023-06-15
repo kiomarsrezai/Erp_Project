@@ -68,6 +68,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(commiteViews);
         }
 
+
         [Route("CommiteDetailRead")]
         [HttpGet]
         public async Task<ApiResult<List<CommiteViewModel>>> GetCommiteDetail(int id)
@@ -375,7 +376,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("CommiteDetailAcceptRead")]
         [HttpGet]
-        public async Task<ApiResult<List<CommiteDetailAcceptReadViewModel>>> Ac_CommiteDetailAcceptRead(CommiteDetailAcceptReadParamViewModel param)
+        public async Task<ApiResult<List<CommiteDetailAcceptReadViewModel>>> Ac_CommiteDetailAcceptRead(CommiteDetailParamReadViewModel param)
         {
             List<CommiteDetailAcceptReadViewModel> commiteAcceptView = new List<CommiteDetailAcceptReadViewModel>();
             {
@@ -445,7 +446,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", Param.Id);
-                     sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
@@ -482,6 +483,120 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+
+        [Route("CommiteDetailEstimateRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<CommiteDetailEstimateReadViewModel>>> Ac_CommiteDetailEstimateRead(CommiteDetailParamReadViewModel param)
+        {
+            List<CommiteDetailEstimateReadViewModel> commiteEstimateView = new List<CommiteDetailEstimateReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailEstimate_Modal", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("CommiteDetailId", param.CommiteDetailId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            CommiteDetailEstimateReadViewModel data = new CommiteDetailEstimateReadViewModel();
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.Description = dataReader["Description"].ToString();
+                            data.Quantity =double.Parse(dataReader["Quantity"].ToString());
+                            data.Price =Int64.Parse(dataReader["Price"].ToString());
+                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            commiteEstimateView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(commiteEstimateView);
+        }
+
+        [Route("CommiteDetailEstimatetInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_CommiteDetailEstimatetInsert([FromBody] CommiteDetailEstimatetInsertParamViewModel param)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailEstimate_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("CommiteDetailId", param.CommiteDetailId);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.Parameters.AddWithValue("Quantity", param.Quantity);
+                    sqlCommand.Parameters.AddWithValue("Price", param.Price);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("CommiteDetailEstimateUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_CommiteDetailEstimateUpdate([FromBody] CommiteDetailEstimatetUpdateParamViewModel param)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailEstimate_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.Parameters.AddWithValue("Quantity", param.Quantity);
+                    sqlCommand.Parameters.AddWithValue("Price", param.Price);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("CommiteDetailEstimateDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_CommiteDetailEstimateDelete([FromBody] DeletePublicParamViewModel Param)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP006_CommiteDetailEstimate_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", Param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
     }
 }
 

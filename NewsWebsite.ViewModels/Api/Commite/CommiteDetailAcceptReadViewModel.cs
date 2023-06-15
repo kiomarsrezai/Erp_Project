@@ -16,7 +16,7 @@ namespace NewsWebsite.ViewModels.Api.Commite
      
     }
 
-    public class CommiteDetailAcceptReadParamViewModel
+    public class CommiteDetailParamReadViewModel
     {
         public int CommiteDetailId { get; set; }
     }
