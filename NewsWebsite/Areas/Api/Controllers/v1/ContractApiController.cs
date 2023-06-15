@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Contract;
+using NewsWebsite.ViewModels.Api.Request;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -107,9 +108,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ContractInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> Ac_ContractInsert([FromBody] ContractInsertParamViewModel param)
+        public async Task<ApiResult<ContractReadViewModel>> Ac_ContractInsert([FromBody] ContractInsertParamViewModel param)
         {
             string readercount = null;
+            ContractReadViewModel data = new ContractReadViewModel();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Insert", sqlconnect))
@@ -127,11 +129,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
+                        data.Id = int.Parse(dataReader["Id"].ToString());
+                        data.Number = dataReader["Number"].ToString();
+                        data.Date = dataReader["Date"].ToString();
+                        data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                        data.Description = dataReader["Description"].ToString();
+                        data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                        data.SuppliersName = dataReader["SuppliersName"].ToString();
+                        data.DateFrom = dataReader["DateFrom"].ToString();
+                        data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
+                        data.DateEnd = dataReader["DateEnd"].ToString();
+                        data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
+                        data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                        data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
+                        data.Final = bool.Parse(dataReader["Final"].ToString());
+
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            if (string.IsNullOrEmpty(readercount)) return Ok(data);
             else
                 return BadRequest(readercount);
         }
@@ -166,7 +184,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-        
+
         [Route("ContractDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractDelete([FromBody] PublicParamIdViewModel param)
@@ -210,6 +228,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             ContractRequestSearchViewModel data = new ContractRequestSearchViewModel();
                             data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.Number = dataReader["Number"].ToString();
+                            data.Date = dataReader["Date"].ToString();
+                            data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                            data.Description = dataReader["Description"].ToString();
+                            ContractSearchView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(ContractSearchView);
+        }
+
+        [Route("ContractRequestRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ContractRequestReadViewModel>>> Ac_ContractRequestRead(PublicParamIdViewModel param)
+        {
+            List<ContractRequestReadViewModel> ContractSearchView = new List<ContractRequestReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractRequest_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("YearId", param.Id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ContractRequestReadViewModel data = new ContractRequestReadViewModel();
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.YearName = dataReader["YearName"].ToString();
+                            data.AreaName = dataReader["AreaName"].ToString();
                             data.Number = dataReader["Number"].ToString();
                             data.Date = dataReader["Date"].ToString();
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
