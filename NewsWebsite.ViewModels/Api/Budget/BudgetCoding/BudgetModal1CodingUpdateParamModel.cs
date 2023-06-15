@@ -8,6 +8,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
     {
         public int id { get; set; }
         public long mosavabPublic { get; set; }
+        public string Code { get; set; }
 
     }
 }
