@@ -73,6 +73,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractView);
         }
 
+        [Route("ContractSearch")]
+        [HttpGet]
+        public async Task<ApiResult<List<ContractSearchViewModel>>> Ac_ContractSearch(PublicParamAreaIdViewModel param)
+        {
+            List<ContractSearchViewModel> ContractSearchView = new List<ContractSearchViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Search", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ContractSearchViewModel data = new ContractSearchViewModel();
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.Number = dataReader["Number"].ToString();
+                            data.Date = dataReader["Date"].ToString();
+                            data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                            data.Description = dataReader["Description"].ToString();
+                            data.SuppliersName = dataReader["SuppliersName"].ToString();
+                            ContractSearchView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(ContractSearchView);
+        }
+
         //[Route("CommiteDetailEstimatetInsert")]
         //[HttpPost]
         //public async Task<ApiResult<string>> Ac_CommiteDetailEstimatetInsert([FromBody] CommiteDetailEstimatetInsertParamViewModel param)
