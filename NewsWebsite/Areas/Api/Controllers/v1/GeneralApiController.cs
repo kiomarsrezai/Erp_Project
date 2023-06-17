@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -22,25 +23,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
-    [ApiResultFilter]
     public class GeneralApiController : ControllerBase
     {
         ProgramBuddbContext _context;
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
+        public readonly IWebHostEnvironment _environment;
 
-        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration,IWebHostEnvironment environment)
         {
             _config = configuration;
             _context = context;
             _uw = uw;
+            _environment = environment;
         }
 
         [Route("UploadFile")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<ApiResult<string>> UploadFile([FromBody] FileUploadModel fileUpload)
+        public async Task<ApiResult<string>> UploadFile(FileUploadModel fileUpload)
         {
             string issuccess="ناموفق";
 
@@ -70,14 +70,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
-                var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(), "\\");
+            var folderName = Path.Combine($"{_environment.WebRootPath}\\Resources\\Project\\{projectId}\\");
 
-                if (!Directory.Exists(pathBuilt))
+            if (!Directory.Exists(folderName))
                 {
-                    Directory.CreateDirectory(pathBuilt);
+                    Directory.CreateDirectory(folderName);
                 }
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(), "\\", fileName);
+                var path = Path.Combine(folderName, fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
