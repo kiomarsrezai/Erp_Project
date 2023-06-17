@@ -97,7 +97,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AreaFetch")]
         [HttpGet]
-        public async Task<IActionResult> AreaFetch(int areaform)
+        public async Task<ApiResult<List<AreaViewModel>>> AreaFetch(int areaform)
         {
 
             return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
