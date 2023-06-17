@@ -841,7 +841,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetCodingInfoModal_Read", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
                     sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
