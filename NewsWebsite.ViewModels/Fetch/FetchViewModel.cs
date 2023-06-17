@@ -24,11 +24,14 @@ namespace NewsWebsite.ViewModels.Fetch
         [Display(Name = "عملکرد")]
         public Int64 Expense { get; set; }
 
+        [Display(Name = "تامین اعتبار")]
+        public Int64? CreditAmount { get; set; }
+
         [Display(Name = "% درصد")]
         public double? PercentBud { get; set; }
         
         [Display(Name = "اصلاح بودجه")]
-        public Int64 Edit { get; set; }
+        public Int64? Edit { get; set; }
         public bool Show { get; set; }
 
         public Int64 TotalMosavab { get; set; }

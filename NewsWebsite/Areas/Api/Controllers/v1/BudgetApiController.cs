@@ -61,7 +61,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        fetchView.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
+                        fetchView.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         fetchView.Show = (bool)dataReader["Show"];
                         fetchView.Crud = (bool)dataReader["Crud"];
