@@ -8,6 +8,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.Entities;
 using NewsWebsite.Services.Api;
 using NewsWebsite.ViewModels.Api.Abstract;
 using NewsWebsite.ViewModels.Api.GeneralVm;
@@ -30,7 +31,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IUnitOfWork _uw;
         public readonly IWebHostEnvironment _environment;
 
-        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration,IWebHostEnvironment environment)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration, IWebHostEnvironment environment)
         {
             _config = configuration;
             _context = context;
@@ -42,11 +43,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> UploadFile(FileUploadModel fileUpload)
         {
-            string issuccess="ناموفق";
+            string issuccess = "ناموفق";
 
-            if (await WriteFile(fileUpload.FormFile,fileUpload.ProjectId))
+            if (await WriteFile(fileUpload.FormFile, fileUpload.ProjectId))
             {
-               issuccess ="موفق";
+                issuccess = "موفق";
             }
             else
             {
@@ -65,14 +66,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             bool isSaveSuccess = false;
             string fileName;
-            //try
-            //{
+            try
+            {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
-            var folderName = Path.Combine($"{_environment.WebRootPath}\\Resources\\Project\\{projectId}\\");
+                var folderName = Path.Combine($"{_environment.WebRootPath}\\Resources\\Project\\{projectId}\\");
 
-            if (!Directory.Exists(folderName))
+                if (!Directory.Exists(folderName))
                 {
                     Directory.CreateDirectory(folderName);
                 }
@@ -84,13 +85,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     await file.CopyToAsync(stream);
 
                 }
-
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP0_FileDetail_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("ProjectId", projectId);
+                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    }
+                }
                 isSaveSuccess = true;
-            //}
-            //catch (Exception e)
-            //{
-            //    //log error
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Source = "Error";
+                isSaveSuccess &= false;
+            }
 
             return isSaveSuccess;
         }
@@ -103,7 +115,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
         }
 
-        
+
 
         [Route("YearFetch")]
         [HttpGet]
