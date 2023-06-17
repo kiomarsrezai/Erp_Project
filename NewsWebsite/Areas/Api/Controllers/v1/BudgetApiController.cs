@@ -853,6 +853,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         data.EditArea = StringExtensions.ToNullableBigInt(dataReader["EditArea"].ToString());
                         data.Expense = StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString());
                         data.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
+                        data.StructureId = int.Parse(dataReader["StructureId"].ToString());
                         fecth.Add(data);
                     }
                 }
