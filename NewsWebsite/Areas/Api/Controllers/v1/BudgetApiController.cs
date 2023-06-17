@@ -828,7 +828,40 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+
+        [Route("BudgetCodingInfoModalRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetCodingInfoModalReadViewModal>>> Ac_BudgetCodingInfoModalRead(ParamViewModal param)
+        {
+
+            List<BudgetCodingInfoModalReadViewModal> fecth = new List<BudgetCodingInfoModalReadViewModal>();
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetCodingInfoModal_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetCodingInfoModalReadViewModal data = new BudgetCodingInfoModalReadViewModal();
+                        data.AreaName = dataReader["AreaName"].ToString();
+                        data.Mosavab = StringExtensions.ToNullableBigInt(dataReader["Mosavab"].ToString());
+                        data.EditArea = StringExtensions.ToNullableBigInt(dataReader["EditArea"].ToString());
+                        data.Expense = StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString());
+                        data.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
+                        fecth.Add(data);
+                    }
+                }
+            }
+            return Ok(fecth);
+        }
+
     }
+
 
 
 }
