@@ -5,7 +5,9 @@ using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
 using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
+using NewsWebsite.ViewModels.Api.Public;
 using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;
@@ -249,7 +251,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         BudgetSepratorAreaAccModalViewModel fetchView = new BudgetSepratorAreaAccModalViewModel();
-                        fetchView.NumberSanad = StringExtensions.ToNullableInt(dataReader["NumberSanad"].ToString());
+                        fetchView.NumberSanad = dataReader["NumberSanad"].ToString();
                         fetchView.DateSanad = dataReader["DateSanad"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
@@ -554,8 +556,34 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-
-
+        [Route("CodingManualUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_CodingManualUpdate([FromBody] CodingManualUpdate param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_EditCodingManual", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+                    sqlCommand.Parameters.AddWithValue("Code", param.Code);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
     }
 

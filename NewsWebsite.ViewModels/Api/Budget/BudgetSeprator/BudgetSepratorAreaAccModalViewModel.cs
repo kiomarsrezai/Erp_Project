@@ -5,7 +5,7 @@
         public long Expense { get; set; }
         public string Description { get; set; }
         public string DateSanad { get; set; }
-        public int? NumberSanad { get; set; }
+        public string NumberSanad { get; set; }
         public int KindId { get; set; }
     }
 
