@@ -118,6 +118,26 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
+        [Route("DeleteRow")]
+        [HttpGet]
+        public async Task<ApiResult<string>> AC_DeleteRow(int id)
+        {
+                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Row_Delete", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("id", id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        sqlconnect.Close();
+                    }
+                }
+       
+            return Ok("با موفقیت انجام شد");
+        }
+
+
         [Route("LinkCodeAcc")]
         [HttpGet]
         public async Task<ApiResult<string>> LinkCodeAcc(int id, int areaId, string codeAcc, string titleAcc)
