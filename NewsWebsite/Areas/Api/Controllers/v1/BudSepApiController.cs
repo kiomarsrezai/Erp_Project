@@ -585,6 +585,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+
+        [Route("MosavabManualUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_MosavabManualUpdate([FromBody] MosavabManualUpdateViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_EditCodingManual", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+                    sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
     }
 
 
