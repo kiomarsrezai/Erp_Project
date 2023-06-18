@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.Entities;
 using NewsWebsite.Services.Api;
 using NewsWebsite.ViewModels.Api.Abstract;
 using NewsWebsite.ViewModels.Api.GeneralVm;
@@ -22,31 +24,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
-    [ApiResultFilter]
     public class GeneralApiController : ControllerBase
     {
         ProgramBuddbContext _context;
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
+        public readonly IWebHostEnvironment _environment;
 
-        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration, IWebHostEnvironment environment)
         {
             _config = configuration;
             _context = context;
             _uw = uw;
+            _environment = environment;
         }
 
         [Route("UploadFile")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<ApiResult<string>> UploadFile([FromBody] FileUploadModel fileUpload)
+        public async Task<ApiResult<string>> UploadFile(FileUploadModel fileUpload)
         {
-            string issuccess="ناموفق";
+            string issuccess = "ناموفق";
 
-            if (await WriteFile(fileUpload.FormFile,fileUpload.ProjectId))
+            if (await WriteFile(fileUpload.FormFile, fileUpload.ProjectId))
             {
-               issuccess ="موفق";
+                issuccess = "موفق";
             }
             else
             {
@@ -65,45 +66,56 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             bool isSaveSuccess = false;
             string fileName;
-            //try
-            //{
+            try
+            {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
-                var pathBuilt = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(), "\\");
+                var folderName = Path.Combine($"{_environment.WebRootPath}\\Resources\\Project\\{projectId}\\");
 
-                if (!Directory.Exists(pathBuilt))
+                if (!Directory.Exists(folderName))
                 {
-                    Directory.CreateDirectory(pathBuilt);
+                    Directory.CreateDirectory(folderName);
                 }
 
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Project\\", projectId.ToString(), "\\", fileName);
+                var path = Path.Combine(folderName, fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
 
                 }
-
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP0_FileDetail_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("ProjectId", projectId);
+                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    }
+                }
                 isSaveSuccess = true;
-            //}
-            //catch (Exception e)
-            //{
-            //    //log error
-            //}
+            }
+            catch (Exception e)
+            {
+                e.Source = "Error";
+                isSaveSuccess &= false;
+            }
 
             return isSaveSuccess;
         }
 
         [Route("AreaFetch")]
         [HttpGet]
-        public async Task<IActionResult> AreaFetch(int areaform)
+        public async Task<ApiResult<List<AreaViewModel>>> AreaFetch(int areaform)
         {
 
             return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
         }
 
-        
+
 
         [Route("YearFetch")]
         [HttpGet]
