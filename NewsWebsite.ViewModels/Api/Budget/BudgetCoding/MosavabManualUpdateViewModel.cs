@@ -6,10 +6,9 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
 {
     public class MosavabManualUpdateViewModel
     {
-        public int YearId { get; set; }
-        public int AreaId { get; set; }
-        public int BudgetProcessId { get; set; }
-        public int CodingId { get; set; }
+        public int BudgetDetailId { get; set; }
+         public int BudgetDetailProjectId { get; set; }
+        public int BudgetDetailProjectAreaId { get; set; }
         public Int64 Mosavab { get; set; }
 
     }

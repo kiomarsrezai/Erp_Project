@@ -622,9 +622,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
    
-
-
-
         [Route("MosavabManualUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> AC_MosavabManualUpdate([FromBody] MosavabManualUpdateViewModel param)
@@ -635,11 +632,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_EditMosavabManual", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
-                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
                     sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
+                    sqlCommand.Parameters.AddWithValue("BudgetDetailId", param.BudgetDetailId);
+                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectId", param.BudgetDetailProjectId);
+                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaId", param.BudgetDetailProjectAreaId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
