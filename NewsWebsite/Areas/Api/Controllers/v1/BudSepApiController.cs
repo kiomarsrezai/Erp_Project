@@ -593,7 +593,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_EditCodingManual", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_EditMosavabManual", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
