@@ -586,6 +586,45 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("MosavabManualModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<MosavabModalViewModel>>> AC_MosavabManualModal(ReadPublicParamViewModel param)
+        {
+            List<MosavabModalViewModel> fecthViewModel = new List<MosavabModalViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_MosavabManualModal", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        MosavabModalViewModel data = new MosavabModalViewModel();
+                        data.Code = dataReader["Code"].ToString();
+                        data.Description = dataReader["Description"].ToString();
+                        data.BudgetDetailId =int.Parse(dataReader["BudgetDetailId"].ToString());
+                        data.MosavabPublic =Int64.Parse(dataReader["MosavabPublic"].ToString());
+                        data.BudgetDetailProjectId = int.Parse(dataReader["BudgetDetailProjectId"].ToString());
+                        data.MosavabProject = Int64.Parse(dataReader["MosavabProject"].ToString());
+                        data.BudgetDetailProjectAreaId = int.Parse(dataReader["BudgetDetailProjectAreaId"].ToString());
+                        data.MosavabArea = Int64.Parse(dataReader["MosavabArea"].ToString());
+                        fecthViewModel.Add(data);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
+        }
+
+   
+
+
+
         [Route("MosavabManualUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> AC_MosavabManualUpdate([FromBody] MosavabManualUpdateViewModel param)
