@@ -152,7 +152,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public virtual async Task<ApiResult<string>> ChangePassword([FromBody] ChangePasswordViewModel ViewModel)
         {
-            var user = _userManager.GetById(ViewModel.Id);
+            var user = await _Context.Users.FirstOrDefaultAsync(a=>a.Id== ViewModel.Id);
             if (user == null)
                 return BadRequest("");
 
