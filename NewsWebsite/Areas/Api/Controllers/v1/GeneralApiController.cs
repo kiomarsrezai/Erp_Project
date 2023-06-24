@@ -30,6 +30,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         public readonly IWebHostEnvironment _environment;
+        private readonly IFileService fileService; 
 
         public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration, IWebHostEnvironment environment)
         {
@@ -139,6 +140,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         YearViewModel fetchView = new YearViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
                         fetchView.YearName = dataReader["YearName"].ToString();
+                        yearViews.Add(fetchView);
+
+                        //dataReader.NextResult();
+                    }
+                }
+            }
+            return Ok(yearViews);
+        }
+
+
+        [Route("GetAttachFiles")]
+        [HttpGet]
+        public async Task<ApiResult<List<GetListAttachFiles>>> GetAttachFiles(int projectId)
+        {
+            if (projectId== 0) BadRequest();
+
+            List<GetListAttachFiles> yearViews = new List<GetListAttachFiles>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Year", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("ProjectId", projectId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        GetListAttachFiles fetchView = new GetListAttachFiles();
+                        fetchView.ProjectCode = int.Parse(dataReader["ProjectCode"].ToString());
+                        fetchView.ProjectId = int.Parse(dataReader["YearName"].ToString());
+                        fetchView.FileName = dataReader["FileName"].ToString();
+                        fetchView.FileDetailId = int.Parse(dataReader["FileDetailId"].ToString());
                         yearViews.Add(fetchView);
 
                         //dataReader.NextResult();

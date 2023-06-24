@@ -87,7 +87,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
-
         [Route("BudgetConnectRead")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetConnect_ReadViewModel>>> BudgetConnectRead(BudgetConnect_ReadParamViewModel viewModel)
@@ -828,7 +827,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("BudgetCodingInfoModalRead")]
         [HttpGet]
