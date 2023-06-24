@@ -160,7 +160,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Year", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_GetListAttachFiles", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("ProjectId", projectId);
