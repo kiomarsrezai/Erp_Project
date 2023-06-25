@@ -72,7 +72,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
-                var folderName = Path.Combine($"{_environment.WebRootPath}\\Resources\\Project\\{projectId}\\");
+                var folderName = Path.Combine(@"F:\Resources\Project\",projectId.ToString()+"\\");
 
                 if (!Directory.Exists(folderName))
                 {
