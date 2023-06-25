@@ -145,7 +145,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("CarInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> AC_CarInsert([FromBody] CarInsertParamViewModel param)
+        public async Task<ApiResult<CarReadViewModel>> AC_CarInsert([FromBody] CarInsertParamViewModel param)
         {
             CarReadViewModel data = new CarReadViewModel();
            // string readercount = null;
