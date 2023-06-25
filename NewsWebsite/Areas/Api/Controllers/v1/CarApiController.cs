@@ -148,7 +148,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<string>> AC_CarInsert([FromBody] CarInsertParamViewModel param)
         {
             CarReadViewModel data = new CarReadViewModel();
-            string readercount = null;
+           // string readercount = null;
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {

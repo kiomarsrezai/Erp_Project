@@ -13,5 +13,10 @@ namespace NewsWebsite.ViewModels.Api.Car
         public int? TipeId { get; set; }
         public string ProductYear { get; set; }
         public string Color { get; set; }
+        public string KindName { get; set; }
+        public string SystemName { get; set; }
+        public string TipeName { get; set; }
+
+
     }
 }
