@@ -38,6 +38,7 @@ namespace NewsWebsite.ViewModels.Api.Report
         public double PercentDar_Khazane { get; set; }
 
         public Int64 Resoures { get; set; }
+        public Int64 balance { get; set; }
 
     }
 
