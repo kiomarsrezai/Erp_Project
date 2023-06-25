@@ -76,7 +76,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                             if (!string.IsNullOrEmpty(dataReader1["Mosavab"].ToString()) && Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
-                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["Mosavab"].ToString())));
+                                percmosavab.Add(_uw.Budget_001Rep.Division(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["Mosavab"].ToString())));
                             }
                             else
                             {
@@ -84,7 +84,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             }
                             if (!string.IsNullOrEmpty(dataReader1["MosavabDaily"].ToString()) && Int64.Parse(dataReader1["MosavabDaily"].ToString()) > 0)
                             {
-                                percdaily.Add(_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["MosavabDaily"].ToString())));
+                                percdaily.Add(_uw.Budget_001Rep.Division(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["MosavabDaily"].ToString())));
                             }
                             else
                             {
@@ -133,7 +133,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                             if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
-                                percmosavab.Add(_uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString())));
+                                percmosavab.Add(_uw.Budget_001Rep.Division(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString())));
                             }
                             else
                             {
@@ -181,7 +181,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.ExpenseRevenue = Int64.Parse(dataReader1["ExpenseRevenue"].ToString());
                         if (!string.IsNullOrEmpty(dataReader1["MosavabRevenue"].ToString()) && Int64.Parse(dataReader1["MosavabRevenue"].ToString()) > 0)
                         {
-                            row.percentRevenue = _uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["ExpenseRevenue"].ToString()), long.Parse(dataReader1["MosavabRevenue"].ToString()));
+                            row.percentRevenue = _uw.Budget_001Rep.Division(long.Parse(dataReader1["ExpenseRevenue"].ToString()), long.Parse(dataReader1["MosavabRevenue"].ToString()));
                         }
                         else
                         {
@@ -192,7 +192,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (!string.IsNullOrEmpty(dataReader1["MosavabSale"].ToString()) &&
                                  Int64.Parse(dataReader1["MosavabSale"].ToString()) > 0)
                         {
-                            row.percentSale = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseSale"].ToString()), Int64.Parse(dataReader1["MosavabSale"].ToString())));
+                            row.percentSale = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["ExpenseSale"].ToString()), Int64.Parse(dataReader1["MosavabSale"].ToString())));
                         }
                         else
                         {
@@ -203,7 +203,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (!string.IsNullOrEmpty(dataReader1["MosavabLoan"].ToString()) &&
                               Int64.Parse(dataReader1["MosavabLoan"].ToString()) > 0)
                         {
-                            row.percentLoan = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseLoan"].ToString()), Int64.Parse(dataReader1["MosavabLoan"].ToString())));
+                            row.percentLoan = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["ExpenseLoan"].ToString()), Int64.Parse(dataReader1["MosavabLoan"].ToString())));
                         }
                         else
                         {
@@ -214,7 +214,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (!string.IsNullOrEmpty(dataReader1["MosavabDaryaftAzKhazane"].ToString()) && Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString()) > 0)
                         {
-                            row.percentDaryaftAzKhazane = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString()), Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString())));
+                            row.percentDaryaftAzKhazane = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["ExpenseDaryaftAzKhazane"].ToString()), Int64.Parse(dataReader1["MosavabDaryaftAzKhazane"].ToString())));
                         }
                         else
                         {
@@ -226,7 +226,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (!string.IsNullOrEmpty(dataReader1["MosavabKol"].ToString()) && Int64.Parse(dataReader1["MosavabKol"].ToString()) > 0)
                         {
-                            row.percentKol = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseKol"].ToString()), Int64.Parse(dataReader1["MosavabKol"].ToString())));
+                            row.percentKol = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["ExpenseKol"].ToString()), Int64.Parse(dataReader1["MosavabKol"].ToString())));
                         }
                         else
                         {
@@ -314,7 +314,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.expense = Int64.Parse(dataReader1["Expense"].ToString());
                         if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                         {
-                            row.percmosavab = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                            row.percmosavab = _uw.Budget_001Rep.Division(double.Parse(dataReader1["Expense"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
                         }
                         else
                         {
@@ -403,7 +403,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.NotGet = Int64.Parse(dataReader["NotGet"].ToString());
                         if (double.Parse(dataReader["Mosavab"].ToString()) > 0)
                         {
-                            row.PercentMosavab = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader["Expense"].ToString()), double.Parse(dataReader["Mosavab"].ToString()));
+                            row.PercentMosavab = _uw.Budget_001Rep.Division(double.Parse(dataReader["Expense"].ToString()), double.Parse(dataReader["Mosavab"].ToString()));
                         }
                         else
                         {
@@ -411,7 +411,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
                         if (double.Parse(dataReader["MosavabDaily"].ToString()) > 0)
                         {
-                            row.PercentMosavabDaily = _uw.Budget_001Rep.Divivasion(double.Parse(dataReader["Expense"].ToString()), double.Parse(dataReader["MosavabDaily"].ToString()));
+                            row.PercentMosavabDaily = _uw.Budget_001Rep.Division(double.Parse(dataReader["Expense"].ToString()), double.Parse(dataReader["MosavabDaily"].ToString()));
                         }
                         else
                         {
@@ -467,7 +467,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (row.MosavabCurrent != 0)
                         {
-                            row.PercentCurrent = _uw.Budget_001Rep.Divivasion(row.ExpenseCurrent, row.MosavabCurrent);
+                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.MosavabCurrent);
                             //row.PercentCurrentStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent, fetchView.MosavabCurrent).ToString()) + "%";
                         }
                         else
@@ -478,7 +478,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (row.MosavabCivil != 0)
                         {
-                            row.PercentCivil = _uw.Budget_001Rep.Divivasion(row.ExpenseCivil, row.MosavabCivil);
+                            row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.MosavabCivil);
                             //row.PercentCivilStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil, fetchView.MosavabCivil).ToString()) + "%";
                         }
                         else
@@ -487,7 +487,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (row.MosavabCurrent + row.MosavabCivil != 0)
                         {
-                            row.PercentTotal = _uw.Budget_001Rep.Divivasion(row.ExpenseCivil + row.ExpenseCurrent, row.MosavabCivil + row.MosavabCurrent);
+                            row.PercentTotal = _uw.Budget_001Rep.Division(row.ExpenseCivil + row.ExpenseCurrent, row.MosavabCivil + row.MosavabCurrent);
                             //fetchView.PercentTotalStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil + fetchView.ExpenseCurrent, fetchView.MosavabCivil + fetchView.MosavabCurrent).ToString()) + "%";
                         }
                         else
@@ -529,7 +529,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
                         if (fetchView.MosavabCurrent != 0)
                         {
-                            fetchView.PercentCurrent = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent, fetchView.MosavabCurrent);
+                            fetchView.PercentCurrent = _uw.Budget_001Rep.Division(fetchView.ExpenseCurrent, fetchView.MosavabCurrent);
                         }
                         else
                         {
@@ -541,7 +541,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (fetchView.MosavabCivil != 0)
                         {
-                            fetchView.PercentCivil = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil, fetchView.MosavabCivil);
+                            fetchView.PercentCivil = _uw.Budget_001Rep.Division(fetchView.ExpenseCivil, fetchView.MosavabCivil);
                         }
                         else
                         {
@@ -550,7 +550,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (fetchView.MosavabCurrent + fetchView.MosavabCivil != 0)
                         {
-                            fetchView.PercentTotal = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent + fetchView.ExpenseCivil, fetchView.MosavabCurrent + fetchView.MosavabCivil);
+                            fetchView.PercentTotal = _uw.Budget_001Rep.Division(fetchView.ExpenseCurrent + fetchView.ExpenseCivil, fetchView.MosavabCurrent + fetchView.MosavabCivil);
                         }
                         else
                         {
@@ -602,7 +602,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (fetchView.Mosavab != 0)
                         {
-                            fetchView.Percent = _uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Mosavab);
+                            fetchView.Percent = _uw.Budget_001Rep.Division(fetchView.Expense, fetchView.Mosavab);
                         }
                         else
                         {
@@ -728,7 +728,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchdata.ExpenseCurrent = Int64.Parse(dataReader["ExpenseCurrent"].ToString());
                         if (fetchdata.MosavabCurrent != 0)
                         {
-                            fetchdata.PercentCurrent = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent);
+                            fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent));
                         }
                         else
                         {
@@ -738,7 +738,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchdata.ExpenseCivil = Int64.Parse(dataReader["ExpenseCivil"].ToString());
                         if (fetchdata.MosavabCivil != 0)
                         {
-                            fetchdata.PercentCivil = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseCivil, fetchdata.MosavabCivil);
+                            fetchdata.PercentCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCivil, fetchdata.MosavabCivil));
                         }
                         else
                         {
@@ -749,7 +749,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchdata.ExpenseFinancial = Int64.Parse(dataReader["ExpenseFinancial"].ToString());
                         if (fetchdata.MosavabFinancial != 0)
                         {
-                            fetchdata.PercentFinancial = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseFinancial, fetchdata.MosavabFinancial);
+                            fetchdata.PercentFinancial = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseFinancial, fetchdata.MosavabFinancial));
                         }
                         else
                         {
@@ -760,7 +760,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchdata.ExpenseSanavati = Int64.Parse(dataReader["ExpenseSanavati"].ToString());
                         if (fetchdata.MosavabFinancial != 0)
                         {
-                            fetchdata.PercentSanavati = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseSanavati, fetchdata.MosavabSanavati);
+                            fetchdata.PercentSanavati = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseSanavati, fetchdata.MosavabSanavati));
                         }
                         else
                         {

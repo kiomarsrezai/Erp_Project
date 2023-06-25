@@ -206,7 +206,7 @@ namespace NewsWebsite.Data.Repositories
             return areaViews;
         }
 
-        public double Divivasion(double? expense, double? mosavab)
+        public double Division(double? expense, double? mosavab)
         {
             if (mosavab == null )  return 0;
 
@@ -248,7 +248,7 @@ namespace NewsWebsite.Data.Repositories
 
                         if (fetchView.Mosavab != 0)
                         {
-                            fetchView.PercentBud = Math.Round(Divivasion(fetchView.Expense, fetchView.Mosavab));
+                            fetchView.PercentBud = Math.Round(Division(fetchView.Expense, fetchView.Mosavab));
                         }
                         else
                         {

@@ -71,7 +71,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         _totalExpense += fetchView.Expense;
                         if ((!string.IsNullOrEmpty(dataReader["Edit"].ToString()) && Int64.Parse(dataReader["Edit"].ToString()) > 0))
                         {
-                            fetchView.PercentBud = _uw.Budget_001Rep.Divivasion(StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString()));
+                            fetchView.PercentBud = _uw.Budget_001Rep.Division(StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString()), StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString()));
                         }
                         else
                         {
@@ -388,7 +388,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         //BudgetView.Show = (bool)dataReader["Show"];
                         if (BudgetView.Mosavab != 0)
                         {
-                            BudgetView.PercentBud = _uw.Budget_001Rep.Divivasion(BudgetView.Expense, BudgetView.Mosavab);
+                            BudgetView.PercentBud = _uw.Budget_001Rep.Division(BudgetView.Expense, BudgetView.Mosavab);
                         }
                         else
                         {
@@ -735,7 +735,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         //BudgetView.Show = (bool)dataReader["Show"];
                         if (BudgetView.Mosavab != 0)
                         {
-                            BudgetView.PercentBud = _uw.Budget_001Rep.Divivasion(BudgetView.Expense, BudgetView.Mosavab);
+                            BudgetView.PercentBud = _uw.Budget_001Rep.Division(BudgetView.Expense, BudgetView.Mosavab);
                         }
                         else
                         {
