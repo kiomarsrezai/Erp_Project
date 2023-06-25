@@ -796,9 +796,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
                         fetchdata.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
-
-              
-                    
+                        fetchdata.balance = Int64.Parse(dataReader["balance"].ToString());
 
 
                         fecthViewModel.Add(fetchdata);
