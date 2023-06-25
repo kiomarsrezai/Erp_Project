@@ -718,12 +718,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchdata.Id = int.Parse(dataReader["Id"].ToString());
                         fetchdata.AreaName = dataReader["AreaName"].ToString();
                         fetchdata.MosavabRevenue = Int64.Parse(dataReader["MosavabRevenue"].ToString());
-                        fetchdata.MosavabPayMotomarkez = Int64.Parse(dataReader["MosavabPayMotomarkez"].ToString());
-                        fetchdata.MosavabDar_Khazane = Int64.Parse(dataReader["MosavabDar_Khazane"].ToString());
-                        fetchdata.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
                         fetchdata.ExpenseRevenue = Int64.Parse(dataReader["ExpenseRevenue"].ToString());
-                        fetchdata.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
-                        fetchdata.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+                        if (fetchdata.MosavabRevenue != 0)
+                        {
+                            fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabRevenue));
+                        }
+                        else
+                        {
+                            fetchdata.PercentRevenue = 0;
+                        }
+
                         fetchdata.MosavabCurrent = Int64.Parse(dataReader["MosavabCurrent"].ToString());
                         fetchdata.ExpenseCurrent = Int64.Parse(dataReader["ExpenseCurrent"].ToString());
                         if (fetchdata.MosavabCurrent != 0)
@@ -768,8 +772,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
 
 
+                        fetchdata.MosavabPayMotomarkez = Int64.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                        fetchdata.MosavabDar_Khazane = Int64.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                        fetchdata.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
 
-                        
+                        fetchdata.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
+                        fetchdata.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+
 
                         fecthViewModel.Add(fetchdata);
                     }
