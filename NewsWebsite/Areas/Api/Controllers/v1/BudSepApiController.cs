@@ -115,8 +115,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         await sqlCommand.ExecuteReaderAsync();
                         ViewBag.alertsucces = "بروزرسانی انجام شد";
                     }
-                    //view["notification"] = "بروزرسانی با موفقیت انجام شد";
-                }
+                 sqlconnect.Close();
+                 }
             }
             else
             if (refreshFormViewModel.yearId == 33)
@@ -131,6 +131,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.ExecuteReader();
                         ViewBag.alertsucces = "بروزرسانی انجام شد";
                     }
+                 sqlconnect.Close();
                 }
             }
             return Ok();
