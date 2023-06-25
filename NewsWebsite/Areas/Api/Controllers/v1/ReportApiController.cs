@@ -179,20 +179,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.AreaName = dataReader1["AreaName"].ToString();
                         row.MosavabRevenue = Int64.Parse(dataReader1["MosavabRevenue"].ToString());
                         row.ExpenseRevenue = Int64.Parse(dataReader1["ExpenseRevenue"].ToString());
-                           if (!string.IsNullOrEmpty(dataReader1["MosavabRevenue"].ToString()) && Int64.Parse(dataReader1["MosavabRevenue"].ToString()) > 0)
-                            {
-                            row.percentRevenue=_uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["ExpenseRevenue"].ToString()), long.Parse(dataReader1["MosavabRevenue"].ToString()));
-                            }
-                            else
-                            {
-                            row.percentRevenue =0;
-                            }
+                        if (!string.IsNullOrEmpty(dataReader1["MosavabRevenue"].ToString()) && Int64.Parse(dataReader1["MosavabRevenue"].ToString()) > 0)
+                        {
+                            row.percentRevenue = _uw.Budget_001Rep.Divivasion(long.Parse(dataReader1["ExpenseRevenue"].ToString()), long.Parse(dataReader1["MosavabRevenue"].ToString()));
+                        }
+                        else
+                        {
+                            row.percentRevenue = 0;
+                        }
                         row.MosavabSale = Int64.Parse(dataReader1["MosavabSale"].ToString());
                         row.ExpenseSale = Int64.Parse(dataReader1["ExpenseSale"].ToString());
                         if (!string.IsNullOrEmpty(dataReader1["MosavabSale"].ToString()) &&
                                  Int64.Parse(dataReader1["MosavabSale"].ToString()) > 0)
                         {
-                            row.percentSale =(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseSale"].ToString()), Int64.Parse(dataReader1["MosavabSale"].ToString())));
+                            row.percentSale = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseSale"].ToString()), Int64.Parse(dataReader1["MosavabSale"].ToString())));
                         }
                         else
                         {
@@ -203,7 +203,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (!string.IsNullOrEmpty(dataReader1["MosavabLoan"].ToString()) &&
                               Int64.Parse(dataReader1["MosavabLoan"].ToString()) > 0)
                         {
-                            row.percentLoan =(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseLoan"].ToString()), Int64.Parse(dataReader1["MosavabLoan"].ToString())));
+                            row.percentLoan = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseLoan"].ToString()), Int64.Parse(dataReader1["MosavabLoan"].ToString())));
                         }
                         else
                         {
@@ -218,7 +218,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
                         else
                         {
-                            row.percentDaryaftAzKhazane=0;
+                            row.percentDaryaftAzKhazane = 0;
                         }
 
                         row.MosavabKol = Int64.Parse(dataReader1["MosavabKol"].ToString());
@@ -226,7 +226,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         if (!string.IsNullOrEmpty(dataReader1["MosavabKol"].ToString()) && Int64.Parse(dataReader1["MosavabKol"].ToString()) > 0)
                         {
-                            row.percentKol =(_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseKol"].ToString()), Int64.Parse(dataReader1["MosavabKol"].ToString())));
+                            row.percentKol = (_uw.Budget_001Rep.Divivasion(Int64.Parse(dataReader1["ExpenseKol"].ToString()), Int64.Parse(dataReader1["MosavabKol"].ToString())));
                         }
                         else
                         {
@@ -456,13 +456,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
                         row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
                         //fetchView.MosavabCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCurrent"].ToString())));
-                    
+
                         //fetchView.MosavabCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCivil"].ToString())));
-                      
+
                         //fetchView.ExpenseCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCurrent"].ToString())));
-                      
+
                         //fetchView.ExpenseCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCivil"].ToString())));
-                    
+
                         //fetchView.Row = int.Parse(dataReader["Id"].ToString());
 
                         if (row.MosavabCurrent != 0)
@@ -548,7 +548,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchView.PercentCivil = 0;
                         }
 
-                        if (fetchView.MosavabCurrent +fetchView.MosavabCivil != 0)
+                        if (fetchView.MosavabCurrent + fetchView.MosavabCivil != 0)
                         {
                             fetchView.PercentTotal = _uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent + fetchView.ExpenseCivil, fetchView.MosavabCurrent + fetchView.MosavabCivil);
                         }
@@ -610,7 +610,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
                         fecthViewModel.Add(fetchView);
                     }
-    
+
                 }
             }
             return Ok(fecthViewModel);
@@ -700,7 +700,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<AbstractPerformanceBudgetViewModel>>> AC_AbstractPerformanceBudget(ParamViewModel param)
         {
-          
+
             List<AbstractPerformanceBudgetViewModel> fecthViewModel = new List<AbstractPerformanceBudgetViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -714,30 +714,32 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        AbstractPerformanceBudgetViewModel fetchView = new AbstractPerformanceBudgetViewModel();
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.AreaName = dataReader["AreaName"].ToString();
-                        fetchView.MosavabRevenue = Int64.Parse(dataReader["MosavabRevenue"].ToString());
-                        fetchView.MosavabPayMotomarkez = Int64.Parse(dataReader["MosavabPayMotomarkez"].ToString());
-                        fetchView.MosavabDar_Khazane = Int64.Parse(dataReader["MosavabDar_Khazane"].ToString());
-                        fetchView.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
-                        fetchView.ExpenseRevenue = Int64.Parse(dataReader["ExpenseRevenue"].ToString());
-                        fetchView.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
-                        fetchView.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
-                        fetchView.MosavabCurrent = Int64.Parse(dataReader["MosavabCurrent"].ToString());
-                        fetchView.ExpenseCurrent = Int64.Parse(dataReader["ExpenseCurrent"].ToString());
-                        fetchView.MosavabCivil = Int64.Parse(dataReader["MosavabCivil"].ToString());
-                        fetchView.ExpenseCivil = Int64.Parse(dataReader["ExpenseCivil"].ToString());
-                        fetchView.MosavabFinancial = Int64.Parse(dataReader["MosavabFinancial"].ToString());
-                        fetchView.ExpenseFinancial = Int64.Parse(dataReader["ExpenseFinancial"].ToString());
-                        fetchView.MosavabSanavati = Int64.Parse(dataReader["MosavabSanavati"].ToString());
-                        fetchView.ExpenseSanavati = Int64.Parse(dataReader["ExpenseSanavati"].ToString());
+                        AbstractPerformanceBudgetViewModel fetchdata = new AbstractPerformanceBudgetViewModel();
+                        fetchdata.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchdata.AreaName = dataReader["AreaName"].ToString();
+                        fetchdata.MosavabRevenue = Int64.Parse(dataReader["MosavabRevenue"].ToString());
+                        fetchdata.MosavabPayMotomarkez = Int64.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                        fetchdata.MosavabDar_Khazane = Int64.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                        fetchdata.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
+                        fetchdata.ExpenseRevenue = Int64.Parse(dataReader["ExpenseRevenue"].ToString());
+                        fetchdata.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
+                        fetchdata.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+                        fetchdata.MosavabCurrent = Int64.Parse(dataReader["MosavabCurrent"].ToString());
+                        fetchdata.ExpenseCurrent = Int64.Parse(dataReader["ExpenseCurrent"].ToString());
+                        fetchdata.MosavabCivil = Int64.Parse(dataReader["MosavabCivil"].ToString());
+                        fetchdata.ExpenseCivil = Int64.Parse(dataReader["ExpenseCivil"].ToString());
+                        fetchdata.MosavabFinancial = Int64.Parse(dataReader["MosavabFinancial"].ToString());
+                        fetchdata.ExpenseFinancial = Int64.Parse(dataReader["ExpenseFinancial"].ToString());
+                        fetchdata.MosavabSanavati = Int64.Parse(dataReader["MosavabSanavati"].ToString());
+                        fetchdata.ExpenseSanavati = Int64.Parse(dataReader["ExpenseSanavati"].ToString());
 
-        fecthViewModel.Add(fetchView);
+                        fecthViewModel.Add(fetchdata);
                     }
-
                 }
+                sqlconnect.Close();
             }
+
+
             return Ok(fecthViewModel);
         }
     }
