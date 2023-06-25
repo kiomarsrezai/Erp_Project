@@ -694,5 +694,51 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(commiteViews);
         }
+
+
+        [Route("AbstractPerformanceBudget")]
+        [HttpGet]
+        public async Task<ApiResult<List<AbstractPerformanceBudgetViewModel>>> AC_AbstractPerformanceBudget(ParamViewModel param)
+        {
+          
+            List<AbstractPerformanceBudgetViewModel> fecthViewModel = new List<AbstractPerformanceBudgetViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId ", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("structureId", param.StructureId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        AbstractPerformanceBudgetViewModel fetchView = new AbstractPerformanceBudgetViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.AreaName = dataReader["AreaName"].ToString();
+                        fetchView.MosavabRevenue = Int64.Parse(dataReader["MosavabRevenue"].ToString());
+                        fetchView.MosavabPayMotomarkez = Int64.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                        fetchView.MosavabDar_Khazane = Int64.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                        fetchView.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
+                        fetchView.ExpenseRevenue = Int64.Parse(dataReader["ExpenseRevenue"].ToString());
+                        fetchView.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
+                        fetchView.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+                        fetchView.MosavabCurrent = Int64.Parse(dataReader["MosavabCurrent"].ToString());
+                        fetchView.ExpenseCurrent = Int64.Parse(dataReader["ExpenseCurrent"].ToString());
+                        fetchView.MosavabCivil = Int64.Parse(dataReader["MosavabCivil"].ToString());
+                        fetchView.ExpenseCivil = Int64.Parse(dataReader["ExpenseCivil"].ToString());
+                        fetchView.MosavabFinancial = Int64.Parse(dataReader["MosavabFinancial"].ToString());
+                        fetchView.ExpenseFinancial = Int64.Parse(dataReader["ExpenseFinancial"].ToString());
+                        fetchView.MosavabSanavati = Int64.Parse(dataReader["MosavabSanavati"].ToString());
+                        fetchView.ExpenseSanavati = Int64.Parse(dataReader["ExpenseSanavati"].ToString());
+
+        fecthViewModel.Add(fetchView);
+                    }
+
+                }
+            }
+            return Ok(fecthViewModel);
+        }
     }
 }
