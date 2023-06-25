@@ -726,12 +726,50 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchdata.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
                         fetchdata.MosavabCurrent = Int64.Parse(dataReader["MosavabCurrent"].ToString());
                         fetchdata.ExpenseCurrent = Int64.Parse(dataReader["ExpenseCurrent"].ToString());
+                        if (fetchdata.MosavabCurrent != 0)
+                        {
+                            fetchdata.PercentCurrent = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent);
+                        }
+                        else
+                        {
+                            fetchdata.PercentCurrent = 0;
+                        }
                         fetchdata.MosavabCivil = Int64.Parse(dataReader["MosavabCivil"].ToString());
                         fetchdata.ExpenseCivil = Int64.Parse(dataReader["ExpenseCivil"].ToString());
+                        if (fetchdata.MosavabCivil != 0)
+                        {
+                            fetchdata.PercentCivil = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseCivil, fetchdata.MosavabCivil);
+                        }
+                        else
+                        {
+                            fetchdata.PercentCivil = 0;
+                        }
+
                         fetchdata.MosavabFinancial = Int64.Parse(dataReader["MosavabFinancial"].ToString());
                         fetchdata.ExpenseFinancial = Int64.Parse(dataReader["ExpenseFinancial"].ToString());
+                        if (fetchdata.MosavabFinancial != 0)
+                        {
+                            fetchdata.PercentFinancial = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseFinancial, fetchdata.MosavabFinancial);
+                        }
+                        else
+                        {
+                            fetchdata.PercentFinancial = 0;
+                        }
+
                         fetchdata.MosavabSanavati = Int64.Parse(dataReader["MosavabSanavati"].ToString());
                         fetchdata.ExpenseSanavati = Int64.Parse(dataReader["ExpenseSanavati"].ToString());
+                        if (fetchdata.MosavabFinancial != 0)
+                        {
+                            fetchdata.PercentSanavati = _uw.Budget_001Rep.Divivasion(fetchdata.ExpenseSanavati, fetchdata.MosavabSanavati);
+                        }
+                        else
+                        {
+                            fetchdata.PercentSanavati = 0;
+                        }
+
+
+
+                        
 
                         fecthViewModel.Add(fetchdata);
                     }
