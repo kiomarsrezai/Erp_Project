@@ -773,11 +773,32 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
                         fetchdata.MosavabPayMotomarkez = Int64.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                        fetchdata.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
+                        if (fetchdata.MosavabPayMotomarkez != 0)
+                        {
+                            fetchdata.PercentPayMotomarkez = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpensePayMotomarkez, fetchdata.MosavabPayMotomarkez));
+                        }
+                        else
+                        {
+                            fetchdata.PercentPayMotomarkez = 0;
+                        }
+
                         fetchdata.MosavabDar_Khazane = Int64.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                        fetchdata.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+                        if (fetchdata.MosavabDar_Khazane != 0)
+                        {
+                            fetchdata.PercentDar_Khazane = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseDar_Khazane, fetchdata.MosavabDar_Khazane));
+                        }
+                        else
+                        {
+                            fetchdata.PercentDar_Khazane = 0;
+                        }
+
+
                         fetchdata.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
 
-                        fetchdata.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
-                        fetchdata.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+              
+                    
 
 
                         fecthViewModel.Add(fetchdata);
