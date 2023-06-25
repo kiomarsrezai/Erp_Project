@@ -721,7 +721,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchdata.ExpenseRevenue = Int64.Parse(dataReader["ExpenseRevenue"].ToString());
                         if (fetchdata.MosavabRevenue != 0)
                         {
-                            fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabRevenue));
+                            fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseRevenue, fetchdata.MosavabRevenue));
                         }
                         else
                         {
