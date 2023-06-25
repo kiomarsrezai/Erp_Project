@@ -17,13 +17,22 @@ namespace NewsWebsite.ViewModels.Api.Report
         public Int64 ExpenseDar_Khazane { get; set; }
         public Int64 MosavabCurrent { get; set; }
         public Int64 ExpenseCurrent { get; set; }
+        public double PercentCurrent { get; set; }
+
         public Int64 MosavabCivil { get; set; }
         public Int64 ExpenseCivil { get; set; }
+        public double PercentCivil { get; set; }
+
         public Int64 MosavabFinancial { get; set; }
         public Int64 ExpenseFinancial { get; set; }
+        public double PercentFinancial { get; set; }
+
         public Int64 MosavabSanavati { get; set; }
         public Int64 ExpenseSanavati { get; set; }
+        public double PercentSanavati { get; set; }
 
+
+        
     }
 
     public class ParamViewModel

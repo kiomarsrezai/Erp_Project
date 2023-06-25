@@ -62,7 +62,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                             if (fetchView.Mosavab != 0)
                             {
-                                fetchView.PercentBud = Math.Round(_uw.Budget_001Rep.Divivasion(fetchView.Expense, fetchView.Mosavab));
+                                fetchView.PercentBud = Math.Round(_uw.Budget_001Rep.Division(fetchView.Expense, fetchView.Mosavab));
                             }
                             else
                             {
