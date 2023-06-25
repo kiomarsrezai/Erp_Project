@@ -178,13 +178,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         data.ProductYear = dataReader["ProductYear"].ToString();
                         data.Color = dataReader["Color"].ToString();
 
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                        //if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+            //if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            //else
+            return Ok(data);
         }
 
         [Route("CarUpdate")]
