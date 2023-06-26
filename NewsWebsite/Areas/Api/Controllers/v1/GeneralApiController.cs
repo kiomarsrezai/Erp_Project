@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
@@ -28,16 +29,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     {
         ProgramBuddbContext _context;
         public readonly IConfiguration _config;
+        public readonly ISqlDataAccess _sqlDataAccess;
         public readonly IUnitOfWork _uw;
         public readonly IWebHostEnvironment _environment;
         private readonly IFileService fileService; 
 
-        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration, IWebHostEnvironment environment)
+        public GeneralApiController(ProgramBuddbContext context, IUnitOfWork uw, IConfiguration configuration, IWebHostEnvironment environment, ISqlDataAccess sqlDataAccess)
         {
             _config = configuration;
             _context = context;
             _uw = uw;
             _environment = environment;
+            _sqlDataAccess = sqlDataAccess;
         }
 
         [Route("UploadFile")]
@@ -108,14 +111,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return isSaveSuccess;
         }
 
+        //[route("areafetch")]
+        //[httpget]
+        //public async task<apiresult<list<areaviewmodel>>> areafetch(int areaform)
+        //{
+        //    return ok(await _uw.budget_001rep.areafetchasync(areaform));
+        //}
+
         [Route("AreaFetch")]
         [HttpGet]
         public async Task<ApiResult<List<AreaViewModel>>> AreaFetch(int areaform)
         {
-
-            return Ok(await _uw.Budget_001Rep.AreaFetchAsync(areaform));
+            var data=await _sqlDataAccess.LoadData<AreaViewModel, dynamic>(storedProcedure: "SP000_Area", new { areaform=areaform });
+            return Ok(data);
         }
-
 
 
         [Route("YearFetch")]

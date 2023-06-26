@@ -15,6 +15,7 @@ namespace NewsWebsite.IocConfig
         {
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             //services.AddSingleton<ISecurityTrimmingService, SecurityTrimmingService>();
+            services.AddTransient<ISqlDataAccess, SqlDataAccess>();
             services.AddTransient<IBudget_001Rep, Budget_001Rep>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddTransient<ICommentRepository, CommentRepository>();
