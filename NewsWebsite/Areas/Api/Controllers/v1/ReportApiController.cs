@@ -705,115 +705,274 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance", sqlconnect))
+                if (param.StructureId == 2)
                 {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId ", param.YearId);
-                    sqlCommand.Parameters.AddWithValue("structureId", param.StructureId);
-                    sqlCommand.Parameters.AddWithValue("MonthId", param.MonthId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
+                    using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Sazman", sqlconnect))
                     {
-                        AbstractPerformanceBudgetViewModel fetchdata = new AbstractPerformanceBudgetViewModel();
-                        fetchdata.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchdata.AreaName = dataReader["AreaName"].ToString();
-                        fetchdata.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
-                        fetchdata.ExpenseRevenue = long.Parse(dataReader["ExpenseRevenue"].ToString());
-                        if (fetchdata.MosavabRevenue != 0)
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("yearId ", param.YearId);
+                        sqlCommand.Parameters.AddWithValue("structureId", param.StructureId);
+                        sqlCommand.Parameters.AddWithValue("MonthId", param.MonthId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.Read())
                         {
-                            fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseRevenue, fetchdata.MosavabRevenue));
-                        }
-                        else
-                        {
-                            fetchdata.PercentRevenue = 0;
-                        }
+                            if ((long.Parse(dataReader["MosavabRevenue"].ToString()) != 0) ||
+                               (long.Parse(dataReader["ExpenseRevenue"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabCurrent"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabCivil"].ToString()) != 0) ||
+                                (long.Parse(dataReader["CreditAmountCivil"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseCivil"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabFinancial"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseFinancial"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabSanavati"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseSanavati"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabPayMotomarkez"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpensePayMotomarkez"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabDar_Khazane"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseDar_Khazane"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabRevenue"].ToString()) != 0))
+                            {
 
-                        fetchdata.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
-                        fetchdata.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
-                        if (fetchdata.MosavabCurrent != 0)
-                        {
-                            fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent));
-                        }
-                        else
-                        {
-                            fetchdata.PercentCurrent = 0;
-                        }
-                        fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
-                        fetchdata.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
-                        if (fetchdata.MosavabCivil != 0)
-                        {
-                            fetchdata.PercentCreditCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.CreditAmountCivil, fetchdata.MosavabCivil));
-                        }
-                        else
-                        {
-                            fetchdata.PercentCreditCivil = 0;
-                        }
+                                AbstractPerformanceBudgetViewModel fetchdata = new AbstractPerformanceBudgetViewModel();
+                                fetchdata.Id = int.Parse(dataReader["Id"].ToString());
+                                fetchdata.AreaName = dataReader["AreaName"].ToString();
+                                fetchdata.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
+                                fetchdata.ExpenseRevenue = long.Parse(dataReader["ExpenseRevenue"].ToString());
+                                if (fetchdata.MosavabRevenue != 0)
+                                {
+                                    fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseRevenue, fetchdata.MosavabRevenue));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentRevenue = 0;
+                                }
 
-                        fetchdata.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
-                        if (fetchdata.MosavabCivil != 0)
-                        {
-                            fetchdata.PercentCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCivil, fetchdata.MosavabCivil));
-                        }
-                        else
-                        {
-                            fetchdata.PercentCivil = 0;
-                        }
+                                fetchdata.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                                fetchdata.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
+                                if (fetchdata.MosavabCurrent != 0)
+                                {
+                                    fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentCurrent = 0;
+                                }
+                                fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                                fetchdata.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
+                                if (fetchdata.MosavabCivil != 0)
+                                {
+                                    fetchdata.PercentCreditCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.CreditAmountCivil, fetchdata.MosavabCivil));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentCreditCivil = 0;
+                                }
 
-                        fetchdata.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
-                        fetchdata.ExpenseFinancial = long.Parse(dataReader["ExpenseFinancial"].ToString());
-                        if (fetchdata.MosavabFinancial != 0)
-                        {
-                            fetchdata.PercentFinancial = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseFinancial, fetchdata.MosavabFinancial));
-                        }
-                        else
-                        {
-                            fetchdata.PercentFinancial = 0;
-                        }
+                                fetchdata.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
+                                if (fetchdata.MosavabCivil != 0)
+                                {
+                                    fetchdata.PercentCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCivil, fetchdata.MosavabCivil));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentCivil = 0;
+                                }
 
-                        fetchdata.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
-                        fetchdata.ExpenseSanavati = long.Parse(dataReader["ExpenseSanavati"].ToString());
-                        if (fetchdata.MosavabSanavati != 0)
-                        {
-                            fetchdata.PercentSanavati = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseSanavati, fetchdata.MosavabSanavati));
-                        }
-                        else
-                        {
-                            fetchdata.PercentSanavati = 0;
-                        }
+                                fetchdata.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
+                                fetchdata.ExpenseFinancial = long.Parse(dataReader["ExpenseFinancial"].ToString());
+                                if (fetchdata.MosavabFinancial != 0)
+                                {
+                                    fetchdata.PercentFinancial = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseFinancial, fetchdata.MosavabFinancial));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentFinancial = 0;
+                                }
 
-
-                        fetchdata.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
-                        fetchdata.ExpensePayMotomarkez = long.Parse(dataReader["ExpensePayMotomarkez"].ToString());
-                        if (fetchdata.MosavabPayMotomarkez != 0)
-                        {
-                            fetchdata.PercentPayMotomarkez = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpensePayMotomarkez, fetchdata.MosavabPayMotomarkez));
-                        }
-                        else
-                        {
-                            fetchdata.PercentPayMotomarkez = 0;
-                        }
-
-                        fetchdata.MosavabDar_Khazane = long.Parse(dataReader["MosavabDar_Khazane"].ToString());
-                        fetchdata.ExpenseDar_Khazane = long.Parse(dataReader["ExpenseDar_Khazane"].ToString());
-                        if (fetchdata.MosavabDar_Khazane != 0)
-                        {
-                            fetchdata.PercentDar_Khazane = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseDar_Khazane, fetchdata.MosavabDar_Khazane));
-                        }
-                        else
-                        {
-                            fetchdata.PercentDar_Khazane = 0;
-                        }
+                                fetchdata.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
+                                fetchdata.ExpenseSanavati = long.Parse(dataReader["ExpenseSanavati"].ToString());
+                                if (fetchdata.MosavabSanavati != 0)
+                                {
+                                    fetchdata.PercentSanavati = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseSanavati, fetchdata.MosavabSanavati));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentSanavati = 0;
+                                }
 
 
-                        fetchdata.Resoures = long.Parse(dataReader["Resoures"].ToString());
-                        fetchdata.balance = long.Parse(dataReader["balance"].ToString());
+                                fetchdata.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                                fetchdata.ExpensePayMotomarkez = long.Parse(dataReader["ExpensePayMotomarkez"].ToString());
+                                if (fetchdata.MosavabPayMotomarkez != 0)
+                                {
+                                    fetchdata.PercentPayMotomarkez = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpensePayMotomarkez, fetchdata.MosavabPayMotomarkez));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentPayMotomarkez = 0;
+                                }
+
+                                fetchdata.MosavabDar_Khazane = long.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                                fetchdata.ExpenseDar_Khazane = long.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+                                if (fetchdata.MosavabDar_Khazane != 0)
+                                {
+                                    fetchdata.PercentDar_Khazane = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseDar_Khazane, fetchdata.MosavabDar_Khazane));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentDar_Khazane = 0;
+                                }
 
 
-                        fecthViewModel.Add(fetchdata);
+                                fetchdata.Resoures = long.Parse(dataReader["Resoures"].ToString());
+                                fetchdata.balance = long.Parse(dataReader["balance"].ToString());
+
+
+                                fecthViewModel.Add(fetchdata);
+                            }
+
+                        }
                     }
+                    sqlconnect.Close();
+
                 }
-                sqlconnect.Close();
+
+                if (param.StructureId == 1)
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Shahrdari", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("yearId ", param.YearId);
+                        sqlCommand.Parameters.AddWithValue("structureId", param.StructureId);
+                        sqlCommand.Parameters.AddWithValue("MonthId", param.MonthId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.Read())
+                        {
+                            if ((long.Parse(dataReader["MosavabRevenue"].ToString()) != 0) ||
+                               (long.Parse(dataReader["ExpenseRevenue"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabCurrent"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabCivil"].ToString()) != 0) ||
+                                (long.Parse(dataReader["CreditAmountCivil"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseCivil"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabFinancial"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseFinancial"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabSanavati"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseSanavati"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabPayMotomarkez"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpensePayMotomarkez"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabDar_Khazane"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseDar_Khazane"].ToString()) != 0) ||
+                                (long.Parse(dataReader["MosavabRevenue"].ToString()) != 0))
+                            {
+
+                                AbstractPerformanceBudgetViewModel fetchdata = new AbstractPerformanceBudgetViewModel();
+                                fetchdata.Id = int.Parse(dataReader["Id"].ToString());
+                                fetchdata.AreaName = dataReader["AreaName"].ToString();
+                                fetchdata.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
+                                fetchdata.ExpenseRevenue = long.Parse(dataReader["ExpenseRevenue"].ToString());
+                                if (fetchdata.MosavabRevenue != 0)
+                                {
+                                    fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseRevenue, fetchdata.MosavabRevenue));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentRevenue = 0;
+                                }
+
+                                fetchdata.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                                fetchdata.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
+                                if (fetchdata.MosavabCurrent != 0)
+                                {
+                                    fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentCurrent = 0;
+                                }
+                                fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                                fetchdata.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
+                                if (fetchdata.MosavabCivil != 0)
+                                {
+                                    fetchdata.PercentCreditCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.CreditAmountCivil, fetchdata.MosavabCivil));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentCreditCivil = 0;
+                                }
+
+                                fetchdata.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
+                                if (fetchdata.MosavabCivil != 0)
+                                {
+                                    fetchdata.PercentCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCivil, fetchdata.MosavabCivil));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentCivil = 0;
+                                }
+
+                                fetchdata.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
+                                fetchdata.ExpenseFinancial = long.Parse(dataReader["ExpenseFinancial"].ToString());
+                                if (fetchdata.MosavabFinancial != 0)
+                                {
+                                    fetchdata.PercentFinancial = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseFinancial, fetchdata.MosavabFinancial));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentFinancial = 0;
+                                }
+
+                                fetchdata.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
+                                fetchdata.ExpenseSanavati = long.Parse(dataReader["ExpenseSanavati"].ToString());
+                                if (fetchdata.MosavabSanavati != 0)
+                                {
+                                    fetchdata.PercentSanavati = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseSanavati, fetchdata.MosavabSanavati));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentSanavati = 0;
+                                }
+
+
+                                fetchdata.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                                fetchdata.ExpensePayMotomarkez = long.Parse(dataReader["ExpensePayMotomarkez"].ToString());
+                                if (fetchdata.MosavabPayMotomarkez != 0)
+                                {
+                                    fetchdata.PercentPayMotomarkez = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpensePayMotomarkez, fetchdata.MosavabPayMotomarkez));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentPayMotomarkez = 0;
+                                }
+
+                                fetchdata.MosavabDar_Khazane = long.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                                fetchdata.ExpenseDar_Khazane = long.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+                                if (fetchdata.MosavabDar_Khazane != 0)
+                                {
+                                    fetchdata.PercentDar_Khazane = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseDar_Khazane, fetchdata.MosavabDar_Khazane));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentDar_Khazane = 0;
+                                }
+
+
+                                fetchdata.Resoures = long.Parse(dataReader["Resoures"].ToString());
+                                fetchdata.balance = long.Parse(dataReader["balance"].ToString());
+
+
+                                fecthViewModel.Add(fetchdata);
+                            }
+
+                        }
+                    }
+                    sqlconnect.Close();
+
+                }
+
             }
 
 
@@ -824,7 +983,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<AbstractPerformanceBudgetDetailViewModel>>> AC_AbstractPerformanceBudgetDetail(ParamsViewModel param)
         {
-           List<AbstractPerformanceBudgetDetailViewModel> fecthViewModel = new List<AbstractPerformanceBudgetDetailViewModel>();
+            List<AbstractPerformanceBudgetDetailViewModel> fecthViewModel = new List<AbstractPerformanceBudgetDetailViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
