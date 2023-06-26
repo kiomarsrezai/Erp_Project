@@ -740,6 +740,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchdata.PercentCurrent = 0;
                         }
                         fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        fetchdata.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
                         fetchdata.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
                         if (fetchdata.MosavabCivil != 0)
                         {
