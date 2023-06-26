@@ -46,5 +46,6 @@ namespace NewsWebsite.ViewModels.Api.Report
     {
         public int YearId { get; set; }
         public int StructureId { get; set; }
+        public int MonthId { get; set; }
     }
 }
