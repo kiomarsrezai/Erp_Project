@@ -717,8 +717,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         AbstractPerformanceBudgetViewModel fetchdata = new AbstractPerformanceBudgetViewModel();
                         fetchdata.Id = int.Parse(dataReader["Id"].ToString());
                         fetchdata.AreaName = dataReader["AreaName"].ToString();
-                        fetchdata.MosavabRevenue = Int64.Parse(dataReader["MosavabRevenue"].ToString());
-                        fetchdata.ExpenseRevenue = Int64.Parse(dataReader["ExpenseRevenue"].ToString());
+                        fetchdata.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
+                        fetchdata.ExpenseRevenue = long.Parse(dataReader["ExpenseRevenue"].ToString());
                         if (fetchdata.MosavabRevenue != 0)
                         {
                             fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseRevenue, fetchdata.MosavabRevenue));
@@ -728,8 +728,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchdata.PercentRevenue = 0;
                         }
 
-                        fetchdata.MosavabCurrent = Int64.Parse(dataReader["MosavabCurrent"].ToString());
-                        fetchdata.ExpenseCurrent = Int64.Parse(dataReader["ExpenseCurrent"].ToString());
+                        fetchdata.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        fetchdata.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
                         if (fetchdata.MosavabCurrent != 0)
                         {
                             fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent));
@@ -738,8 +738,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             fetchdata.PercentCurrent = 0;
                         }
-                        fetchdata.MosavabCivil = Int64.Parse(dataReader["MosavabCivil"].ToString());
-                        fetchdata.ExpenseCivil = Int64.Parse(dataReader["ExpenseCivil"].ToString());
+                        fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        fetchdata.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
                         if (fetchdata.MosavabCivil != 0)
                         {
                             fetchdata.PercentCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCivil, fetchdata.MosavabCivil));
@@ -749,8 +749,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchdata.PercentCivil = 0;
                         }
 
-                        fetchdata.MosavabFinancial = Int64.Parse(dataReader["MosavabFinancial"].ToString());
-                        fetchdata.ExpenseFinancial = Int64.Parse(dataReader["ExpenseFinancial"].ToString());
+                        fetchdata.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
+                        fetchdata.ExpenseFinancial = long.Parse(dataReader["ExpenseFinancial"].ToString());
                         if (fetchdata.MosavabFinancial != 0)
                         {
                             fetchdata.PercentFinancial = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseFinancial, fetchdata.MosavabFinancial));
@@ -760,9 +760,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchdata.PercentFinancial = 0;
                         }
 
-                        fetchdata.MosavabSanavati = Int64.Parse(dataReader["MosavabSanavati"].ToString());
-                        fetchdata.ExpenseSanavati = Int64.Parse(dataReader["ExpenseSanavati"].ToString());
-                        if (fetchdata.MosavabFinancial != 0)
+                        fetchdata.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
+                        fetchdata.ExpenseSanavati = long.Parse(dataReader["ExpenseSanavati"].ToString());
+                        if (fetchdata.MosavabSanavati != 0)
                         {
                             fetchdata.PercentSanavati = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseSanavati, fetchdata.MosavabSanavati));
                         }
@@ -772,8 +772,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
 
 
-                        fetchdata.MosavabPayMotomarkez = Int64.Parse(dataReader["MosavabPayMotomarkez"].ToString());
-                        fetchdata.ExpensePayMotomarkez = Int64.Parse(dataReader["ExpensePayMotomarkez"].ToString());
+                        fetchdata.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
+                        fetchdata.ExpensePayMotomarkez = long.Parse(dataReader["ExpensePayMotomarkez"].ToString());
                         if (fetchdata.MosavabPayMotomarkez != 0)
                         {
                             fetchdata.PercentPayMotomarkez = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpensePayMotomarkez, fetchdata.MosavabPayMotomarkez));
@@ -783,8 +783,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             fetchdata.PercentPayMotomarkez = 0;
                         }
 
-                        fetchdata.MosavabDar_Khazane = Int64.Parse(dataReader["MosavabDar_Khazane"].ToString());
-                        fetchdata.ExpenseDar_Khazane = Int64.Parse(dataReader["ExpenseDar_Khazane"].ToString());
+                        fetchdata.MosavabDar_Khazane = long.Parse(dataReader["MosavabDar_Khazane"].ToString());
+                        fetchdata.ExpenseDar_Khazane = long.Parse(dataReader["ExpenseDar_Khazane"].ToString());
                         if (fetchdata.MosavabDar_Khazane != 0)
                         {
                             fetchdata.PercentDar_Khazane = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseDar_Khazane, fetchdata.MosavabDar_Khazane));
@@ -795,8 +795,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
 
 
-                        fetchdata.Resoures = Int64.Parse(dataReader["Resoures"].ToString());
-                        fetchdata.balance = Int64.Parse(dataReader["balance"].ToString());
+                        fetchdata.Resoures = long.Parse(dataReader["Resoures"].ToString());
+                        fetchdata.balance = long.Parse(dataReader["balance"].ToString());
 
 
                         fecthViewModel.Add(fetchdata);
