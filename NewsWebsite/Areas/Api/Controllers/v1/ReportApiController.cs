@@ -741,6 +741,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
                         fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
                         fetchdata.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
+                        if (fetchdata.MosavabCivil != 0)
+                        {
+                            fetchdata.PercentCreditCivil = Math.Round(_uw.Budget_001Rep.Division(fetchdata.CreditAmountCivil, fetchdata.MosavabCivil));
+                        }
+                        else
+                        {
+                            fetchdata.PercentCreditCivil = 0;
+                        }
+
                         fetchdata.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
                         if (fetchdata.MosavabCivil != 0)
                         {
