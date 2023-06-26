@@ -170,7 +170,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         GetListAttachFiles fetchView = new GetListAttachFiles();
                         fetchView.ProjectCode = int.Parse(dataReader["ProjectCode"].ToString());
-                        fetchView.ProjectId = int.Parse(dataReader["YearName"].ToString());
+                        fetchView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                         fetchView.FileName = dataReader["FileName"].ToString();
                         fetchView.FileDetailId = int.Parse(dataReader["FileDetailId"].ToString());
                         yearViews.Add(fetchView);
