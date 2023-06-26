@@ -19,7 +19,8 @@ namespace NewsWebsite.ViewModels.Api.Report
 
         public Int64 MosavabCivil { get; set; }
         public Int64 CreditAmountCivil { get; set; }
-
+        public double PercentCreditCivil { get; set; }
+        
         public Int64 ExpenseCivil { get; set; }
         public double PercentCivil { get; set; }
 
