@@ -1021,5 +1021,98 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
+
+        [Route("AbstractPerformanceShardari_Excel")]
+        [HttpGet]
+        public async Task<ApiResult<List<AbstractPerformanceShardari_ExcelViewModel>>> AC_AbstractPerformanceShardari_Excel(Param1ViewModel param)
+        {
+            List<AbstractPerformanceShardari_ExcelViewModel> fecthViewModel = new List<AbstractPerformanceShardari_ExcelViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Shahrdari_Excel", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("monthId", param.MonthId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        AbstractPerformanceShardari_ExcelViewModel fetchView = new AbstractPerformanceShardari_ExcelViewModel();
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        fetchView.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+                        fetchView.ExpenseMonth = Int64.Parse(dataReader["ExpenseMonth"].ToString());
+                        fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+
+                        if (fetchView.Edit != 0)
+                        {
+                            fetchView.Percent = _uw.Budget_001Rep.Division(fetchView.ExpenseMonth, fetchView.Edit);
+                        }
+                        else
+                        {
+                            fetchView.Percent = 0;
+                        }
+                        fecthViewModel.Add(fetchView);
+                    }
+
+                }
+            }
+            return Ok(fecthViewModel);
+        }
+
+
+        [Route("AbstractPerformanceSazman_Excel")]
+        [HttpGet]
+        public async Task<ApiResult<List<AbstractPerformanceShardari_ExcelViewModel>>> AC_AbstractPerformanceSazman_Excel(Param1ViewModel param)
+        {
+            List<AbstractPerformanceShardari_ExcelViewModel> fecthViewModel = new List<AbstractPerformanceShardari_ExcelViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Sazman_Excel", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("monthId", param.MonthId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        AbstractPerformanceShardari_ExcelViewModel fetchView = new AbstractPerformanceShardari_ExcelViewModel();
+                        fetchView.Code = dataReader["Code"].ToString();
+                        fetchView.Description = dataReader["Description"].ToString();
+                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        fetchView.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+                        fetchView.ExpenseMonth = Int64.Parse(dataReader["ExpenseMonth"].ToString());
+                        fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+
+                        if (fetchView.Edit != 0)
+                        {
+                            fetchView.Percent = _uw.Budget_001Rep.Division(fetchView.ExpenseMonth, fetchView.Edit);
+                        }
+                        else
+                        {
+                            fetchView.Percent = 0;
+                        }
+                        fecthViewModel.Add(fetchView);
+                    }
+
+                }
+            }
+            return Ok(fecthViewModel);
+        }
+
+
+
+
     }
 }
