@@ -1047,6 +1047,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         fetchView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         fetchView.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+
                         fetchView.ExpenseMonth = Int64.Parse(dataReader["ExpenseMonth"].ToString());
                         fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
 
@@ -1058,6 +1059,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             fetchView.Percent = 0;
                         }
+
+                        if (fetchView.Edit != 0)
+                        {
+                            fetchView.PercentCredit = _uw.Budget_001Rep.Division(fetchView.CreditAmount, fetchView.Edit);
+                        }
+                        else
+                        {
+                            fetchView.PercentCredit = 0;
+                        }
+
+
+
+
                         fecthViewModel.Add(fetchView);
                     }
 
@@ -1102,6 +1116,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         else
                         {
                             fetchView.Percent = 0;
+                        }
+
+                        if (fetchView.Edit != 0)
+                        {
+                            fetchView.PercentCredit = _uw.Budget_001Rep.Division(fetchView.CreditAmount, fetchView.Edit);
+                        }
+                        else
+                        {
+                            fetchView.PercentCredit = 0;
                         }
                         fecthViewModel.Add(fetchView);
                     }

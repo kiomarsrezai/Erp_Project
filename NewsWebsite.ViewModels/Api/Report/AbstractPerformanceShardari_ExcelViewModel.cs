@@ -14,6 +14,8 @@ namespace NewsWebsite.ViewModels.Api.Report
         public int levelNumber { get; set; }
         public Int64 ExpenseMonth { get; set; }
         public double Percent { get; set; }
+        public double PercentCredit { get; set; }
+
     }
 
     public class Param1ViewModel
