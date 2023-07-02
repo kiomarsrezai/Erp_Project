@@ -129,22 +129,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        data.Id = int.Parse(dataReader["Id"].ToString());
-                        data.Number = dataReader["Number"].ToString();
-                        data.Date = dataReader["Date"].ToString();
-                        data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
-                        data.Description = dataReader["Description"].ToString();
-                        data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
-                        data.SuppliersName = dataReader["SuppliersName"].ToString();
-                        data.DateFrom = dataReader["DateFrom"].ToString();
-                        data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
-                        data.DateEnd = dataReader["DateEnd"].ToString();
-                        data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
-                        data.Amount = Int64.Parse(dataReader["Amount"].ToString());
-                        data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
-                        data.Final = bool.Parse(dataReader["Final"].ToString());
-
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                        DataTable table = dataReader.GetSchemaTable();
+                        if (table.Columns.Count == 1) readercount = dataReader["Message_DB"].ToString();
+                        else
+                        {
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.Number = dataReader["Number"].ToString();
+                            data.Date = dataReader["Date"].ToString();
+                            data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                            data.Description = dataReader["Description"].ToString();
+                            data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                            data.SuppliersName = dataReader["SuppliersName"].ToString();
+                            data.DateFrom = dataReader["DateFrom"].ToString();
+                            data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
+                            data.DateEnd = dataReader["DateEnd"].ToString();
+                            data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
+                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
+                            data.Final = bool.Parse(dataReader["Final"].ToString());
+                        }
 
                     }
                 }
