@@ -27,6 +27,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        
         public ContractApiController(IUnitOfWork uw, IConfiguration config)
         {
             _config = config;
@@ -74,7 +75,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractView);
         }
 
-         [Route("ContractSearch")]
+        [Route("ContractSearch")]
         [HttpGet]
         public async Task<ApiResult<List<ContractSearchViewModel>>> Ac_ContractSearch(PublicParamAreaIdViewModel param)
         {
@@ -213,7 +214,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
         [Route("ContractAreaRead")]
         [HttpGet]
         public async Task<ApiResult<List<ContractAreaViewModel>>> Ac_ContractAreaRead(PublicParamIdViewModel param)
@@ -251,7 +251,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Delete", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("ContractId", param.ContractId);
@@ -317,7 +317,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("Contract_Request_Search")]
         [HttpGet]
