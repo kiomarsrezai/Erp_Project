@@ -142,6 +142,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.Description = dataReader["Description"].ToString();
                             data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
+                            data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
                             data.DateFrom = dataReader["DateFrom"].ToString();
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
                             data.DateEnd = dataReader["DateEnd"].ToString();
