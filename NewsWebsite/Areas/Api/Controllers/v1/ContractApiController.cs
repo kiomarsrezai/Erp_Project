@@ -74,6 +74,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractView);
         }
 
+        [Route("ContractAreaRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ContractAreaViewModel>>> Ac_ContractAreaRead(PublicParamIdViewModel param)
+        {
+            List<ContractAreaViewModel> ContractView = new List<ContractAreaViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ContractAreaViewModel data = new ContractAreaViewModel();
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                            data.AreaName = dataReader["SuppliersName"].ToString();
+                            data.ShareAmount = Int64.Parse(dataReader["ShareAmount"].ToString());
+                            ContractView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(ContractView);
+        }
+
+
         [Route("ContractSearch")]
         [HttpGet]
         public async Task<ApiResult<List<ContractSearchViewModel>>> Ac_ContractSearch(PublicParamAreaIdViewModel param)

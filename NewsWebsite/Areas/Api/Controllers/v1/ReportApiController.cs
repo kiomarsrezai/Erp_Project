@@ -657,7 +657,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-
         [Route("ProjectReportScale")]
         [HttpGet]
         public async Task<ApiResult<List<ProjectReportScaleViewModel>>> ProjectReportScale(int yearId, int areaId, int scaleId)
