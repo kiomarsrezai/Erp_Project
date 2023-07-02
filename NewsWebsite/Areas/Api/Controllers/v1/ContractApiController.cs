@@ -56,8 +56,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.Date = dataReader["Date"].ToString();
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
-                            data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString();
-                            data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString();
+                            data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
+                            data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
                             data.DateFrom = dataReader["DateFrom"].ToString();
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
