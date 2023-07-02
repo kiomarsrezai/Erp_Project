@@ -123,6 +123,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("Date", param.Date);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
                     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
+                    sqlCommand.Parameters.AddWithValue("DoingMethodId", param.DoingMethodId);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
                     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
                     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
