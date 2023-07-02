@@ -18,6 +18,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string DateEnd { get; set; }
         public string DateEndShamsi { get; set; }
         public Int64 Amount { get; set; }
+        public int DoingMethodId { get; set; }
         public Int64 Surplus { get; set; }
         public bool Final { get; set; }
     }

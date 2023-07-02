@@ -22,7 +22,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    //[ApiController]
     public class ContractApiController : ControllerBase
     {
         public readonly IConfiguration _config;
@@ -57,6 +56,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
                             data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                            data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
                             data.DateFrom = dataReader["DateFrom"].ToString();
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
@@ -74,114 +74,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractView);
         }
 
-        [Route("ContractAreaRead")]
-        [HttpGet]
-        public async Task<ApiResult<List<ContractAreaViewModel>>> Ac_ContractAreaRead(PublicParamIdViewModel param)
-        {
-            List<ContractAreaViewModel> ContractView = new List<ContractAreaViewModel>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Read", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            ContractAreaViewModel data = new ContractAreaViewModel();
-                            data.Id = int.Parse(dataReader["Id"].ToString());
-                            data.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                            data.AreaName = dataReader["AreaName"].ToString();
-                            data.ShareAmount = Int64.Parse(dataReader["ShareAmount"].ToString());
-                            ContractView.Add(data);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(ContractView);
-        }
-
-        [Route("ContractAreaInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> Ac_ContractAreaInsert([FromBody] ContractAreaInsertViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Delete", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("ContractId", param.ContractId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-        [Route("ContractAreaUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> Ac_ContractAreaUpdate([FromBody] ContractAreaUpdateViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.Parameters.AddWithValue("ShareAmount", param.ShareAmount);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-
-        [Route("ContractAreaDelete")]
-        [HttpPost]
-        public async Task<ApiResult<string>> Ac_ContractAreaDelete([FromBody] PublicParamIdViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Delete", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-
-
-        [Route("ContractSearch")]
+         [Route("ContractSearch")]
         [HttpGet]
         public async Task<ApiResult<List<ContractSearchViewModel>>> Ac_ContractSearch(PublicParamAreaIdViewModel param)
         {
@@ -281,6 +174,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
                     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
+                    sqlCommand.Parameters.AddWithValue("DoingMethodId", param.DoingMethodId);
                     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -318,6 +212,112 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+
+        [Route("ContractAreaRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ContractAreaViewModel>>> Ac_ContractAreaRead(PublicParamIdViewModel param)
+        {
+            List<ContractAreaViewModel> ContractView = new List<ContractAreaViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ContractAreaViewModel data = new ContractAreaViewModel();
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                            data.AreaName = dataReader["AreaName"].ToString();
+                            data.ShareAmount = Int64.Parse(dataReader["ShareAmount"].ToString());
+                            ContractView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(ContractView);
+        }
+
+        [Route("ContractAreaInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractAreaInsert([FromBody] ContractAreaInsertViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("ContractId", param.ContractId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("ContractAreaUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractAreaUpdate([FromBody] ContractAreaUpdateViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("ShareAmount", param.ShareAmount);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("ContractAreaDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractAreaDelete([FromBody] PublicParamIdViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
 
         [Route("Contract_Request_Search")]
         [HttpGet]
@@ -383,5 +383,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(ContractSearchView);
         }
+    
+
     }
 }
