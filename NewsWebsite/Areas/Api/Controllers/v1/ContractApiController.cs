@@ -93,7 +93,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             ContractAreaViewModel data = new ContractAreaViewModel();
                             data.Id = int.Parse(dataReader["Id"].ToString());
                             data.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                            data.AreaName = dataReader["SuppliersName"].ToString();
+                            data.AreaName = dataReader["AreaName"].ToString();
                             data.ShareAmount = Int64.Parse(dataReader["ShareAmount"].ToString());
                             ContractView.Add(data);
                         }
@@ -128,6 +128,34 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+        [Route("ContractAreaUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractAreaUpdate([FromBody] ContractAreaUpdateViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractArea_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("ShareAmount", param.ShareAmount);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
+
 
 
         [Route("ContractSearch")]
