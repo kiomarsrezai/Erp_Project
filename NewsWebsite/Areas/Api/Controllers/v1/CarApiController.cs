@@ -243,5 +243,42 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+        [Route("CarSearch")]
+        [HttpGet]
+        public async Task<ApiResult<List<CarSearchViewModel>>> AC_CarSearch()
+        {
+            List<CarSearchViewModel> dataViews = new List<CarSearchViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP050_Car_Search", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (await dataReader.ReadAsync())
+                    {
+                        CarSearchViewModel data = new CarSearchViewModel();
+                        data.Id = int.Parse(dataReader["Id"].ToString());
+                        data.Pelak = dataReader["Pelak"].ToString();
+                        data.KindMotorId = int.Parse(dataReader["KindMotorId"].ToString());
+                        data.KindId = StringExtensions.ToNullableInt(dataReader["KindId"].ToString());
+                        data.KindName = dataReader["KindName"].ToString();
+                        data.SystemId = StringExtensions.ToNullableInt(dataReader["SystemId"].ToString());
+                        data.SystemName = dataReader["SystemName"].ToString();
+                        data.TipeId = StringExtensions.ToNullableInt(dataReader["TipeId"].ToString());
+                        data.TipeName = dataReader["TipeName"].ToString();
+                        data.ProductYear = dataReader["ProductYear"].ToString();
+                        data.Color = dataReader["Color"].ToString();
+                        dataViews.Add(data);
+                    }
+                }
+            }
+            return Ok(dataViews);
+        }
+
+
+
+
     }
 }
