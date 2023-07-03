@@ -31,10 +31,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("SuppliersRead")]
         [HttpGet]
-        public async Task<ApiResult<List<SupplyViewModel>>> SupplyList(int SuppliersCoKindId)
+        public async Task<ApiResult<List<SupplyViewModel>>> AC_SuppliersRead(int SuppliersCoKindId)
         {
-            if (SuppliersCoKindId == 0) { BadRequest(); }
-
             List<SupplyViewModel> fecthViewModel = new List<SupplyViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -50,7 +48,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SupplyViewModel fetchView = new SupplyViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
                         fetchView.SuppliersName = dataReader["SuppliersName"].ToString();
-
+                        fetchView.Bank = dataReader["Bank"].ToString();
+                        fetchView.Branch = dataReader["Branch"].ToString();
+                        fetchView.NumberBank = dataReader["NumberBank"].ToString();
                         fecthViewModel.Add(fetchView);
                     }
                 }
