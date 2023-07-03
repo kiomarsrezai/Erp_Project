@@ -12,6 +12,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
 using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
+using NewsWebsite.ViewModels.Api.Contract;
 using NewsWebsite.ViewModels.Api.Public;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.RequestTable;
@@ -249,8 +250,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(request);
         }
-
-
 
         //نمایش لیست درخواست های جدولی
         [Route("RequestTableRead")]
@@ -493,9 +492,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         [Route("RequestContractModal")]
-        [HttpPost]
-        public async Task<ApiResult> AC_RequestContractModal([FromBody] PublicParamAreaIdViewModel param)
+        [HttpGet]
+        public async Task<ApiResult<List<RequestContractModalViewModel>>> AC_RequestContractModal(PublicParamAreaIdViewModel param)
         {
+            List<RequestContractModalViewModel> requestsViewModels = new List<RequestContractModalViewModel>();
+
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestContract_Modal", sqlconnect))
@@ -504,11 +505,45 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        RequestContractModalViewModel request = new RequestContractModalViewModel();
+                        request.Id = int.Parse(dataReader["Id"].ToString());
+                        request.Number = dataReader["Number"].ToString();
+                        request.Date = dataReader["Date"].ToString();
+                        request.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                        request.Description = dataReader["Description"].ToString();
+                        request.ShareAmount = Int64.Parse(dataReader["ShareAmount"].ToString());
+                        request.SuppliersName = dataReader["SuppliersName"].ToString();
+                        requestsViewModels.Add(request);
+                    }
+                }
+            }
+            return Ok(requestsViewModels);
+        }
+
+
+        [Route("RequestContractConnect")]
+        [HttpPost]
+        public async Task<ApiResult> AC_RequestContractConnect([FromBody] RequestContractConnectViewModel param)
+        {
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestContract_Connect", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("RequestId", param.RequestId);
+                    sqlCommand.Parameters.AddWithValue("ContractId", param.ContractId);
+
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                 }
             }
             return Ok();
         }
-
-
+   
+    
+    
+    
     }
 }
