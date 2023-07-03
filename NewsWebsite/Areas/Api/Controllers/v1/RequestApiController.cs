@@ -12,6 +12,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
 using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
+using NewsWebsite.ViewModels.Api.Public;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Api.RequestTable;
 using System;
@@ -490,5 +491,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok();
         }
+
+        [Route("RequestContractModal")]
+        [HttpPost]
+        public async Task<ApiResult> AC_RequestContractModal([FromBody] PublicParamAreaIdViewModel param)
+        {
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP010_RequestContract_Modal", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                }
+            }
+            return Ok();
+        }
+
+
     }
 }
