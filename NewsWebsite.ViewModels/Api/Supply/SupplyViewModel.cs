@@ -7,7 +7,7 @@ namespace NewsWebsite.ViewModels.Api.Supply
     public class SupplyViewModel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string SuppliersName { get; set; }
     }
 
     public class SuppliersCoViewModel

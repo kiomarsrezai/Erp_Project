@@ -29,7 +29,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _budgetuw = budgetuw;
         }
 
-        [Route("GetSupplyList")]
+        [Route("SuppliersRead")]
         [HttpGet]
         public async Task<ApiResult<List<SupplyViewModel>>> SupplyList(int SuppliersCoKindId)
         {
@@ -49,7 +49,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         SupplyViewModel fetchView = new SupplyViewModel();
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.Name = dataReader["Name"].ToString();
+                        fetchView.SuppliersName = dataReader["SuppliersName"].ToString();
 
                         fecthViewModel.Add(fetchView);
                     }
@@ -83,6 +83,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(fecthViewModel);
         }
+
+
 
     }
 }
