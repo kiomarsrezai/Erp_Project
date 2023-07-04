@@ -206,6 +206,32 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractView);
         }
 
+        [Route("DepartmentAcceptorEmployeeInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_DepartmentAcceptorEmployeeInsert([FromBody] DepartmentAcceptorEmployeeInsertViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_DepartmentAcceptorUser_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("EmployeeId", param.EmployeeId);
+                    sqlCommand.Parameters.AddWithValue("DepartmentAcceptorId", param.DepartmentAcceptorId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
 
     }
 }
