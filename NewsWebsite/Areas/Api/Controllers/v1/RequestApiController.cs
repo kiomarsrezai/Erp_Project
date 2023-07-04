@@ -388,15 +388,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        RequestBudgetSearchViewModel request = new RequestBudgetSearchViewModel();
-                        request.Id = int.Parse(dataReader["Id"].ToString());
-                        request.YearName = dataReader["YearName"].ToString();
-                        request.Code = dataReader["Code"].ToString();
-                        request.Description = dataReader["Description"].ToString();
-                        request.Project = dataReader["Project"].ToString();
-                        request.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
-                        request.BudgetProcessId = int.Parse(dataReader["BudgetProcessId"].ToString());
-                        requestsViewModels.Add(request);
+                        RequestBudgetSearchViewModel data = new RequestBudgetSearchViewModel();
+                        data.Id = int.Parse(dataReader["Id"].ToString());
+                        data.YearName = dataReader["YearName"].ToString();
+                        data.Code = dataReader["Code"].ToString();
+                        data.Description = dataReader["Description"].ToString();
+                        data.Project = dataReader["Project"].ToString();
+                        data.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
+                        data.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+                        data.Balance = Int64.Parse(dataReader["Balance"].ToString());
+                        data.BudgetProcessId = int.Parse(dataReader["BudgetProcessId"].ToString());
+                        requestsViewModels.Add(data);
                     }
                 }
             }
