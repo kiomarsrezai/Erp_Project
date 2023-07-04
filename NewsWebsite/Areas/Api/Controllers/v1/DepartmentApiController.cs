@@ -178,7 +178,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<EmployeeModalViewModel>>> Ac_EmployeeModal(PublicParamIdViewModel param)
         {
-            List<EmployeeModalViewModel> ContractView = new List<EmployeeModalViewModel>();
+            List<EmployeeModalViewModel> dataview = new List<EmployeeModalViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -195,14 +195,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.FirstName = dataReader["FirstName"].ToString();
                             data.LastName = dataReader["LastName"].ToString();
                             data.Bio = dataReader["Bio"].ToString();
-
-                            ContractView.Add(data);
+                            dataview.Add(data);
                         }
                     }
                     sqlconnect.Close();
                 }
             }
-            return Ok(ContractView);
+            return Ok(dataview);
         }
 
         [Route("DepartmentAcceptorEmployeeInsert")]
@@ -230,7 +229,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
+        [Route("DepartmentAcceptorEmployeeDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_DepartmentAcceptorEmployeeDelete([FromBody] PublicParamIdViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_DepartmentAcceptorUser_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
     }
 }
