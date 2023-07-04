@@ -274,6 +274,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
+
             return Ok(dataViews);
         }
 
