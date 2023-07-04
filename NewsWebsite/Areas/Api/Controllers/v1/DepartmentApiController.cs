@@ -92,6 +92,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("DepartmentAcceptorInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_DepartmentAcceptorInsert([FromBody] DepartmentAcceptorInsertViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_DepartmentAcceptor_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("DepartmanId", param.DepartmanId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
         [Route("DepartmentAcceptorDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> AC_DepartmentAcceptorDelete([FromBody] PublicParamIdViewModel param)
