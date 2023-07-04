@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
+using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.Car;
 using NewsWebsite.ViewModels.Api.Contract;
 using NewsWebsite.ViewModels.Api.Department;
@@ -80,6 +82,64 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.DepartmentCode = dataReader["DepartmentCode"].ToString();
                             data.DepartmentName = dataReader["DepartmentName"].ToString();
                             data.AreaName = dataReader["AreaName"].ToString();
+                            ContractView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(ContractView);
+        }
+
+
+        [Route("DepartmentAcceptorDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_DepartmentAcceptorDelete([FromBody] PublicParamIdViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP003_DepartmentAcceptor_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
+        [Route("DepartmentAcceptorUserRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<DepartmentAcceptorUserReadViewModel>>> Ac_DepartmentAcceptorUserRead(PublicParamIdViewModel param)
+        {
+            List<DepartmentAcceptorUserReadViewModel> ContractView = new List<DepartmentAcceptorUserReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP003_DepartmentAcceptor_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            DepartmentAcceptorUserReadViewModel data = new DepartmentAcceptorUserReadViewModel();
+                     
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.FirstName = dataReader["FirstName"].ToString();
+                            data.LastName = dataReader["LastName"].ToString();
+                            data.Resposibility = dataReader["Resposibility"].ToString();  
+                            data.UserId = int.Parse(dataReader["UserId"].ToString());
                             ContractView.Add(data);
                         }
                     }
