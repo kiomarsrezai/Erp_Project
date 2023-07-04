@@ -150,7 +150,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP003_DepartmentAcceptor_Read", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP003_DepartmentAcceptorUser_Read", sqlconnect))
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("Id", param.Id);
@@ -164,6 +164,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.FirstName = dataReader["FirstName"].ToString();
                             data.LastName = dataReader["LastName"].ToString();
                             data.Resposibility = dataReader["Resposibility"].ToString();  
+                            data.UserId = int.Parse(dataReader["UserId"].ToString());
+                            ContractView.Add(data);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(ContractView);
+        }
+
+        [Route("EmployeeModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<DepartmentAcceptorUserReadViewModel>>> Ac_EmployeeModal(PublicParamIdViewModel param)
+        {
+            List<DepartmentAcceptorUserReadViewModel> ContractView = new List<DepartmentAcceptorUserReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP003_Employee_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            DepartmentAcceptorUserReadViewModel data = new DepartmentAcceptorUserReadViewModel();
+
+                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            data.FirstName = dataReader["FirstName"].ToString();
+                            data.LastName = dataReader["LastName"].ToString();
+                            data.Resposibility = dataReader["Resposibility"].ToString();
                             data.UserId = int.Parse(dataReader["UserId"].ToString());
                             ContractView.Add(data);
                         }
