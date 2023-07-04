@@ -176,9 +176,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("EmployeeModal")]
         [HttpGet]
-        public async Task<ApiResult<List<DepartmentAcceptorUserReadViewModel>>> Ac_EmployeeModal(PublicParamIdViewModel param)
+        public async Task<ApiResult<List<EmployeeModalViewModel>>> Ac_EmployeeModal(PublicParamIdViewModel param)
         {
-            List<DepartmentAcceptorUserReadViewModel> ContractView = new List<DepartmentAcceptorUserReadViewModel>();
+            List<EmployeeModalViewModel> ContractView = new List<EmployeeModalViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -189,13 +189,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            DepartmentAcceptorUserReadViewModel data = new DepartmentAcceptorUserReadViewModel();
+                            EmployeeModalViewModel data = new EmployeeModalViewModel();
 
                             data.Id = int.Parse(dataReader["Id"].ToString());
                             data.FirstName = dataReader["FirstName"].ToString();
                             data.LastName = dataReader["LastName"].ToString();
-                            data.Resposibility = dataReader["Resposibility"].ToString();
-                            data.UserId = int.Parse(dataReader["UserId"].ToString());
+                            data.Bio = dataReader["Bio"].ToString();
+
                             ContractView.Add(data);
                         }
                     }
