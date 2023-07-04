@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Api\Budget\TaminEtebar\" />
+    <Folder Include="Api\Payment\" />
   </ItemGroup>
 
 </Project>
