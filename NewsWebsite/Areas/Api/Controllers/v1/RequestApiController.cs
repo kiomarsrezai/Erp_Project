@@ -188,7 +188,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         request.Employee = dataReader["Employee"].ToString();
                         request.Number = dataReader["Number"].ToString();
                         request.Date = dataReader["Date"].ToString();
-                        request.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                        request.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                         request.Description = dataReader["Description"].ToString();
                         request.EstimateAmount = Int64.Parse(dataReader["EstimateAmount"].ToString());
                         requestsViewModels.Add(request);
