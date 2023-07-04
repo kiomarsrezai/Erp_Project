@@ -12,7 +12,7 @@ namespace NewsWebsite.ViewModels.Api.Request
         public int AreaId { get; set; }
         public int? DepartmentId { get; set; }
         public string Employee { get; set; }
-        public int DoingMethodId { get; set; }
+        public int? DoingMethodId { get; set; }
         public string Users { get; set; }
         public string Number { get; set; }
 

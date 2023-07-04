@@ -92,7 +92,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<RequestsViewModel>> GetRequest(RequestReadParamViewModel paramViewModel)
         {
-            RequestsViewModel requestsViewModels = new RequestsViewModel();
+            RequestsViewModel data = new RequestsViewModel();
 
             if (paramViewModel.RequestId == 0)
                 return BadRequest();
@@ -107,24 +107,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        requestsViewModels.Id = int.Parse(dataReader["Id"].ToString());
-                        requestsViewModels.YearId = int.Parse(dataReader["YearId"].ToString());
-                        requestsViewModels.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        requestsViewModels.DepartmentId = StringExtensions.ToNullableInt(dataReader["DepartmentId"].ToString());
-                        requestsViewModels.Employee = dataReader["Employee"].ToString();
-                        requestsViewModels.DoingMethodId = dataReader["DoingMethodId"] == null ? 1 : int.Parse(dataReader["DoingMethodId"].ToString());
-                        requestsViewModels.Number = dataReader["Number"].ToString();
-                        requestsViewModels.Date = DateTime.Parse(dataReader["Date"].ToString());
-                        requestsViewModels.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/MM/dd");
-                        requestsViewModels.Description = dataReader["Description"].ToString();
-                        requestsViewModels.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
-                        requestsViewModels.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
-                        requestsViewModels.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
-                        requestsViewModels.SuppliersName = dataReader["SuppliersName"].ToString();
+                        data.Id = int.Parse(dataReader["Id"].ToString());
+                        data.YearId = int.Parse(dataReader["YearId"].ToString());
+                        data.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        data.DepartmentId = StringExtensions.ToNullableInt(dataReader["DepartmentId"].ToString());
+                        data.Employee = dataReader["Employee"].ToString();
+                        data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
+                        data.Number = dataReader["Number"].ToString();
+                        data.Date = DateTime.Parse(dataReader["Date"].ToString());
+                        data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(DateTime.Parse(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                        data.Description = dataReader["Description"].ToString();
+                        data.EstimateAmount = long.Parse(dataReader["EstimateAmount"].ToString());
+                        data.ResonDoingMethod = dataReader["ResonDoingMethod"].ToString();
+                        data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
+                        data.SuppliersName = dataReader["SuppliersName"].ToString();
                     }
                 }
             }
-            return Ok(requestsViewModels);
+            return Ok(data);
         }
 
         [Route("RequestUpdate")]
