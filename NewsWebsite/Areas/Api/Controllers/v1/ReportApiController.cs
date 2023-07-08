@@ -616,7 +616,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
-        [Route("AbstractList")]
+        [Route("AbstractRead")]
         [HttpGet]
         public async Task<ApiResult<List<AbstractViewModel>>> GetAbstractList(int yearId, int KindId, int StructureId)
         {
@@ -628,8 +628,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlConnection.Open();
                     cmd.Parameters.AddWithValue("yearId", yearId);
-                    cmd.Parameters.AddWithValue("KindId", KindId);
-                    cmd.Parameters.AddWithValue("StructureId", StructureId);
+                   // cmd.Parameters.AddWithValue("KindId", KindId);
+                    //cmd.Parameters.AddWithValue("StructureId", StructureId);
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await cmd.ExecuteReaderAsync();
                     while (dataReader.Read())
