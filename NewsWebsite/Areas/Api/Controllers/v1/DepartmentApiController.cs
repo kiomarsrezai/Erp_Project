@@ -117,6 +117,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+
         [Route("DepartmentAcceptorDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> AC_DepartmentAcceptorDelete([FromBody] PublicParamIdViewModel param)
@@ -204,6 +205,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(dataview);
         }
 
+
         [Route("DepartmentAcceptorEmployeeInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> AC_DepartmentAcceptorEmployeeInsert([FromBody] DepartmentAcceptorEmployeeInsertViewModel param)
@@ -229,6 +231,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+
         [Route("DepartmentAcceptorEmployeeDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> AC_DepartmentAcceptorEmployeeDelete([FromBody] PublicParamIdViewModel param)
@@ -252,6 +255,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+
+
 
     }
 }

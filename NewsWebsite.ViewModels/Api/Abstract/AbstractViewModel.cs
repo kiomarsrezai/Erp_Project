@@ -16,6 +16,7 @@ namespace NewsWebsite.ViewModels.Api.Abstract
         public long MosavabSanavati { get; set; }
         public long MosavabPayMotomarkez { get; set; }
         public long MosavabDar_Khazane { get; set; }
+        public long MosavabNeyabati { get; set; }
         public long balanceMosavab { get; set; }
     }
 }
