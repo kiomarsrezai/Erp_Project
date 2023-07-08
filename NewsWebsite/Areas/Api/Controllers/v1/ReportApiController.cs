@@ -618,7 +618,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AbstractRead")]
         [HttpGet]
-        public async Task<ApiResult<List<AbstractViewModel>>> GetAbstractList(int yearId, int KindId, int StructureId)
+        public async Task<ApiResult<List<AbstractViewModel>>> GetAbstractList(int yearId)
         {
             List<AbstractViewModel> abslist = new List<AbstractViewModel>();
 
