@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
@@ -722,7 +723,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             if ((long.Parse(dataReader["MosavabRevenue"].ToString()) != 0) ||
                                (long.Parse(dataReader["ExpenseRevenue"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCurrent"].ToString()) != 0) ||
-                                (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) || 
                                 (long.Parse(dataReader["MosavabCivil"].ToString()) != 0) ||
                                 (long.Parse(dataReader["CreditAmountCivil"].ToString()) != 0) ||
                                 (long.Parse(dataReader["ExpenseCivil"].ToString()) != 0) ||
@@ -895,7 +896,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 {
                                     fetchdata.PercentCurrent = 0;
                                 }
-                                fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                                fetchdata.MosavabCivil      = long.Parse(dataReader["MosavabCivil"].ToString());
                                 fetchdata.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
                                 if (fetchdata.MosavabCivil != 0)
                                 {
@@ -1033,6 +1034,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Shahrdari_Excel", sqlconnect))
                 {
                     sqlconnect.Open();
+                    sqlCommand.CommandTimeout = 500;
                     sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
                     sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
                     sqlCommand.Parameters.AddWithValue("monthId", param.MonthId);
@@ -1092,6 +1094,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Sazman_Excel", sqlconnect))
                 {
                     sqlconnect.Open();
+                    sqlCommand.CommandTimeout = 500;
                     sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
                     sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
                     sqlCommand.Parameters.AddWithValue("monthId", param.MonthId);
@@ -1135,7 +1138,40 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("BudgetPerformanceAcceptRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetPerformanceAcceptReadViewModel>>> AC_BudgetPerformanceAcceptRead(Param2ViewModel param)
+        {
+            List<BudgetPerformanceAcceptReadViewModel> fecthViewModel = new List<BudgetPerformanceAcceptReadViewModel>();
 
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Detail", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.MonthId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetPerformanceAcceptReadViewModel data = new BudgetPerformanceAcceptReadViewModel();
+                        data.Id = int.Parse(dataReader["Id"].ToString());
+                        data.AreaName = dataReader["AreaName"].ToString();
+                        data.FirstName = dataReader["FirstName"].ToString();
+                        data.LastName = dataReader["LastName"].ToString();
+                        data.Responsibility = dataReader["Responsibility"].ToString();
+                        data.Date = dataReader["Date"].ToString();
+                        data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                        data.UserId = StringExtensions.ToNullableInt(dataReader["UserId"].ToString());
+
+                        fecthViewModel.Add(data);
+                    }
+
+                }
+            }
+            return Ok(fecthViewModel);
+        }
 
 
     }

@@ -501,7 +501,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
     
-
         [Route("SepratorAreaDepartmentModal")]
         [HttpGet]
         public async Task<ApiResult<List<SepratorAreaDepartmentModalViewModel>>> GetSepratorAreaDepartmentModal(int yearId, int areaId, int codingId, int projectId)
@@ -558,7 +557,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
 
         [Route("CodingManualUpdate")]
@@ -652,6 +650,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
             else
                 return BadRequest(readercount);
+        }
+
+
+        [Route("BudgetSepratorAbstractAreaModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<SepratorAreaDepartmentModalViewModel>>> AC_BudgetSepratorAbstractAreaModal()
+        {
+            List<SepratorAreaDepartmentModalViewModel> fecthViewModel = new List<SepratorAreaDepartmentModalViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDetpartmant_Modal", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("@codingId", codingId);
+                    sqlCommand.Parameters.AddWithValue("@projectId", projectId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        SepratorAreaDepartmentModalViewModel fetchView = new SepratorAreaDepartmentModalViewModel();
+                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
+                        fetchView.DepartmentName = dataReader["DepartmentName"].ToString();
+                        fetchView.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
+
+                        fecthViewModel.Add(fetchView);
+                    }
+                }
+            }
+
+            return Ok(fecthViewModel);
         }
 
     }
