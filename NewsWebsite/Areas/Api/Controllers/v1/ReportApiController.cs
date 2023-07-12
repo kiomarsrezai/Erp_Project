@@ -452,25 +452,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Id = int.Parse(dataReader["Id"].ToString());
                         row.ProctorName = dataReader["ProctorName"].ToString();
                         row.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        row.CreditAmountCurrent = long.Parse(dataReader["CreditAmountCurrent"].ToString());
+                        if (row.MosavabCurrent != 0)
+                        {
+                            row.PercentCreditAmountCurrent = _uw.Budget_001Rep.Division(row.CreditAmountCurrent, row.MosavabCurrent);
+                        }
+                        else
+                        {
+                            row.PercentCreditAmountCurrent = 0;
+                        }
+
                         row.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
 
                         row.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        row.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
+                        if (row.MosavabCivil != 0)
+                        {
+                            row.PercentCreditAmountCivil = _uw.Budget_001Rep.Division(row.CreditAmountCivil, row.MosavabCivil);
+                        }
+                        else
+                        {
+                            row.PercentCreditAmountCivil = 0;
+                        }
+
                         row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
-                        //fetchView.MosavabCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCurrent"].ToString())));
-
-                        //fetchView.MosavabCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["MosavabCivil"].ToString())));
-
-                        //fetchView.ExpenseCurrentStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCurrent"].ToString())));
-
-                        //fetchView.ExpenseCivilStr = Common.StringExtensions.En2Fa(Common.StringExtensions.ToNumeric(long.Parse(dataReader["ExpenseCivil"].ToString())));
-
-                        //fetchView.Row = int.Parse(dataReader["Id"].ToString());
-
+      
                         if (row.MosavabCurrent != 0)
                         {
                             row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.MosavabCurrent);
-                            //row.PercentCurrentStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCurrent, fetchView.MosavabCurrent).ToString()) + "%";
-                        }
+                                                  }
                         else
                         {
                             row.MosavabCurrent = 0;
@@ -480,8 +490,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (row.MosavabCivil != 0)
                         {
                             row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.MosavabCivil);
-                            //row.PercentCivilStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil, fetchView.MosavabCivil).ToString()) + "%";
-                        }
+                                                    }
                         else
                         { row.PercentCivil = 0; }
 
@@ -489,7 +498,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (row.MosavabCurrent + row.MosavabCivil != 0)
                         {
                             row.PercentTotal = _uw.Budget_001Rep.Division(row.ExpenseCivil + row.ExpenseCurrent, row.MosavabCivil + row.MosavabCurrent);
-                            //fetchView.PercentTotalStr = Common.StringExtensions.En2Fa(_uw.Budget_001Rep.Divivasion(fetchView.ExpenseCivil + fetchView.ExpenseCurrent, fetchView.MosavabCivil + fetchView.MosavabCurrent).ToString()) + "%";
                         }
                         else
                         {

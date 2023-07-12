@@ -20,25 +20,18 @@ namespace NewsWebsite.ViewModels.Api.Deputy
     {
         public int Id { get; set; }
 
-        [Display(Name = "متولی")]
         public string ProctorName { get; set; }
 
-        [Display(Name = "مصوب هزینه ای")]
         public Int64 MosavabCurrent { get; set; }
-
-        [Display(Name = "عملکرد هزینه ای")]
+        public Int64 CreditAmountCurrent { get; set; }
+        public double PercentCreditAmountCurrent { get; set; }
         public Int64 ExpenseCurrent { get; set; }
-
-        [Display(Name = "مصوب سرمایه ای")]
         public Int64 MosavabCivil { get; set; }
-
-        [Display(Name = "عملکرد سرمایه ای")]
+        public Int64 CreditAmountCivil { get; set; }
+        public double PercentCreditAmountCivil { get; set; }
         public Int64 ExpenseCivil { get; set; }
-
         public double PercentCurrent { get; set; }
-
         public double PercentCivil { get; set; }
-         
         public double PercentTotal { get; set; }
 
     }
