@@ -476,11 +476,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
 
                         row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
-      
+
                         if (row.MosavabCurrent != 0)
                         {
                             row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.MosavabCurrent);
-                                                  }
+                        }
                         else
                         {
                             row.MosavabCurrent = 0;
@@ -490,7 +490,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (row.MosavabCivil != 0)
                         {
                             row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.MosavabCivil);
-                                                    }
+                        }
                         else
                         { row.PercentCivil = 0; }
 
@@ -650,7 +650,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<ProctorAutomationViewModel>>> AC_ProctorAutomation(Param11ViewModel param)
         {
-         
+
             List<ProctorAutomationViewModel> fecthViewModel = new List<ProctorAutomationViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -670,10 +670,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Date = dataReader["Date"].ToString();
                         row.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                         row.Description = dataReader["Description"].ToString();
-                        row.EstimateAmount = StringExtensions.ToNullableInt (dataReader["EstimateAmount"].ToString());
+                        row.EstimateAmount = StringExtensions.ToNullableInt(dataReader["EstimateAmount"].ToString());
                         row.Code = dataReader["Code"].ToString();
                         row.title = dataReader["title"].ToString();
-     }
+                        fecthViewModel.Add(row);
+                    }
                 }
             }
             return Ok(fecthViewModel);
@@ -693,7 +694,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlConnection.Open();
                     cmd.Parameters.AddWithValue("yearId", yearId);
-                   // cmd.Parameters.AddWithValue("KindId", KindId);
+                    // cmd.Parameters.AddWithValue("KindId", KindId);
                     //cmd.Parameters.AddWithValue("StructureId", StructureId);
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await cmd.ExecuteReaderAsync();
@@ -787,7 +788,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             if ((long.Parse(dataReader["MosavabRevenue"].ToString()) != 0) ||
                                (long.Parse(dataReader["ExpenseRevenue"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCurrent"].ToString()) != 0) ||
-                                (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) || 
+                                (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCivil"].ToString()) != 0) ||
                                 (long.Parse(dataReader["CreditAmountCivil"].ToString()) != 0) ||
                                 (long.Parse(dataReader["ExpenseCivil"].ToString()) != 0) ||
@@ -960,7 +961,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 {
                                     fetchdata.PercentCurrent = 0;
                                 }
-                                fetchdata.MosavabCivil      = long.Parse(dataReader["MosavabCivil"].ToString());
+                                fetchdata.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
                                 fetchdata.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
                                 if (fetchdata.MosavabCivil != 0)
                                 {
