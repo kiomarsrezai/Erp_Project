@@ -234,7 +234,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAreaAccModal")]
         [HttpGet]
-        public async Task<ApiResult<List<BudgetSepratorAreaAccModalViewModel>>> BudgetSepratorAreaAccModal(ParamViewModel param)
+        public async Task<ApiResult<List<BudgetSepratorAreaAccModalViewModel>>> BudgetSepratorAreaAccModal(Param10ViewModel param)
         {
             List<BudgetSepratorAreaAccModalViewModel> fecthViewModel = new List<BudgetSepratorAreaAccModalViewModel>();
 
@@ -655,7 +655,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAbstractAreaModal")]
         [HttpGet]
-        public async Task<ApiResult<List<SepratorAreaDepartmentModalViewModel>>> AC_BudgetSepratorAbstractAreaModal()
+        public async Task<ApiResult<List<SepratorAreaDepartmentModalViewModel>>> AC_BudgetSepratorAbstractAreaModal(Param11ViewModel param)
         {
             List<SepratorAreaDepartmentModalViewModel> fecthViewModel = new List<SepratorAreaDepartmentModalViewModel>();
 
@@ -664,10 +664,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDetpartmant_Modal", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("@codingId", codingId);
-                    sqlCommand.Parameters.AddWithValue("@projectId", projectId);
+                    sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("@codingId", param.codingId);
+                    sqlCommand.Parameters.AddWithValue("@projectId", param.projectId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -676,12 +676,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Id = int.Parse(dataReader["Id"].ToString());
                         fetchView.DepartmentName = dataReader["DepartmentName"].ToString();
                         fetchView.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
-
                         fecthViewModel.Add(fetchView);
                     }
                 }
             }
-
             return Ok(fecthViewModel);
         }
 
