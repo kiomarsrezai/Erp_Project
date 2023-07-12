@@ -645,6 +645,42 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
+
+        [Route("ProctorAutomationRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ProctorAutomationViewModel>>> AC_ProctorAutomation(Param11ViewModel param)
+        {
+         
+            List<ProctorAutomationViewModel> fecthViewModel = new List<ProctorAutomationViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_ProctorAutomation", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("ProctorId", param.ProctorId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        ProctorAutomationViewModel row = new ProctorAutomationViewModel();
+                        row.Number = dataReader["Number"].ToString();
+                        row.Date = dataReader["Date"].ToString();
+                        row.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                        row.Description = dataReader["Description"].ToString();
+                        row.EstimateAmount = StringExtensions.ToNullableInt (dataReader["Supply"].ToString());
+                        row.Code = dataReader["Expense"].ToString();
+                        row.title = dataReader["Expense"].ToString();
+     }
+                }
+            }
+            return Ok(fecthViewModel);
+        }
+
+
+
         [Route("AbstractRead")]
         [HttpGet]
         public async Task<ApiResult<List<AbstractViewModel>>> GetAbstractList(int yearId)
