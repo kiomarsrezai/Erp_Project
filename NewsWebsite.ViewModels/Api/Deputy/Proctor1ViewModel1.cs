@@ -60,6 +60,7 @@ namespace NewsWebsite.ViewModels.Api.Deputy
         public string Description { get; set; }
 
         public Int64 Mosavab { get; set; }
+        public Int64 Supply { get; set; }
 
         public Int64 Expense { get; set; }
 

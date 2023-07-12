@@ -626,6 +626,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Code = dataReader["Code"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Supply = Int64.Parse(dataReader["Supply"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
 
                         if (fetchView.Mosavab != 0)
