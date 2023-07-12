@@ -531,42 +531,61 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        AreaProctorViewModel fetchView = new AreaProctorViewModel();
-                        fetchView.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        fetchView.AreaName = dataReader["AreaName"].ToString();
-                        fetchView.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
-                        fetchView.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
-                        if (fetchView.MosavabCurrent != 0)
+                        AreaProctorViewModel row = new AreaProctorViewModel();
+                        row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        row.AreaName = dataReader["AreaName"].ToString();
+                        row.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        row.CreditAmountCurrent = long.Parse(dataReader["CreditAmountCurrent"].ToString());
+                        if (row.MosavabCurrent != 0)
                         {
-                            fetchView.PercentCurrent = _uw.Budget_001Rep.Division(fetchView.ExpenseCurrent, fetchView.MosavabCurrent);
+                            row.PercentCreditAmountCurrent = _uw.Budget_001Rep.Division(row.CreditAmountCurrent, row.MosavabCurrent);
                         }
                         else
                         {
-                            fetchView.PercentCurrent = 0;
+                            row.PercentCreditAmountCurrent = 0;
                         }
-
-                        fetchView.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
-                        fetchView.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
-
-                        if (fetchView.MosavabCivil != 0)
+                        row.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
+                        if (row.MosavabCurrent != 0)
                         {
-                            fetchView.PercentCivil = _uw.Budget_001Rep.Division(fetchView.ExpenseCivil, fetchView.MosavabCivil);
+                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.MosavabCurrent);
                         }
                         else
                         {
-                            fetchView.PercentCivil = 0;
+                            row.PercentCurrent = 0;
                         }
 
-                        if (fetchView.MosavabCurrent + fetchView.MosavabCivil != 0)
+                        row.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        row.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
+                        if (row.MosavabCivil != 0)
                         {
-                            fetchView.PercentTotal = _uw.Budget_001Rep.Division(fetchView.ExpenseCurrent + fetchView.ExpenseCivil, fetchView.MosavabCurrent + fetchView.MosavabCivil);
+                            row.PercentCreditAmountCivil = _uw.Budget_001Rep.Division(row.CreditAmountCivil, row.MosavabCivil);
                         }
                         else
                         {
-                            fetchView.PercentTotal = 0;
+                            row.PercentCreditAmountCivil = 0;
                         }
 
-                        fecthViewModel.Add(fetchView);
+                        row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
+
+                        if (row.MosavabCivil != 0)
+                        {
+                            row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.MosavabCivil);
+                        }
+                        else
+                        {
+                            row.PercentCivil = 0;
+                        }
+
+                        if (row.MosavabCurrent + row.MosavabCivil != 0)
+                        {
+                            row.PercentTotal = _uw.Budget_001Rep.Division(row.ExpenseCurrent + row.ExpenseCivil, row.MosavabCurrent + row.MosavabCivil);
+                        }
+                        else
+                        {
+                            row.PercentTotal = 0;
+                        }
+
+                        fecthViewModel.Add(row);
                     }
                 }
                 return Ok(fecthViewModel);
