@@ -670,9 +670,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Date = dataReader["Date"].ToString();
                         row.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                         row.Description = dataReader["Description"].ToString();
-                        row.EstimateAmount = StringExtensions.ToNullableInt (dataReader["Supply"].ToString());
-                        row.Code = dataReader["Expense"].ToString();
-                        row.title = dataReader["Expense"].ToString();
+                        row.EstimateAmount = StringExtensions.ToNullableInt (dataReader["EstimateAmount"].ToString());
+                        row.Code = dataReader["Code"].ToString();
+                        row.title = dataReader["title"].ToString();
      }
                 }
             }
