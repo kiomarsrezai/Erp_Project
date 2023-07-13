@@ -49,8 +49,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             if (areaId == null)
             {
-
-                //List<ColumnChart> dataset = new List<ColumnChart>();
                 using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart", sqlconnect1))
@@ -254,7 +252,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<Int64> expense = new List<Int64>();
 
 
-            //List<ColumnChart> dataset = new List<ColumnChart>();
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand1 = new SqlCommand("SP500_Chart_Ravand", sqlconnect1))
@@ -285,7 +282,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             };
 
             return data;
-
         }
 
         [Route("BudgetDeviation")]
@@ -416,8 +412,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             };
             return data;
         }
-
-
 
 
         [Route("DetailChartApi")]
@@ -731,7 +725,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(fecthViewModel);
         }
-
 
 
         [Route("AbstractRead")]
