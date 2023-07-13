@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Report
 {
-    public class ChartBudgetDeviationViewModel
+    public class BudgetShareViewModel
     {
+
+        public int CodingId { get; set; }
         public string AreaName { get; set; }
         public string code { get; set; }
         public string description { get; set; }
@@ -14,19 +15,16 @@ namespace NewsWebsite.ViewModels.Api.Report
         public long CreditAmount { get; set; }
         public double PercentCreditAmount { get; set; }
         public long expense { get; set; }
-        public double percmosavab { get; set; }
-
+        public double Percent { get; set; }
     }
 
-    public class ChartBudgetDeviationParamViewModel
+    public class Paream12ViewModel
     {
         public int yearId { get; set; }
         public int areaId { get; set; }
-        public int kindId { get; set; }
         public int BudgetProcessId { get; set; }
-   
-
     }
 
-  
+
+
 }

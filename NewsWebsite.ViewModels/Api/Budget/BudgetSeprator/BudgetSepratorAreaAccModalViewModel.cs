@@ -9,12 +9,21 @@
         public int KindId { get; set; }
     }
 
-    public class ParamViewModel
+    public class Param10ViewModel
     {
         public int yearId { get; set; }
         public int areaId { get; set; }
         public int codingId { get; set; }
         public int KindId { get; set; }
+
+    }
+
+    public class Param11ViewModel
+    {
+        public int yearId { get; set; }
+        public int areaId { get; set; }
+        public int codingId { get; set; }
+        public int projectId { get; set; }
 
     }
 }

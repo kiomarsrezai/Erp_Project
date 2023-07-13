@@ -122,7 +122,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var User = await _userManager.FindByNameAsync(ViewModel.UserName);
 
             if (User == null)
-                return BadRequest("شماره موبایل یا کلمه عبور شما صحیح نمی باشد.");
+                return BadRequest(" نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
             else
             {
                 User.Token = await _jwtService.GenerateTokenAsync(User);
@@ -139,6 +139,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     Token = User.Token,
                     UserName = User.UserName,
                     Bio = User.Bio,
+                    DateNow = DateTimeExtensions.GetDateMilady("yyyy/MM/dd").ToString()
                 };
                 var result = await _userManager.CheckPasswordAsync(User, ViewModel.Password);
                 if (result)
@@ -204,6 +205,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         userfech.SectionId = int.Parse(dataReader["SectionId"].ToString());
                         userfech.SectionName = await _uw.AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
                         userfech.Token = dataReader["Token"].ToString();
+                        userfech.DateNow = DateTimeExtensions.GetDateMilady("yyyy/MM/dd").ToString();
                     }
                 }
             }
