@@ -336,9 +336,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetShare")]
         [HttpGet]
-        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> GetBudgetShare(ChartBudgetDeviationParamViewModel param)
+        public async Task<ApiResult<List<BudgetShareViewModel>>> GetBudgetShare(Paream12ViewModel param)
         {
-            List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
+            List<BudgetShareViewModel> data = new List<BudgetShareViewModel>();
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand1 = new SqlCommand("SP500_BudgetShare", sqlconnect1))
@@ -353,11 +353,28 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                     while (dataReader1.Read())
                     {
-                        ChartBudgetDeviationViewModel row = new ChartBudgetDeviationViewModel();
+                        BudgetShareViewModel row = new BudgetShareViewModel();
                         row.code = dataReader1["Code"].ToString();
                         row.description = dataReader1["Description"].ToString();
                         row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
+                        row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
+                        if (Int64.Parse(dataReader1["mosavab"].ToString())> 0)
+                        {
+                            row.PercentCreditAmount = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["CreditAmount"].ToString()), Int64.Parse(dataReader1["Mosavab"].ToString())));
+                        }
+                        else
+                        {
+                            row.PercentCreditAmount = 0;
+                        }
                         row.expense = Int64.Parse(dataReader1["Expense"].ToString());
+                        if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
+                        {
+                            row.Percent = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["expense"].ToString()), Int64.Parse(dataReader1["Mosavab"].ToString())));
+                        }
+                        else
+                        {
+                            row.Percent = 0;
+                        }
                         row.AreaName = dataReader1["AreaName"].ToString();
                         data.Add(row);
                     }
