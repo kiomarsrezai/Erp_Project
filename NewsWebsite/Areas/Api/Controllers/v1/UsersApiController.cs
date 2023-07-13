@@ -14,6 +14,7 @@ using NewsWebsite.Services.Contracts;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.UserManager;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -139,7 +140,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     Token = User.Token,
                     UserName = User.UserName,
                     Bio = User.Bio,
-                    DateNow = DateTimeExtensions.GetDateMilady("yyyy/MM/dd").ToString()
+                    DateNow = DateTime.Now.ToShortDateString()
                 };
                 var result = await _userManager.CheckPasswordAsync(User, ViewModel.Password);
                 if (result)
