@@ -206,7 +206,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         userfech.SectionId = int.Parse(dataReader["SectionId"].ToString());
                         userfech.SectionName = await _uw.AreaNameByIdAsync(int.Parse(dataReader["SectionId"].ToString()));
                         userfech.Token = dataReader["Token"].ToString();
-                        userfech.DateNow = DateTimeExtensions.GetDateMilady("yyyy/MM/dd").ToString();
+                        userfech.DateNow = DateTime.Now.ToShortDateString();
                     }
                 }
             }
