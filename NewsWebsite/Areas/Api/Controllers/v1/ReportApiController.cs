@@ -391,49 +391,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<List<BudgetShareModalViewModel>>> AC_BudgetShareModal(Paream13ViewModel param)
         {
             List<BudgetShareModalViewModel> data = new List<BudgetShareModalViewModel>();
-            using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand1 = new SqlCommand("SP500_BudgetShare_Modal", sqlconnect1))
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_BudgetShare_Modal", sqlconnect))
                 {
-                    sqlconnect1.Open();
-                    sqlCommand1.CommandType = CommandType.StoredProcedure;
-                    sqlCommand1.Parameters.AddWithValue("YearId", param.YearId);
-                    sqlCommand1.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand1.Parameters.AddWithValue("CodingId", param.CodingId);
-                    SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
 
-                    while (dataReader1.Read())
+                    while (dataReader.Read())
                     {
                         BudgetShareModalViewModel row = new BudgetShareModalViewModel();
-                        row.Number = dataReader1["Number"].ToString();
-                        row.Date = dataReader1["Date"].ToString();
-                        row.DateShamsi = dataReader1["Date"].ToString();
-                        row.Description = dataReader1["Description"].ToString();
-                        row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
-                        if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
-                        {
-                            row.PercentCreditAmount = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["CreditAmount"].ToString()), Int64.Parse(dataReader1["Mosavab"].ToString())));
-                        }
-                        else
-                        {
-                            row.PercentCreditAmount = 0;
-                        }
-                        row.Expense = Int64.Parse(dataReader1["Expense"].ToString());
-                        if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
-                        {
-                            row.Percent = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["Expense"].ToString()), Int64.Parse(dataReader1["Mosavab"].ToString())));
-                        }
-                        else
-                        {
-                            row.Percent = 0;
-                        }
+                        row.Number = dataReader["Number"].ToString();
+                        row.Date = dataReader["Date"].ToString();
+                        row.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                        row.Description = dataReader["Description"].ToString();
+                        row.RequestBudgetAmount = Int64.Parse(dataReader["RequestBudgetAmount"].ToString());
                         data.Add(row);
                     }
                 }
             };
-
             return data;
-
         }
 
 
