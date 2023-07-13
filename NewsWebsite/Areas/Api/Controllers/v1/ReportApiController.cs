@@ -354,6 +354,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader1.Read())
                     {
                         BudgetShareViewModel row = new BudgetShareViewModel();
+                        row.CodingId = int.Parse(dataReader1["CodingId"].ToString());
                         row.code = dataReader1["Code"].ToString();
                         row.description = dataReader1["Description"].ToString();
                         row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
@@ -384,6 +385,59 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return data;
 
         }
+
+        [Route("BudgetShareModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetShareModalViewModel>>> AC_BudgetShareModal(Paream13ViewModel param)
+        {
+            List<BudgetShareModalViewModel> data = new List<BudgetShareModalViewModel>();
+            using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand1 = new SqlCommand("SP500_BudgetShare_Modal", sqlconnect1))
+                {
+                    sqlconnect1.Open();
+                    sqlCommand1.CommandType = CommandType.StoredProcedure;
+                    sqlCommand1.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand1.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand1.Parameters.AddWithValue("CodingId", param.CodingId);
+                    SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
+
+                    while (dataReader1.Read())
+                    {
+                        BudgetShareModalViewModel row = new BudgetShareModalViewModel();
+                        row.Number = dataReader1["Number"].ToString();
+                        row.Date = dataReader1["Date"].ToString();
+                        row.DateShamsi = dataReader1["Date"].ToString();
+                        row.Description = dataReader1["Description"].ToString();
+                        row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
+                        if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
+                        {
+                            row.PercentCreditAmount = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["CreditAmount"].ToString()), Int64.Parse(dataReader1["Mosavab"].ToString())));
+                        }
+                        else
+                        {
+                            row.PercentCreditAmount = 0;
+                        }
+                        row.Expense = Int64.Parse(dataReader1["Expense"].ToString());
+                        if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
+                        {
+                            row.Percent = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["Expense"].ToString()), Int64.Parse(dataReader1["Mosavab"].ToString())));
+                        }
+                        else
+                        {
+                            row.Percent = 0;
+                        }
+                        data.Add(row);
+                    }
+                }
+            };
+
+            return data;
+
+        }
+
+
+
 
         [Route("DetailChartApi")]
         [HttpGet]
