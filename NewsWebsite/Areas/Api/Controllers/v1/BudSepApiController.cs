@@ -514,8 +514,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", yearId);
                     sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("@codingId", codingId);
-                    sqlCommand.Parameters.AddWithValue("@projectId", projectId);
+                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    sqlCommand.Parameters.AddWithValue("projectId", projectId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -655,38 +655,33 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetSepratorAbstractAreaModal")]
         [HttpGet]
-        public async Task<ApiResult<List<SepratorAreaDepartmentModalViewModel>>> AC_BudgetSepratorAbstractAreaModal(Param11ViewModel param)
+        public async Task<ApiResult<List<BudgetSepratorAbstractAreaModalViewModel>>> AC_BudgetSepratorAbstractAreaModal(Param3 param)
         {
-            List<SepratorAreaDepartmentModalViewModel> fecthViewModel = new List<SepratorAreaDepartmentModalViewModel>();
+            List<BudgetSepratorAbstractAreaModalViewModel> DataModel = new List<BudgetSepratorAbstractAreaModalViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDetpartmant_Modal", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_AbstractArea", sqlconnect))
                 {
                     sqlconnect.Open();
-                    // sqlCommand.Parameters.AddWithValue("yearId", 33);
-                    // sqlCommand.Parameters.AddWithValue("areaId", 10);
-                    // sqlCommand.Parameters.AddWithValue("@codingId", 2723);
-                    // sqlCommand.Parameters.AddWithValue("@projectId", 55);
-                    sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
-                    sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
-                    sqlCommand.Parameters.AddWithValue("projectId", param.projectId);
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        SepratorAreaDepartmentModalViewModel fetchView = new SepratorAreaDepartmentModalViewModel();
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.DepartmentName = dataReader["DepartmentName"].ToString();
-                        fetchView.MosavabDepartment = Int64.Parse(dataReader["MosavabDepartment"].ToString());
-                        fecthViewModel.Add(fetchView);
+                        BudgetSepratorAbstractAreaModalViewModel row = new BudgetSepratorAbstractAreaModalViewModel();
+                        row.side = int.Parse(dataReader["side"].ToString());
+                        row.RevenueKind = int.Parse(dataReader["RevenueKind"].ToString());
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        DataModel.Add(row);
                     }
                 }
             }
-            return Ok(fecthViewModel);
+            return Ok(DataModel);
         }
-
 
 
         [Route("BudgetPerformanceAccept")]
