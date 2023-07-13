@@ -20,7 +20,7 @@ namespace NewsWebsite.ViewModels.Api.Report
     {
         public int yearId { get; set; }
         public int areaId { get; set; }
-        public int kindId { get; set; }
+       // public int kindId { get; set; }
         public int BudgetProcessId { get; set; }
 
 

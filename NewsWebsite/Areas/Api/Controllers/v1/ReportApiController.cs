@@ -347,7 +347,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand1.CommandType = CommandType.StoredProcedure;
                     sqlCommand1.Parameters.AddWithValue("areaId", param.areaId);
                     sqlCommand1.Parameters.AddWithValue("yearId", param.yearId);
-                    sqlCommand1.Parameters.AddWithValue("KindId", param.kindId);
+                  //  sqlCommand1.Parameters.AddWithValue("KindId", param.kindId);
                     sqlCommand1.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
                     SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
