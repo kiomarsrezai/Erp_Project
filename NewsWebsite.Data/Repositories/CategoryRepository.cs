@@ -34,7 +34,12 @@ namespace NewsWebsite.Data.Repositories
                 .SelectMany(p => p.ParentInfo.DefaultIfEmpty(), (x, y) => new { x.CategoryInfo, ParentInfo = y })
                 .OrderBy(orderBy)
                 .Skip(offset).Take(limit)
-                .Select(c => new CategoryViewModel { CategoryId = c.CategoryInfo.CategoryId, CategoryName = c.CategoryInfo.CategoryName, ParentCategoryId = c.ParentInfo.CategoryId, ParentCategoryName = c.ParentInfo.CategoryName }).AsNoTracking().ToListAsync();
+                .Select(c => new CategoryViewModel { 
+                    CategoryId = c.CategoryInfo.CategoryId, 
+                    CategoryName = c.CategoryInfo.CategoryName, 
+                    ParentCategoryId = c.ParentInfo.CategoryId, 
+                    ParentCategoryName = c.ParentInfo.CategoryName 
+                }).AsNoTracking().ToListAsync();
           
             foreach (var item in categories)
                 item.Row = ++offset;

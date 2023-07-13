@@ -664,10 +664,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDetpartmant_Modal", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand.Parameters.AddWithValue("@codingId", codingId);
-                    sqlCommand.Parameters.AddWithValue("@projectId", projectId);
+                    sqlCommand.Parameters.AddWithValue("yearId", 33);
+                    sqlCommand.Parameters.AddWithValue("areaId", 10);
+                    sqlCommand.Parameters.AddWithValue("@codingId", 2723);
+                    sqlCommand.Parameters.AddWithValue("@projectId", 55);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
