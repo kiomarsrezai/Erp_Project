@@ -664,17 +664,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDetpartmant_Modal", sqlconnect))
                 {
                     sqlconnect.Open();
-<<<<<<< HEAD
-                    sqlCommand.Parameters.AddWithValue("yearId", 33);
-                    sqlCommand.Parameters.AddWithValue("areaId", 10);
-                    sqlCommand.Parameters.AddWithValue("@codingId", 2723);
-                    sqlCommand.Parameters.AddWithValue("@projectId", 55);
-=======
+                    // sqlCommand.Parameters.AddWithValue("yearId", 33);
+                    // sqlCommand.Parameters.AddWithValue("areaId", 10);
+                    // sqlCommand.Parameters.AddWithValue("@codingId", 2723);
+                    // sqlCommand.Parameters.AddWithValue("@projectId", 55);
                     sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
                     sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
                     sqlCommand.Parameters.AddWithValue("@codingId", param.codingId);
                     sqlCommand.Parameters.AddWithValue("@projectId", param.projectId);
->>>>>>> baf73a7943e76e894b9b197585526c1d0fa4fe1e
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
