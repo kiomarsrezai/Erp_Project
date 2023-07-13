@@ -7,7 +7,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
     public class BudgetSepratorAbstractAreaModalViewModel
     {
         public int side { get; set; }
-        public int RevenueKind { get; set; }
+        public string Description { get; set; }
         public Int64 Mosavab { get; set; }
         public Int64 Edit { get; set; }
         public Int64 Expense { get; set; }

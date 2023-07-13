@@ -672,7 +672,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         BudgetSepratorAbstractAreaModalViewModel row = new BudgetSepratorAbstractAreaModalViewModel();
                         row.side = int.Parse(dataReader["side"].ToString());
-                        row.RevenueKind = int.Parse(dataReader["RevenueKind"].ToString());
+                        row.Description = dataReader["Description"].ToString();
                         row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         row.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         row.Expense = Int64.Parse(dataReader["Expense"].ToString());
