@@ -670,8 +670,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     // sqlCommand.Parameters.AddWithValue("@projectId", 55);
                     sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
                     sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
-                    sqlCommand.Parameters.AddWithValue("@codingId", param.codingId);
-                    sqlCommand.Parameters.AddWithValue("@projectId", param.projectId);
+                    sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
+                    sqlCommand.Parameters.AddWithValue("projectId", param.projectId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
