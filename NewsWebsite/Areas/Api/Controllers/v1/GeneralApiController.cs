@@ -14,6 +14,7 @@ using NewsWebsite.Services.Api;
 using NewsWebsite.ViewModels.Api.Abstract;
 using NewsWebsite.ViewModels.Api.GeneralVm;
 using NewsWebsite.ViewModels.Api.UploadFile;
+using NewsWebsite.ViewModels.Api.UsersApi;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -199,6 +200,41 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("EmployeeRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<EmployeeViewModel>>> AC_EmployeeRead()
+        {
+            List<EmployeeViewModel> data = new List<EmployeeViewModel>();
 
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        EmployeeViewModel row = new EmployeeViewModel();
+
+                        row.Id = int.Parse(dataReader["Id"].ToString());
+                        row.UserName = dataReader["UserName"].ToString();
+                        row.NormalizedUserName = dataReader["NormalizedUserName"].ToString();
+                        row.Email = dataReader["Email"].ToString();
+                        row.NormalizedEmail = dataReader["NormalizedEmail"].ToString();
+                        row.PhoneNumber = dataReader["PhoneNumber"].ToString();
+                        row.FirstName = dataReader["FirstName"].ToString();
+                        row.LastName = dataReader["LastName"].ToString();
+                        row.Bio = dataReader["Bio"].ToString();
+                        row.BirthDate = dataReader["BirthDate"].ToString();
+                        row.IsActive = bool.Parse(dataReader["IsActive"].ToString());
+                        row.Gender = int.Parse(dataReader["Gender"].ToString());
+
+                        data.Add(row);
+                    }
+                }
+            }
+            return Ok(data);
+        }
     }
 }
