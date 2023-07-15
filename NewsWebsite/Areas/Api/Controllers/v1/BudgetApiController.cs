@@ -430,6 +430,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+        
         [Route("BudgteModal1CodingUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> BudgteModal1CodingUpdate([FromBody] BudgetModal1CodingUpdateParamModel Param)
@@ -443,6 +444,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("id", Param.id);
                     sqlCommand.Parameters.AddWithValue("mosavabPublic", Param.mosavabPublic);
                     sqlCommand.Parameters.AddWithValue("Code", Param.Code);
+                    sqlCommand.Parameters.AddWithValue("Description", Param.Description);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
