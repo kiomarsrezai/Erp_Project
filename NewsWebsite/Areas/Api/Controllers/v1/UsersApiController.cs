@@ -11,6 +11,7 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Services.Api.Contract;
 using NewsWebsite.Services.Contracts;
+using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using NewsWebsite.ViewModels.Manage;
 using NewsWebsite.ViewModels.UserManager;
@@ -19,6 +20,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -48,7 +50,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("UserListPagination")]
         [HttpGet]
         //[JwtAuthentication(Policy = ConstantPolicies.DynamicPermission)]
-        public virtual async Task<ApiResult<List<UsersViewModel>>> Get(int offset, int limit, string searchText="")
+        public virtual async Task<ApiResult<List<UsersViewModel>>> Get(int offset, int limit, string searchText = "")
         {
             List<UsersViewModel> users;
             if (searchText.Length > 0)
@@ -76,7 +78,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                           RoleId = user.Roles.Select(r => r.Role.Id).FirstOrDefault(),
                           RoleName = user.Roles.Select(r => r.Role.Name).FirstOrDefault()
                       }).AsNoTracking().ToListAsync();
-            }else
+            }
+            else
             {
                 users = await _Context.Users.Include(u => u.Roles).Include(l => l.Section)
                       .Skip(offset).Take(limit)
@@ -154,7 +157,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public virtual async Task<ApiResult<string>> ChangePassword([FromBody] ChangePasswordViewModel ViewModel)
         {
-            var user = await _Context.Users.FirstOrDefaultAsync(a=>a.Id== ViewModel.Id);
+            var user = await _Context.Users.FirstOrDefaultAsync(a => a.Id == ViewModel.Id);
             if (user == null)
                 return BadRequest("");
 
@@ -224,6 +227,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
+
+        [Route("EmployeeInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_EmployeeInsert([FromBody] EmployeeInsertViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("UserName", param.UserName);
+                    sqlCommand.Parameters.AddWithValue("PhoneNumber", param.PhoneNumber);
+                    sqlCommand.Parameters.AddWithValue("FirstName", param.FirstName);
+                    sqlCommand.Parameters.AddWithValue("LastName", param.LastName);
+                    sqlCommand.Parameters.AddWithValue("Gender", param.Gender);
+                    sqlCommand.Parameters.AddWithValue("Bio", param.Bio);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
         //[HttpPost("CreateUser")]
         //public async Task<User> Create([FromBody] UsersViewModel viewModel)
         //{
@@ -240,10 +275,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //    User user = new User
         //    {
         //        passStoredHash = passwordHash,
-        //    passStoredSalt = passwordSalt,
+        //        passStoredSalt = passwordSalt,
         //    };
 
-        //    await _Context.Users.AddAsync(user,cancellationToken);
+        //    await _Context.Users.AddAsync(user, CancellationToken);
         //    _Context.SaveChanges();
 
         //    return user;
