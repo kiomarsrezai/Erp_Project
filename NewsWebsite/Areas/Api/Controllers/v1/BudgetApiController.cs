@@ -868,7 +868,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Update", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget_Inline_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Code", param.Code);
