@@ -11,6 +11,7 @@ using NewsWebsite.ViewModels.Api.Budget.BudgetArea;
 using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
 using NewsWebsite.ViewModels.Api.Budget.BudgetConnect;
 using NewsWebsite.ViewModels.Api.Budget.BudgetProject;
+using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.Projects;
 using NewsWebsite.ViewModels.Api.Request;
 using NewsWebsite.ViewModels.Fetch;
@@ -859,8 +860,68 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecth);
         }
 
+
+        [Route("BudgetInlineInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_BudgetInlineInsert([FromBody] param15ViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Code", param.Code);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
+                    sqlCommand.Parameters.AddWithValue("ProgramOperationDetailsId", param.ProgramOperationDetailsId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
+        [Route("BudgetInlineInsertModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<BudgetInlineModalViewModel>>> BudgetSepratorAreaProjectModal2(Param16ViewModel param)
+        {
+            List<BudgetInlineModalViewModel> data = new List<BudgetInlineModalViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget_Inline_Modal", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+                    //sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        BudgetInlineModalViewModel row = new BudgetInlineModalViewModel();
+                        row.Id = int.Parse(dataReader["Id"].ToString());
+                        row.ProjectCode = dataReader["ProjectCode"].ToString();
+                        row.ProjectName = dataReader["ProjectName"].ToString();
+                        data.Add(row);
+                    }
+                }
+            }
+
+            return Ok(data);
+        }
+
+
     }
-
-
-
 }
