@@ -443,8 +443,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", Param.id);
                     sqlCommand.Parameters.AddWithValue("mosavabPublic", Param.mosavabPublic);
-                    sqlCommand.Parameters.AddWithValue("CodeOld", Param.Code);
-                    sqlCommand.Parameters.AddWithValue("CodeNew", Param.Code);
+                    sqlCommand.Parameters.AddWithValue("CodeOld", Param.CodeOld);
+                    sqlCommand.Parameters.AddWithValue("CodeNew", Param.CodeNew);
                     sqlCommand.Parameters.AddWithValue("Description", Param.Description);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
