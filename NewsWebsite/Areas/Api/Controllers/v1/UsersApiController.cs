@@ -258,6 +258,40 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+        [Route("EmployeeUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AC_EmployeeUpdate([FromBody] EmployeeUpdateViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("UserName", param.UserName);
+                    sqlCommand.Parameters.AddWithValue("PhoneNumber", param.PhoneNumber);
+                    sqlCommand.Parameters.AddWithValue("FirstName", param.FirstName);
+                    sqlCommand.Parameters.AddWithValue("LastName", param.LastName);
+                    sqlCommand.Parameters.AddWithValue("Gender", param.Gender);
+                    sqlCommand.Parameters.AddWithValue("Bio", param.Bio);
+                    sqlCommand.Parameters.AddWithValue("NormalizedUserName", param.NormalizedUserName);
+                    sqlCommand.Parameters.AddWithValue("Email", param.Email);
+                    sqlCommand.Parameters.AddWithValue("NormalizedEmail", param.NormalizedEmail);
+                    sqlCommand.Parameters.AddWithValue("BirthDate", param.BirthDate);
+                    sqlCommand.Parameters.AddWithValue("IsActive", param.IsActive);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
         //[HttpPost("CreateUser")]
         //public async Task<User> Create([FromBody] UsersViewModel viewModel)
