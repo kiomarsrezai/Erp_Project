@@ -17,7 +17,6 @@ namespace NewsWebsite.ViewModels.Api.UsersApi
         public string Email { get; set; }
         public string NormalizedEmail { get; set; }
         public string BirthDate { get; set; }
-        public string BirthDateShamsi { get; set; }
         public bool? IsActive { get; set; }
 
     }
