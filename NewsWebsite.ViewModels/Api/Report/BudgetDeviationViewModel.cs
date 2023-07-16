@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Report
 {
-    public class ChartBudgetDeviationViewModel
+    public class BudgetDeviationViewModel
     {
         public string AreaName { get; set; }
         public string code { get; set; }
@@ -18,13 +18,11 @@ namespace NewsWebsite.ViewModels.Api.Report
 
     }
 
-    public class ChartBudgetDeviationParamViewModel
+    public class Param20ViewModel
     {
         public int yearId { get; set; }
         public int areaId { get; set; }
-        public int kindId { get; set; }
-        public int BudgetProcessId { get; set; }
-   
+  
 
     }
 

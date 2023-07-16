@@ -286,9 +286,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetDeviation")]
         [HttpGet]
-        public async Task<ApiResult<List<ChartBudgetDeviationViewModel>>> BudgetDeviation(int areaId, int yearId)
+        public async Task<ApiResult<List<BudgetDeviationViewModel>>> BudgetDeviation(Param20ViewModel param)
         {
-            List<ChartBudgetDeviationViewModel> data = new List<ChartBudgetDeviationViewModel>();
+            List<BudgetDeviationViewModel> data = new List<BudgetDeviationViewModel>();
 
 
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -297,17 +297,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect1.Open();
                     sqlCommand1.CommandType = CommandType.StoredProcedure;
-                    sqlCommand1.Parameters.AddWithValue("areaId", areaId);
-                    sqlCommand1.Parameters.AddWithValue("yearId", yearId);
+                    sqlCommand1.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand1.Parameters.AddWithValue("yearId", param.yearId);
                     SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
                     while (dataReader1.Read())
                     {
-                        ChartBudgetDeviationViewModel row = new ChartBudgetDeviationViewModel();
+                        BudgetDeviationViewModel row = new BudgetDeviationViewModel();
                         row.AreaName = dataReader1["AreaName"].ToString();
                         row.code = dataReader1["Code"].ToString();
                         row.description = dataReader1["Description"].ToString();
                         row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
+                        row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
                         row.expense = Int64.Parse(dataReader1["Expense"].ToString());
                         if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                         {
