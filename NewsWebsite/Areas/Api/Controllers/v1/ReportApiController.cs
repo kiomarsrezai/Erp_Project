@@ -309,6 +309,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.description = dataReader1["Description"].ToString();
                         row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
                         row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
+                        if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
+                        {
+                            row.PercentCreditAmount = _uw.Budget_001Rep.Division(double.Parse(dataReader1["CreditAmount"].ToString()), double.Parse(dataReader1["Mosavab"].ToString()));
+                        }
+                        else
+                        {
+                            row.PercentCreditAmount = 0;
+                        }
                         row.expense = Int64.Parse(dataReader1["Expense"].ToString());
                         if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                         {
