@@ -155,6 +155,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+
         [Route("Chart_RevenueKindModal")]
         [HttpGet]
         public async Task<ApiResult<List<Chart_RevenueKindModalViewModel>>> ChartRevenueKindModal(int yearId, int StructureId)
@@ -284,6 +285,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return data;
         }
 
+
         [Route("BudgetDeviation")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetDeviationViewModel>>> BudgetDeviation(Param20ViewModel param)
@@ -339,6 +341,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+
         [Route("BudgetShare")]
         [HttpGet]
         public async Task<ApiResult<List<BudgetShareViewModel>>> GetBudgetShare(Paream12ViewModel param)
@@ -390,6 +393,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return data;
 
         }
+
 
         [Route("BudgetShareModal")]
         [HttpGet]
@@ -484,6 +488,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
+
         [Route("Proctor")]
         [HttpGet]
         public async Task<ApiResult<List<Proctor1ViewModel1>>> GetAllDeputy(ProctorParamViewModel ViewModel)
@@ -567,6 +572,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
+
         [Route("ProctorArea")]
         [HttpGet]
         public async Task<ApiResult<List<AreaProctorViewModel>>> ProctorAreaBudget(ProctorParamViewModel viewModel)
@@ -646,6 +652,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return Ok(fecthViewModel);
             }
         }
+
 
         [Route("ProctorList")]
         [HttpGet]
@@ -1100,6 +1107,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             return Ok(fecthViewModel);
         }
+
 
         [Route("AbstractPerformanceBudgetDetail")]
         [HttpGet]

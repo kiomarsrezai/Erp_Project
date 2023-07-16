@@ -238,7 +238,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
                     sqlCommand.Parameters.AddWithValue("UserName", param.UserName);
                     sqlCommand.Parameters.AddWithValue("PhoneNumber", param.PhoneNumber);
                     sqlCommand.Parameters.AddWithValue("FirstName", param.FirstName);
