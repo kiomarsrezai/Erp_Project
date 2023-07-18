@@ -31,6 +31,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     public class UsersApiController : ControllerBase
     {
         private readonly IApplicationUserManager _userManager;
+        private readonly IApplicationRoleManager _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IjwtService _jwtService;
         private readonly ProgramBuddbContext _Context;
@@ -38,13 +39,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IConfiguration _configuration;
 
 
-        public UsersApiController(IApplicationUserManager userManager, IjwtService jwtService, ProgramBuddbContext context, IBudget_001Rep uw, IConfiguration configuration)
+        public UsersApiController(IApplicationUserManager userManager, IApplicationRoleManager roleManager, IjwtService jwtService, ProgramBuddbContext context, IBudget_001Rep uw, IConfiguration configuration)
         {
-            _configuration = configuration;
             _userManager = userManager;
+            _roleManager = roleManager;
             _jwtService = jwtService;
             _Context = context;
             _uw = uw;
+            _configuration = configuration;
         }
 
         [Route("UserListPagination")]
@@ -228,144 +230,153 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        [Route("EmployeeInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> AC_EmployeeInsert([FromBody] EmployeeInsertViewModel param)
+        //[Route("EmployeeInsert")]
+        //[HttpPost]
+        //public async Task<ApiResult<string>> AC_EmployeeInsert([FromBody] EmployeeInsertViewModel param)
+        //{
+        //    string readercount = null;
+        //    using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Insert", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.Parameters.AddWithValue("UserName", param.UserName);
+        //            sqlCommand.Parameters.AddWithValue("PhoneNumber", param.PhoneNumber);
+        //            sqlCommand.Parameters.AddWithValue("FirstName", param.FirstName);
+        //            sqlCommand.Parameters.AddWithValue("LastName", param.LastName);
+        //            sqlCommand.Parameters.AddWithValue("Gender", param.Gender);
+        //            sqlCommand.Parameters.AddWithValue("Bio", param.Bio);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //            while (dataReader.Read())
+        //            {
+        //                if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+        //            }
+        //        }
+        //    }
+        //    if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+        //    else
+        //        return BadRequest(readercount);
+        //}
+
+        //[Route("EmployeeUpdate")]
+        //[HttpPost]
+        //public async Task<ApiResult<string>> AC_EmployeeUpdate([FromBody] EmployeeUpdateViewModel param)
+        //{
+        //    string readercount = null;
+        //    using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //    {
+        //        using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Update", sqlconnect))
+        //        {
+        //            sqlconnect.Open();
+        //            sqlCommand.Parameters.AddWithValue("Id", param.Id);
+        //            sqlCommand.Parameters.AddWithValue("UserName", param.UserName);
+        //            sqlCommand.Parameters.AddWithValue("PhoneNumber", param.PhoneNumber);
+        //            sqlCommand.Parameters.AddWithValue("FirstName", param.FirstName);
+        //            sqlCommand.Parameters.AddWithValue("LastName", param.LastName);
+        //            sqlCommand.Parameters.AddWithValue("Gender", param.Gender);
+        //            sqlCommand.Parameters.AddWithValue("Bio", param.Bio);
+        //            sqlCommand.Parameters.AddWithValue("NormalizedUserName", param.NormalizedUserName);
+        //            sqlCommand.Parameters.AddWithValue("Email", param.Email);
+        //            sqlCommand.Parameters.AddWithValue("NormalizedEmail", param.NormalizedEmail);
+        //            sqlCommand.Parameters.AddWithValue("BirthDate", param.BirthDate);
+        //            sqlCommand.Parameters.AddWithValue("IsActive", param.IsActive);
+        //            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //            while (dataReader.Read())
+        //            {
+        //                if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+        //            }
+        //        }
+        //    }
+        //    if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+        //    else
+        //        return BadRequest(readercount);
+        //}
+
+        [HttpPost("CreateUser")]
+        public async Task<ApiResult<string>> Create([FromBody] UsersViewModel viewModel)
         {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            if (viewModel.UserName == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+            // validation
+            var roleresult = await _roleManager.FindByNameAsync("کاربر");
+                if (roleresult == null)
+                    await _roleManager.CreateAsync(new Role("کاربر"));
+            var user = new User
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("UserName", param.UserName);
-                    sqlCommand.Parameters.AddWithValue("PhoneNumber", param.PhoneNumber);
-                    sqlCommand.Parameters.AddWithValue("FirstName", param.FirstName);
-                    sqlCommand.Parameters.AddWithValue("LastName", param.LastName);
-                    sqlCommand.Parameters.AddWithValue("Gender", param.Gender);
-                    sqlCommand.Parameters.AddWithValue("Bio", param.Bio);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
+                UserName = viewModel.UserName,
+                Email = viewModel.Email,
+                RegisterDateTime = DateTime.Now,
+                IsActive = true,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, viewModel.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "کاربر");
+
+                byte[] passwordHash, passwordSalt;
+                _userManager.CreatePasswordHash("abc123", out passwordHash, out passwordSalt);
+
+                await _Context.Users.AddAsync(user);
+                _Context.SaveChanges();
+
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+            return Ok("کاربر با موفقیت ایجاد شد");
         }
 
-        [Route("EmployeeUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> AC_EmployeeUpdate([FromBody] EmployeeUpdateViewModel param)
+        [HttpPost("UpdateUser")]
+        public void Update(User userParam)
         {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            var user = _Context.Users.Find(userParam.Id);
+
+            if (user == null)
+                throw new Exception("User not found");
+
+            // update username if it has changed
+            if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Employee_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.Parameters.AddWithValue("UserName", param.UserName);
-                    sqlCommand.Parameters.AddWithValue("PhoneNumber", param.PhoneNumber);
-                    sqlCommand.Parameters.AddWithValue("FirstName", param.FirstName);
-                    sqlCommand.Parameters.AddWithValue("LastName", param.LastName);
-                    sqlCommand.Parameters.AddWithValue("Gender", param.Gender);
-                    sqlCommand.Parameters.AddWithValue("Bio", param.Bio);
-                    sqlCommand.Parameters.AddWithValue("NormalizedUserName", param.NormalizedUserName);
-                    sqlCommand.Parameters.AddWithValue("Email", param.Email);
-                    sqlCommand.Parameters.AddWithValue("NormalizedEmail", param.NormalizedEmail);
-                    sqlCommand.Parameters.AddWithValue("BirthDate", param.BirthDate);
-                    sqlCommand.Parameters.AddWithValue("IsActive", param.IsActive);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
+                // throw error if the new username is already taken
+                if (_Context.Users.Any(x => x.UserName == userParam.UserName))
+                    throw new Exception("Username " + userParam.UserName + " is already taken");
+
+                user.UserName = userParam.UserName;
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
+            // update user properties if provided
+            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+                user.FirstName = userParam.FirstName;
+
+            if (!string.IsNullOrWhiteSpace(userParam.LastName))
+                user.LastName = userParam.LastName;
+
+            // update password if provided
+            //if (!string.IsNullOrWhiteSpace(password))
+            //{
+            //    byte[] passwordHash, passwordSalt;
+            //    _userManager.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            //    user.passStoredHash = passwordHash;
+            //    user.passStoredSalt = passwordSalt;
+            //}
+
+            _Context.Users.Update(user);
+            _Context.SaveChanges();
         }
 
-        //[HttpPost("CreateUser")]
-        //public async Task<User> Create([FromBody] UsersViewModel viewModel)
-        //{
-        //    // validation
-        //    if (string.IsNullOrWhiteSpace(viewModel.Password))
-        //        throw new Exception("Password is required");
-
-        //    if (await _Context.Users.AnyAsync(x => x.UserName == viewModel.UserName))
-        //        throw new Exception("Username \"" + viewModel.UserName + "\" is already taken");
-
-        //    byte[] passwordHash, passwordSalt;
-        //    _userService.CreatePasswordHash(viewModel.Password, out passwordHash, out passwordSalt);
-
-        //    User user = new User
-        //    {
-        //        passStoredHash = passwordHash,
-        //        passStoredSalt = passwordSalt,
-        //    };
-
-        //    await _Context.Users.AddAsync(user, CancellationToken);
-        //    _Context.SaveChanges();
-
-        //    return user;
-        //}
-
-        //[HttpPost("UpdateUser")]
-        //public void Update(User userParam, string password = null)
-        //{
-        //    var user = _Context.Users.Find(userParam.Id);
-
-        //    if (user == null)
-        //        throw new Exception("User not found");
-
-        //    // update username if it has changed
-        //    if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
-        //    {
-        //        // throw error if the new username is already taken
-        //        if (_Context.Users.Any(x => x.UserName == userParam.UserName))
-        //            throw new Exception("Username " + userParam.UserName + " is already taken");
-
-        //        user.UserName = userParam.UserName;
-        //    }
-
-        //    // update user properties if provided
-        //    if (!string.IsNullOrWhiteSpace(userParam.FirstName))
-        //        user.FirstName = userParam.FirstName;
-
-        //    if (!string.IsNullOrWhiteSpace(userParam.LastName))
-        //        user.LastName = userParam.LastName;
-
-        //    // update password if provided
-        //    if (!string.IsNullOrWhiteSpace(password))
-        //    {
-        //        byte[] passwordHash, passwordSalt;
-        //        _userManager.CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-        //        user.passStoredHash = passwordHash;
-        //        user.passStoredSalt = passwordSalt;
-        //    }
-
-        //    _Context.Users.Update(user);
-        //    _Context.SaveChanges();
-        //}
-
-        //[HttpPost("DeleteUser")]
-        //public void Delete(int id)
-        //{
-        //    var user = _Context.Users.Find(id);
-        //    if (user != null)
-        //    {
-        //        _Context.Users.Remove(user);
-        //        _Context.SaveChanges();
-        //    }
-        //}
+        [HttpPost("DeleteUser")]
+        public void Delete(int id)
+        {
+            var user = _Context.Users.Find(id);
+            if (user != null)
+            {
+                _Context.Users.Remove(user);
+                _Context.SaveChanges();
+            }
+        }
 
         // private helper methods
 
