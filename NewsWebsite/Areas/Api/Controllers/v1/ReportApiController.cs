@@ -954,6 +954,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                     fetchdata.PercentDar_Khazane = 0;
                                 }
 
+                                fetchdata.MosavabNeyabati = long.Parse(dataReader["MosavabNeyabati"].ToString());
+                                fetchdata.ExpenseNeyabati = long.Parse(dataReader["ExpenseNeyabati"].ToString());
+                                if (fetchdata.PercentNeyabati != 0)
+                                {
+                                    fetchdata.PercentDar_Khazane = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseNeyabati, fetchdata.MosavabNeyabati));
+                                }
+                                else
+                                {
+                                    fetchdata.PercentNeyabati = 0;
+                                }
+
+
+
+
 
                                 fetchdata.Resoures = long.Parse(dataReader["Resoures"].ToString());
                                 fetchdata.balance = long.Parse(dataReader["balance"].ToString());

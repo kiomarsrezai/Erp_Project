@@ -40,6 +40,10 @@ namespace NewsWebsite.ViewModels.Api.Report
         public Int64 ExpenseDar_Khazane { get; set; }
         public double PercentDar_Khazane { get; set; }
 
+        public Int64 MosavabNeyabati { get; set; }
+        public Int64 ExpenseNeyabati { get; set; }
+        public double PercentNeyabati { get; set; }
+
         public Int64 Resoures { get; set; }
         public Int64 balance { get; set; }
 
