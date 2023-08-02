@@ -977,9 +977,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                                 fetchdata.MosavabNeyabati = long.Parse(dataReader["MosavabNeyabati"].ToString());
                                 fetchdata.ExpenseMonthNeyabati = long.Parse(dataReader["ExpenseMonthNeyabati"].ToString());
-                                if (fetchdata.PercentNeyabati != 0)
+                                if (fetchdata.MosavabNeyabati != 0)
                                 {
-                                    fetchdata.PercentDar_Khazane = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseMonthNeyabati, fetchdata.MosavabNeyabati));
+                                    fetchdata.PercentNeyabati = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseMonthNeyabati, fetchdata.MosavabNeyabati));
                                 }
                                 else
                                 {
