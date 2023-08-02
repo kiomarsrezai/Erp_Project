@@ -868,10 +868,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 fetchdata.Id = int.Parse(dataReader["Id"].ToString());
                                 fetchdata.AreaName = dataReader["AreaName"].ToString();
                                 fetchdata.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
-                                fetchdata.ExpenseRevenue = long.Parse(dataReader["ExpenseRevenue"].ToString());
+                                fetchdata.ExpenseMonthRevenue = long.Parse(dataReader["ExpenseMonthRevenue"].ToString());
                                 if (fetchdata.MosavabRevenue != 0)
                                 {
-                                    fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseRevenue, fetchdata.MosavabRevenue));
+                                    fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseMonthRevenue, fetchdata.MosavabRevenue));
                                 }
                                 else
                                 {
@@ -879,10 +879,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 }
 
                                 fetchdata.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
-                                fetchdata.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
+                                fetchdata.ExpenseMonthCurrent = long.Parse(dataReader["ExpenseMonthCurrent"].ToString());
                                 if (fetchdata.MosavabCurrent != 0)
                                 {
-                                    fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent));
+                                    fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseMonthCurrent, fetchdata.MosavabCurrent));
                                 }
                                 else
                                 {
@@ -997,7 +997,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             if ((long.Parse(dataReader["MosavabRevenue"].ToString()) != 0) ||
                                (long.Parse(dataReader["ExpenseRevenue"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCurrent"].ToString()) != 0) ||
-                                (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseMonthCurrent"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCivil"].ToString()) != 0) ||
                                 (long.Parse(dataReader["CreditAmountCivil"].ToString()) != 0) ||
                                 (long.Parse(dataReader["ExpenseCivil"].ToString()) != 0) ||
@@ -1016,10 +1016,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 fetchdata.Id = int.Parse(dataReader["Id"].ToString());
                                 fetchdata.AreaName = dataReader["AreaName"].ToString();
                                 fetchdata.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
-                                fetchdata.ExpenseRevenue = long.Parse(dataReader["ExpenseRevenue"].ToString());
+                                fetchdata.ExpenseMonthRevenue = long.Parse(dataReader["ExpenseMonthRevenue"].ToString());
                                 if (fetchdata.MosavabRevenue != 0)
                                 {
-                                    fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseRevenue, fetchdata.MosavabRevenue));
+                                    fetchdata.PercentRevenue = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseMonthRevenue, fetchdata.MosavabRevenue));
                                 }
                                 else
                                 {
@@ -1027,10 +1027,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 }
 
                                 fetchdata.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
-                                fetchdata.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
+                                fetchdata.ExpenseMonthCurrent = long.Parse(dataReader["ExpenseMonthCurrent"].ToString());
                                 if (fetchdata.MosavabCurrent != 0)
                                 {
-                                    fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseCurrent, fetchdata.MosavabCurrent));
+                                    fetchdata.PercentCurrent = Math.Round(_uw.Budget_001Rep.Division(fetchdata.ExpenseMonthCurrent, fetchdata.MosavabCurrent));
                                 }
                                 else
                                 {

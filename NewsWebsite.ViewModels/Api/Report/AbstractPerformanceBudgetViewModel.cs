@@ -9,12 +9,12 @@ namespace NewsWebsite.ViewModels.Api.Report
         public int Id { get; set; }
         public string AreaName { get; set; }
         public Int64 MosavabRevenue { get; set; }
-        public Int64 ExpenseRevenue { get; set; }
+        public Int64 ExpenseMonthRevenue { get; set; }
         public double PercentRevenue { get; set; }
 
 
         public Int64 MosavabCurrent { get; set; }
-        public Int64 ExpenseCurrent { get; set; }
+        public Int64 ExpenseMonthCurrent { get; set; }
         public double PercentCurrent { get; set; }
 
         public Int64 MosavabCivil { get; set; }
