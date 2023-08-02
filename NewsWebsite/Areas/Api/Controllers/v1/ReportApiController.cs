@@ -911,7 +911,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 fetchdata.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
                                 fetchdata.CreditFinancial = long.Parse(dataReader["CreditFinancial"].ToString());
 
-
                                 if (fetchdata.MosavabFinancial != 0)
                                 {
                                     fetchdata.PercentCreditFinancial = Math.Round(_uw.Budget_001Rep.Division(fetchdata.CreditFinancial, fetchdata.MosavabFinancial));
