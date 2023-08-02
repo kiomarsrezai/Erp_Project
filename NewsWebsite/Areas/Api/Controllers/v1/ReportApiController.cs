@@ -847,7 +847,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         while (dataReader.Read())
                         {
                             if ((long.Parse(dataReader["MosavabRevenue"].ToString()) != 0) ||
-                               (long.Parse(dataReader["ExpenseRevenue"].ToString()) != 0) ||
+                               (long.Parse(dataReader["ExpenseMonthRevenue"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCurrent"].ToString()) != 0) ||
                                 (long.Parse(dataReader["ExpenseCurrent"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCivil"].ToString()) != 0) ||
@@ -1016,7 +1016,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         while (dataReader.Read())
                         {
                             if ((long.Parse(dataReader["MosavabRevenue"].ToString()) != 0) ||
-                               (long.Parse(dataReader["ExpenseRevenue"].ToString()) != 0) ||
+                               (long.Parse(dataReader["ExpenseMonthRevenue"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCurrent"].ToString()) != 0) ||
                                 (long.Parse(dataReader["ExpenseMonthCurrent"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabCivil"].ToString()) != 0) ||
