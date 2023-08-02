@@ -859,7 +859,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 (long.Parse(dataReader["MosavabPayMotomarkez"].ToString()) != 0) ||
                                 (long.Parse(dataReader["ExpensePayMotomarkez"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabDar_Khazane"].ToString()) != 0) ||
-                                (long.Parse(dataReader["ExpenseDar_Khazane"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseMonthDarAzKhazane"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabRevenue"].ToString()) != 0))
                             {
 
@@ -1029,7 +1029,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 (long.Parse(dataReader["MosavabPayMotomarkez"].ToString()) != 0) ||
                                 (long.Parse(dataReader["ExpensePayMotomarkez"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabDar_Khazane"].ToString()) != 0) ||
-                                (long.Parse(dataReader["ExpenseDar_Khazane"].ToString()) != 0) ||
+                                (long.Parse(dataReader["ExpenseMonthDarAzKhazane"].ToString()) != 0) ||
                                 (long.Parse(dataReader["MosavabRevenue"].ToString()) != 0))
                             {
 
