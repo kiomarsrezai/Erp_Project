@@ -18,6 +18,8 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetSeprator
     {
         public int YearId { get; set; }
         public int AreaId { get; set; }
+        public int budgetProcessId { get; set; }
+
     }
 }
 
