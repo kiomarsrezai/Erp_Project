@@ -14,6 +14,8 @@ namespace NewsWebsite.ViewModels.Api.Report
 
 
         public Int64 MosavabCurrent { get; set; }
+        public Int64 CreditCurrent { get; set; }
+        public double PercentCreditCurrent { get; set; }
         public Int64 ExpenseMonthCurrent { get; set; }
         public double PercentCurrent { get; set; }
 
