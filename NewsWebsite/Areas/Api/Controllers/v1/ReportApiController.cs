@@ -1054,6 +1054,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 }
 
                                 row.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                                row.CreditCurrent = long.Parse(dataReader["CreditCurrent"].ToString());
+                                if (row.MosavabCurrent != 0)
+                                {
+                                    row.PercentCreditCurrent = Math.Round(_uw.Budget_001Rep.Division(row.CreditCurrent, row.MosavabCurrent));
+                                }
+                                else
+                                {
+                                    row.PercentCreditCurrent = 0;
+                                }
                                 row.ExpenseMonthCurrent = long.Parse(dataReader["ExpenseMonthCurrent"].ToString());
                                 if (row.MosavabCurrent != 0)
                                 {
