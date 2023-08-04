@@ -629,14 +629,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        [Route("ContractInstallmentsAutomaticInsert")]
+        [Route("ContractInstallmentsInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> Ac_ContractInstallmentsAutomaticInsert([FromBody] ContractInstallmentsAutomaticInsertViewModel param)
+        public async Task<ApiResult<string>> Ac_ContractInstallmentsInsert([FromBody] ContractInstallmentsInsertViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractInstallmentsAutomatic_Insert", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractInstallments_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("ContractId", param.ContractId);

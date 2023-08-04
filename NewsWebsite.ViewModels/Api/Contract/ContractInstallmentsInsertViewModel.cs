@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Contract
 {
-    public class ContractInstallmentsAutomaticInsertViewModel
+    public class ContractInstallmentsInsertViewModel
     {
         public int ContractId { get; set; }
         public string Date { get; set; }
