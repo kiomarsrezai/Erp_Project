@@ -7,8 +7,6 @@ namespace NewsWebsite.ViewModels.Api.Contract
     public class ContractInstallmentsReadViewModel
     {
         public int Id { get; set; }
-        public int YearName { get; set; }
-        public int MonthId { get; set; }
         public string InstallmentsDate { get; set; }
         public string DateShamsi { get; set; }
         public Int64 MonthlyAmount { get; set; }
