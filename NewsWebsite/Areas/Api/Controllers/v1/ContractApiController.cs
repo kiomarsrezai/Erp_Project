@@ -572,12 +572,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-        public async Task<ApiResult<string>> Ac_EstateInfoPrivateDelete([FromBody] PublicParamIdViewModel param)
+        [Route("AmlakPrivateDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_AmlakPrivateDelete([FromBody] PublicParamIdViewModel param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Delete", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakPrivate_Delete", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
