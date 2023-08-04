@@ -403,6 +403,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
                             row.Id = int.Parse(dataReader["Id"].ToString());
+                            row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                            row.AreaName = dataReader["AreaName"].ToString();
                             row.EstateInfoName = dataReader["EstateInfoName"].ToString();
                             row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
                             data.Add(row);
