@@ -27,7 +27,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        
+
         public ContractApiController(IUnitOfWork uw, IConfiguration config)
         {
             _config = config;
@@ -576,37 +576,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakPrivateDelete")]
         [HttpPost]
-
-        [Route("ContractInstallmentsRead")]
-        [HttpGet]
-        public async Task<ApiResult<List<ContractInstallmentsReadViewModel>>> Ac_ContractInstallmentsRead(Param30 param)
-        {
-            List<ContractInstallmentsReadViewModel> data = new List<ContractInstallmentsReadViewModel>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractInstallments_Read", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("ContractId", param.ContractId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            ContractInstallmentsReadViewModel row = new ContractInstallmentsReadViewModel();
-                            row.Id = int.Parse(dataReader["Id"].ToString());
-                            row.InstallmentsDate = dataReader["InstallmentsDate"].ToString();
-                            row.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["InstallmentsDate"].ToString()), "yyyy/MM/dd");
-                            row.MonthlyAmount =Int64.Parse(dataReader["MonthlyAmount"].ToString());
-                            data.Add(row);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(data);
-        }
-
         public async Task<ApiResult<string>> Ac_AmlakPrivateDelete([FromBody] PublicParamIdViewModel param)
         {
             string readercount = null;
@@ -628,6 +597,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+        [Route("ContractInstallmentsRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ContractInstallmentsReadViewModel>>> Ac_ContractInstallmentsRead(Param30 param)
+        {
+            List<ContractInstallmentsReadViewModel> data = new List<ContractInstallmentsReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractInstallments_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("ContractId", param.ContractId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ContractInstallmentsReadViewModel row = new ContractInstallmentsReadViewModel();
+                            row.Id = int.Parse(dataReader["Id"].ToString());
+                            row.InstallmentsDate = dataReader["InstallmentsDate"].ToString();
+                            row.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["InstallmentsDate"].ToString()), "yyyy/MM/dd");
+                            row.MonthlyAmount = Int64.Parse(dataReader["MonthlyAmount"].ToString());
+                            data.Add(row);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(data);
+        }
+
 
         [Route("ContractInstallmentsAutomaticInsert")]
         [HttpPost]
