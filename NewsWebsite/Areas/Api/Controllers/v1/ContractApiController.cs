@@ -710,5 +710,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+        [Route("ReciveBankRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ReciveBankViewModel>>> Ac_ReciveBankRead(param31 param)
+        {
+            List<ReciveBankViewModel> data = new List<ReciveBankViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ReciveBank_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("Date", param.Date);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ReciveBankViewModel row = new ReciveBankViewModel();
+                            row.Id = int.Parse(dataReader["Id"].ToString());
+                            row.Date = StringExtensions.ToNullableDatetime(dataReader["Date"].ToString());
+                            row.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
+                            row.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            data.Add(row);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(data);
+        }
+
+
+
     }
 }
