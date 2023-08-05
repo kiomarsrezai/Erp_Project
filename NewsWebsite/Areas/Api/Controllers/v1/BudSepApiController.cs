@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
@@ -8,7 +7,6 @@ using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Budget.BudgetCoding;
 using NewsWebsite.ViewModels.Api.Budget.BudgetSeprator;
 using NewsWebsite.ViewModels.Api.Public;
-using NewsWebsite.ViewModels.Fetch;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,6 +23,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     {
         public readonly IUnitOfWork _uw;
         public readonly IConfiguration _configuration;
+        public readonly ISqlDataAccess _sqlDataAccess;
         public BudSepApiController(IUnitOfWork uw, IConfiguration configuration)
         {
             _configuration = configuration;
@@ -451,28 +450,41 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> SepratorAreaDepartmanInsert([FromBody] SepratorAreaDepartmantInsert modalUpdateViewModel)
         {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            await _sqlDataAccess.SaveData<dynamic>(storedProcedure: "SP002_SepratorAreaDepartmant_Insert", new
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("yearId", modalUpdateViewModel.yearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", modalUpdateViewModel.areaId);
-                    sqlCommand.Parameters.AddWithValue("codingId", modalUpdateViewModel.codingId);
-                    sqlCommand.Parameters.AddWithValue("projectId", modalUpdateViewModel.projectId);
-                    sqlCommand.Parameters.AddWithValue("departmanId", modalUpdateViewModel.departmanId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+                yearId = modalUpdateViewModel.yearId,
+                areaId = modalUpdateViewModel.areaId,
+                codingId = modalUpdateViewModel.codingId,
+                projectId = modalUpdateViewModel.projectId,
+                departmanId = modalUpdateViewModel.departmanId
+
+            });
+            return Ok();
+
+
+
+            //string readercount = null;
+            //using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            //{
+            //    using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
+            //    {
+            //        sqlconnect.Open();
+            //        sqlCommand.Parameters.AddWithValue("yearId", modalUpdateViewModel.yearId);
+            //        sqlCommand.Parameters.AddWithValue("areaId", modalUpdateViewModel.areaId);
+            //        sqlCommand.Parameters.AddWithValue("codingId", modalUpdateViewModel.codingId);
+            //        sqlCommand.Parameters.AddWithValue("projectId", modalUpdateViewModel.projectId);
+            //        sqlCommand.Parameters.AddWithValue("departmanId", modalUpdateViewModel.departmanId);
+            //        sqlCommand.CommandType = CommandType.StoredProcedure;
+            //        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            //        while (dataReader.Read())
+            //        {
+            //            if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+            //        }
+            //    }
+            //}
+            //if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            //else
+            //    return BadRequest(readercount);
         }
 
         [Route("BudgetSepratorAreaDepartmantUpdate")]
