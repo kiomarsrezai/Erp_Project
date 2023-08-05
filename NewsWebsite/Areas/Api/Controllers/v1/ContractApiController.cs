@@ -454,7 +454,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId); 
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
                     sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
                     sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
                     sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
@@ -790,7 +790,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.SuppliersName = dataReader["SuppliersName"].ToString();
                             row.Number = dataReader["Number"].ToString();
-                            row.YearName =int.Parse(dataReader["YearName"].ToString());
+                            row.YearName = int.Parse(dataReader["YearName"].ToString());
                             row.MonthId = int.Parse(dataReader["MonthId"].ToString());
                             row.ReciveAmount = Int64.Parse(dataReader["ReciveAmount"].ToString());
                             data.Add(row);
@@ -834,6 +834,58 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(data);
         }
+
+
+        [Route("ContractInstallmentsReciveInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractInstallmentsReciveInsert([FromBody] ReciveBankSuppliersInsertViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractInstallmentsRecive_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("ReciveBankId", param.ReciveBankId);
+                    sqlCommand.Parameters.AddWithValue("ContractInstallmentsId", param.ContractInstallmentsId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("ContractInstallmentsReciveUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_ContractInstallmentsReciveUpdate([FromBody] ContractInstallmentsReciveUpdateViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractInstallmentsRecive_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("ReciveAmount", param.ReciveAmount);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
 
     }
 }
