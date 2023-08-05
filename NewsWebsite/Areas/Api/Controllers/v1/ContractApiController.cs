@@ -403,6 +403,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             AmlakInfoKindComViewModel row = new AmlakInfoKindComViewModel();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
+                            data.Add(row);
                         }
                     }
                     sqlconnect.Close();
