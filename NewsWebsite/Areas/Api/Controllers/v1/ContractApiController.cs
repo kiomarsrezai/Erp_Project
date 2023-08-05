@@ -53,7 +53,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             ContractReadViewModel data = new ContractReadViewModel();
                             data.Id = int.Parse(dataReader["Id"].ToString());
                             data.Number = dataReader["Number"].ToString();
-                            data.Date = dataReader["Date"].ToString().ConvertShamsiToMiladi();
+                            data.Date = StringExtensions.ToNullableDatetime(dataReader["Date"].ToString());
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
                             data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
