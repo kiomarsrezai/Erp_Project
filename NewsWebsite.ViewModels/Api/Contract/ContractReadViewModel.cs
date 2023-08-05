@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Contract
@@ -8,7 +10,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
     {
         public int Id { get; set; }
         public string Number { get; set; }
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         public string DateShamsi { get; set; }
         public string Description { get; set; }
         public int? SuppliersId { get; set; }
