@@ -10,7 +10,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string YearName { get; set; }
         public string AreaName { get; set; }
         public string Number { get; set; }
-        public string Date { get; set; }
+        public DateTime? Date { get; set; }
         public string DateShamsi { get; set; }
         public string Description { get; set; }
   

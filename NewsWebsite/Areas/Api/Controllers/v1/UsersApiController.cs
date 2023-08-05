@@ -294,8 +294,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //        return BadRequest(readercount);
         //}
 
-        [HttpPost("CreateUser")]
-        public async Task<ApiResult<string>> Create([FromBody] UsersViewModel viewModel)
+        [HttpPost("EmployeeInsert")]
+        public async Task<ApiResult<string>> Create([FromBody] UserInsertViewModel viewModel)
         {
             if (viewModel.UserName == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
             // validation
@@ -305,14 +305,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var user = new User
             {
                 UserName = viewModel.UserName,
-                Email = viewModel.Email,
+                Bio = viewModel.Bio,
+                Email = null,
+                BirthDate = DateTime.Now,
                 RegisterDateTime = DateTime.Now,
                 IsActive = true,
+                SectionId = 9,
                 FirstName = viewModel.FirstName,
-                LastName = viewModel.LastName
+                LastName = viewModel.LastName,
             };
 
-            IdentityResult result = await _userManager.CreateAsync(user, viewModel.Password);
+            IdentityResult result = await _userManager.CreateAsync(user,"abc123");
 
             if (result.Succeeded)
             {

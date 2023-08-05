@@ -28,6 +28,13 @@ namespace NewsWebsite.Data.Repositories
 
         }
 
+        public async Task<T> LoadDataById<T, U>(string storedProcedure, U parameters, string connectionId = "SqlErp")
+        {
+            using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
+
+            return await connection.QueryFirstOrDefaultAsync<T>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+        }
+
         public async Task SaveData<T>(string storedProcedure, T parameter, string connectionId = "SqlErp")
         {
             using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
