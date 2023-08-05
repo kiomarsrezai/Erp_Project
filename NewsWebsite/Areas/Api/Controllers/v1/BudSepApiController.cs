@@ -756,6 +756,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
 
+        [Route("AbstractPerformanceMonthly")]
+        [HttpGet]
+        public async Task<ApiResult<List<AbstractPerformanceMonthlyViewModel>>> AC_AbstractPerformanceMonthly(Param15 param)
+        {
+            List<AbstractPerformanceMonthlyViewModel> datamodel = new List<AbstractPerformanceMonthlyViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_Abstract_PerformanceMonthly", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        AbstractPerformanceMonthlyViewModel row = new AbstractPerformanceMonthlyViewModel();
+                        row.Id = int.Parse(dataReader["Id"].ToString());
+                        row.Code = dataReader["Code"].ToString();
+                        row.Description = dataReader["Description"].ToString();
+                        row.Month = StringExtensions.ToNullableInt(dataReader["Month"].ToString());
+                        row.Mosavab = StringExtensions.ToNullableBigInt(dataReader["Mosavab"].ToString());
+                        row.Expense = StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString());
+                        datamodel.Add(row);
+                    }
+                }
+            }
+            return Ok(datamodel);
+        }
 
     }
 }

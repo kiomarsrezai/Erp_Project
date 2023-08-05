@@ -9,12 +9,14 @@ namespace NewsWebsite.ViewModels.Api.Report
         public int Id { get; set; }
         public string AreaName { get; set; }
         public Int64 MosavabRevenue { get; set; }
-        public Int64 ExpenseRevenue { get; set; }
+        public Int64 ExpenseMonthRevenue { get; set; }
         public double PercentRevenue { get; set; }
 
 
         public Int64 MosavabCurrent { get; set; }
-        public Int64 ExpenseCurrent { get; set; }
+        public Int64 CreditCurrent { get; set; }
+        public double PercentCreditCurrent { get; set; }
+        public Int64 ExpenseMonthCurrent { get; set; }
         public double PercentCurrent { get; set; }
 
         public Int64 MosavabCivil { get; set; }
@@ -25,10 +27,14 @@ namespace NewsWebsite.ViewModels.Api.Report
         public double PercentCivil { get; set; }
 
         public Int64 MosavabFinancial { get; set; }
+        public Int64 CreditFinancial { get; set; }
+        public double PercentCreditFinancial { get; set; }
         public Int64 ExpenseFinancial { get; set; }
         public double PercentFinancial { get; set; }
 
         public Int64 MosavabSanavati { get; set; }
+        public Int64 CreditDoyonSanavati { get; set; }
+        public double PercentDoyonSanavati { get; set; }
         public Int64 ExpenseSanavati { get; set; }
         public double PercentSanavati { get; set; }
 
@@ -37,8 +43,12 @@ namespace NewsWebsite.ViewModels.Api.Report
         public double PercentPayMotomarkez { get; set; }
 
         public Int64 MosavabDar_Khazane { get; set; }
-        public Int64 ExpenseDar_Khazane { get; set; }
+        public Int64 ExpenseMonthDarAzKhazane { get; set; }
         public double PercentDar_Khazane { get; set; }
+
+        public Int64 MosavabNeyabati { get; set; }
+        public Int64 ExpenseMonthNeyabati { get; set; }
+        public double PercentNeyabati { get; set; }
 
         public Int64 Resoures { get; set; }
         public Int64 balance { get; set; }
