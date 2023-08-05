@@ -760,7 +760,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.SuppliersName = dataReader["SuppliersName"].ToString();
                             row.Number = dataReader["Number"].ToString();
-                            row.YearName = dataReader["YearName"].ToString();
+                            row.YearName =int.Parse(dataReader["YearName"].ToString());
                             row.MonthId = int.Parse(dataReader["MonthId"].ToString());
                             row.ReciveAmount = Int64.Parse(dataReader["ReciveAmount"].ToString());
                             data.Add(row);

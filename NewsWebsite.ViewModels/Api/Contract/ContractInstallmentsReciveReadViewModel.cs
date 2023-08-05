@@ -9,7 +9,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int Id { get; set; }
         public string SuppliersName { get; set; }
         public string Number { get; set; }
-        public string YearName { get; set; }
+        public int YearName { get; set; }
         public int MonthId { get; set; }
         public Int64 ReciveAmount { get; set; }
 
