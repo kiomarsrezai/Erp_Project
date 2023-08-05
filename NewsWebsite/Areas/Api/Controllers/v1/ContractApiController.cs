@@ -523,6 +523,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+
         [Route("AmlakPrivateRead")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakPrivateReadViewModel>>> Ac_AmlakPrivateRead(param20 param)
@@ -552,6 +553,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractSearchView);
         }
 
+
         [Route("AmlakPrivateInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakPrivateInsert([FromBody] AmlakPrivateInsertViewModel param)
@@ -578,6 +580,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+
         [Route("AmlakPrivateUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakPrivateUpdate([FromBody] AmlakPrivateUpdateViewModel param)
@@ -603,6 +606,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
 
         [Route("AmlakPrivateDelete")]
         [HttpPost]
@@ -687,6 +691,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+
         [Route("ContractInstallmentsUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractInstallmentsUpdate([FromBody] ContractInstallmentsUpdateViewModel param)
@@ -740,6 +745,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+
         [Route("ReciveBankRead")]
         [HttpGet]
         public async Task<ApiResult<List<ReciveBankViewModel>>> Ac_ReciveBankRead(param31 param)
@@ -770,6 +776,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
+        
         [Route("ContractInstallmentsReciveRead")]
         [HttpGet]
         public async Task<ApiResult<List<ContractInstallmentsReciveReadViewModel>>> Ac_ContractInstallmentsReciveRead(param32 param)
@@ -823,7 +830,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             ReciveBankModalViewModel row = new ReciveBankModalViewModel();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.YearName = int.Parse(dataReader["YearName"].ToString());
-                            row.MonthId = int.Parse(dataReader["Date"].ToString());
+                            row.MonthId = int.Parse(dataReader["MonthId"].ToString());
                             row.MonthlyAmount = Int64.Parse(dataReader["MonthlyAmount"].ToString());
                             row.Description = dataReader["Description"].ToString();
                             data.Add(row);
@@ -860,6 +867,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
 
         [Route("ContractInstallmentsReciveUpdate")]
         [HttpPost]
