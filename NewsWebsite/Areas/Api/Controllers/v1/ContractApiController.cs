@@ -453,7 +453,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId); 
+                    sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
                     sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
                     sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -481,6 +482,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
                     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
                     sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
                     sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
