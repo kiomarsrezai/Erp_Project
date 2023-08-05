@@ -387,9 +387,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfoKindCom")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoPrivateReadViewModel>>> Ac_AmlakInfoKindCom()
+        public async Task<ApiResult<List<AmlakInfoKindComViewModel>>> Ac_AmlakInfoKindCom()
         {
-            List<AmlakInfoPrivateReadViewModel> data = new List<AmlakInfoPrivateReadViewModel>();
+            List<AmlakInfoKindComViewModel> data = new List<AmlakInfAmlakInfoKindComViewModeloPrivateReadViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -400,7 +400,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
+                            AmlakInfoKindComViewModel row = new AmlakInfoKindComViewModel();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
                         }
