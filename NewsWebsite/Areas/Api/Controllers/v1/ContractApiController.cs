@@ -389,7 +389,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoKindComViewModel>>> Ac_AmlakInfoKindCom()
         {
-            List<AmlakInfoKindComViewModel> data = new List<AmlakInfAmlakInfoKindComViewModeloPrivateReadViewModel>();
+            List<AmlakInfoKindComViewModel> data = new List<AmlakInfoKindComViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
