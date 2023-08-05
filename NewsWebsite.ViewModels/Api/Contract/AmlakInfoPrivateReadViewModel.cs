@@ -8,7 +8,9 @@ namespace NewsWebsite.ViewModels.Api.Contract
     {
         public int Id { get; set; }
         public int AreaId { get; set; }
+        public int AmlakInfoKindId { get; set; }
         public string AreaName { get; set; }
+        public string AmlakInfoKindName { get; set; }
         public string EstateInfoName { get; set; }
         public string EstateInfoAddress { get; set; }
     }

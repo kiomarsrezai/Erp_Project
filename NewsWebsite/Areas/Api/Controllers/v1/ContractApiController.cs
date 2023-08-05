@@ -385,6 +385,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractSearchView);
         }
 
+        [Route("AmlakInfoKindCom")]
+        [HttpGet]
+        public async Task<ApiResult<List<AmlakInfoPrivateReadViewModel>>> Ac_AmlakInfoKindCom()
+        {
+            List<AmlakInfoPrivateReadViewModel> data = new List<AmlakInfoPrivateReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfoKind_Com", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
+                            row.Id = int.Parse(dataReader["Id"].ToString());
+                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(data);
+        }
 
         [Route("AmlakInfoRead")]
         [HttpGet]
@@ -404,7 +429,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                            row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
                             row.AreaName = dataReader["AreaName"].ToString();
+                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
                             row.EstateInfoName = dataReader["EstateInfoName"].ToString();
                             row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
                             data.Add(row);
