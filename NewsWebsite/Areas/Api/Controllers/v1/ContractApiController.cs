@@ -740,7 +740,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-
+        [Route("ContractInstallmentsReciveRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ContractInstallmentsReciveReadViewModel>>> Ac_ContractInstallmentsReciveRead(param32 param)
+        {
+            List<ContractInstallmentsReciveReadViewModel> data = new List<ContractInstallmentsReciveReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractInstallmentsRecive_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("ReciveBankId", param.ReciveBankId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ContractInstallmentsReciveReadViewModel row = new ContractInstallmentsReciveReadViewModel();
+                            row.Id = int.Parse(dataReader["Id"].ToString());
+                            row.SuppliersName = dataReader["SuppliersName"].ToString();
+                            row.Number = dataReader["Number"].ToString();
+                            row.YearName = dataReader["YearName"].ToString();
+                            row.MonthId = int.Parse(dataReader["MonthId"].ToString());
+                            row.ReciveAmount = Int64.Parse(dataReader["ReciveAmount"].ToString());
+                            data.Add(row);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(data);
+        }
 
     }
 }
