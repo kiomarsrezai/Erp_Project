@@ -15,9 +15,9 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string Description { get; set; }
         public int? SuppliersId { get; set; }
         public string SuppliersName { get; set; }
-        public string DateFrom { get; set; }
+        public DateTime? DateFrom { get; set; }
         public string DateFromShamsi { get; set; }
-        public string DateEnd { get; set; }
+        public DateTime? DateEnd { get; set; }
         public string DateEndShamsi { get; set; }
         public Int64 Amount { get; set; }
         public int? DoingMethodId { get; set; }

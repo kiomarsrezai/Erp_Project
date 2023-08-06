@@ -59,9 +59,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
                             data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
-                            data.DateFrom = dataReader["DateFrom"].ToString();
+                            data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
-                            data.DateEnd = dataReader["DateEnd"].ToString();
+                            data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
                             data.Amount = Int64.Parse(dataReader["Amount"].ToString());
                             data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
@@ -143,9 +143,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
                             data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
-                            data.DateFrom = dataReader["DateFrom"].ToString();
+                            data.DateFrom =StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
-                            data.DateEnd = dataReader["DateEnd"].ToString();
+                            data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
                             data.Amount = Int64.Parse(dataReader["Amount"].ToString());
                             data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
