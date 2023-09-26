@@ -1094,6 +1094,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                                 }
 
                                 row.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
+                                row.CreditFinancial = long.Parse(dataReader["CreditFinancial"].ToString());
+
+                                if (row.MosavabFinancial != 0)
+                                {
+                                    row.PercentCreditFinancial = Math.Round(_uw.Budget_001Rep.Division(row.CreditFinancial, row.MosavabFinancial));
+                                }
+                                else
+                                {
+                                    row.PercentCreditFinancial = 0;
+                                }
+
                                 row.ExpenseFinancial = long.Parse(dataReader["ExpenseFinancial"].ToString());
                                 if (row.MosavabFinancial != 0)
                                 {
