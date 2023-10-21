@@ -146,41 +146,42 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-        //[HttpGet]
-        //[Route("FetchDetails")]
-        //public async Task<ApiResult<List<TarazKolMoeinViewModel>>> FetchDetails(int yearId, int areaId, int codingId)
-        //{
-        //    List<FetchDataBudgetViewModel> dataset = new List<FetchDataBudgetViewModel>();
+        [Route("GetTarazHistoryAccount")]
+        [HttpGet]
+        public async Task<ApiResult<List<HistoryAccountViewModel>>> GetTarazHistoryAccount_AC(Param100 param100)
+        {
+            List<HistoryAccountViewModel> data = new List<HistoryAccountViewModel>();
+   
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9900_Taraz_HistoryAccount_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("AreaId", param100.AreaId);
+                        sqlCommand.Parameters.AddWithValue("IdTafsil", param100.IdTafsil);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (dataReader.Read())
+                        {
+                        HistoryAccountViewModel row = new HistoryAccountViewModel();
+                        row.IdSanad = int.Parse(dataReader["IdSanad"].ToString());
+                        row.SanadDate = dataReader["SanadDate"].ToString();
+                        row.SanadDateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["SanadDate"].ToString()), "yyyy/MM/dd");
+                        row.IdKol = int.Parse(dataReader["IdKol"].ToString());
+                        row.IdMoien = int.Parse(dataReader["IdMoien"].ToString());
+                        row.Description = dataReader["Description"].ToString();
+                        row.Bedehkar = Int64.Parse(dataReader["Bedehkar"].ToString());
+                        row.Bestankar = Int64.Parse(dataReader["Bestankar"].ToString());
+                        row.AtfCh = dataReader["AtfCh"].ToString();
+                        row.AtfDt = dataReader["AtfDt"].ToString();
+                        row.AtfDtShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["AtfDt"].ToString()), "yyyy/MM/dd");
+                        data.Add(row);
+                        }
+                    }
+                }
+            return Ok(data);
+        }
 
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP001_ShowBudgetDetail", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            sqlCommand.Parameters.AddWithValue("YearId", yearId);
-        //            sqlCommand.Parameters.AddWithValue("AreaId", areaId);
-        //            sqlCommand.Parameters.AddWithValue("CodingId", codingId);
-        //            SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
-
-        //            while (dataReader.Read())
-        //            {
-        //                FetchDataBudgetViewModel row = new FetchDataBudgetViewModel();
-
-        //                row.AreaId = int.Parse(dataReader["AreaId"].ToString());
-        //                row.Code = dataReader["Code"].ToString();
-        //                row.Description = dataReader["Description"].ToString();
-        //                row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-        //                row.Expense = Int64.Parse(dataReader["Expense"].ToString());
-        //                row.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
-        //                dataset.Add(row);
-        //            }
-
-        //        }
-
-        //    };
-        //    return Ok(dataset);
-        //}
 
     }
 
