@@ -106,19 +106,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetConnect_ReadViewModel fetchView = new BudgetConnect_ReadViewModel();
-                        fetchView.Id = int.Parse(dataReader["Id"].ToString());
-                        fetchView.ProctorId = StringExtensions.ToNullableInt(dataReader["ProctorId"].ToString());
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.ProctorName = dataReader["ProctorName"].ToString();
-                        fetchView.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
-                        fetchView.Show = StringExtensions.ToNullablebool(dataReader["Show"].ToString());
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.CodingNatureId = StringExtensions.ToNullableInt(dataReader["CodingNatureId"].ToString());
-                        fetchView.CodingNatureName = dataReader["CodingNatureName"].ToString();
+                        BudgetConnect_ReadViewModel row = new BudgetConnect_ReadViewModel();
+                        row.Id = int.Parse(dataReader["Id"].ToString());
 
-                        fecthViewModel.Add(fetchView);
+                        row.Code = dataReader["Code"].ToString();
+                        row.Description = dataReader["Description"].ToString();
+                        row.ProctorId = StringExtensions.ToNullableInt(dataReader["ProctorId"].ToString());
+                        row.ProctorName = dataReader["ProctorName"].ToString();
+
+                        row.ExecuteId = StringExtensions.ToNullableInt(dataReader["ExecuteId"].ToString());
+                        row.ExecuteName = dataReader["ExecuteName"].ToString();
+
+                        row.BudgetDetailId = int.Parse(dataReader["BudgetDetailId"].ToString());
+                        row.Show = StringExtensions.ToNullablebool(dataReader["Show"].ToString());
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.CodingNatureId = StringExtensions.ToNullableInt(dataReader["CodingNatureId"].ToString());
+                        row.CodingNatureName = dataReader["CodingNatureName"].ToString();
+
+                        fecthViewModel.Add(row);
                     }
                 }
             }
@@ -156,7 +161,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //خروجی با MessageDB
         [Route("BudgetConnectUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgetConnectUpdate([FromBody] BudgetConnectUpdateParamViewModel updateParamViewModel)
+        public async Task<ApiResult<string>> BudgetConnectUpdate([FromBody] BudgetConnectUpdateParamViewModel param)
         {
             string readercount = null;
 
@@ -165,9 +170,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetConnect_Update", sqlconnect))
                 {
                     sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", updateParamViewModel.id);
-                    sqlCommand.Parameters.AddWithValue("ProctorId", updateParamViewModel.ProctorId);
-                    sqlCommand.Parameters.AddWithValue("CodingNatureId", updateParamViewModel.CodingNatureId);
+                    sqlCommand.Parameters.AddWithValue("id", param.id);
+                    sqlCommand.Parameters.AddWithValue("ProctorId", param.ProctorId);
+                    sqlCommand.Parameters.AddWithValue("ExecuteId", param.ExecuteId);
+                    sqlCommand.Parameters.AddWithValue("CodingNatureId", param.CodingNatureId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
