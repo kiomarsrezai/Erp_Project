@@ -380,12 +380,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         BudgetModalCodingViewModel BudgetView = new BudgetModalCodingViewModel();
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
-                        BudgetView.Code = dataReader["Code"].ToString();
-                        BudgetView.Description = dataReader["Description"].ToString();
                         BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        BudgetView.Description = dataReader["Description"].ToString();
+                        BudgetView.Code = dataReader["Code"].ToString();
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.EditPublic = Int64.Parse(dataReader["EditPublic"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        BudgetView.AreaName = dataReader["AreaName"].ToString();
                         //BudgetView.Show = (bool)dataReader["Show"];
                         if (BudgetView.Mosavab != 0)
                         {

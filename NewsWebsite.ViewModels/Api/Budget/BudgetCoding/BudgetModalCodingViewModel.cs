@@ -27,10 +27,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
 
         [Display(Name = "% درصد")]
         public double PercentBud { get; set; }
-
-
-
-
+        public string AreaName { get; set; }
     }
 
 

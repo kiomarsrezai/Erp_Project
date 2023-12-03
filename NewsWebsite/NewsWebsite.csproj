@@ -6,9 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Admin\Views\**" />
     <Compile Remove="wwwroot\Resources\**" />
+    <Content Remove="Areas\Admin\Views\**" />
     <Content Remove="wwwroot\Resources\**" />
+    <EmbeddedResource Remove="Areas\Admin\Views\**" />
     <EmbeddedResource Remove="wwwroot\Resources\**" />
+    <None Remove="Areas\Admin\Views\**" />
     <None Remove="wwwroot\Resources\**" />
   </ItemGroup>
 

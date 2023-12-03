@@ -39,7 +39,36 @@ namespace NewsWebsite.ViewModels.Fetch
         public bool Crud { get; set; }
         public int? MotherId { get; set; }
     }
+    public class PishanahadViewModel
+    {
+        public int CodingId { get; set; }
+        
+        [Display(Name = "کد")]
+        public string Code { get; set; }
 
-  
+        [Display(Name = "عنوان")]
+        public string Description { get; set; }
+
+        [Display(Name = "مصوب")]
+        public Int64 Mosavab { get; set; }
+
+        [Display(Name = "اصلاح بودجه")]
+        public Int64? Edit { get; set; }
+
+        [Display(Name = "تامین اعتبار")]
+        public Int64? CreditAmount { get; set; }
+
+        [Display(Name = "عملکرد")]
+        public Int64 Expense { get; set; }
+
+        public Int64 BudgetNext { get; set; }
+
+        [Display(Name = "سطح")]
+        public int LevelNumber { get; set; }
+        public bool Crud { get; set; }
+
+    }
+
+
 
 }

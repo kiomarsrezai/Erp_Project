@@ -14,6 +14,7 @@ namespace NewsWebsite.ViewModels.Api.Report
         public long mosavab { get; set; }
         public long CreditAmount { get; set; }
         public double PercentCreditAmount { get; set; }
+        public long edit { get;set; }
         public long expense { get; set; }
         public double Percent { get; set; }
     }

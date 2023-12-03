@@ -366,6 +366,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.code = dataReader1["Code"].ToString();
                         row.description = dataReader1["Description"].ToString();
                         row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
+                        row.edit = Int64.Parse(dataReader1["edit"].ToString());
                         row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
                         if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
                         {
