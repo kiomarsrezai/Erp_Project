@@ -1,4 +1,6 @@
-﻿namespace NewsWebsite.ViewModels.Api.Budget.BudgetProject
+﻿using System;
+
+namespace NewsWebsite.ViewModels.Api.Budget.BudgetProject
 {
     public class ProgramOperationViewModel
     {
@@ -13,8 +15,9 @@
     public class ProjectReportScaleViewModel
     {
         public int ProjectId { get; set; }
-        public long Mosavab { get; set; }
-        public long Expense { get; set; }
+        public Int64 Mosavab { get; set; }
+        public Int64 Edit { get; set; }
+        public Int64 Expense { get; set; }
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
     }

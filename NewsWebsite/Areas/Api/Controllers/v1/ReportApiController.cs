@@ -811,6 +811,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             ProjectReportScaleViewModel commiteView = new ProjectReportScaleViewModel();
                             commiteView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
                             commiteView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                            commiteView.Edit = Int64.Parse(dataReader["Edit"].ToString());
                             commiteView.Expense = Int64.Parse(dataReader["Expense"].ToString());
                             commiteView.ProjectCode = dataReader["ProjectCode"].ToString();
                             commiteView.ProjectName = dataReader["ProjectName"].ToString();

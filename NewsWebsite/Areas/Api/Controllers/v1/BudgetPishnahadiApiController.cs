@@ -108,10 +108,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
-
-
-
-
         [Route("BudgetProposalInlineInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> BudgetProposalInlineInsert([FromBody] BudgetPrposalInsertModalViewModel updateParamViewModel)
