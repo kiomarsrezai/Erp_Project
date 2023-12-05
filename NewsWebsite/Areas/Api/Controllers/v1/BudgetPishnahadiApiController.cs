@@ -77,7 +77,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<PishanahadViewModel>>> BudgetProposalBalanceTextBoxRead(int yearId, int areaId, int budgetProcessId)
         {
-            List<PishanahadViewModel> fecth = new List<PishanahadViewModel>();
+            PishanahadViewModel fecth = new PishanahadViewModel();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposal_BalanceTextbox_Read", sqlconnect))
@@ -90,27 +90,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        PishanahadViewModel fetchView = new PishanahadViewModel();
-                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
-                        fetchView.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        fetchView.Crud = (bool)dataReader["Crud"];
+                        fecth.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        fecth.Code = dataReader["Code"].ToString();
+                        fecth.Description = dataReader["Description"].ToString();
+                        fecth.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        fecth.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fecth.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
+                        fecth.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
+                        fecth.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        fecth.Crud = (bool)dataReader["Crud"];
 
-                        fecth.Add(fetchView);
                     }
                 }
                 return Ok(fecth);
             }
         }
-
-
-
-
 
         [Route("BudgetProposalInlineInsert")]
         [HttpPost]
