@@ -64,6 +64,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
                         fetchView.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        fetchView.BudgetNext = Int64.Parse(dataReader["BudgetNext"].ToString());
                         fetchView.Crud = (bool)dataReader["Crud"];
 
                         fecth.Add(fetchView);
