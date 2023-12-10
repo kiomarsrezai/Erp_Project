@@ -172,7 +172,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", param.id);
                     sqlCommand.Parameters.AddWithValue("ProctorId", param.ProctorId);
-                    sqlCommand.Parameters.AddWithValue("ExecuteId", param.ExecuteId);
                     sqlCommand.Parameters.AddWithValue("CodingNatureId", param.CodingNatureId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
