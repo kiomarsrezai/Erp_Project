@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
@@ -12,6 +13,7 @@ using NewsWebsite.ViewModels.Api.Report;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -1357,6 +1359,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
+        [Route("RequestAnalyzeRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<RequestAnalyzeViewModel>>> AC_RequestAnalyzeRead(RequestAnalyzeParam param)
+        {
+            List<RequestAnalyzeViewModel> data = new List<RequestAnalyzeViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_Request_Analyze", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("KindId", param.KindId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        RequestAnalyzeViewModel row = new RequestAnalyzeViewModel();
+                        row.RequestRef = int.Parse(dataReader["RequestRef"].ToString());
+                        row.ConfirmDocNo = dataReader["ConfirmDocNo"].ToString();
+                        row.RequestRefStr = dataReader["RequestRefStr"].ToString();
+                        row.RequestDate = dataReader["RequestDate"].ToString();
+                        row.ReqDesc = dataReader["ReqDesc"].ToString();
+                        row.RequestPrice = Int64.Parse(dataReader["RequestPrice"].ToString());
+                        row.CnfirmedPrice = Int64.Parse(dataReader["CnfirmedPrice"].ToString());
+                        row.Diff = Int64.Parse(dataReader["Diff"].ToString());
+                        row.SectionId = int.Parse(dataReader["SectionId"].ToString());
+                        data.Add(row);
+                    }
+                }
+            }
+            return Ok(data);
+        }
 
     }
 }
