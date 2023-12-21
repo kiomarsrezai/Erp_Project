@@ -15,6 +15,7 @@ namespace NewsWebsite.ViewModels.Api.Report
         public Int64 CnfirmedPrice { get; set; }
         public Int64 Diff { get; set; }
         public int SectionId { get; set; }
+        public string ConfirmDocDate { get; set; }
     }
 
     public class RequestAnalyzeParam

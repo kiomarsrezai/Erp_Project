@@ -1379,6 +1379,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         RequestAnalyzeViewModel row = new RequestAnalyzeViewModel();
                         row.RequestRef = int.Parse(dataReader["RequestRef"].ToString());
                         row.ConfirmDocNo = dataReader["ConfirmDocNo"].ToString();
+                        row.ConfirmDocDate = dataReader["ConfirmDocDate"].ToString();
                         row.RequestRefStr = dataReader["RequestRefStr"].ToString();
                         row.RequestDate = dataReader["RequestDate"].ToString();
                         row.ReqDesc = dataReader["ReqDesc"].ToString();
