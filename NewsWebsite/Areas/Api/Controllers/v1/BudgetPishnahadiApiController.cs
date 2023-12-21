@@ -42,7 +42,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<PishanahadViewModel>>> BudgetProposaRead(int yearId, int areaId, int budgetProcessId)
         {
-            List<PishanahadViewModel> fecth = new List<PishanahadViewModel>();
+            List<PishanahadViewModel> data = new List<PishanahadViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposal_Read", sqlconnect))
@@ -55,22 +55,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        PishanahadViewModel fetchView = new PishanahadViewModel();
-                        fetchView.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
-                        fetchView.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        fetchView.BudgetNext = Int64.Parse(dataReader["BudgetNext"].ToString());
-                        fetchView.Crud = (bool)dataReader["Crud"];
-
-                        fecth.Add(fetchView);
+                        PishanahadViewModel row = new PishanahadViewModel();
+                        row.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        row.Code = dataReader["Code"].ToString();
+                        row.Description = dataReader["Description"].ToString();
+                        row.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
+                        row.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        row.BudgetNext = Int64.Parse(dataReader["BudgetNext"].ToString());
+                        row.Crud = (bool)dataReader["Crud"];
+                        if (row.Mosavab != 0)
+                        {
+                            row.Percent = _uw.Budget_001Rep.Growth(row.BudgetNext, row.Mosavab);
+                        }
+                        else
+                        {
+                            row.Percent = 0;
+                        }
+                        data.Add(row);
                     }
                 }
-                return Ok(fecth);
+                return Ok(data);
             }
         }
 

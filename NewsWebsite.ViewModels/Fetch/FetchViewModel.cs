@@ -66,7 +66,7 @@ namespace NewsWebsite.ViewModels.Fetch
         [Display(Name = "سطح")]
         public int LevelNumber { get; set; }
         public bool Crud { get; set; }
-
+        public double Percent { get; set; }
     }
 
 

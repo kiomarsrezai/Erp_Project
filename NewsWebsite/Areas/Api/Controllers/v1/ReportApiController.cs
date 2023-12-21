@@ -312,6 +312,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.code = dataReader1["Code"].ToString();
                         row.description = dataReader1["Description"].ToString();
                         row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
+                        row.Edit = Int64.Parse(dataReader1["Edit"].ToString());
                         row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
                         if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                         {
@@ -515,10 +516,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Id = int.Parse(dataReader["Id"].ToString());
                         row.ProctorName = dataReader["ProctorName"].ToString();
                         row.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        row.EditCurrent = long.Parse(dataReader["EditCurrent"].ToString());
                         row.CreditAmountCurrent = long.Parse(dataReader["CreditAmountCurrent"].ToString());
-                        if (row.MosavabCurrent != 0)
+                        if (row.EditCurrent != 0)
                         {
-                            row.PercentCreditAmountCurrent = _uw.Budget_001Rep.Division(row.CreditAmountCurrent, row.MosavabCurrent);
+                            row.PercentCreditAmountCurrent = _uw.Budget_001Rep.Division(row.CreditAmountCurrent, row.EditCurrent);
                         }
                         else
                         {
@@ -528,10 +530,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
 
                         row.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        row.EditCivil = long.Parse(dataReader["EditCivil"].ToString());
                         row.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
-                        if (row.MosavabCivil != 0)
+                        if (row.EditCivil != 0)
                         {
-                            row.PercentCreditAmountCivil = _uw.Budget_001Rep.Division(row.CreditAmountCivil, row.MosavabCivil);
+                            row.PercentCreditAmountCivil = _uw.Budget_001Rep.Division(row.CreditAmountCivil, row.EditCivil);
                         }
                         else
                         {
@@ -540,27 +543,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
 
-                        if (row.MosavabCurrent != 0)
+                        if (row.EditCurrent != 0)
                         {
-                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.MosavabCurrent);
+                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.EditCurrent);
                         }
                         else
                         {
-                            row.MosavabCurrent = 0;
+                            row.PercentCurrent = 0;
                         }
 
 
-                        if (row.MosavabCivil != 0)
+                        if (row.EditCivil != 0)
                         {
-                            row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.MosavabCivil);
+                            row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.EditCivil);
                         }
                         else
                         { row.PercentCivil = 0; }
 
 
-                        if (row.MosavabCurrent + row.MosavabCivil != 0)
+                        if (row.EditCurrent + row.EditCivil != 0)
                         {
-                            row.PercentTotal = _uw.Budget_001Rep.Division(row.ExpenseCivil + row.ExpenseCurrent, row.MosavabCivil + row.MosavabCurrent);
+                            row.PercentTotal = _uw.Budget_001Rep.Division(row.ExpenseCivil + row.ExpenseCurrent, row.EditCivil + row.EditCurrent);
                         }
                         else
                         {
@@ -843,6 +846,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Sazman", sqlconnect))
                     {
                         sqlconnect.Open();
+                        sqlCommand.CommandTimeout = 500;
                         sqlCommand.Parameters.AddWithValue("yearId ", param.YearId);
                         sqlCommand.Parameters.AddWithValue("structureId", param.StructureId);
                         sqlCommand.Parameters.AddWithValue("MonthId", param.MonthId);
@@ -1018,6 +1022,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Shahrdari", sqlconnect))
                     {
                         sqlconnect.Open();
+                        sqlCommand.CommandTimeout = 500;
                         sqlCommand.Parameters.AddWithValue("yearId ", param.YearId);
                         sqlCommand.Parameters.AddWithValue("structureId", param.StructureId);
                         sqlCommand.Parameters.AddWithValue("MonthId", param.MonthId);
@@ -1179,6 +1184,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 using (SqlCommand sqlCommand = new SqlCommand("SP500_Abstract_Performance_Detail", sqlconnect))
                 {
                     sqlconnect.Open();
+                    sqlCommand.CommandTimeout = 500;
                     sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
                     sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
                     sqlCommand.Parameters.AddWithValue("columnName", param.ColumnName);

@@ -10,10 +10,11 @@ namespace NewsWebsite.ViewModels.Api.Report
         public string AreaName { get; set; }
         public string code { get; set; }
         public string description { get; set; }
-        public long mosavab { get; set; }
-        public long CreditAmount { get; set; }
+        public Int64 mosavab { get; set; }
+        public Int64 Edit { get; set; }
+        public Int64 CreditAmount { get; set; }
         public double PercentCreditAmount { get; set; }
-        public long expense { get; set; }
+        public Int64 expense { get; set; }
         public double percmosavab { get; set; }
 
     }

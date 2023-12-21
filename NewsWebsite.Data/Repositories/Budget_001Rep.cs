@@ -215,9 +215,17 @@ namespace NewsWebsite.Data.Repositories
             return summry;
         }
 
-       
+        public double Growth(double? SecondNumber, double? FirstNumber)
+        {
+            if (FirstNumber == null) return 0;
 
-     
+            double summry = 0;
+            summry = Math.Round((double)(SecondNumber / FirstNumber * 100)-100);
+            return summry;
+        }
+        
+
+
         public async Task<List<BudgetSepratorViewModel>> GetAllBudgetSeprtaorAsync(int yearId, int areaId, int budgetProcessId)
         {
             List<BudgetSepratorViewModel> fecth = new List<BudgetSepratorViewModel>();

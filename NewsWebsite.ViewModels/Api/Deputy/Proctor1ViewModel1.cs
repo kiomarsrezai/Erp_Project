@@ -23,10 +23,12 @@ namespace NewsWebsite.ViewModels.Api.Deputy
         public string ProctorName { get; set; }
 
         public Int64 MosavabCurrent { get; set; }
+        public Int64 EditCurrent { get; set; }
         public Int64 CreditAmountCurrent { get; set; }
         public double PercentCreditAmountCurrent { get; set; }
         public Int64 ExpenseCurrent { get; set; }
         public Int64 MosavabCivil { get; set; }
+        public Int64 EditCivil { get; set; }
         public Int64 CreditAmountCivil { get; set; }
         public double PercentCreditAmountCivil { get; set; }
         public Int64 ExpenseCivil { get; set; }

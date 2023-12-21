@@ -19,6 +19,7 @@ namespace NewsWebsite.Data.Contracts
         Task<List<YearViewModel>> YearFetchAsync(int kindid);
         Task<List<ProctorViewModel>> ProctorList();
         double Division(double? expense, double? mosavab);
+        double Growth(double? SecondNumber, double? FirstNumber);
         Task<List<BudgetSepratorViewModel>> GetAllBudgetSeprtaorAsync(int yearId, int areaId, int budgetProcessId);
         //List<DeputyViewModel> GetAllDeputiesAsync(int offset, int limit, string Orderby, string searchText);
     }
