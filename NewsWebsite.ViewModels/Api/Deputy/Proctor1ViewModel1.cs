@@ -42,10 +42,12 @@ namespace NewsWebsite.ViewModels.Api.Deputy
         public int AreaId { get; set; }
         public string AreaName { get; set; }
         public Int64 MosavabCurrent { get; set; }
+        public Int64 EditCurrent { get; set; }
         public Int64 CreditAmountCurrent { get; set; }
         public double PercentCreditAmountCurrent { get; set; }
         public Int64 ExpenseCurrent { get; set; }
         public Int64 MosavabCivil { get; set; }
+        public Int64 EditCivil { get; set; }
         public Int64 CreditAmountCivil { get; set; }
         public double PercentCreditAmountCivil { get; set; }
         public Int64 ExpenseCivil { get; set; }
@@ -62,10 +64,12 @@ namespace NewsWebsite.ViewModels.Api.Deputy
         public string Description { get; set; }
 
         public Int64 Mosavab { get; set; }
+        public Int64 Edit { get; set; }
         public Int64 Supply { get; set; }
 
         public Int64 Expense { get; set; }
 
+        public double PercentSupply { get; set; }
         public double Percent { get; set; }
 
 

@@ -35,7 +35,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ChartApi")]
         [HttpGet]
-        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? areaId = null, int? codingId = null)
+        public async Task<ApiResult<List<object>>> ChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, int? areaId = null, int? codingId = null)
         {
             List<int> Id = new List<int>();
             List<string> Description = new List<string>();
@@ -43,6 +43,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<object> data = new List<object>();
             List<string> lables = new List<string>();
             List<Int64> mosavab = new List<Int64>();
+            List<Int64> Supply = new List<Int64>();
             List<double> percmosavab = new List<double>();
             List<double> percdaily = new List<double>();
             List<Int64> mosavabdaily = new List<Int64>();
@@ -61,10 +62,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand1.Parameters.AddWithValue("areaId", areaId);
                         sqlCommand1.Parameters.AddWithValue("CenterId", centerId);
                         sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
-                        sqlCommand1.Parameters.AddWithValue("revenue", revenue);
-                        sqlCommand1.Parameters.AddWithValue("sale", sale);
-                        sqlCommand1.Parameters.AddWithValue("loan", loan);
-                        sqlCommand1.Parameters.AddWithValue("niabati", niabati);
+                        //sqlCommand1.Parameters.AddWithValue("revenue", revenue);
+                        //sqlCommand1.Parameters.AddWithValue("sale", sale);
+                        //sqlCommand1.Parameters.AddWithValue("loan", loan);
+                        //sqlCommand1.Parameters.AddWithValue("niabati", niabati);
                         sqlCommand1.Parameters.AddWithValue("StructureId", StructureId);
                         sqlCommand1.Parameters.AddWithValue("codingId", codingId);
                         SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
@@ -73,6 +74,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             lables.Add(dataReader1["AreaName"].ToString());
                             mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
+                            Supply.Add(Int64.Parse(dataReader1["Supply"].ToString()));
                             mosavabdaily.Add(Int64.Parse(dataReader1["MosavabDaily"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                             if (!string.IsNullOrEmpty(dataReader1["Mosavab"].ToString()) && Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
@@ -117,10 +119,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand1.Parameters.AddWithValue("areaId", areaId);
                         sqlCommand1.Parameters.AddWithValue("CenterId", centerId);
                         sqlCommand1.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
-                        sqlCommand1.Parameters.AddWithValue("revenue", revenue);
-                        sqlCommand1.Parameters.AddWithValue("sale", sale);
-                        sqlCommand1.Parameters.AddWithValue("loan", loan);
-                        sqlCommand1.Parameters.AddWithValue("niabati", niabati);
+                        //sqlCommand1.Parameters.AddWithValue("revenue", revenue);
+                        //sqlCommand1.Parameters.AddWithValue("sale", sale);
+                        //sqlCommand1.Parameters.AddWithValue("loan", loan);
+                        //sqlCommand1.Parameters.AddWithValue("niabati", niabati);
                         sqlCommand1.Parameters.AddWithValue("StructureId", StructureId);
                         SqlDataReader dataReader1 = await sqlCommand1.ExecuteReaderAsync();
 
@@ -131,6 +133,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             Code.Add(dataReader1["Code"].ToString());
                             Description.Add(dataReader1["Description"].ToString());
                             mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
+                            Supply.Add(Int64.Parse(dataReader1["Supply"].ToString()));
                             expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
                             if (double.Parse(dataReader1["Mosavab"].ToString()) > 0)
                             {
@@ -528,6 +531,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
 
                         row.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
+                        
+                        if (row.EditCurrent != 0)
+                        {
+                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.EditCurrent);
+                        }
+                        else
+                        {
+                            row.PercentCurrent = 0;
+                        }
+
 
                         row.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
                         row.EditCivil = long.Parse(dataReader["EditCivil"].ToString());
@@ -542,17 +555,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
 
                         row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
-
-                        if (row.EditCurrent != 0)
-                        {
-                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.EditCurrent);
-                        }
-                        else
-                        {
-                            row.PercentCurrent = 0;
-                        }
-
-
+   
                         if (row.EditCivil != 0)
                         {
                             row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.EditCivil);
@@ -602,19 +605,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.AreaId = int.Parse(dataReader["AreaId"].ToString());
                         row.AreaName = dataReader["AreaName"].ToString();
                         row.MosavabCurrent = long.Parse(dataReader["MosavabCurrent"].ToString());
+                        row.EditCurrent = long.Parse(dataReader["EditCurrent"].ToString());
                         row.CreditAmountCurrent = long.Parse(dataReader["CreditAmountCurrent"].ToString());
-                        if (row.MosavabCurrent != 0)
+                        if (row.EditCurrent != 0)
                         {
-                            row.PercentCreditAmountCurrent = _uw.Budget_001Rep.Division(row.CreditAmountCurrent, row.MosavabCurrent);
+                            row.PercentCreditAmountCurrent = _uw.Budget_001Rep.Division(row.CreditAmountCurrent, row.EditCurrent);
                         }
                         else
                         {
                             row.PercentCreditAmountCurrent = 0;
                         }
                         row.ExpenseCurrent = long.Parse(dataReader["ExpenseCurrent"].ToString());
-                        if (row.MosavabCurrent != 0)
+                        if (row.EditCurrent != 0)
                         {
-                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.MosavabCurrent);
+                            row.PercentCurrent = _uw.Budget_001Rep.Division(row.ExpenseCurrent, row.EditCurrent);
                         }
                         else
                         {
@@ -622,10 +626,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
 
                         row.MosavabCivil = long.Parse(dataReader["MosavabCivil"].ToString());
+                        row.EditCivil = long.Parse(dataReader["EditCivil"].ToString());
                         row.CreditAmountCivil = long.Parse(dataReader["CreditAmountCivil"].ToString());
-                        if (row.MosavabCivil != 0)
+                        if (row.EditCivil != 0)
                         {
-                            row.PercentCreditAmountCivil = _uw.Budget_001Rep.Division(row.CreditAmountCivil, row.MosavabCivil);
+                            row.PercentCreditAmountCivil = _uw.Budget_001Rep.Division(row.CreditAmountCivil, row.EditCivil);
                         }
                         else
                         {
@@ -634,18 +639,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                         row.ExpenseCivil = long.Parse(dataReader["ExpenseCivil"].ToString());
 
-                        if (row.MosavabCivil != 0)
+                        if (row.EditCivil != 0)
                         {
-                            row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.MosavabCivil);
+                            row.PercentCivil = _uw.Budget_001Rep.Division(row.ExpenseCivil, row.EditCivil);
                         }
                         else
                         {
                             row.PercentCivil = 0;
                         }
 
-                        if (row.MosavabCurrent + row.MosavabCivil != 0)
+                        if (row.EditCurrent + row.EditCivil != 0)
                         {
-                            row.PercentTotal = _uw.Budget_001Rep.Division(row.ExpenseCurrent + row.ExpenseCivil, row.MosavabCurrent + row.MosavabCivil);
+                            row.PercentTotal = _uw.Budget_001Rep.Division(row.ExpenseCurrent + row.ExpenseCivil, row.EditCurrent + row.EditCivil);
                         }
                         else
                         {
@@ -690,22 +695,32 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        ProctorAreaBudgetViewModel fetchView = new ProctorAreaBudgetViewModel();
-                        fetchView.Code = dataReader["Code"].ToString();
-                        fetchView.Description = dataReader["Description"].ToString();
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Supply = Int64.Parse(dataReader["Supply"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-
-                        if (fetchView.Mosavab != 0)
+                        ProctorAreaBudgetViewModel row = new ProctorAreaBudgetViewModel();
+                        row.Code = dataReader["Code"].ToString();
+                        row.Description = dataReader["Description"].ToString();
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        row.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                        if (row.Edit != 0)
                         {
-                            fetchView.Percent = _uw.Budget_001Rep.Division(fetchView.Expense, fetchView.Mosavab);
+                            row.PercentSupply = _uw.Budget_001Rep.Division(row.Supply, row.Edit);
                         }
                         else
                         {
-                            fetchView.Percent = 0;
+                            row.PercentSupply = 0;
                         }
-                        fecthViewModel.Add(fetchView);
+
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+
+                        if (row.Edit != 0)
+                        {
+                            row.Percent = _uw.Budget_001Rep.Division(row.Expense, row.Edit);
+                        }
+                        else
+                        {
+                            row.Percent = 0;
+                        }
+                        fecthViewModel.Add(row);
                     }
 
                 }
@@ -1365,6 +1380,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
+
         [Route("RequestAnalyzeRead")]
         [HttpGet]
         public async Task<ApiResult<List<RequestAnalyzeViewModel>>> AC_RequestAnalyzeRead(RequestAnalyzeParam param)
@@ -1399,6 +1415,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(data);
         }
+
 
     }
 }
