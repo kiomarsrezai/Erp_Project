@@ -83,9 +83,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetProposalBalanceTextBoxRead")]
         [HttpGet]
-        public async Task<ApiResult<PishanahadViewModel>> BudgetProposalBalanceTextBoxRead(int yearId, int areaId, int budgetProcessId)
+        public async Task<ApiResult<BalanceViewModel>> BudgetProposalBalanceTextBoxRead(int yearId, int areaId, int budgetProcessId)
         {
-            PishanahadViewModel fecth = new PishanahadViewModel();
+            BalanceViewModel fecth = new BalanceViewModel();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposal_BalanceTextbox_Read", sqlconnect))
@@ -98,16 +98,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        fecth.CodingId = int.Parse(dataReader["CodingId"].ToString());
-                        fecth.Code = dataReader["Code"].ToString();
-                        fecth.Description = dataReader["Description"].ToString();
-                        fecth.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
-                        fecth.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fecth.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
-                        fecth.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
-                        fecth.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        fecth.Crud = (bool)dataReader["Crud"];
-
+                         fecth.Balance = Int64.Parse(dataReader["Balance"].ToString());
+              
                     }
                 }
                 return Ok(fecth);

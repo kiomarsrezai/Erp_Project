@@ -69,6 +69,10 @@ namespace NewsWebsite.ViewModels.Fetch
         public double Percent { get; set; }
     }
 
+    public class BalanceViewModel
+    {
+       public Int64 Balance { get; set; }
 
+    }
 
 }
