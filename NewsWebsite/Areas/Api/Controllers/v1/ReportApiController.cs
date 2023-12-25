@@ -810,11 +810,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<ProjectReportScaleViewModel>>> ProjectReportScale(int yearId, int areaId, int scaleId)
         {
-            List<ProjectReportScaleViewModel> commiteViews = new List<ProjectReportScaleViewModel>();
-
-            if (yearId == 0)
-                return BadRequest("با خطا مواجه شد");
-            if (yearId > 0)
+            List<ProjectReportScaleViewModel> data = new List<ProjectReportScaleViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
                 {
@@ -828,22 +824,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            ProjectReportScaleViewModel commiteView = new ProjectReportScaleViewModel();
-                            commiteView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
-                            commiteView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                            commiteView.Edit = Int64.Parse(dataReader["Edit"].ToString());
-                            commiteView.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                            commiteView.ProjectCode = dataReader["ProjectCode"].ToString();
-                            commiteView.ProjectName = dataReader["ProjectName"].ToString();
-                            commiteViews.Add(commiteView);
-
+                            ProjectReportScaleViewModel row = new ProjectReportScaleViewModel();
+                            row.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
+                            row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                            row.AreaName = dataReader["AreaName"].ToString();
+                            row.ProjectCode = dataReader["ProjectCode"].ToString();
+                            row.ProjectName = dataReader["ProjectName"].ToString();
+                            row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                            row.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                            row.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                            row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                            row.BudgetNext = Int64.Parse(dataReader["BudgetNext"].ToString());
+                           data.Add(row);
                         }
-
                     }
                 }
-
             }
-            return Ok(commiteViews);
+            return Ok(data);
         }
 
 

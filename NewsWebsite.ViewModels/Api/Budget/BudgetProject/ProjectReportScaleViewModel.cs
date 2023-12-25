@@ -15,11 +15,16 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetProject
     public class ProjectReportScaleViewModel
     {
         public int ProjectId { get; set; }
-        public Int64 Mosavab { get; set; }
-        public Int64 Edit { get; set; }
-        public Int64 Expense { get; set; }
+        public int AreaId { get; set; }
+        public string AreaName { get; set; }
         public string ProjectCode { get; set; }
         public string ProjectName { get; set; }
+        public Int64 Mosavab { get; set; }
+        public Int64 Edit { get; set; }
+        public Int64 Supply { get; set; }
+        public Int64 Expense { get; set; }
+        public Int64 BudgetNext { get; set; }
+  
     }
 
     public class ProgramOperationUpdateViewModel
