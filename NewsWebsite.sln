@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29025.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsWebsite", "NewsWebsite\NewsWebsite.csproj", "{FA17300F-7E6E-4FC4-92D8-759ED43936B0}"
 EndProject
@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsWebsite.ViewModels", "N
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BB2C6040-D9DC-4022-9737-27B3CE5B1D09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsWebsite.XUnitTest", "NewsWebsite.XUnitTest\NewsWebsite.XUnitTest.csproj", "{7F5ABB30-6CFA-4524-857E-458613158DE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsWebsite.XUnitTest", "NewsWebsite.XUnitTest\NewsWebsite.XUnitTest.csproj", "{7F5ABB30-6CFA-4524-857E-458613158DE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -22,7 +22,7 @@ namespace NewsWebsite.IocConfig.Api.Swagger
                     {
                         Title = "Library Api",
                         Version = "v1",
-                        Description = "Through this Api you can access BookInfo",
+                        Description = "Through this Api you can access BudgetInfo",
                         Contact = new OpenApiContact
                         {
                             Email = "kiomarsrezai@gmail.com",
@@ -41,7 +41,7 @@ namespace NewsWebsite.IocConfig.Api.Swagger
                    {
                        Title = "Library Api",
                        Version = "v2",
-                       Description = "Through this Api you can access BookInfo",
+                       Description = "Through this Api you can access BudgetInfo",
                        Contact = new OpenApiContact
                        {
                            Email = "kiomarsrezai@gmail.com",

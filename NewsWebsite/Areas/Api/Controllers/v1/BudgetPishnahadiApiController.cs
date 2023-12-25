@@ -83,7 +83,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetProposalBalanceTextBoxRead")]
         [HttpGet]
-        public async Task<ApiResult<List<PishanahadViewModel>>> BudgetProposalBalanceTextBoxRead(int yearId, int areaId, int budgetProcessId)
+        public async Task<ApiResult<PishanahadViewModel>> BudgetProposalBalanceTextBoxRead(int yearId, int areaId, int budgetProcessId)
         {
             PishanahadViewModel fecth = new PishanahadViewModel();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))

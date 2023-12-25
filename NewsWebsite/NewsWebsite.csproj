@@ -21,7 +21,14 @@
     <ProjectReference Include="..\NewsWebsite.Data\NewsWebsite.Data.csproj" />
     <ProjectReference Include="..\NewsWebsite.IocConfig\NewsWebsite.IocConfig.csproj" />
   </ItemGroup>
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="echo &quot;App Offline&quot; /a &gt; &quot;$(ProjectDir)app_offline.htm&quot;" />
+	</Target>
 
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="del &quot;$(ProjectDir)app_offline.htm&quot;" />
+	</Target>
+	
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
