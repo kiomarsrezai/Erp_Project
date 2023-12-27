@@ -195,5 +195,45 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("BudgetProposalModalRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<PishanahadModalViewModel>>> AC_BudgetProposalModalRead(int yearId, int areaId, int budgetProcessId , int codingId)
+        {
+            List<PishanahadModalViewModel> data = new List<PishanahadModalViewModel>();
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposal_Modal_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", areaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("codingId", codingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        PishanahadModalViewModel row = new PishanahadModalViewModel();
+                        row.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        row.AreaName = dataReader["AreaName"].ToString();
+                        row.Code = dataReader["Code"].ToString();
+                        row.Description = dataReader["Description"].ToString();
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        row.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        row.BudgetNext = Int64.Parse(dataReader["BudgetNext"].ToString());
+                    
+                        data.Add(row);
+                    }
+                }
+                return Ok(data);
+            }
+        }
+
+
+
+
     }
 }

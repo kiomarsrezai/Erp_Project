@@ -75,4 +75,18 @@ namespace NewsWebsite.ViewModels.Fetch
 
     }
 
+    public class PishanahadModalViewModel
+    {
+        public int CodingId { get; set; }
+        public int AreaId { get; set; }
+        public string AreaName { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public Int64 Mosavab { get; set; }
+        public Int64 Edit { get; set; }
+        public Int64 Supply { get; set; }
+        public Int64 Expense { get; set; }
+        public Int64 BudgetNext { get; set; }
+
+    }
 }
