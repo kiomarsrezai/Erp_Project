@@ -12,7 +12,9 @@ namespace NewsWebsite.ViewModels.Fetch
         public string IdMoein { get; set; }
         public string IdTafsily { get; set; }
         public string IdTafsily5 { get; set; }
-        
+        public string IdTafsily6 { get; set; }
+        public string Tafsily6Name { get; set; }
+
         [Display(Name = "شرح حسابداری")]
         public string Name { get; set; }
 
