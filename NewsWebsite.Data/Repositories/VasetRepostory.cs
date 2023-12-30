@@ -82,6 +82,8 @@ namespace NewsWebsite.Data.Repositories
                         codeAcc.IdTafsily = dataReader["IdTafsily"].ToString() == null ? "" : dataReader["IdTafsily"].ToString();
                         codeAcc.Name = dataReader["Name"].ToString();
                         codeAcc.IdTafsily5 = dataReader["IdTafsily5"].ToString() == null ? "" : dataReader["IdTafsily5"].ToString();
+                        codeAcc.IdTafsily6 = dataReader["IdTafsily6"].ToString() == null ? "" : dataReader["IdTafsily6"].ToString();
+                        codeAcc.Tafsily6Name = dataReader["Tafsily6Name"].ToString() == null ? "" : dataReader["Tafsily6Name"].ToString();
                         codeAcc.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         codeAcc.MarkazHazine = dataReader["MarkazHazine"].ToString();
                         codeAcc.AreaId = areaId;
