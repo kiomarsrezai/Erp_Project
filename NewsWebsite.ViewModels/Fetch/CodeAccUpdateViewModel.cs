@@ -20,11 +20,27 @@ namespace NewsWebsite.ViewModels.Fetch
 
         [Display(Name = "مرکز هزینه")]
         public string MarkazHazine { get; set; }
-        
-        [Display(Name ="عملکرد")]
+
+        [Display(Name = "عملکرد")]
         public Int64 Expense { get; set; }
         public int AreaId { get; set; }
 
 
+    }
+    public class LinkCodeAccViewModel
+    {
+        public int id { get; set; }
+        public int areaId { get; set; }
+        public string codeAcc { get; set; }
+        public string titleAcc { get; set; }
+    }
+    
+    public class ModalVasetViewModel
+    {
+        public int id { get; set; }
+        public int areaId { get; set; }
+        public int yearId { get; set; }
+        public string description { get; set; }
+        public string code { get; set; }
     }
 }

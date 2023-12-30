@@ -66,9 +66,45 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("GetModalVaset")]
         [HttpGet]
-        public async Task<ApiResult<List<CodeAccUpdateViewModel>>> GetModalVaset(int id, string code, string description, int yearId, int areaId)
+        public async Task<ApiResult<List<CodeAccUpdateViewModel>>> GetModalVaset(ModalVasetViewModel model)
         {
-            return Ok(await _uw.VasetRepository.ModalDetailsAsync(id, code, description, yearId, areaId));
+            List<CodeAccUpdateViewModel> fecthViewModel = new List<CodeAccUpdateViewModel>();
+
+            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
+            //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
+            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Modal_Read", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", model.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", model.areaId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        CodeAccUpdateViewModel codeAcc = new CodeAccUpdateViewModel();
+                        codeAcc.Id = model.id;
+                        codeAcc.IdKol = dataReader["IdKol"].ToString();
+                        codeAcc.IdMoein = dataReader["IdMoien"].ToString();
+                        codeAcc.IdTafsily = dataReader["IdTafsily"].ToString() == null ? "" : dataReader["IdTafsily"].ToString();
+                        codeAcc.Name = dataReader["Name"].ToString();
+                        codeAcc.IdTafsily5 = dataReader["IdTafsily5"].ToString() == null ? "" : dataReader["IdTafsily5"].ToString();
+                        codeAcc.IdTafsily6 = dataReader["IdTafsily6"].ToString() == null ? "" : dataReader["IdTafsily6"].ToString();
+                        codeAcc.Tafsily6Name = dataReader["Tafsily6Name"].ToString() == null ? "" : dataReader["Tafsily6Name"].ToString();
+                        codeAcc.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        codeAcc.MarkazHazine = dataReader["MarkazHazine"].ToString();
+                        codeAcc.IdTafsily6 = dataReader["IdTafsily6"].ToString();
+                        codeAcc.Tafsily6Name = dataReader["Tafsily6Name"].ToString();
+                        codeAcc.AreaId = model.areaId;
+                        fecthViewModel.Add(codeAcc);
+                    }
+
+                }
+                sqlconnect.Close();
+            }
+
+            return Ok(fecthViewModel);
         }
 
         [Route("InsertCodeAcc")]
@@ -139,22 +175,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
 
         [Route("LinkCodeAcc")]
-        [HttpGet]
-        public async Task<ApiResult<string>> LinkCodeAcc(int id, int areaId, string codeAcc, string titleAcc)
+        [HttpPost]
+        public async Task<ApiResult<string>> LinkCodeAcc([FromBody] LinkCodeAccViewModel model)
         {
-            if (id == 0)
+            if (model.id == 0)
                 return BadRequest("با خطا مواجه شد"); 
-            if (id > 0)
+            if (model.id > 0)
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Update", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", id);
-                        sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                        sqlCommand.Parameters.AddWithValue("codeAcc", codeAcc);
-                        sqlCommand.Parameters.AddWithValue("titleAcc", titleAcc);
+                        sqlCommand.Parameters.AddWithValue("Id", model.id);
+                        sqlCommand.Parameters.AddWithValue("areaId", model.areaId);
+                        sqlCommand.Parameters.AddWithValue("codeAcc", model.codeAcc);
+                        sqlCommand.Parameters.AddWithValue("titleAcc", model.titleAcc);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
                         TempData["notification"] = "ویرایش با موفقیت انجام شد";
