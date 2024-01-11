@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
@@ -232,6 +233,64 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
+
+        [Route("ChartRadef")]
+        [HttpGet]
+        public async Task<ApiResult<List<object>>> ChartRadef(int codingId )
+        {
+            List<object> data = new List<object>();
+            List<int> YearName = new List<int>();
+            List<Int64> Mosavab = new List<Int64>();
+            List<Int64> Edit = new List<Int64>();
+            List<Int64> Expense = new List<Int64>();
+            List<double> PercentMosavab = new List<double>();
+            List<double> PercentEdit = new List<double>();
+
+            using (SqlConnection sqlconnect1 = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand1 = new SqlCommand("SP004_BudgetProposal_Chart_Read", sqlconnect1))
+                    {
+                        sqlconnect1.Open();
+                        sqlCommand1.CommandType = CommandType.StoredProcedure;
+                        sqlCommand1.Parameters.AddWithValue("codingId", codingId);
+                        SqlDataReader dataReader = await sqlCommand1.ExecuteReaderAsync();
+
+                        while (dataReader.Read())
+                        {
+                           YearName.Add(int.Parse(dataReader["YearName"].ToString()));
+                           Mosavab.Add(Int64.Parse(dataReader["Mosavab"].ToString()));
+                           Edit.Add(Int64.Parse(dataReader["Edit"].ToString()));
+                           Expense.Add(Int64.Parse(dataReader["Expense"].ToString()));
+                            if (Int64.Parse(dataReader["Mosavab"].ToString()) > 0)
+                            {
+                            PercentMosavab.Add(_uw.Budget_001Rep.Division(long.Parse(dataReader["Expense"].ToString()), long.Parse(dataReader["Mosavab"].ToString())));
+                            }
+                            else
+                            {
+                            PercentMosavab.Add(0);
+                            }
+                            if (Int64.Parse(dataReader["Edit"].ToString()) > 0)
+                            {
+                            PercentEdit.Add(_uw.Budget_001Rep.Division(long.Parse(dataReader["Expense"].ToString()), long.Parse(dataReader["Edit"].ToString())));
+                            }
+                            else
+                            {
+                            PercentEdit.Add(0);
+                            }
+                        }
+
+                        data.Add(YearName);
+                        data.Add(Mosavab);
+                        data.Add(Edit);
+                        data.Add(Expense);
+                        data.Add(PercentMosavab);
+                        data.Add(PercentEdit);
+                    }
+                }
+
+            return data;
+
+        }
 
 
 

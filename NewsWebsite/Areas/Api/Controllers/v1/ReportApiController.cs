@@ -253,9 +253,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<string> yearName = new List<string>();
             List<string> yearId = new List<string>();
             List<Int64> mosavab = new List<Int64>();
-            List<double> percmosavab = new List<double>();
             List<Int64> edit = new List<Int64>();
             List<Int64> expense = new List<Int64>();
+            List<double> percmosavab = new List<double>();
+            List<double> percEdit = new List<double>();
+
 
 
             using (SqlConnection sqlconnect1 = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -275,6 +277,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         mosavab.Add(Int64.Parse(dataReader1["Mosavab"].ToString()));
                         edit.Add(Int64.Parse(dataReader1["Edit"].ToString()));
                         expense.Add(Int64.Parse(dataReader1["Expense"].ToString()));
+                        if (Int64.Parse(dataReader1["Mosavab"].ToString()) > 0)
+                        {
+                            percmosavab.Add(_uw.Budget_001Rep.Division(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["Mosavab"].ToString())));
+                        }
+                        else
+                        {
+                            percmosavab.Add(0);
+                        }
+                        if (Int64.Parse(dataReader1["Edit"].ToString()) > 0)
+                        {
+                            percEdit.Add(_uw.Budget_001Rep.Division(long.Parse(dataReader1["Expense"].ToString()), long.Parse(dataReader1["Edit"].ToString())));
+                        }
+                        else
+                        {
+                            percEdit.Add(0);
+                        }
+
+
                     }
 
                     data.Add(yearId);
@@ -436,7 +456,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("DetailChartApi")]
         [HttpGet]
-        public async Task<ApiResult<List<ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, bool revenue, bool sale, bool loan, bool niabati, int? codingId = null)
+        public async Task<ApiResult<List<ChartAreaViewModel>>> DetailChartApi(int yearId, int centerId, int budgetProcessId, int StructureId, int? codingId = null)
         {
             List<ChartAreaViewModel> dataset = new List<ChartAreaViewModel>();
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
@@ -449,10 +469,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("CenterId", centerId);
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", budgetProcessId);
                     sqlCommand.Parameters.AddWithValue("StructureId", StructureId);
-                    sqlCommand.Parameters.AddWithValue("revenue", revenue);
-                    sqlCommand.Parameters.AddWithValue("sale", sale);
-                    sqlCommand.Parameters.AddWithValue("loan", loan);
-                    sqlCommand.Parameters.AddWithValue("niabati", niabati);
                     sqlCommand.Parameters.AddWithValue("codingId", codingId);
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
 
@@ -486,13 +502,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         }
                         dataset.Add(row);
                     }
-
                 }
-
             };
-
             return dataset;
-
         }
 
 
