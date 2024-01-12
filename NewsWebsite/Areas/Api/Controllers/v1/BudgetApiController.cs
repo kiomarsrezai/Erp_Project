@@ -771,7 +771,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
                     sqlCommand.Parameters.AddWithValue("Mosavab", param.mosavab);
                     sqlCommand.Parameters.AddWithValue("EditArea", param.EditArea);
-                    sqlCommand.Parameters.AddWithValue("Expense", param.Expense);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
