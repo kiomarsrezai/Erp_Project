@@ -855,6 +855,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
+        [Route("ProjectReportScaleBudgetModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<ProjectReportScaleBudgetViewModel>>> AC_ProjectReportScaleBudgetModal(int yearId, int areaId, int scaleId)
+        {
+            List<ProjectReportScaleBudgetViewModel> data = new List<ProjectReportScaleBudgetViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP005_Report_ProjectScaleBudgetModal_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("YearId", yearId);
+                        sqlCommand.Parameters.AddWithValue("AreaId", areaId);
+                        sqlCommand.Parameters.AddWithValue("ScaleId", scaleId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            ProjectReportScaleBudgetViewModel row = new ProjectReportScaleBudgetViewModel();
+                            row.Code = dataReader["Code"].ToString();
+                            row.Description = dataReader["Description"].ToString();
+                            row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                            row.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                            row.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                            row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                            data.Add(row);
+                        }
+                    }
+                }
+            }
+            return Ok(data);
+        }
 
         [Route("AbstractPerformanceBudget")]
         [HttpGet]
