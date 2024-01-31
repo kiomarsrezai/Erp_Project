@@ -201,7 +201,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         row.Supply = Int64.Parse(dataReader["Supply"].ToString());
                         row.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        row.NeesEditYearNow = Int64.Parse(dataReader["NeesEditYearNow"].ToString());
+                        row.NeedEditYearNow = Int64.Parse(dataReader["NeedEditYearNow"].ToString());
                         row.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         row.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
                         row.Crud = int.Parse(dataReader["Crud"].ToString());

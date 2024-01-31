@@ -19,7 +19,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetEdit
         public Int64 Mosavab { get; set; }
         public Int64 Supply { get; set; }
         public Int64 Expense { get; set; }
-        public Int64 NeesEditYearNow { get; set; }
+        public Int64 NeedEditYearNow { get; set; }
         public int levelNumber { get; set; }
         public int Crud { get; set; }
         public Int64 Edit { get; set; }
