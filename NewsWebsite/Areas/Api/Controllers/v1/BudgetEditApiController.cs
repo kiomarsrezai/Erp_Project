@@ -204,7 +204,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.NeedEditYearNow = Int64.Parse(dataReader["NeedEditYearNow"].ToString());
                         row.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         row.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
-                        row.Crud = int.Parse(dataReader["Crud"].ToString());
+                        row.Crud = bool.Parse(dataReader["Crud"].ToString());
                         data.Add(row);
                     }
                 }

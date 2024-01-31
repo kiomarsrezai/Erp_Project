@@ -21,7 +21,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetEdit
         public Int64 Expense { get; set; }
         public Int64 NeedEditYearNow { get; set; }
         public int levelNumber { get; set; }
-        public int Crud { get; set; }
+        public bool Crud { get; set; }
         public Int64 Edit { get; set; }
     }
  
