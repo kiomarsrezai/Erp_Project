@@ -10,4 +10,11 @@ namespace NewsWebsite.ViewModels.Api.Public
         public int areaId { get; set; }
         public int budgetProcessId { get; set; }
     }
+
+    public class Param22ViewModel
+    {
+        public int yearId { get; set; }
+        public int areaId { get; set; }
+    }
+
 }
