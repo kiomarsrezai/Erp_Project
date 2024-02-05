@@ -211,7 +211,44 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(data);
         }
- 
+
+        [Route("EditDetailModal")]
+        [HttpGet]
+        public async Task<ApiResult<List<EditDetailModalViewModel>>> Ac_EditDetailModal(EditDetailModalParamViewModel param)
+        {
+            List<EditDetailModalViewModel> data = new List<EditDetailModalViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_Edit", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        EditDetailModalViewModel row = new EditDetailModalViewModel();
+                        row.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        row.Code = dataReader["Code"].ToString();
+                        row.Description = dataReader["Description"].ToString();
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        row.NeedEditYearNow = Int64.Parse(dataReader["NeedEditYearNow"].ToString());
+                        row.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        row.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+                        data.Add(row);
+                    }
+                }
+            }
+            return Ok(data);
+        }
+
+
     }
 
 }
