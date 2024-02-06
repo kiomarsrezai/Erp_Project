@@ -233,6 +233,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         EditDetailModalViewModel row = new EditDetailModalViewModel();
                         row.CodingId = int.Parse(dataReader["CodingId"].ToString());
+                        row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        row.AreaName = dataReader["AreaName"].ToString();
                         row.Code = dataReader["Code"].ToString();
                         row.Description = dataReader["Description"].ToString();
                         row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
