@@ -394,7 +394,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.mosavab = Int64.Parse(dataReader1["Mosavab"].ToString());
                         row.edit = Int64.Parse(dataReader1["edit"].ToString());
                         row.CreditAmount = Int64.Parse(dataReader1["CreditAmount"].ToString());
-                        if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
+                        if (Int64.Parse(dataReader1["edit"].ToString()) > 0)
                         {
                             row.PercentCreditAmount = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["CreditAmount"].ToString()), Int64.Parse(dataReader1["edit"].ToString())));
                         }
@@ -403,7 +403,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.PercentCreditAmount = 0;
                         }
                         row.expense = Int64.Parse(dataReader1["Expense"].ToString());
-                        if (Int64.Parse(dataReader1["mosavab"].ToString()) > 0)
+                        if (Int64.Parse(dataReader1["edit"].ToString()) > 0)
                         {
                             row.Percent = (_uw.Budget_001Rep.Division(Int64.Parse(dataReader1["expense"].ToString()), Int64.Parse(dataReader1["edit"].ToString())));
                         }
