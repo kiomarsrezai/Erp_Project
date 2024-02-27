@@ -16,6 +16,10 @@ using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Contract;
 using NewsWebsite.ViewModels.Api.Request;
+using NewsWebsite.Common.PublicMethod;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -32,6 +36,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             _config = config;
             _uw = uw;
+        }
+
+        [HttpGet]
+        [Route("ResponseDataFromSdi")]
+
+        public async Task<string> ResponseSdi(string useranme, string password)
+        {
+            string apiUrl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+            GetListApi GA = new GetListApi();
+            //
+            string jsonfullmodel = await GA.GetApiList(apiUrl, User.FindFirstValue("Token"));
+            dynamic jsondataPars = JObject.Parse(jsonfullmodel);
+            //
+            var resp= JsonConvert.DeserializeObject<List<string>>(jsondataPars.data.ToString());
+
+            return "";
         }
 
         [Route("ContractRead")]
