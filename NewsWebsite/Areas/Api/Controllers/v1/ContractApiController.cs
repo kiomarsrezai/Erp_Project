@@ -500,6 +500,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             //your Hosted Base URL
             string loginurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+
             // GET: login
 
             var clientlogin = new RestClient(loginurl);
@@ -512,9 +513,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             RestResponse responselogin = await clientlogin.ExecuteAsync(requestlogin);
 
-            string authkey = JObject.Parse(responselogin.Content)["app_key"].ToString();
+            string authkey = JObject.Parse(responselogin.Content)["api_key"].ToString();
 
-            string requetlayerurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+            string requetlayerurl = "https://sdi.ahvaz.ir/geoserver/wms/";
+
             // GET: kiosk layer
 
             var clientlayer = new RestClient(requetlayerurl);
