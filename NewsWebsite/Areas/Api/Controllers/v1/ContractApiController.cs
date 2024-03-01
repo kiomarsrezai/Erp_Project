@@ -21,6 +21,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using RestSharp;
+using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -494,9 +495,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfoFromSdi")]
         [HttpGet]
-        public async Task<ApiResult<AmlakPrivateFromSdiDto>> AmlakPrivateUpdateFromSdi()
+        public async Task<ApiResult> AmlakPrivateUpdateFromSdi()
         {
-            AmlakPrivateFromSdiDto AmlakPrivateFromSdiDto = new AmlakPrivateFromSdiDto();
+            var Amlaklist = new AmlakPrivateFromSdiDto();
 
             //your Hosted Base URL
             string loginurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
@@ -537,9 +538,33 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             RestResponse responseRequestLayer = await clientlayer.ExecuteAsync(requestlayer);
 
-            var TempData = JsonConvert.DeserializeObject<AmlakPrivateFromSdiDto>(responseRequestLayer.Content);
+            Root TempData = JsonConvert.DeserializeObject<Root>(responseRequestLayer.ToString());
+            int x = TempData.features.Count;
+            
+            for (int i = 0; i < x; i++)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakPrivate_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", TempData.features[i].properties.radif);
+                        sqlCommand.Parameters.AddWithValue("Masahat", TempData.features[i].properties.name);
+                        sqlCommand.Parameters.AddWithValue("NumberGhorfe", TempData.features[i].properties.vaziat);
+                        sqlCommand.Parameters.AddWithValue("lat", TempData.features[i].geometry.coordinates[0]);
+                        sqlCommand.Parameters.AddWithValue("log", TempData.features[i].geometry.coordinates[1]);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        //while (dataReader.Read())
+                        //{
+                        //    if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                        //}
+                    }
+                }
+            }
 
-            return Ok(TempData);
+            
+            return Ok();
         }
 
         [Route("AmlakInfoUpdate")]

@@ -157,6 +157,7 @@ namespace NewsWebsite.Data.Repositories
 
             RestResponse responseRequestLayer = await clientlayer.ExecuteAsync(requestlayer);
             var TempData = JsonConvert.DeserializeObject<AmlakPrivateFromSdiDto>(responseRequestLayer.Content);
+
             return TempData;
 
         }
