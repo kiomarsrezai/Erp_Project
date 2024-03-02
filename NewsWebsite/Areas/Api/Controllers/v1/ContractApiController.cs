@@ -21,11 +21,13 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using RestSharp;
-using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net;
 using System.Security.Policy;
+using System.Net.Mime;
+using System.Text;
+using static NewsWebsite.Common.PublicMethod.GetListApi;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -52,12 +54,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string apiUrl = "https://sdi.ahvaz.ir/geoapi/user/login/";
             GetListApi GA = new GetListApi();
             //
-            string jsonfullmodel = await GA.GetApiList(apiUrl, User.FindFirstValue("Token"));
+            string jsonfullmodel = await GA.GetApiList(apiUrl);
             dynamic jsondataPars = JObject.Parse(jsonfullmodel);
             //
-            var resp= JsonConvert.DeserializeObject<List<string>>(jsondataPars.data.ToString());
+            var resp = JsonConvert.DeserializeObject<List<string>>(jsondataPars.data.ToString());
 
-            return "";
+            return resp;
         }
 
         [Route("ContractRead")]
@@ -169,7 +171,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
                             data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
-                            data.DateFrom =StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
+                            data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
                             data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
@@ -499,40 +501,67 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfoFromSdi")]
         [HttpGet]
-        public async Task<ApiResult<Root>> AmlakPrivateUpdateFromSdi()
+        public async Task<ApiResult<ResponseLoginSdi>> AmlakPrivateUpdateFromSdi()
         {
-            var Amlaklist = new AmlakPrivateFromSdiDto();
+            //string output = "";
 
-            //your Hosted Base URL
-            string loginurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
-
-            // GET: login
-
-            using (var client = new HttpClient())
+            var logindto = new logintosdi()
             {
-                //client.BaseAddress = new Uri(url);
-                client.BaseAddress = new Uri(loginurl);
-                client.DefaultRequestHeaders.Clear();
-                //client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("application/json, text/plain, */*"));
+                username = "ERP_Fava",
+                password = "123456",
+                appId = "mobilegis"
+            };
+            GetListApi getListApi = new GetListApi();
 
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            string apiUrl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+            string fullStock = await getListApi.GetLoginApiSdiWithParam(apiUrl, logindto);
+            dynamic jsonfullStockPars = JObject.Parse(fullStock);
+            var result = JsonConvert.DeserializeObject<ResponseLoginSdi>(jsonfullStockPars);
 
-                //string token = param.token.Value;
-                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                // New code:
-                var response = client.GetAsync(string.Format("api/products/username={0}&password={1}&appId={2}", "ERP_Fava", "123456", "mobilegis")).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = response.Content.ReadAsStringAsync().Result;
-                    //string authkey = JObject.Parse(response.Content)["api_key"].ToString();
-                    return Ok(result);
-                }
 
-                return BadRequest();
-            }
+            //using (HttpClient client = new HttpClient())
+            //{
+            //    var jsonBody = Newtonsoft.Json.JsonConvert.SerializeObject(logindto);
+            //    var requestGet = new HttpRequestMessage
+            //    {
+            //        Method = HttpMethod.Get,
+            //        RequestUri = new Uri("https://sdi.ahvaz.ir/geoapi/user/login/"),
+            //        Content = new StringContent(jsonBody, Encoding.Default, mediaType: MediaTypeNames.Application.Json)
+            //    };
+            //    //requestGet.Headers.Add("Authorization", "Bearer " + token);
 
-            //var clientlogin = new RestClient(loginurl);
+            //    var response = await client.SendAsync(requestGet).ConfigureAwait(false);
+
+            //    output = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            //    //output= myDeserializedClass.api_key.ToString();
+            //}
+            //using (var client = new HttpClient())
+            //{
+            //    //client.BaseAddress = new Uri(url);
+            //    client.BaseAddress = new Uri(loginurl);
+            //    client.DefaultRequestHeaders.Clear();
+            //    //client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("application/json, text/plain, */*"));
+
+            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            //    //string token = param.token.Value;
+            //    //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            //    // New code:
+            //    var response = client.GetAsync(string.Format("geoapi/user/login/username={0}&password={1}&appId={2}", "ERP_Fava", "123456", "mobilegis")).Result;
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        string apiResponse =await response.Content.ReadAsStringAsync();
+            //        var data = JsonConvert.DeserializeObject<string>(apiResponse);
+            //        //string authkey = JObject.Parse(response.Content)["api_key"].ToString();
+            //        return Ok(data);
+            //    }
+
+            //    return BadRequest();
+            //}
+
+            //var clientlogin = new RestClient(apiUrl);
             //var requestlogin = new RestRequest();
             //requestlogin.AddHeader("Accept", "application/json, text/plain, */*");
             //requestlogin.AddHeader("Content-Type", "application/json");
@@ -540,9 +569,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             //requestlogin.AddParameter("password", "123456", ParameterType.RequestBody);
             //requestlogin.AddParameter("appId", "mobilegis", ParameterType.RequestBody);
 
-            //RestResponse responselogin = await clientlogin.ExecuteAsync(requestlogin);
+            //dynamic responselogin = await clientlogin.ExecuteAsync(requestlogin);
 
-
+            //var resp = JsonConvert.DeserializeObject<ResponseLoginSdi>(responselogin.ToString());
 
             //string requetlayerurl = "https://sdi.ahvaz.ir/geoserver/wms/";
 
@@ -592,7 +621,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             //}
 
 
-            //return Ok(TempData);
+            return Ok(result);
         }
 
         [Route("AmlakInfoUpdate")]
@@ -900,7 +929,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-        
+
         [Route("ContractInstallmentsReciveRead")]
         [HttpGet]
         public async Task<ApiResult<List<ContractInstallmentsReciveReadViewModel>>> Ac_ContractInstallmentsReciveRead(param32 param)
