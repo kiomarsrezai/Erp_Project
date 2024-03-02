@@ -14,4 +14,11 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string EstateInfoName { get; set; }
         public string EstateInfoAddress { get; set; }
     }
+
+    public class LoginParamModelFromSdi
+    {
+        public string username { get; set; }
+        public string password { get; set; }
+        public string appId { get; set; }
+    }
 }

@@ -16,6 +16,12 @@ using Microsoft.Extensions.Configuration;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Contract;
 using NewsWebsite.ViewModels.Api.Request;
+using NewsWebsite.Common.PublicMethod;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Security.Claims;
+using RestSharp;
+using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -32,6 +38,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             _config = config;
             _uw = uw;
+        }
+
+        [HttpGet]
+        [Route("ResponseDataFromSdi")]
+
+        public async Task<string> ResponseSdi(string useranme, string password)
+        {
+            string apiUrl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+            GetListApi GA = new GetListApi();
+            //
+            string jsonfullmodel = await GA.GetApiList(apiUrl, User.FindFirstValue("Token"));
+            dynamic jsondataPars = JObject.Parse(jsonfullmodel);
+            //
+            var resp= JsonConvert.DeserializeObject<List<string>>(jsondataPars.data.ToString());
+
+            return "";
         }
 
         [Route("ContractRead")]
@@ -469,6 +491,80 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
             else
                 return BadRequest(readercount);
+        }
+
+        [Route("AmlakInfoFromSdi")]
+        [HttpGet]
+        public async Task<ApiResult> AmlakPrivateUpdateFromSdi()
+        {
+            var Amlaklist = new AmlakPrivateFromSdiDto();
+
+            //your Hosted Base URL
+            string loginurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+
+            // GET: login
+
+            var clientlogin = new RestClient(loginurl);
+            var requestlogin = new RestRequest();
+            requestlogin.AddHeader("Accept", "application/json, text/plain, */*");
+            requestlogin.AddHeader("Content-Type", "application/json");
+            requestlogin.AddParameter("username", "ERP_Fava", ParameterType.RequestBody);
+            requestlogin.AddParameter("password", "123456", ParameterType.RequestBody);
+            requestlogin.AddParameter("appId", "mobilegis", ParameterType.RequestBody);
+
+            RestResponse responselogin = await clientlogin.ExecuteAsync(requestlogin);
+
+            string authkey = JObject.Parse(responselogin.Content)["api_key"].ToString();
+
+            string requetlayerurl = "https://sdi.ahvaz.ir/geoserver/wms/";
+
+            // GET: kiosk layer
+
+            var clientlayer = new RestClient(requetlayerurl);
+            var requestlayer = new RestRequest();
+            requestlayer.AddHeader("Accept", "application/json, text/plain, */*");
+            requestlayer.AddHeader("Content-Type", "application/json");
+            requestlayer.AddParameter("service", "WMS", ParameterType.QueryString);
+            requestlayer.AddParameter("version", "123456", ParameterType.QueryString);
+            requestlayer.AddParameter("request", "GetMap", ParameterType.QueryString);
+            requestlayer.AddParameter("layers", "ahvaz_kiosk14000719_8798", ParameterType.QueryString);
+            requestlayer.AddParameter("styles", "", ParameterType.QueryString);
+            requestlayer.AddParameter("bbox", "266946.15830115,3459691.01376209,290403.347700002,3475056.7358", ParameterType.QueryString);
+            requestlayer.AddParameter("width", "565", ParameterType.QueryString);
+            requestlayer.AddParameter("srs", "EPSG:32639", ParameterType.QueryString);
+            requestlayer.AddParameter("format", "application/json", ParameterType.QueryString);
+            requestlayer.AddParameter("authkey", authkey, ParameterType.QueryString);
+            requestlayer.AddParameter("INFO_FORMAT", "application/json", ParameterType.QueryString);
+
+            RestResponse responseRequestLayer = await clientlayer.ExecuteAsync(requestlayer);
+
+            Root TempData = JsonConvert.DeserializeObject<Root>(responseRequestLayer.ToString());
+            int x = TempData.features.Count;
+            
+            for (int i = 0; i < x; i++)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakPrivate_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", TempData.features[i].properties.radif);
+                        sqlCommand.Parameters.AddWithValue("Masahat", TempData.features[i].properties.name);
+                        sqlCommand.Parameters.AddWithValue("NumberGhorfe", TempData.features[i].properties.vaziat);
+                        sqlCommand.Parameters.AddWithValue("lat", TempData.features[i].geometry.coordinates[0]);
+                        sqlCommand.Parameters.AddWithValue("log", TempData.features[i].geometry.coordinates[1]);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        //while (dataReader.Read())
+                        //{
+                        //    if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                        //}
+                    }
+                }
+            }
+
+            
+            return Ok();
         }
 
         [Route("AmlakInfoUpdate")]
