@@ -1458,5 +1458,43 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
+        [Route("ComparErpAndTaminRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<ComparErpAndTaminViewModel>>> AC_ComparErpAndTaminRead(param100 param)
+        {
+            List<ComparErpAndTaminViewModel> dataModel = new List<ComparErpAndTaminViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_ComparErpAndTaminRead", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandTimeout = 500;
+                    sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("Number", param.Number);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        ComparErpAndTaminViewModel row = new ComparErpAndTaminViewModel();
+                        row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        row.Code = dataReader["Code"].ToString();
+                        row.Description = dataReader["Description"].ToString();
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                        row.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        row.Total_Res = Int64.Parse(dataReader["Total_Res"].ToString());
+                        row.Diff = Int64.Parse(dataReader["Diff"].ToString());
+
+                        dataModel.Add(row);
+                    }
+
+                }
+            }
+            return Ok(dataModel);
+        }
     }
 }
