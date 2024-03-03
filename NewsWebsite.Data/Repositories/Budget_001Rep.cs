@@ -115,10 +115,10 @@ namespace NewsWebsite.Data.Repositories
             return yearViews;
         }
 
-        public async Task<AmlakPrivateFromSdiDto> UpdateErpFromSdi()
+        public async Task<Root> UpdateErpFromSdi()
         {
 
-            AmlakPrivateFromSdiDto AmlakPrivateFromSdiDto = new AmlakPrivateFromSdiDto();
+            Root AmlakPrivateFromSdiDto = new Root();
 
             //your Hosted Base URL
             string loginurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
@@ -156,7 +156,7 @@ namespace NewsWebsite.Data.Repositories
             requestlayer.AddParameter("INFO_FORMAT", "application/json", ParameterType.QueryString);
 
             RestResponse responseRequestLayer = await clientlayer.ExecuteAsync(requestlayer);
-            var TempData = JsonConvert.DeserializeObject<AmlakPrivateFromSdiDto>(responseRequestLayer.Content);
+            var TempData = JsonConvert.DeserializeObject<Root>(responseRequestLayer.Content);
 
             return TempData;
 

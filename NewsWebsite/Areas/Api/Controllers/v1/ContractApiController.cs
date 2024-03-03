@@ -21,7 +21,13 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using RestSharp;
-using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net;
+using System.Security.Policy;
+using System.Net.Mime;
+using System.Text;
+using static NewsWebsite.Common.PublicMethod.GetListApi;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -199,7 +205,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
                             data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
-                            data.DateFrom =StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
+                            data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
                             data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
@@ -529,48 +535,99 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfoFromSdi")]
         [HttpGet]
-        public async Task<ApiResult> AmlakPrivateUpdateFromSdi()
+        public async Task<ApiResult<ResponseLoginSdi>> AmlakPrivateUpdateFromSdi()
         {
-            var Amlaklist = new AmlakPrivateFromSdiDto();
+            //string output = "";
 
-            //your Hosted Base URL
-            string loginurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+            var logindto = new logintosdi()
+            {
+                username = "ERP_Fava",
+                password = "123456",
+                appId = "mobilegis"
+            };
+            GetListApi getListApi = new GetListApi();
 
-            // GET: login
+            string apiUrl = "https://sdi.ahvaz.ir/geoapi/user/login/";
+            string fullStock = await getListApi.GetLoginApiSdiWithParam(apiUrl, logindto);
+            dynamic jsonfullStockPars = JObject.Parse(fullStock);
+            var result = JsonConvert.DeserializeObject<ResponseLoginSdi>(jsonfullStockPars);
 
-            var clientlogin = new RestClient(loginurl);
-            var requestlogin = new RestRequest();
-            requestlogin.AddHeader("Accept", "application/json, text/plain, */*");
-            requestlogin.AddHeader("Content-Type", "application/json");
-            requestlogin.AddParameter("username", "ERP_Fava", ParameterType.RequestBody);
-            requestlogin.AddParameter("password", "123456", ParameterType.RequestBody);
-            requestlogin.AddParameter("appId", "mobilegis", ParameterType.RequestBody);
 
-            RestResponse responselogin = await clientlogin.ExecuteAsync(requestlogin);
 
-            string authkey = JObject.Parse(responselogin.Content)["api_key"].ToString();
+            //using (HttpClient client = new HttpClient())
+            //{
+            //    var jsonBody = Newtonsoft.Json.JsonConvert.SerializeObject(logindto);
+            //    var requestGet = new HttpRequestMessage
+            //    {
+            //        Method = HttpMethod.Get,
+            //        RequestUri = new Uri("https://sdi.ahvaz.ir/geoapi/user/login/"),
+            //        Content = new StringContent(jsonBody, Encoding.Default, mediaType: MediaTypeNames.Application.Json)
+            //    };
+            //    //requestGet.Headers.Add("Authorization", "Bearer " + token);
 
-            string requetlayerurl = "https://sdi.ahvaz.ir/geoserver/wms/";
+            //    var response = await client.SendAsync(requestGet).ConfigureAwait(false);
 
-            // GET: kiosk layer
+            //    output = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            //    //output= myDeserializedClass.api_key.ToString();
+            //}
+            //using (var client = new HttpClient())
+            //{
+            //    //client.BaseAddress = new Uri(url);
+            //    client.BaseAddress = new Uri(loginurl);
+            //    client.DefaultRequestHeaders.Clear();
+            //    //client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("application/json, text/plain, */*"));
 
-            var clientlayer = new RestClient(requetlayerurl);
-            var requestlayer = new RestRequest();
-            requestlayer.AddHeader("Accept", "application/json, text/plain, */*");
-            requestlayer.AddHeader("Content-Type", "application/json");
-            requestlayer.AddParameter("service", "WMS", ParameterType.QueryString);
-            requestlayer.AddParameter("version", "123456", ParameterType.QueryString);
-            requestlayer.AddParameter("request", "GetMap", ParameterType.QueryString);
-            requestlayer.AddParameter("layers", "ahvaz_kiosk14000719_8798", ParameterType.QueryString);
-            requestlayer.AddParameter("styles", "", ParameterType.QueryString);
-            requestlayer.AddParameter("bbox", "266946.15830115,3459691.01376209,290403.347700002,3475056.7358", ParameterType.QueryString);
-            requestlayer.AddParameter("width", "565", ParameterType.QueryString);
-            requestlayer.AddParameter("srs", "EPSG:32639", ParameterType.QueryString);
-            requestlayer.AddParameter("format", "application/json", ParameterType.QueryString);
-            requestlayer.AddParameter("authkey", authkey, ParameterType.QueryString);
-            requestlayer.AddParameter("INFO_FORMAT", "application/json", ParameterType.QueryString);
+            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            RestResponse responseRequestLayer = await clientlayer.ExecuteAsync(requestlayer);
+            //    //string token = param.token.Value;
+            //    //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            //    // New code:
+            //    var response = client.GetAsync(string.Format("geoapi/user/login/username={0}&password={1}&appId={2}", "ERP_Fava", "123456", "mobilegis")).Result;
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        string apiResponse =await response.Content.ReadAsStringAsync();
+            //        var data = JsonConvert.DeserializeObject<string>(apiResponse);
+            //        //string authkey = JObject.Parse(response.Content)["api_key"].ToString();
+            //        return Ok(data);
+            //    }
+
+            //    return BadRequest();
+            //}
+
+            //var clientlogin = new RestClient(apiUrl);
+            //var requestlogin = new RestRequest();
+            //requestlogin.AddHeader("Accept", "application/json, text/plain, */*");
+            //requestlogin.AddHeader("Content-Type", "application/json");
+            //requestlogin.AddParameter("username", "ERP_Fava", ParameterType.RequestBody);
+            //requestlogin.AddParameter("password", "123456", ParameterType.RequestBody);
+            //requestlogin.AddParameter("appId", "mobilegis", ParameterType.RequestBody);
+
+            //dynamic responselogin = await clientlogin.ExecuteAsync(requestlogin);
+
+            //var resp = JsonConvert.DeserializeObject<ResponseLoginSdi>(responselogin.ToString());
+
+            //string requetlayerurl = "https://sdi.ahvaz.ir/geoserver/wms/";
+
+            //// GET: kiosk layer
+
+            //var clientlayer = new RestClient(requetlayerurl);
+            //var requestlayer = new RestRequest();
+            //requestlayer.AddHeader("Accept", "application/json, text/plain, */*");
+            //requestlayer.AddHeader("Content-Type", "application/json");
+            //requestlayer.AddParameter("service", "WMS", ParameterType.QueryString);
+            //requestlayer.AddParameter("version", "123456", ParameterType.QueryString);
+            //requestlayer.AddParameter("request", "GetMap", ParameterType.QueryString);
+            //requestlayer.AddParameter("layers", "ahvaz_kiosk14000719_8798", ParameterType.QueryString);
+            //requestlayer.AddParameter("styles", "", ParameterType.QueryString);
+            //requestlayer.AddParameter("bbox", "266946.15830115,3459691.01376209,290403.347700002,3475056.7358", ParameterType.QueryString);
+            //requestlayer.AddParameter("width", "565", ParameterType.QueryString);
+            //requestlayer.AddParameter("srs", "EPSG:32639", ParameterType.QueryString);
+            //requestlayer.AddParameter("format", "application/json", ParameterType.QueryString);
+            //requestlayer.AddParameter("authkey", authkey, ParameterType.QueryString);
+            //requestlayer.AddParameter("INFO_FORMAT", "application/json", ParameterType.QueryString);
+
+            //RestResponse responseRequestLayer = await clientlayer.ExecuteAsync(requestlayer);
 
             var TempData = JsonConvert.DeserializeObject<ResponseLayerDto>(responseRequestLayer.ToString());
             int x = TempData.features.Count;
@@ -597,8 +654,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
 
-            
-            return Ok();
+
+            return Ok(result);
         }
 
         [Route("AmlakInfoUpdate")]
@@ -906,7 +963,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-        
+
         [Route("ContractInstallmentsReciveRead")]
         [HttpGet]
         public async Task<ApiResult<List<ContractInstallmentsReciveReadViewModel>>> Ac_ContractInstallmentsReciveRead(param32 param)
