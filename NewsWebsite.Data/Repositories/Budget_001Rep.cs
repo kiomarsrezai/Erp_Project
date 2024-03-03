@@ -23,6 +23,7 @@ using RestSharp;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Text.Json.Nodes;
+using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
 
 namespace NewsWebsite.Data.Repositories
 {
@@ -115,10 +116,10 @@ namespace NewsWebsite.Data.Repositories
             return yearViews;
         }
 
-        public async Task<Root> UpdateErpFromSdi()
+        public async Task<ResponseLayerDto> UpdateErpFromSdi()
         {
 
-            Root AmlakPrivateFromSdiDto = new Root();
+            ResponseLayerDto AmlakPrivateFromSdiDto = new ResponseLayerDto();
 
             //your Hosted Base URL
             string loginurl = "https://sdi.ahvaz.ir/geoapi/user/login/";
@@ -156,7 +157,7 @@ namespace NewsWebsite.Data.Repositories
             requestlayer.AddParameter("INFO_FORMAT", "application/json", ParameterType.QueryString);
 
             RestResponse responseRequestLayer = await clientlayer.ExecuteAsync(requestlayer);
-            var TempData = JsonConvert.DeserializeObject<Root>(responseRequestLayer.Content);
+            var TempData = JsonConvert.DeserializeObject<ResponseLayerDto>(responseRequestLayer.Content);
 
             return TempData;
 
