@@ -17,8 +17,9 @@ namespace NewsWebsite.ViewModels.Api.Contract
 
     public class LoginParamModelFromSdi
     {
-        public string username { get; set; }
-        public string password { get; set; }
-        public string appId { get; set; }
+        public string userId { get; set; }
+        public string id { get; set; }
+        public string title { get; set; }
+        public string completed { get; set; }
     }
 }

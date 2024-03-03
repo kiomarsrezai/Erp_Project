@@ -48,12 +48,24 @@ namespace NewsWebsite.ViewModels.Api.Contract
             public string MelkPrice { get; set; }
         }
 
-        public class Root
+        public class ResponseLayerDto
         {
             public string type { get; set; }
             public int totalFeatures { get; set; }
             public List<Feature> features { get; set; }
             public Crs crs { get; set; }
+        }
+
+        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+        public class ResponseLoginSdiDto
+        {
+            public string api_key { get; set; }
+            public string password_change { get; set; }
+            public bool success { get; set; }
+            public List<string> user_all_permission { get; set; }
+            public string user_id { get; set; }
+            public string user_name { get; set; }
+            public string username { get; set; }
         }
 
     }
