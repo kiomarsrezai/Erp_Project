@@ -74,6 +74,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecth);
         }
 
+
         [Route("DeleteTamin")]
         [HttpPost]
         public virtual async Task<ApiResult<string>> DeleteTamin([FromBody] DeleteSepViewModel deleteSep)
@@ -446,46 +447,46 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
+          //=============================================================================================================
+
         [Route("SepratorAreaDepartmentInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> SepratorAreaDepartmanInsert([FromBody] SepratorAreaDepartmantInsert modalUpdateViewModel)
+        public async Task<ApiResult<string>> AC_SepratorAreaDepartmentInsert([FromBody] SepratorAreaDepartmantInsert param)
         {
-            await _sqlDataAccess.SaveData<dynamic>(storedProcedure: "SP002_SepratorAreaDepartmant_Insert", new
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                yearId = modalUpdateViewModel.yearId,
-                areaId = modalUpdateViewModel.areaId,
-                codingId = modalUpdateViewModel.codingId,
-                projectId = modalUpdateViewModel.projectId,
-                departmanId = modalUpdateViewModel.departmanId
-
-            });
-            return Ok();
-
-
-
-            //string readercount = null;
-            //using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            //{
-            //    using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
-            //    {
-            //        sqlconnect.Open();
-            //        sqlCommand.Parameters.AddWithValue("yearId", modalUpdateViewModel.yearId);
-            //        sqlCommand.Parameters.AddWithValue("areaId", modalUpdateViewModel.areaId);
-            //        sqlCommand.Parameters.AddWithValue("codingId", modalUpdateViewModel.codingId);
-            //        sqlCommand.Parameters.AddWithValue("projectId", modalUpdateViewModel.projectId);
-            //        sqlCommand.Parameters.AddWithValue("departmanId", modalUpdateViewModel.departmanId);
-            //        sqlCommand.CommandType = CommandType.StoredProcedure;
-            //        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-            //        while (dataReader.Read())
-            //        {
-            //            if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-            //        }
-            //    }
-            //}
-            //if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            //else
-            //    return BadRequest(readercount);
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
+                    sqlCommand.Parameters.AddWithValue("projectId", param.projectId);
+                    sqlCommand.Parameters.AddWithValue("departmanId", param.departmanId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
+
+
+
+
+
+
+
+
+        //==========================================================================================================================
+
+
 
         [Route("BudgetSepratorAreaDepartmantUpdate")]
         [HttpPost]
