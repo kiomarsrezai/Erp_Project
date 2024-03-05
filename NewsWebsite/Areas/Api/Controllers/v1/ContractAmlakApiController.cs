@@ -444,6 +444,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.AreaId = int.Parse(dataReader["AreaId"].ToString());
                             row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
                             row.TotalContract = int.Parse(dataReader["TotalContract"].ToString());
+                            row.IsSubmited = StringExtensions.ToNullablebool(dataReader["IsSubmited"].ToString());
+                            row.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
                             row.AreaName = dataReader["AreaName"].ToString();
                             row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
                             row.EstateInfoName = dataReader["EstateInfoName"].ToString();

@@ -17,6 +17,9 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string AmlakInfolong { get; set; }
         public string AmlakInfoId { get; set; }
         public int TotalContract { get; set; }
+        public float? Masahat { get; set; }
+        public bool? IsSubmited { get; set; }
+
     }
 
     public class LoginParamModelFromSdi
