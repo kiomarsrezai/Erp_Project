@@ -16,6 +16,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string AmlakInfolate { get; set; }
         public string AmlakInfolong { get; set; }
         public string AmlakInfoId { get; set; }
+        public int TotalContract { get; set; }
     }
 
     public class LoginParamModelFromSdi

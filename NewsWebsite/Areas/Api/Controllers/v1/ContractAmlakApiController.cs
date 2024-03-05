@@ -443,6 +443,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AreaId = int.Parse(dataReader["AreaId"].ToString());
                             row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
+                            row.TotalContract = int.Parse(dataReader["TotalContract"].ToString());
                             row.AreaName = dataReader["AreaName"].ToString();
                             row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
                             row.EstateInfoName = dataReader["EstateInfoName"].ToString();
