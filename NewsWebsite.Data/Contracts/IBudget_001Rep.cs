@@ -6,7 +6,6 @@ using NewsWebsite.ViewModels.Api.Report;
 using NewsWebsite.ViewModels.Api.UsersApi;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
 
 namespace NewsWebsite.Data.Contracts
 {

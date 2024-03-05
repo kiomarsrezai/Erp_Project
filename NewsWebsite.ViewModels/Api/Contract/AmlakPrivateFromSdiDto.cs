@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NewsWebsite.ViewModels.Api.Contract;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,7 +25,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
     public class Geometry
     {
         public string type { get; set; }
-        public List<double> coordinates { get; set; }
+        public List<List<double>> coordinates { get; set; }
     }
 
     public class Properties
@@ -41,30 +42,34 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string size { get; set; }
         public int mantaqe { get; set; }
         public int radif_1 { get; set; }
-        public string agreement_ { get; set; }
-        public string agreement1 { get; set; }
-        public string MelkPrice { get; set; }
+        public object agreement_ { get; set; }
+        public object agreement1 { get; set; }
+        public string مبلغ { get; set; }
     }
 
-        public class ResponseLayerDto
-        {
-            public string type { get; set; }
-            public int totalFeatures { get; set; }
-            public List<Feature> features { get; set; }
-            public Crs crs { get; set; }
-        }
-
-        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-        public class ResponseLoginSdiDto
-        {
-            public string api_key { get; set; }
-            public string password_change { get; set; }
-            public bool success { get; set; }
-            public List<string> user_all_permission { get; set; }
-            public string user_id { get; set; }
-            public string user_name { get; set; }
-            public string username { get; set; }
-        }
-
+    public class ResponseLayerDto
+    {
+        public string type { get; set; }
+        public int totalFeatures { get; set; }
+        public List<Feature> features { get; set; }
+        public Crs crs { get; set; }
     }
+
+    public class ResponseLoginSdiDto
+    {
+        public string api_key { get; set; }
+        public string password_change { get; set; }
+        public bool success { get; set; }
+        public List<string> user_all_permission { get; set; }
+        public string user_id { get; set; }
+        public string user_name { get; set; }
+        public string username { get; set; }
+    }
+
+    public class coordinate
+    {
+        public double latitude { get; set; }
+        public double longitude { get; set; }
+    }
+
 }

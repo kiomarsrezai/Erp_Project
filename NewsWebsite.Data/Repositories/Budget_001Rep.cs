@@ -23,7 +23,6 @@ using RestSharp;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Text.Json.Nodes;
-using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
 
 namespace NewsWebsite.Data.Repositories
 {

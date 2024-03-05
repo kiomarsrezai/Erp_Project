@@ -13,6 +13,9 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string AmlakInfoKindName { get; set; }
         public string EstateInfoName { get; set; }
         public string EstateInfoAddress { get; set; }
+        public string AmlakInfolate { get; set; }
+        public string AmlakInfolong { get; set; }
+        public string AmlakInfoId { get; set; }
     }
 
     public class LoginParamModelFromSdi
