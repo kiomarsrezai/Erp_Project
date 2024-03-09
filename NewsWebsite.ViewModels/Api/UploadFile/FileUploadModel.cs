@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static NewsWebsite.Common.FileExtensions;
 
 namespace NewsWebsite.ViewModels.Api.UploadFile
 {

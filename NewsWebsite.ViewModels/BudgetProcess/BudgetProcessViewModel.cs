@@ -1,5 +1,4 @@
-﻿using NewsWebsite.Common.Attributes;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace NewsWebsite.ViewModels.BudgetProcess
