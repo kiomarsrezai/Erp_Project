@@ -44,6 +44,7 @@
     <Folder Include="ViewModels\Api\Budget\BudgetSeprator\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
+    <Folder Include="wwwroot\Upload\AmlakInfo\" />
   </ItemGroup>
 
   <ItemGroup>

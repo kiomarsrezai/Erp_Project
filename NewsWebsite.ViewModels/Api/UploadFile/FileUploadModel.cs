@@ -11,4 +11,10 @@ namespace NewsWebsite.ViewModels.Api.UploadFile
         public IFormFile FormFile { get; set; }
     }
 
+    public class FileUploadContractAmlakModel
+    {
+        public int Id { get; set; }
+        public IFormFile FormFile { get; set; }
+    }
+
 }

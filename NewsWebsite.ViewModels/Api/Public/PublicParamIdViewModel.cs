@@ -8,4 +8,10 @@ namespace NewsWebsite.ViewModels.Api.Public
     {
         public int Id { get; set; }
     }
+    
+    public class AmlakInfoSerachParamDto
+    {
+        public int? AreaId { get; set; }
+        public int? AmlakInfoKindId { get; set; }
+    }
 }

@@ -13,10 +13,15 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int SuppliersId { get; set; }
         public int? DoingMethodId { get; set; }
         public int AmlakId { get; set; }
+        public float? Masahat { get; set; }
         public string DateFrom { get; set; }
         public string DateEnd { get; set; }
         public Int64 Amount { get; set; }
-     }
+        public Int64 AmountMonth { get; set; }
+        public Int64 Zemanat_Price { get; set; }
+        public string Modat { get; set; }
+        public int ModatValue { get; set; }
+    }
 
     public class ContractAmlakDeleteParamViewModel
     {
