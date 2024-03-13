@@ -269,7 +269,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<BudgetSepratorAreaProjectModalViewModel>>> BudgetSepratorAreaProjectModal(int yearId, int areaId, int codingId, int BudgetProcessId)
         {
-            List<BudgetSepratorAreaProjectModalViewModel> fecthViewModel = new List<BudgetSepratorAreaProjectModalViewModel>();
+            List<BudgetSepratorAreaProjectModalViewModel> dataModel = new List<BudgetSepratorAreaProjectModalViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -284,18 +284,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetSepratorAreaProjectModalViewModel fetchView = new BudgetSepratorAreaProjectModalViewModel();
-                        fetchView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
-                        fetchView.ProjectCode = dataReader["ProjectCode"].ToString();
-                        fetchView.ProjectName = dataReader["ProjectName"].ToString();
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        BudgetSepratorAreaProjectModalViewModel row = new BudgetSepratorAreaProjectModalViewModel();
+                        row.Id = int.Parse(dataReader["Id"].ToString());
+                        row.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
+                        row.ProjectCode = dataReader["ProjectCode"].ToString();
+                        row.ProjectName = dataReader["ProjectName"].ToString();
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
 
-                        fecthViewModel.Add(fetchView);
+                        dataModel.Add(row);
                     }
                 }
             }
-            return Ok(fecthViewModel);
+            return Ok(dataModel);
         }
 
         [Route("CodingUpdate")]
