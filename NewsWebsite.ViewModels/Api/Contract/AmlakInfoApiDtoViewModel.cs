@@ -31,10 +31,10 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int Id { get; set; }
         public string FileName { get; set; }
     }
-    public class UploadContractAmlakFileDto
+    public class ContractFileUploadModel
     {
-        public int Id { get; set; }
-        public IFormFile AttachFile { get; set; }
+        public int ContractId { get; set; }
+        public IFormFile FormFile { get; set; }
     }
 
-    }
+}

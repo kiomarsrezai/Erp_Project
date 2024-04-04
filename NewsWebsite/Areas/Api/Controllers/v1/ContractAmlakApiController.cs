@@ -30,6 +30,7 @@ using System.Text;
 using System.Reflection;
 using NewsWebsite.ViewModels.Api.UploadFile;
 using System.IO;
+using NewsWebsite.ViewModels.Api.GeneralVm;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -48,68 +49,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
+        [Route("UploadContractFile")]
         [HttpPost]
-        [Route("UploadContractAmlakFile")]
-        public async Task<string> UserImageUpload(UploadContractAmlakFileDto fileDto)
+        public async Task<ApiResult<string>> UploadFile(ContractFileUploadModel fileUpload)
         {
-            var upload = Path.Combine(_webHostEnvironment.WebRootPath, "Upload\\AmlakInfo\\");
-            var filename = "";
+            string issuccess = "ناموفق";
 
-            //foreach (var item in imagearray)
-            //{
-                filename = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(fileDto.AttachFile.FileName);
-                using (var fs = new FileStream(Path.Combine(upload, filename), FileMode.Create))
-                {
-                fileDto.AttachFile.CopyTo(fs);
-                }
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP0_AmlakInfoFileDetail_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", fileDto.Id);
-                        sqlCommand.Parameters.AddWithValue("FileName", filename);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    }
-                }
-            //}
-            return filename;
+            if (await WriteFile(fileUpload.FormFile, fileUpload.ContractId))
+            {
+                issuccess = "موفق";
+            }
+            else
+            {
+                return BadRequest(new { message = "فایل نامعتبر می باشد" });
+            }
+
+            return Ok(issuccess);
         }
-
-        //[Route("UploadContractAmlakFile")]
-        //[HttpPost]
-        //public async Task<ApiResult<string>> UploadFile(FileUploadContractAmlakModel fileUpload)
-        //{
-        //    string issuccess = "ناموفق";
-
-        //    if (await WriteContractAmlakFile(fileUpload.FormFile, fileUpload.Id))
-        //    {
-        //        issuccess = "موفق";
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(new { message = "فایل نامعتبر می باشد" });
-        //    }
-
-        //    return Ok(issuccess);
-        //}
         private bool CheckIfExcelFile(IFormFile file)
         {
             var extension = FileExtensions.GetContentType(file.FileName);
-            return (extension == "Mkv" || extension == "Mp4" || extension == "Png" || extension == "JpG" || extension == "Gif"); // Change the extension based on your need
+            return (extension == "Mkv" || extension == "Pdf" || extension == "Mp4" || extension == "Png" || extension == "JpG" || extension == "Gif"); // Change the extension based on your need
         }
-
-        private async Task<bool> WriteContractAmlakFile([FromBody] UploadContractAmlakFileDto fileDto)
+        private async Task<bool> WriteFile(IFormFile file, int contractId)
         {
             bool isSaveSuccess = false;
             string fileName;
             try
             {
-                var extension = "." + fileDto.AttachFile.FileName.Split('.')[fileDto.AttachFile.FileName.Split('.').Length - 1];
+                var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
-                var folderName = Path.Combine(@"F:\Resources\AmlakInfo\", fileDto.Id.ToString() + "\\");
+                var folderName = Path.Combine(@"F:\Resources\Contract\", contractId.ToString() + "\\");
 
                 if (!Directory.Exists(folderName))
                 {
@@ -120,7 +91,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
-                    await fileDto.AttachFile.CopyToAsync(stream);
+                    await file.CopyToAsync(stream);
 
                 }
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -128,7 +99,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     using (SqlCommand sqlCommand = new SqlCommand("SP0_AmlakInfoFileDetail_Insert", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", fileDto.Id);
+                        sqlCommand.Parameters.AddWithValue("ContractId", contractId);
                         sqlCommand.Parameters.AddWithValue("FileName", fileName);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -236,29 +207,40 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(respLayer);
         }
 
-        [Route("ContractAmlakInfoRead")]
+        [Route("AmlakInfoContractList")]
         [HttpGet]
-        public async Task<ApiResult<List<ContractReadViewModel>>> Ac_ContractRead(PublicParamIdViewModel param)
+        public async Task<ApiResult<List<AmlakInfoContractListViewModel>>> AmlakInfoContractList(int AmlakInfoId)
         {
-            List<ContractReadViewModel> ContractView = new List<ContractReadViewModel>();
+            List<AmlakInfoContractListViewModel> ContractView = new List<AmlakInfoContractListViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
                     using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Read", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", AmlakInfoId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            ContractReadViewModel data = new ContractReadViewModel();
-                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            AmlakInfoContractListViewModel data = new AmlakInfoContractListViewModel();
+                            data.id = int.Parse(dataReader["id"].ToString());
                             data.Number = dataReader["Number"].ToString();
+                            data.AreaName = dataReader["AreaName"].ToString();
+                            data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
+                            data.EstateInfoName = dataReader["EstateInfoName"].ToString();
+                            data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
+                            data.Sarparast = dataReader["Sarparast"].ToString();
+                            data.Modir = dataReader["Modir"].ToString();
+                            data.Nemayande = dataReader["Nemayande"].ToString();
+                            data.TenderNumber = dataReader["TenderNumber"].ToString();
+                            data.TenderDate = dataReader["TenderDate"].ToString();
+                            data.TypeUsing = dataReader["TypeUsing"].ToString();
+                            data.ContractType = dataReader["ContractType"].ToString();
                             data.Date = StringExtensions.ToNullableDatetime(dataReader["Date"].ToString());
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
-                            data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
+                            data.AmlakInfoId = StringExtensions.ToNullableInt(dataReader["AmlakInfoId"].ToString());
                             data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
                             data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
@@ -277,29 +259,49 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractView);
         }
 
-        [Route("ContractAmlakInfoSearch")]
+        [Route("AmlakInfoContractRead")]
         [HttpGet]
-        public async Task<ApiResult<List<ContractSearchViewModel>>> Ac_ContractSearch(PublicParamAreaIdViewModel param)
+        public async Task<ApiResult<List<AmlakInfoContractListViewModel>>> AmlakInfoContractRead(int ContractId)
         {
-            List<ContractSearchViewModel> ContractSearchView = new List<ContractSearchViewModel>();
+            List<AmlakInfoContractListViewModel> ContractSearchView = new List<AmlakInfoContractListViewModel>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_Contract_Search", sqlconnect))
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfoContract_Read", sqlconnect))
                     {
                         sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                        sqlCommand.Parameters.AddWithValue("ContractId", ContractId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            ContractSearchViewModel data = new ContractSearchViewModel();
-                            data.Id = int.Parse(dataReader["Id"].ToString());
+                            AmlakInfoContractListViewModel data = new AmlakInfoContractListViewModel();
+                            data.id = int.Parse(dataReader["id"].ToString());
                             data.Number = dataReader["Number"].ToString();
+                            data.AreaName = dataReader["AreaName"].ToString();
+                            data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
+                            data.EstateInfoName = dataReader["EstateInfoName"].ToString();
+                            data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
+                            data.Sarparast = dataReader["Sarparast"].ToString();
+                            data.Modir = dataReader["Modir"].ToString();
+                            data.Nemayande = dataReader["Nemayande"].ToString();
+                            data.TenderNumber = dataReader["TenderNumber"].ToString();
+                            data.TenderDate = dataReader["TenderDate"].ToString();
+                            data.TypeUsing = dataReader["TypeUsing"].ToString();
+                            data.ContractType = dataReader["ContractType"].ToString();
                             data.Date = StringExtensions.ToNullableDatetime(dataReader["Date"].ToString());
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
+                            data.AmlakInfoId = StringExtensions.ToNullableInt(dataReader["AmlakInfoId"].ToString());
+                            data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
+                            data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
+                            data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
+                            data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
+                            data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
+                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
+                            data.Final = bool.Parse(dataReader["Final"].ToString());
                             ContractSearchView.Add(data);
                         }
                     }
@@ -633,7 +635,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
                             row.AmlakInfolate = dataReader["AmlakInfolate"].ToString();
                             row.AmlakInfolong = dataReader["AmlakInfolong"].ToString();
-                            row.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
+                            row.CodeUsing = dataReader["CodeUsing"].ToString();
+                            row.TypeUsing = dataReader["TypeUsing"].ToString();
                             data.Add(row);
                         }
                     }
@@ -655,6 +658,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         sqlconnect.Open();
                         sqlCommand.CommandType = CommandType.StoredProcedure;
+                        sqlCommand.Parameters.AddWithValue("ContractId", param.Id);
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
@@ -672,7 +676,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
                             row.AmlakInfolate = dataReader["AmlakInfolate"].ToString();
                             row.AmlakInfolong = dataReader["AmlakInfolong"].ToString();
-                            row.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
+                            row.CodeUsing = dataReader["AmlakInfoId"].ToString();
+                            row.TypeUsing = dataReader["TypeUsing"].ToString();
+                            row.CodeUsing = dataReader["CodeUsing"].ToString();
                             data.Add(row);
                         }
                     }
@@ -682,32 +688,36 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-        //[Route("AmlakInfoInsert")]
-        //[HttpPost]
-        //public async Task<ApiResult<string>> Ac_AmlakInfoInsert([FromBody] AmlakInfoPrivateInsertViewModel param)
-        //{
-        //    string readercount = null;
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-        //            sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
-        //            sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
-        //            sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //            while (dataReader.Read())
-        //            {
-        //                if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-        //            }
-        //        }
-        //    }
-        //    if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-        //    else
-        //        return BadRequest(readercount);
-        //}
+        [Route("GetContractAttachFiles")]
+        [HttpGet]
+        public async Task<ApiResult<List<GetListContractAttachFiles>>> GetContractAttachFiles(int contractId)
+        {
+            if (contractId == 0) BadRequest();
+
+            List<GetListContractAttachFiles> output = new List<GetListContractAttachFiles>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_GetListContractAttachFiles", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("ContractId", contractId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        GetListContractAttachFiles fetchView = new GetListContractAttachFiles();
+                        fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
+                        fetchView.ContractId = StringExtensions.ToNullableInt(dataReader["ContractId"].ToString());
+                        fetchView.FileName = dataReader["FileName"].ToString();
+                        output.Add(fetchView);
+
+                        //dataReader.NextResult();
+                    }
+                }
+            }
+            return Ok(output);
+        }
 
         [Route("AmlakInfoUpdate")]
         [HttpPost]
@@ -739,29 +749,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-        //[Route("AmlakInfoDelete")]
-        //[HttpPost]
-        //public async Task<ApiResult<string>> Ac_AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
-        //{
-        //    string readercount = null;
-        //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //    {
-        //        using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Delete", sqlconnect))
-        //        {
-        //            sqlconnect.Open();
-        //            sqlCommand.Parameters.AddWithValue("Id", param.Id);
-        //            sqlCommand.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //            while (dataReader.Read())
-        //            {
-        //                if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-        //            }
-        //        }
-        //    }
-        //    if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-        //    else
-        //        return BadRequest(readercount);
-        //}
+        [Route("AmlakInfoDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
 
 
     }

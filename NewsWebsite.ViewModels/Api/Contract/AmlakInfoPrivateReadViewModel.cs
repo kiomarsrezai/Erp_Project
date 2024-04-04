@@ -15,11 +15,12 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string EstateInfoAddress { get; set; }
         public string AmlakInfolate { get; set; }
         public string AmlakInfolong { get; set; }
-        public string AmlakInfoId { get; set; }
+        public string CodeUsing { get; set; }
         public int TotalContract { get; set; }
         public float? Masahat { get; set; }
         public bool? IsSubmited { get; set; }
         public bool? IsContracted { get; set; }
+        public string TypeUsing { get; set; }
     }
 
     public class LoginParamModelFromSdi

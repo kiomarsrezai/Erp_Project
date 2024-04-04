@@ -20,7 +20,14 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public Int64 AmountMonth { get; set; }
         public Int64 Zemanat_Price { get; set; }
         public string Modat { get; set; }
+        public string Nemayande { get; set; }
+        public string Modir { get; set; }
+        public string Sarparast { get; set; }
+        public string TenderNumber { get; set; }
+        public string TenderDate { get; set; }
+        public string TypeUsing { get; set; }
         public int ModatValue { get; set; }
+
     }
 
     public class ContractAmlakDeleteParamViewModel
