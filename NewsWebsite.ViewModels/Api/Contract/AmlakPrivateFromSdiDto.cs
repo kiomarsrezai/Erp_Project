@@ -6,7 +6,6 @@ using System.Text;
 namespace NewsWebsite.ViewModels.Api.Contract
 {
 
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Crs
     {
         public string type { get; set; }
@@ -45,17 +44,17 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public object agreement_ { get; set; }
         public object agreement1 { get; set; }
         public string مبلغ { get; set; }
-    }
+}
 
-    public class ResponseLayerDto
+public class ResponseLayerDto
     {
-        public string type { get; set; }
-        public int totalFeatures { get; set; }
-        public List<Feature> features { get; set; }
-        public Crs crs { get; set; }
-    }
+    public string type { get; set; }
+    public int totalFeatures { get; set; }
+    public List<Feature> features { get; set; }
+    public Crs crs { get; set; }
+}
 
-    public class ResponseLoginSdiDto
+public class ResponseLoginSdiDto
     {
         public string api_key { get; set; }
         public string password_change { get; set; }

@@ -23,6 +23,8 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int? DoingMethodId { get; set; }
         public Int64 Surplus { get; set; }
         public bool Final { get; set; }
+        public bool? IsContracted { get; set; }
+        public bool? IsSubmited { get; set; }
 
     }
 
@@ -57,7 +59,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public Int64 Surplus { get; set; }
         public bool Final { get; set; }
         public bool IsSubmited { get; set; }
-
+        public int AreaId { get; set; }
     }
 
 
