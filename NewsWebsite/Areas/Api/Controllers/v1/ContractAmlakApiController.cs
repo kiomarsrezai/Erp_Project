@@ -1,36 +1,22 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using NewsWebsite.Common;
 using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.ViewModels.Api.Commite;
+using NewsWebsite.ViewModels.Api.Contract;
 using NewsWebsite.ViewModels.Api.Public;
-using NewsWebsite.ViewModels.Commite;
+using Newtonsoft.Json;
+using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
-using System;
 using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using NewsWebsite.Common;
-using NewsWebsite.ViewModels.Api.Contract;
-using NewsWebsite.ViewModels.Api.Request;
-using NewsWebsite.Common.PublicMethod;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Security.Claims;
-using RestSharp;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net;
-using System.Security.Policy;
-using System.Net.Mime;
-using System.Text;
-using System.Reflection;
-using NewsWebsite.ViewModels.Api.UploadFile;
 using System.IO;
-using NewsWebsite.ViewModels.Api.GeneralVm;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -494,7 +480,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         {
                             SupplierAmlakInfoUpdateDto data = new SupplierAmlakInfoUpdateDto();
                             data.Id = int.Parse(dataReader["Id"].ToString());
-                            data.FirstName = dataReader["FirsrtName"].ToString();
+                            data.FirstName = dataReader["FirstName"].ToString();
                             data.LastName = dataReader["LastName"].ToString();
                             data.Mobile = dataReader["Mobile"].ToString();
                             data.CodePost = dataReader["CodePost"].ToString();

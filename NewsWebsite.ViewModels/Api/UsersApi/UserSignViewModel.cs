@@ -20,6 +20,6 @@ namespace NewsWebsite.ViewModels.Api.UsersApi
         [Display(Name ="سمت")]
         public string Bio { get; set; }
         public string DateNow { get; set; }
-
+        public string AmlakLisence { get; set; }
     }
 }

@@ -205,6 +205,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         userfech.Id = int.Parse(dataReader["Id"].ToString());
                         userfech.UserName = dataReader["UserName"].ToString();
                         userfech.Lisence = dataReader["Lisence"].ToString();
+                        userfech.AmlakLisence = dataReader["AmlakLisence"].ToString();
                         userfech.Bio = dataReader["Bio"].ToString();
                         userfech.FirstName = dataReader["FirstName"].ToString();
                         userfech.LastName = dataReader["LastName"].ToString();
@@ -229,6 +230,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok("با موفقیت انجام شد");
         }
 
+        [HttpPost("SaveAmlaklicense")]
+        public virtual async Task<ApiResult<string>> SaveAmlakLisenc([FromBody] SaveAmlakLisenceViewModel saveAmlak)
+        {
+            var user = await _Context.Users.FirstOrDefaultAsync(x => x.Id == saveAmlak.Id);
+            user.AmlakLisence = saveAmlak.AmlakLisence;
+            await _Context.SaveChangesAsync();
+            return Ok("با موفقیت انجام شد");
+        }
 
         //[Route("EmployeeInsert")]
         //[HttpPost]
