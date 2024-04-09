@@ -25,7 +25,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public bool Final { get; set; }
         public bool? IsContracted { get; set; }
         public bool? IsSubmited { get; set; }
-
+        public int AmlakId { get; set; }
     }
 
     public class AmlakInfoContractListViewModel
@@ -60,6 +60,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public bool Final { get; set; }
         public bool IsSubmited { get; set; }
         public int AreaId { get; set; }
+        public int? AmlakId { get; set; }
     }
 
 

@@ -278,6 +278,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             AmlakInfoContractListViewModel data = new AmlakInfoContractListViewModel();
                             data.id = int.Parse(dataReader["id"].ToString());
                             data.Number = dataReader["Number"].ToString();
+                            data.AreaId = int.Parse(dataReader["AreaId"].ToString());
                             data.AreaName = dataReader["AreaName"].ToString();
                             data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
                             data.EstateInfoName = dataReader["EstateInfoName"].ToString();
@@ -293,6 +294,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
                             data.AmlakInfoId = StringExtensions.ToNullableInt(dataReader["AmlakInfoId"].ToString());
+                            data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
                             data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
                             data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
@@ -316,7 +318,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<ContractReadViewModel>> Ac_ContractInsert([FromBody] ContractAmlakInsertParamViewModel param)
         {
             string readercount = null;
-            ContractReadViewModel data = new ContractReadViewModel();
+            AmlakInfoContractListViewModel data= new AmlakInfoContractListViewModel();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Insert", sqlconnect))
@@ -340,14 +342,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        data.Id = int.Parse(dataReader["Id"].ToString());
+                        data.id = int.Parse(dataReader["id"].ToString());
                         data.Number = dataReader["Number"].ToString();
+                        data.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                        data.AreaName = dataReader["AreaName"].ToString();
+                        data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
+                        data.EstateInfoName = dataReader["EstateInfoName"].ToString();
+                        data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
+                        data.Sarparast = dataReader["Sarparast"].ToString();
+                        data.Modir = dataReader["Modir"].ToString();
+                        data.Nemayande = dataReader["Nemayande"].ToString();
+                        data.TenderNumber = dataReader["TenderNumber"].ToString();
+                        data.TenderDate = dataReader["TenderDate"].ToString();
+                        data.TypeUsing = dataReader["TypeUsing"].ToString();
+                        data.ContractType = dataReader["ContractType"].ToString();
                         data.Date = StringExtensions.ToNullableDatetime(dataReader["Date"].ToString());
                         data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                         data.Description = dataReader["Description"].ToString();
-                        data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                        data.AmlakInfoId = StringExtensions.ToNullableInt(dataReader["AmlakInfoId"].ToString());
+                        data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
+                        data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
                         data.SuppliersName = dataReader["SuppliersName"].ToString();
-                        data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
                         data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
                         data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
                         data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
@@ -355,8 +370,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         data.Amount = Int64.Parse(dataReader["Amount"].ToString());
                         data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
                         data.Final = bool.Parse(dataReader["Final"].ToString());
-                        data.IsContracted = StringExtensions.ToNullablebool(dataReader["IsContracted"].ToString());
-                        data.IsSubmited = StringExtensions.ToNullablebool(dataReader["IsSubmited"].ToString());
 
                     }
                 }
