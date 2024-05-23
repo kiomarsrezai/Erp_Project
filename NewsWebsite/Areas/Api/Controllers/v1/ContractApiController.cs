@@ -27,8 +27,6 @@ using System.Net;
 using System.Security.Policy;
 using System.Net.Mime;
 using System.Text;
-using static NewsWebsite.Common.PublicMethod.GetListApi;
-using static NewsWebsite.ViewModels.Api.Contract.AmlakPrivateFromSdiDto;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -49,7 +47,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [HttpGet]
         [Route("ResponseDataFromSdi")]
-
         public async Task<ResponseLayerDto> ResponseSdi()
         {
             var client = new RestClient("https://sdi.ahvaz.ir/geoapi/user/login/");
@@ -534,7 +531,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
         [Route("AmlakInfoUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakInfoUpdate([FromBody] AmlakInfoPrivateUpdateViewModel param)
@@ -587,7 +583,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
         [Route("AmlakPrivateRead")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakPrivateReadViewModel>>> Ac_AmlakPrivateRead(param20 param)
@@ -617,7 +612,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractSearchView);
         }
 
-
         [Route("AmlakPrivateInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakPrivateInsert([FromBody] AmlakPrivateInsertViewModel param)
@@ -644,7 +638,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
         [Route("AmlakPrivateUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakPrivateUpdate([FromBody] AmlakPrivateUpdateViewModel param)
@@ -670,7 +663,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("AmlakPrivateDelete")]
         [HttpPost]
@@ -726,7 +718,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-
         [Route("ContractInstallmentsInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractInstallmentsInsert([FromBody] ContractInstallmentsInsertViewModel param)
@@ -754,7 +745,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("ContractInstallmentsUpdate")]
         [HttpPost]
@@ -784,7 +774,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
         [Route("ContractInstallmentsDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractInstallmentsDelete([FromBody] PublicParamIdViewModel param)
@@ -808,7 +797,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("ReciveBankRead")]
         [HttpGet]
@@ -839,7 +827,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(data);
         }
-
 
         [Route("ContractInstallmentsReciveRead")]
         [HttpGet]
@@ -873,7 +860,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-
         [Route("ReciveBankModal")]
         [HttpGet]
         public async Task<ApiResult<List<ReciveBankModalViewModel>>> Ac_ReciveBankModal(param33 param)
@@ -906,7 +892,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-
         [Route("ContractInstallmentsReciveInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractInstallmentsReciveInsert([FromBody] ReciveBankSuppliersInsertViewModel param)
@@ -931,7 +916,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("ContractInstallmentsReciveUpdate")]
         [HttpPost]
