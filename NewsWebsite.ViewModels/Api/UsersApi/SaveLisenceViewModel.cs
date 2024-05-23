@@ -11,4 +11,11 @@ namespace NewsWebsite.ViewModels.Api.UsersApi
         public string Lisence { get; set; }
 
     }
+
+    public class SaveAmlakLisenceViewModel
+    {
+        public int Id { get; set; }
+        public string AmlakLisence { get; set; }
+
+    }
 }

@@ -17,6 +17,7 @@ namespace NewsWebsite.Entities.identity
         public GenderType Gender { get; set; }
         public string Bio { get; set; }
         public string Lisence { get; set; }
+        public string AmlakLisence { get; set; }
         public int SectionId { get; set; }
         public string Token { get; set; }
 

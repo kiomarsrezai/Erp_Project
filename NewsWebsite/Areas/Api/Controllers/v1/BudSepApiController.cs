@@ -74,6 +74,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecth);
         }
 
+
         [Route("DeleteTamin")]
         [HttpPost]
         public virtual async Task<ApiResult<string>> DeleteTamin([FromBody] DeleteSepViewModel deleteSep)
@@ -268,7 +269,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<BudgetSepratorAreaProjectModalViewModel>>> BudgetSepratorAreaProjectModal(int yearId, int areaId, int codingId, int BudgetProcessId)
         {
-            List<BudgetSepratorAreaProjectModalViewModel> fecthViewModel = new List<BudgetSepratorAreaProjectModalViewModel>();
+            List<BudgetSepratorAreaProjectModalViewModel> dataModel = new List<BudgetSepratorAreaProjectModalViewModel>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
@@ -283,18 +284,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
                     {
-                        BudgetSepratorAreaProjectModalViewModel fetchView = new BudgetSepratorAreaProjectModalViewModel();
-                        fetchView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
-                        fetchView.ProjectCode = dataReader["ProjectCode"].ToString();
-                        fetchView.ProjectName = dataReader["ProjectName"].ToString();
-                        fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        BudgetSepratorAreaProjectModalViewModel row = new BudgetSepratorAreaProjectModalViewModel();
+                        row.Id = int.Parse(dataReader["Id"].ToString());
+                        row.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
+                        row.ProjectCode = dataReader["ProjectCode"].ToString();
+                        row.ProjectName = dataReader["ProjectName"].ToString();
+                        row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        row.Expense = Int64.Parse(dataReader["Expense"].ToString());
 
-                        fecthViewModel.Add(fetchView);
+                        dataModel.Add(row);
                     }
                 }
             }
-            return Ok(fecthViewModel);
+            return Ok(dataModel);
         }
 
         [Route("CodingUpdate")]
@@ -446,46 +448,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(fecthViewModel);
         }
 
+          //=============================================================================================================
+
         [Route("SepratorAreaDepartmentInsert")]
         [HttpPost]
-        public async Task<ApiResult<string>> SepratorAreaDepartmanInsert([FromBody] SepratorAreaDepartmantInsert modalUpdateViewModel)
+        public async Task<ApiResult<string>> AC_SepratorAreaDepartmentInsert([FromBody] SepratorAreaDepartmantInsert param)
         {
-            await _sqlDataAccess.SaveData<dynamic>(storedProcedure: "SP002_SepratorAreaDepartmant_Insert", new
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
             {
-                yearId = modalUpdateViewModel.yearId,
-                areaId = modalUpdateViewModel.areaId,
-                codingId = modalUpdateViewModel.codingId,
-                projectId = modalUpdateViewModel.projectId,
-                departmanId = modalUpdateViewModel.departmanId
-
-            });
-            return Ok();
-
-
-
-            //string readercount = null;
-            //using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            //{
-            //    using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
-            //    {
-            //        sqlconnect.Open();
-            //        sqlCommand.Parameters.AddWithValue("yearId", modalUpdateViewModel.yearId);
-            //        sqlCommand.Parameters.AddWithValue("areaId", modalUpdateViewModel.areaId);
-            //        sqlCommand.Parameters.AddWithValue("codingId", modalUpdateViewModel.codingId);
-            //        sqlCommand.Parameters.AddWithValue("projectId", modalUpdateViewModel.projectId);
-            //        sqlCommand.Parameters.AddWithValue("departmanId", modalUpdateViewModel.departmanId);
-            //        sqlCommand.CommandType = CommandType.StoredProcedure;
-            //        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-            //        while (dataReader.Read())
-            //        {
-            //            if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-            //        }
-            //    }
-            //}
-            //if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            //else
-            //    return BadRequest(readercount);
+                using (SqlCommand sqlCommand = new SqlCommand("SP002_SepratorAreaDepartmant_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
+                    sqlCommand.Parameters.AddWithValue("projectId", param.projectId);
+                    sqlCommand.Parameters.AddWithValue("departmanId", param.departmanId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
+
+          //==========================================================================================================================
+
+
 
         [Route("BudgetSepratorAreaDepartmantUpdate")]
         [HttpPost]

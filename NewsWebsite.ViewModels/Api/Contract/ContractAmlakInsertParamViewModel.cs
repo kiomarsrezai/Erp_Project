@@ -4,9 +4,8 @@ using System.Text;
 
 namespace NewsWebsite.ViewModels.Api.Contract
 {
-    public class ContractUpdateParamViewModel
+    public class ContractAmlakInsertParamViewModel
     {
-        public int Id { get; set; }
         public int AreaId { get; set; }
         public string Number { get; set; }
         public string Date { get; set; }
@@ -28,5 +27,14 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string TenderDate { get; set; }
         public string TypeUsing { get; set; }
         public int ModatValue { get; set; }
+
     }
-}
+
+    public class ContractAmlakDeleteParamViewModel
+    {
+        public int ContractId { get; set;}
+        public int AmlakId { get; set; }
+    }
+
+
+    }

@@ -47,6 +47,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [HttpGet]
         [Route("ResponseDataFromSdi")]
+
         public async Task<ResponseLayerDto> ResponseSdi()
         {
             var client = new RestClient("https://sdi.ahvaz.ir/geoapi/user/login/");
@@ -530,6 +531,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
 
         [Route("AmlakInfoUpdate")]
         [HttpPost]
