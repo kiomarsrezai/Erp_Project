@@ -105,6 +105,7 @@ namespace NewsWebsite.Services.Identity
                 TwoFactorEnabled = user.TwoFactorEnabled,
                 Gender = user.Gender,
                 Lisence=user.Lisence,
+                AmlakLisence=user.AmlakLisence,
                 Token=user.Token
             }).FirstOrDefaultAsync();
         }

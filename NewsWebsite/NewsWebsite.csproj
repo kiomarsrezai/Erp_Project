@@ -45,6 +45,7 @@
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
     <Folder Include="wwwroot\Upload\AmlakInfo\" />
+    <Folder Include="wwwroot\Upload\Contracts\" />
   </ItemGroup>
 
   <ItemGroup>
