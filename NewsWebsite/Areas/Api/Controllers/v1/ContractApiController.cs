@@ -45,6 +45,56 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
+        [HttpGet]
+        [Route("ResponseDataFromSdi")]
+
+        public async Task<ResponseLayerDto> ResponseSdi()
+        {
+            var client = new RestClient("https://sdi.ahvaz.ir/geoapi/user/login/");
+            //client.r = -1;
+            var request = new RestRequest();
+            request.Method= Method.Get;
+            request.AddHeader("content-type", "application/json");
+            request.AddHeader("Accept", "application/json, text/plain, */*");
+            request.AddParameter("application/json", "{\n    \"username\": \"Erp_ahvaz\",\n    \"password\": \"123456\",\n    \"appId\": \"mobilegis\"\n}", ParameterType.RequestBody);
+            var response =await client.ExecuteAsync(request);
+
+            var resp = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(response.Content.ToString());
+
+            var options = new RestClientOptions("https://sdi.ahvaz.ir")
+            {
+                MaxTimeout = -1,
+            };
+            var clientLayer = new RestClient(options);
+            var requestLayer = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvazparcel_9320&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=100&startIndex=0&authkey=fc4133ac632d3c8c4c534b4394808ff672b582d4", Method.Post);
+            requestLayer.AddHeader("content-type", "application/json");
+            requestLayer.AddHeader("Accept", "application/json, text/plain, */*");
+            RestResponse responseLayer = await clientLayer.ExecuteAsync(requestLayer);
+            var respLayer = JsonConvert.DeserializeObject<ResponseLayerDto>(responseLayer.Content.ToString());
+
+            for (int i=0;i<=respLayer.totalFeatures;i++)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", respLayer.features[i].id);
+                        sqlCommand.Parameters.AddWithValue("AreaId", respLayer.features[i].properties.mantaqe);
+                        sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", 4);
+                        sqlCommand.Parameters.AddWithValue("EstateInfoName", respLayer.features[i].properties.name);
+                        sqlCommand.Parameters.AddWithValue("EstateInfoAddress", respLayer.features[i].properties.adress);
+                        sqlCommand.Parameters.AddWithValue("EstateInfolate", respLayer.features[i].geometry.coordinates[0]);
+                        sqlCommand.Parameters.AddWithValue("AmlakInfolong", respLayer.features[i].geometry.coordinates[1]);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                       
+                    }
+                }
+            }
+            return respLayer;
+        }
+
         [Route("ContractRead")]
         [HttpGet]
         public async Task<ApiResult<List<ContractReadViewModel>>> Ac_ContractRead(PublicParamIdViewModel param)
@@ -396,6 +446,145 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractSearchView);
         }
 
+        [Route("AmlakInfoKindCom")]
+        [HttpGet]
+        public async Task<ApiResult<List<AmlakInfoKindComViewModel>>> Ac_AmlakInfoKindCom()
+        {
+            List<AmlakInfoKindComViewModel> data = new List<AmlakInfoKindComViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfoKind_Com", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            AmlakInfoKindComViewModel row = new AmlakInfoKindComViewModel();
+                            row.Id = int.Parse(dataReader["Id"].ToString());
+                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
+                            data.Add(row);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(data);
+        }
+
+        [Route("AmlakInfoRead")]
+        [HttpGet]
+        public async Task<ApiResult<List<AmlakInfoPrivateReadViewModel>>> Ac_AmlakInfoRead()
+        {
+            List<AmlakInfoPrivateReadViewModel> data = new List<AmlakInfoPrivateReadViewModel>();
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Read", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                        while (await dataReader.ReadAsync())
+                        {
+                            AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
+                            row.Id = int.Parse(dataReader["Id"].ToString());
+                            row.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                            row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
+                            row.AreaName = dataReader["AreaName"].ToString();
+                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
+                            row.EstateInfoName = dataReader["EstateInfoName"].ToString();
+                            row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
+                            data.Add(row);
+                        }
+                    }
+                    sqlconnect.Close();
+                }
+            }
+            return Ok(data);
+        }
+
+        [Route("AmlakInfoInsert")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_AmlakInfoInsert([FromBody] AmlakInfoPrivateInsertViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
+                    sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
+                    sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+
+        [Route("AmlakInfoUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_AmlakInfoUpdate([FromBody] AmlakInfoPrivateUpdateViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                    sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
+                    sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
+                    sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
+        [Route("AmlakInfoDelete")]
+        [HttpPost]
+        public async Task<ApiResult<string>> Ac_AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
+        {
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
         [Route("AmlakPrivateRead")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakPrivateReadViewModel>>> Ac_AmlakPrivateRead(param20 param)
@@ -425,7 +614,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(ContractSearchView);
         }
 
-
         [Route("AmlakPrivateInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakPrivateInsert([FromBody] AmlakPrivateInsertViewModel param)
@@ -452,7 +640,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
         [Route("AmlakPrivateUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakPrivateUpdate([FromBody] AmlakPrivateUpdateViewModel param)
@@ -478,7 +665,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("AmlakPrivateDelete")]
         [HttpPost]
@@ -534,7 +720,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-
         [Route("ContractInstallmentsInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractInstallmentsInsert([FromBody] ContractInstallmentsInsertViewModel param)
@@ -562,7 +747,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("ContractInstallmentsUpdate")]
         [HttpPost]
@@ -592,7 +776,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-
         [Route("ContractInstallmentsDelete")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractInstallmentsDelete([FromBody] PublicParamIdViewModel param)
@@ -616,7 +799,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("ReciveBankRead")]
         [HttpGet]
@@ -647,7 +829,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(data);
         }
-
 
         [Route("ContractInstallmentsReciveRead")]
         [HttpGet]
@@ -681,7 +862,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-
         [Route("ReciveBankModal")]
         [HttpGet]
         public async Task<ApiResult<List<ReciveBankModalViewModel>>> Ac_ReciveBankModal(param33 param)
@@ -714,7 +894,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
-
         [Route("ContractInstallmentsReciveInsert")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_ContractInstallmentsReciveInsert([FromBody] ReciveBankSuppliersInsertViewModel param)
@@ -739,7 +918,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
 
         [Route("ContractInstallmentsReciveUpdate")]
         [HttpPost]
