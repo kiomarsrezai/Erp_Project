@@ -23,9 +23,20 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int? DoingMethodId { get; set; }
         public Int64 Surplus { get; set; }
         public bool Final { get; set; }
-        public bool? IsContracted { get; set; }
-        public bool? IsSubmited { get; set; }
-        public int AmlakId { get; set; }
+        public int Type { get; set; }
+        public string CodeBaygani { get; set; }
+        public string ModatType { get; set; }
+        public string ModatValue { get; set; }
+        public int RequestID { get; set; }
+        public string Zemanat_Number { get; set; }
+        public Int64 Zemanat_Price { get; set; }
+        public string Zemanat_Date { get; set; }
+        public string Zemanat_Bank { get; set; }
+        public string Zemanat_Shobe { get; set; }
+        public string Zemanat_ModatValue { get; set; }
+        public string Zemanat_ModatType { get; set; }
+        public string Zemanat_EndDate { get; set; }
+        public string Zemanat_Type { get; set; }
     }
 
     public class AmlakInfoContractListViewModel

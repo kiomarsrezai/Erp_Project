@@ -45,56 +45,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _uw = uw;
         }
 
-        [HttpGet]
-        [Route("ResponseDataFromSdi")]
-
-        public async Task<ResponseLayerDto> ResponseSdi()
-        {
-            var client = new RestClient("https://sdi.ahvaz.ir/geoapi/user/login/");
-            //client.r = -1;
-            var request = new RestRequest();
-            request.Method= Method.Get;
-            request.AddHeader("content-type", "application/json");
-            request.AddHeader("Accept", "application/json, text/plain, */*");
-            request.AddParameter("application/json", "{\n    \"username\": \"Erp_ahvaz\",\n    \"password\": \"123456\",\n    \"appId\": \"mobilegis\"\n}", ParameterType.RequestBody);
-            var response =await client.ExecuteAsync(request);
-
-            var resp = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(response.Content.ToString());
-
-            var options = new RestClientOptions("https://sdi.ahvaz.ir")
-            {
-                MaxTimeout = -1,
-            };
-            var clientLayer = new RestClient(options);
-            var requestLayer = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvazparcel_9320&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=100&startIndex=0&authkey=fc4133ac632d3c8c4c534b4394808ff672b582d4", Method.Post);
-            requestLayer.AddHeader("content-type", "application/json");
-            requestLayer.AddHeader("Accept", "application/json, text/plain, */*");
-            RestResponse responseLayer = await clientLayer.ExecuteAsync(requestLayer);
-            var respLayer = JsonConvert.DeserializeObject<ResponseLayerDto>(responseLayer.Content.ToString());
-
-            for (int i=0;i<=respLayer.totalFeatures;i++)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", respLayer.features[i].id);
-                        sqlCommand.Parameters.AddWithValue("AreaId", respLayer.features[i].properties.mantaqe);
-                        sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", 4);
-                        sqlCommand.Parameters.AddWithValue("EstateInfoName", respLayer.features[i].properties.name);
-                        sqlCommand.Parameters.AddWithValue("EstateInfoAddress", respLayer.features[i].properties.adress);
-                        sqlCommand.Parameters.AddWithValue("EstateInfolate", respLayer.features[i].geometry.coordinates[0]);
-                        sqlCommand.Parameters.AddWithValue("AmlakInfolong", respLayer.features[i].geometry.coordinates[1]);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                       
-                    }
-                }
-            }
-            return respLayer;
-        }
-
+       
         [Route("ContractRead")]
         [HttpGet]
         public async Task<ApiResult<List<ContractReadViewModel>>> Ac_ContractRead(PublicParamIdViewModel param)
@@ -117,14 +68,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.Date = StringExtensions.ToNullableDatetime(dataReader["Date"].ToString());
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
-                            data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
-                            data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
+                            data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
                             data.SuppliersName = dataReader["SuppliersName"].ToString();
+                            data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
                             data.DateFrom = StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString());
                             data.DateFromShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateFrom"].ToString()), "yyyy/MM/dd");
                             data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
                             data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            data.Type = int.Parse(dataReader["Type"].ToString());
+                            data.CodeBaygani = dataReader["CodeBaygani"].ToString();
+                            data.Zemanat_EndDate = dataReader["Zemanat_EndDate"].ToString();
+                            data.Zemanat_Number = dataReader["Zemanat_Number"].ToString();
+                            data.Zemanat_Date = dataReader["Zemanat_Date"].ToString();
+                            data.Zemanat_Bank = dataReader["Zemanat_Bank"].ToString();
+                            data.Zemanat_ModatType = dataReader["Zemanat_ModatType"].ToString();
+                            data.Zemanat_ModatValue = dataReader["Zemanat_ModatValue"].ToString();
+                            data.Zemanat_Price = Int64.Parse(dataReader["Zemanat_Price"].ToString());
+                            data.Zemanat_Shobe = dataReader["Zemanat_Shobe"].ToString();
+                            data.Zemanat_Type = dataReader["Zemanat_Type"].ToString();
                             data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
                             data.Final = bool.Parse(dataReader["Final"].ToString());
                             ContractView.Add(data);
@@ -158,7 +120,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.Date = StringExtensions.ToNullableDatetime(dataReader["Date"].ToString());
                             data.DateShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["Date"].ToString()), "yyyy/MM/dd");
                             data.Description = dataReader["Description"].ToString();
-                            data.SuppliersName = dataReader["SuppliersName"].ToString();
+                            data.SuppliersId = int.Parse(dataReader["SuppliersId"].ToString());
+                            data.DoingMethodId = int.Parse(dataReader["DoingMethodId"].ToString());
+                            data.Type = int.Parse(dataReader["Type"].ToString());
+                            data.DateFrom =dataReader["DateFrom"].ToString();
+                            data.DateEnd = dataReader["DateEnd"].ToString();
+                            data.CodeBaygani = dataReader["CodeBaygani"].ToString();
+                            data.Zemanat_EndDate = dataReader["Zemanat_EndDate"].ToString();
+                            data.Zemanat_Number = dataReader["Zemanat_Number"].ToString();
+                            data.Zemanat_Date = dataReader["Zemanat_Date"].ToString();
+                            data.Zemanat_Bank = dataReader["Zemanat_Bank"].ToString();
+                            data.Zemanat_ModatType = dataReader["Zemanat_ModatType"].ToString();
+                            data.Zemanat_ModatValue = dataReader["Zemanat_ModatValue"].ToString();
+                            data.Zemanat_Price = Int64.Parse(dataReader["Zemanat_Price"].ToString());
+                            data.Zemanat_Shobe = dataReader["Zemanat_Shobe"].ToString();
+                            data.Zemanat_Type = dataReader["Zemanat_Type"].ToString();
+                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
+                            data.Final = bool.Parse(dataReader["Final"].ToString());
                             ContractSearchView.Add(data);
                         }
                     }
@@ -188,6 +167,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
                     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
                     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
+                    sqlCommand.Parameters.AddWithValue("Type", param.Type);
+                    sqlCommand.Parameters.AddWithValue("CodeBaygani", param.CodeBaygani);
+                    sqlCommand.Parameters.AddWithValue("ModatType", param.ModatType);
+                    sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
+                    sqlCommand.Parameters.AddWithValue("RequestID", param.RequestID);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Number", param.Zemanat_Number);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Date", param.Zemanat_Date);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Bank", param.Zemanat_Bank);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Shobe", param.Zemanat_Shobe);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_ModatValue", param.Zemanat_ModatValue);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_ModatType", param.Zemanat_ModatType);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_EndDate", param.Zemanat_EndDate);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Type", param.Zemanat_Type);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -209,6 +202,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.DateEnd = StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString());
                             data.DateEndShamsi = DateTimeExtensions.ConvertMiladiToShamsi(StringExtensions.ToNullableDatetime(dataReader["DateEnd"].ToString()), "yyyy/MM/dd");
                             data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                            data.Type = int.Parse(dataReader["Type"].ToString());
+                            data.CodeBaygani = dataReader["CodeBaygani"].ToString();
+                            data.Zemanat_EndDate = dataReader["Zemanat_EndDate"].ToString();
+                            data.Zemanat_Number = dataReader["Zemanat_Number"].ToString();
+                            data.Zemanat_Date = dataReader["Zemanat_Date"].ToString();
+                            data.Zemanat_Bank = dataReader["Zemanat_Bank"].ToString();
+                            data.Zemanat_ModatType = dataReader["Zemanat_ModatType"].ToString();
+                            data.Zemanat_ModatValue = dataReader["Zemanat_ModatValue"].ToString();
+                            data.Zemanat_Price = Int64.Parse(dataReader["Zemanat_Price"].ToString());
+                            data.Zemanat_Shobe = dataReader["Zemanat_Shobe"].ToString();
+                            data.Zemanat_Type = dataReader["Zemanat_Type"].ToString();
                             data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
                             data.Final = bool.Parse(dataReader["Final"].ToString());
                         }
@@ -232,14 +236,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
                     sqlCommand.Parameters.AddWithValue("Number", param.Number);
                     sqlCommand.Parameters.AddWithValue("Date", param.Date);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
                     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
+                    sqlCommand.Parameters.AddWithValue("DoingMethodId", param.DoingMethodId);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
                     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
-                    sqlCommand.Parameters.AddWithValue("DoingMethodId", param.DoingMethodId);
                     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
+                    sqlCommand.Parameters.AddWithValue("Type", param.Type);
+                    sqlCommand.Parameters.AddWithValue("CodeBaygani", param.CodeBaygani);
+                    sqlCommand.Parameters.AddWithValue("ModatType", param.ModatType);
+                    sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
+                    sqlCommand.Parameters.AddWithValue("RequestID", param.RequestID);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Number", param.Zemanat_Number);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Date", param.Zemanat_Date);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Bank", param.Zemanat_Bank);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Shobe", param.Zemanat_Shobe);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_ModatValue", param.Zemanat_ModatValue);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_ModatType", param.Zemanat_ModatType);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_EndDate", param.Zemanat_EndDate);
+                    sqlCommand.Parameters.AddWithValue("Zemanat_Type", param.Zemanat_Type);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -472,119 +491,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             return Ok(data);
         }
-
-        [Route("AmlakInfoRead")]
-        [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoPrivateReadViewModel>>> Ac_AmlakInfoRead()
-        {
-            List<AmlakInfoPrivateReadViewModel> data = new List<AmlakInfoPrivateReadViewModel>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Read", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
-                            row.Id = int.Parse(dataReader["Id"].ToString());
-                            row.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                            row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
-                            row.AreaName = dataReader["AreaName"].ToString();
-                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
-                            row.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                            row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                            data.Add(row);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(data);
-        }
-
-        [Route("AmlakInfoInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> Ac_AmlakInfoInsert([FromBody] AmlakInfoPrivateInsertViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
-                    sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
-                    sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-
-        [Route("AmlakInfoUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> Ac_AmlakInfoUpdate([FromBody] AmlakInfoPrivateUpdateViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
-                    sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
-                    sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-        [Route("AmlakInfoDelete")]
-        [HttpPost]
-        public async Task<ApiResult<string>> Ac_AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Delete", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
+        
         [Route("AmlakPrivateRead")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakPrivateReadViewModel>>> Ac_AmlakPrivateRead(param20 param)

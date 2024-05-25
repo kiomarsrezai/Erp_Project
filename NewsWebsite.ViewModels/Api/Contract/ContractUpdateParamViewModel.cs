@@ -19,14 +19,19 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string DateEnd { get; set; }
         public Int64 Amount { get; set; }
         public Int64 AmountMonth { get; set; }
+        public int Type { get; set; }
+        public string CodeBaygani { get; set; }
+        public string ModatType { get; set; }
+        public string ModatValue { get; set; }
+        public int RequestID { get; set; }
+        public string Zemanat_Number { get; set; }
         public Int64 Zemanat_Price { get; set; }
-        public string Modat { get; set; }
-        public string Nemayande { get; set; }
-        public string Modir { get; set; }
-        public string Sarparast { get; set; }
-        public string TenderNumber { get; set; }
-        public string TenderDate { get; set; }
-        public string TypeUsing { get; set; }
-        public int ModatValue { get; set; }
+        public string Zemanat_Date { get; set; }
+        public string Zemanat_Bank { get; set; }
+        public string Zemanat_Shobe { get; set; }
+        public string Zemanat_ModatValue { get; set; }
+        public string Zemanat_ModatType { get; set; }
+        public string Zemanat_EndDate { get; set; }
+        public string Zemanat_Type { get; set; }
     }
 }
