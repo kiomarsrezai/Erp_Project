@@ -64,6 +64,7 @@ namespace NewsWebsite.ViewModels.UserManager
         public string GenderName { get; set; }
 
         public string Lisence { get; set; }
+        public string AmlakLisence { get; set; }
 
         [JsonIgnore] 
         public string Token { get; set; }
