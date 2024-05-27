@@ -530,7 +530,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("ContractAmlakInfoUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> Ac_ContractUpdate([FromBody] ContractUpdateParamViewModel param)
+        public async Task<ApiResult<string>> Ac_ContractUpdate([FromBody] ContractAmlakUpdateParamViewModel param)
         {
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {

@@ -140,6 +140,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     FirstName = User.FirstName,
                     LastName = User.LastName,
                     Lisence = User.Lisence,
+                    AmlakLisence = User.AmlakLisence,
                     SectionId = User.SectionId,
                     SectionName = await _uw.AreaNameByIdAsync(User.SectionId),
                     Token = User.Token,
