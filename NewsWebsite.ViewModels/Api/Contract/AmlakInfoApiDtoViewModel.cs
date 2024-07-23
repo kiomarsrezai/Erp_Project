@@ -34,6 +34,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
     public class ContractFileUploadModel
     {
         public int ContractId { get; set; }
+        public string Title { get; set; }
         public IFormFile FormFile { get; set; }
     }
 

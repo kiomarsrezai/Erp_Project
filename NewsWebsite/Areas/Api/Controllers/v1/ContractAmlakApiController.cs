@@ -50,7 +50,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             string issuccess = "ناموفق";
 
-            if (await WriteFile(fileUpload.FormFile, fileUpload.ContractId))
+            if (await WriteFile(fileUpload.FormFile, fileUpload.ContractId, fileUpload.Title))
             {
                 issuccess = "موفق";
             }
@@ -66,14 +66,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var extension = FileExtensions.GetContentType(file.FileName);
             return (extension == "Mkv" || extension == "Pdf" || extension == "Mp4" || extension == "Png" || extension == "JpG" || extension == "Gif"); // Change the extension based on your need
         }
-        private async Task<bool> WriteFile(IFormFile file, int contractId)
+        private async Task<bool> WriteFile(IFormFile file, int contractId,string title)
         {
             bool isSaveSuccess = false;
             string fileName;
            
             var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
             fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
-            var folderPath = Path.Combine("https://Info.Ahvaz.ir", "wwwroot", "Upload", "Contracts", contractId.ToString());
+            // var folderPath = Path.Combine("https://Info.Ahvaz.ir", "wwwroot", "Upload", "Contracts", contractId.ToString());
+            var folderPath = Path.Combine( "wwwroot", "Upload", "Contracts", contractId.ToString());
 
             if (!Directory.Exists(folderPath))
                 {
@@ -97,7 +98,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("ContractId", contractId);
-                        sqlCommand.Parameters.AddWithValue("FileName", pathfile);
+                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
+                        sqlCommand.Parameters.AddWithValue("Title", title);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     }
@@ -889,6 +891,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
                         fetchView.ContractId = StringExtensions.ToNullableInt(dataReader["ContractId"].ToString());
                         fetchView.FileName = dataReader["FileName"].ToString();
+                        fetchView.FileTitle = dataReader["FileTitle"].ToString();
                         output.Add(fetchView);
 
                         //dataReader.NextResult();

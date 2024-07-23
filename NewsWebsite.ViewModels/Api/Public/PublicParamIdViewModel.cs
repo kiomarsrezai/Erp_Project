@@ -21,5 +21,6 @@ namespace NewsWebsite.ViewModels.Api.Public
         public string FileName { get; set; }
         public int? AttachID { get; set; }
         public int? ContractId { get; set; }
+        public string? FileTitle { get; set; }
     }
 }

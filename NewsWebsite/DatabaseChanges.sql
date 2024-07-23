@@ -5,8 +5,12 @@ tblAmlakInfo ->add columns:
     Structure (varchar20) nullable
     Owner (varchar20) nullable
              
-             
+ TblContractAttachs -> add columns
+    Title nvarchar(3000) nullable
+        
 update SP012_AmlakInfo_Search
 update SP012_AmlakInfo_Update
 update SP012_AmlakInfo_Read
+update SP0_AmlakInfoFileDetail_Insert
+update SP000_GetListContractAttachFiles
 
