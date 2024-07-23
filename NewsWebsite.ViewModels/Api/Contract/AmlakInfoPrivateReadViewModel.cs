@@ -21,6 +21,10 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public bool? IsSubmited { get; set; }
         public bool? IsContracted { get; set; }
         public string TypeUsing { get; set; }
+        public string CurrentStatus { get; set; } // AmlakInfoStatuses
+        public string Structure { get; set; } // AmlakInfoStructures
+        public string Owner { get; set; } // AmlakInfoOwners
+        
     }
 
     public class LoginParamModelFromSdi
@@ -30,4 +34,26 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public string title { get; set; }
         public string completed { get; set; }
     }
+    
+    public enum AmlakInfoStatuses {
+        Rented,
+        NotRented,
+    }    
+        
+    public enum AmlakInfoStructures {
+        Sandwichpanel,
+        Kaneks,
+        Sonati,
+        Felezi,
+        Botoni,
+    }
+             
+    public enum AmlakInfoOwners {
+        Shahrdari,
+        Sazman,
+        RahShahrsazi,
+        Others,
+    }    
+    
+   
 }

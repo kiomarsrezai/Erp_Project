@@ -13,5 +13,8 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int AmlakInfoKindId { get; set; }
         public string EstateInfoName { get; set; }
         public string EstateInfoAddress { get; set; }
+        public string CurrentStatus { get; set; } // AmlakInfoStatuses
+        public string Structure { get; set; } // AmlakInfoStructures
+        public string Owner { get; set; } // AmlakInfoOwners
     }
 }

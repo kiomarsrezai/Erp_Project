@@ -16,8 +16,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
+using NewsWebsite.Data;
+using NewsWebsite.Data.Models;
+using NewsWebsite.Data.Repositories;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -29,12 +33,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        protected readonly ProgramBuddbContext _db;
 
-        public ContractAmlakApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment)
+        public ContractAmlakApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment,ProgramBuddbContext db)
         {
             _config = config;
             _uw = uw;
             _webHostEnvironment = webHostEnvironment;
+            _db=db;
+
         }
 
         [Route("UploadContractFile")]
@@ -395,6 +402,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok(ContractView);
+        }
+
+        [Route("Test11")]
+        [HttpGet]
+        public async Task<ApiResult<TblBudgets>> Test11(int ContractId){
+
+            TblBudgets b = _db.TblBudgets.FirstOrDefault();
+            
+            return Ok( b);
+
         }
 
         [Route("AmlakInfoContractRead")]
@@ -793,6 +810,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.AmlakInfolong = dataReader["AmlakInfolong"].ToString();
                             row.CodeUsing = dataReader["CodeUsing"].ToString();
                             row.TypeUsing = dataReader["TypeUsing"].ToString();
+                            row.CurrentStatus = dataReader["CurrentStatus"].ToString();
+                            row.Structure = dataReader["Structure"].ToString();
+                            row.Owner = dataReader["Owner"].ToString();
                             data.Add(row);
                         }
                     }
@@ -835,6 +855,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             row.CodeUsing = dataReader["AmlakInfoId"].ToString();
                             row.TypeUsing = dataReader["TypeUsing"].ToString();
                             row.CodeUsing = dataReader["CodeUsing"].ToString();
+                            row.CurrentStatus = dataReader["CurrentStatus"].ToString();
+                            row.Structure = dataReader["Structure"].ToString();
+                            row.Owner = dataReader["Owner"].ToString();
                             data.Add(row);
                         }
                     }
@@ -892,6 +915,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
                     sqlCommand.Parameters.AddWithValue("IsSubmited", param.IsSubmited);
                     sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
+                    sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
+                    sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
+                    sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
