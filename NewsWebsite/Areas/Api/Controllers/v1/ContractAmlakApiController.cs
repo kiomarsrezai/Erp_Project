@@ -44,77 +44,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         }
 
-        [Route("UploadContractFile")]
-        [HttpPost]
-        public async Task<ApiResult<string>> UploadFile(ContractFileUploadModel fileUpload)
-        {
-            string issuccess = "ناموفق";
-
-            if (await WriteFile(fileUpload.FormFile, fileUpload.ContractId, fileUpload.Title))
-            {
-                issuccess = "موفق";
-            }
-            else
-            {
-                return BadRequest(new { message = "فایل نامعتبر می باشد" });
-            }
-
-            return Ok(issuccess);
-        }
-        private bool CheckIfExcelFile(IFormFile file)
-        {
-            var extension = FileExtensions.GetContentType(file.FileName);
-            return (extension == "Mkv" || extension == "Pdf" || extension == "Mp4" || extension == "Png" || extension == "JpG" || extension == "Gif"); // Change the extension based on your need
-        }
-        private async Task<bool> WriteFile(IFormFile file, int contractId,string title)
-        {
-            bool isSaveSuccess = false;
-            string fileName;
-           
-            var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-            fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
-            // var folderPath = Path.Combine("https://Info.Ahvaz.ir", "wwwroot", "Upload", "Contracts", contractId.ToString());
-            var folderPath = Path.Combine( "wwwroot", "Upload", "Contracts", contractId.ToString());
-
-            if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-
-            var pathfile = Path.Combine(folderPath, fileName);
-
-
-            //var path = Path.Combine(folderPath, fileName);
-            //var filepath = Path.Combine(_webHostEnvironment.WebRootPath, "Upload", "Contracts", fileName);
-
-            using (var stream = new FileStream(pathfile, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-
-                }
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP0_AmlakInfoFileDetail_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("ContractId", contractId);
-                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
-                        sqlCommand.Parameters.AddWithValue("Title", title);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    }
-                }
-                isSaveSuccess = true;
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Source = "Error";
-            //    isSaveSuccess &= false;
-            //}
-
-            return isSaveSuccess;
-        }
-
+        
         [Route("AmlakInfoFileList")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoFileList>>> AmlakInfoFileList(PublicParamIdViewModel model)
@@ -497,13 +427,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
                     sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
                     sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
+                    sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
+                    sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
+                    sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
+                    sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
                     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
                     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
                     sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
                     sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
                     sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
-                    sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
 
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -570,13 +503,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
                     sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
                     sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
+                    sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
+                    sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
+                    sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
+                    sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
                     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
                     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
                     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
                     sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
                     sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
                     sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
-                    sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
 
@@ -869,6 +805,77 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(data);
         }
 
+        
+        [Route("UploadContractFile")]
+        [HttpPost]
+        public async Task<ApiResult<string>> UploadContractFile(ContractFileUploadModel fileUpload)
+        {
+            string issuccess = "ناموفق";
+
+            string fileName = await UploadFile(fileUpload.FormFile, "Contracts/"+fileUpload.ContractId);
+            if (fileName!=""){
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("[SP0_ContractFileDetail_Insert]", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("ContractId", fileUpload.ContractId);
+                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
+                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.Title);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    }
+                }
+                issuccess = "موفق";
+                
+            }else{
+                return BadRequest(new { message = "فایل نامعتبر می باشد" });
+            }
+
+            return Ok(issuccess);
+        }
+
+        private async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,png,gif,bmp"){
+
+            if (!CheckFileType(file, extensions))
+                return "";
+            
+            string fileName;
+
+            var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+            fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
+            var folderPath = Path.Combine("wwwroot", "Upload", path);
+
+            if (!Directory.Exists(folderPath)){
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var pathfile = Path.Combine(folderPath, fileName);
+
+            using var stream = new FileStream(pathfile, FileMode.Create);
+            await file.CopyToAsync(stream);
+
+            return fileName;
+        }
+
+        private bool CheckFileType(IFormFile file, string extensions){
+            if (file == null || string.IsNullOrEmpty(extensions)){
+                return false;
+            }
+            
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            var allowedExtensions = extensions.Split(',');
+            foreach (var extension in allowedExtensions){
+                if (fileExtension.Equals("."+extension.Trim().ToLowerInvariant(), StringComparison.OrdinalIgnoreCase)){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        
         [Route("GetContractAttachFiles")]
         [HttpGet]
         public async Task<ApiResult<List<GetListContractAttachFiles>>> GetContractAttachFiles(int contractId)
@@ -885,12 +892,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("ContractId", contractId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    var prefixUrls = "/Upload/Contracts/"+contractId+"/";
                     while (dataReader.Read())
                     {
                         GetListContractAttachFiles fetchView = new GetListContractAttachFiles();
                         fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
                         fetchView.ContractId = StringExtensions.ToNullableInt(dataReader["ContractId"].ToString());
-                        fetchView.FileName = dataReader["FileName"].ToString();
+                        fetchView.FileName = prefixUrls+Path.GetFileName(dataReader["FileName"]+"");
                         fetchView.FileTitle = dataReader["FileTitle"].ToString();
                         output.Add(fetchView);
 
@@ -901,6 +909,69 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(output);
         }
 
+        [Route("UploadAmlakInfoFile")]
+        [HttpPost]
+        public async Task<ApiResult<string>> UploadAmlakInfoFile(AmlakInfoFileUploadModel fileUpload)
+        {
+            string issuccess = "ناموفق";
+
+            string fileName = await UploadFile(fileUpload.FormFile, "AmlakInfos/"+fileUpload.AmlakInfoIf);
+            if (fileName!=""){
+                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP0_AmlakInfoFileDetail_Insert", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", fileUpload.AmlakInfoIf);
+                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
+                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.Title);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    }
+                }
+                issuccess = "موفق";
+                
+            }else{
+                return BadRequest(new { message = "فایل نامعتبر می باشد" });
+            }
+
+            return Ok(issuccess);
+        }
+
+        [Route("GetAmlakInfoAttachFiles")]
+        [HttpGet]
+        public async Task<ApiResult<List<GetListAmlakInfoAttachFiles>>> GetAmlakInfoAttachFiles(int amlakInfoId)
+        {
+            if (amlakInfoId == 0) BadRequest();
+
+            List<GetListAmlakInfoAttachFiles> output = new List<GetListAmlakInfoAttachFiles>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP000_GetListAmlakInfoAttachFiles", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("AmlakInfoId", amlakInfoId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    var prefixUrls = "/Upload/AmlakInfos/"+amlakInfoId+"/";
+                    while (dataReader.Read())
+                    {
+                        GetListAmlakInfoAttachFiles fetchView = new GetListAmlakInfoAttachFiles();
+                        fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
+                        fetchView.AmlakInfoId = StringExtensions.ToNullableInt(dataReader["AmlakInfoId"].ToString());
+                        fetchView.FileName = prefixUrls+Path.GetFileName(dataReader["FileName"]+"");
+                        fetchView.FileTitle = dataReader["FileTitle"].ToString();
+                        output.Add(fetchView);
+
+                        //dataReader.NextResult();
+                    }
+                }
+            }
+            return Ok(output);
+        }
+
+        
         [Route("AmlakInfoUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> Ac_AmlakInfoUpdate([FromBody] AmlakInfoUpdateViewModel param)

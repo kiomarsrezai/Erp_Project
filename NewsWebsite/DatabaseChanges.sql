@@ -14,3 +14,9 @@ update SP012_AmlakInfo_Read
 update SP0_AmlakInfoFileDetail_Insert
 update SP000_GetListContractAttachFiles
 
+add [SP000_GetListAmlakInfoAttachFiles]
+add [TblAmlakInfoAttachs]
+add [SP0_ContractFileDetail_Insert]
+edit [SP0_AmlakInfoFileDetail_Insert]
+edit [SP012_ContractAmlak_Insert]
+edit [SP012_ContractAmlak_Update]

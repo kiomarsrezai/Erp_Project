@@ -14,6 +14,9 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int? DoingMethodId { get; set; }
         public int AmlakId { get; set; }
         public float? Masahat { get; set; }
+        public string? CurrentStatus { get; set; }
+        public string? Structure { get; set; }
+        public string? Owner { get; set; }
         public string DateFrom { get; set; }
         public string DateEnd { get; set; }
         public Int64 Amount { get; set; }
@@ -40,6 +43,9 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int? DoingMethodId { get; set; }
         public int AmlakId { get; set; }
         public float? Masahat { get; set; }
+        public string? CurrentStatus { get; set; }
+        public string? Structure { get; set; }
+        public string? Owner { get; set; }
         public string DateFrom { get; set; }
         public string DateEnd { get; set; }
         public Int64 Amount { get; set; }

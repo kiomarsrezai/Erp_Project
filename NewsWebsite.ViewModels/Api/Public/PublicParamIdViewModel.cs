@@ -23,4 +23,12 @@ namespace NewsWebsite.ViewModels.Api.Public
         public int? ContractId { get; set; }
         public string? FileTitle { get; set; }
     }
+    public class GetListAmlakInfoAttachFiles
+    {
+
+        public string FileName { get; set; }
+        public int? AttachID { get; set; }
+        public int? AmlakInfoId { get; set; }
+        public string? FileTitle { get; set; }
+    }
 }
