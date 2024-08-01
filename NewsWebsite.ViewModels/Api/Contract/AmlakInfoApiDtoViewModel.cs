@@ -39,7 +39,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
     }
     public class AmlakInfoFileUploadModel
     {
-        public int AmlakInfoIf { get; set; }
+        public int AmlakInfoId { get; set; }
         public string Title { get; set; }
         public IFormFile FormFile { get; set; }
     }
