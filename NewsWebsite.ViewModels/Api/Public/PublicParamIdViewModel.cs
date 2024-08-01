@@ -8,27 +8,4 @@ namespace NewsWebsite.ViewModels.Api.Public
     {
         public int Id { get; set; }
     }
-    
-    public class AmlakInfoSerachParamDto
-    {
-        public int? AreaId { get; set; }
-        public int? AmlakInfoKindId { get; set; }
-    }
-
-    public class GetListContractAttachFiles
-    {
-
-        public string FileName { get; set; }
-        public int? AttachID { get; set; }
-        public int? ContractId { get; set; }
-        public string? FileTitle { get; set; }
-    }
-    public class GetListAmlakInfoAttachFiles
-    {
-
-        public string FileName { get; set; }
-        public int? AttachID { get; set; }
-        public int? AmlakInfoId { get; set; }
-        public string? FileTitle { get; set; }
-    }
 }

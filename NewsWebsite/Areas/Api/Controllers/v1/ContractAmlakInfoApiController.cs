@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Models;
 using NewsWebsite.Data.Repositories;
+using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -45,35 +46,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         
-        // [Route("AmlakInfoFileList")]
-        // [HttpGet]
-        // public async Task<ApiResult<List<AmlakInfoFileList>>> AmlakInfoFileList(PublicParamIdViewModel model)
-        // {
-        //
-        //     List<AmlakInfoFileList> ContractView = new List<AmlakInfoFileList>();
-        //     {
-        //         using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-        //         {
-        //             using (SqlCommand sqlCommand = new SqlCommand("SP0_FileDetail_Read", sqlconnect))
-        //             {
-        //                 sqlconnect.Open();
-        //                 sqlCommand.CommandType = CommandType.StoredProcedure;
-        //                 sqlCommand.Parameters.AddWithValue("Id", model.Id);
-        //                 SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-        //                 while (await dataReader.ReadAsync())
-        //                 {
-        //                     AmlakInfoFileList data = new AmlakInfoFileList();
-        //                     data.Id = int.Parse(dataReader["Id"].ToString());
-        //                     data.FileName = dataReader["FileName"].ToString();
-        //                     ContractView.Add(data);
-        //                 }
-        //             }
-        //             sqlconnect.Close();
-        //         }
-        //     }
-        //     return Ok(ContractView);
-        // }
-
         [HttpGet]
         [Route("UpdateDataFromSdi_ahvaz_kiosk14000719_8798")]
         public async Task<ApiResult<ResponseLayerDto>> UpdateDataFromSdi_ahvaz_kiosk()
@@ -149,86 +121,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(respLayer);
         }
     
-        [HttpGet]
-        [Route("UpdateDataFromSdi_ahvaz_amlak_tatbiqii_9244")]
-        public async Task<ApiResult<string>> UpdateDataFromSdi_ahvaz_amlak_tatbiqi()
-        {
-            var options = new RestClientOptions("https://sdi.ahvaz.ir")
-            {
-                MaxTimeout = -1,
-            };
-            var client = new RestClient(options);
-            var request = new RestRequest("/geoapi/user/login/", Method.Post);
-            request.AddHeader("content-type", "application/json");
-            request.AddHeader("Accept", "application/json, text/plain, */*");
-            request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            var body = @"{" + "\n" +
-            @" ""username"": ""ERP_Fava""," + "\n" +
-            @" ""password"":" + "\n" +
-            @"""123456""," + "\n" +
-            @" ""appId"": ""mobilegis""" + "\n" +
-            @"}";
-            request.AddStringBody(body, DataFormat.Json);
-            RestResponse responselogin = await client.ExecuteAsync(request);
-            var resplogin = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(responselogin.Content.ToString());
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
 
-            //var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
-            //{
-            //    MaxTimeout = -1,
-            //};
-            //var client2 = new RestClient(options2);
-            //var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey="+ resplogin.api_key.ToString(), Method.Get);
-            //request.AddHeader("content-type", "application/json");
-            //request.AddHeader("Accept", "application/json, text/plain, */*");
-            //request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            //RestResponse response2 = await client2.ExecuteAsync(request2);
-            ////UTF8Encoding uTF8Encoding = new UTF8Encoding();
-            ////uTF8Encoding.GetBytes(response2.Content.ToString());
-            //byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
-            //string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
-            var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
-            {
-                MaxTimeout = -1,
-            };
-            var client2 = new RestClient(options2);
-            var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=amlak_tatbiqii_9244&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey=e434be85d126299659334f104feffb18f51328a6", Method.Post);
-            request2.AddHeader("content-type", "application/json");
-            request2.AddHeader("Accept", "application/json, text/plain, */*");
-            request2.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            RestResponse response2 = await client2.ExecuteAsync(request2);
-            byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
-            string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
-            //var respLayer = JsonConvert.DeserializeObject<ResponseLayerDto>(newmessage.ToString());
-
-            //for (int i = 0; i <= respLayer.totalFeatures; i++)
-            //{
-            //    using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            //    {
-            //        using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
-            //        {
-            //            sqlconnect.Open();
-            //            sqlCommand.Parameters.AddWithValue("AmlakInfoId", respLayer.features[i].id);
-            //            sqlCommand.Parameters.AddWithValue("AreaId", respLayer.features[i].properties.mantaqe);
-            //            sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", 4);
-            //            sqlCommand.Parameters.AddWithValue("EstateInfoName", respLayer.features[i].properties.name);
-            //            sqlCommand.Parameters.AddWithValue("EstateInfoAddress", respLayer.features[i].properties.adress);
-            //            sqlCommand.Parameters.AddWithValue("AmlakInfolong", respLayer.features[i].geometry.coordinates[0][0].ToString());
-            //            sqlCommand.Parameters.AddWithValue("AmlakInfolate", respLayer.features[i].geometry.coordinates[0][1].ToString());
-            //            sqlCommand.CommandType = CommandType.StoredProcedure;
-            //            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-
-            //        }
-            //    }
-            //}
-
-            return Ok(response2);
-        }
-
+        
         [Route("Contract/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractListViewModel>>> ContractList(int AmlakInfoId)
+        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int AmlakInfoId)
         {
-            List<AmlakInfoContractListViewModel> ContractView = new List<AmlakInfoContractListViewModel>();
+            List<AmlakInfoContractListVm> ContractView = new List<AmlakInfoContractListVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -240,7 +142,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoContractListViewModel data = new AmlakInfoContractListViewModel();
+                            AmlakInfoContractListVm data = new AmlakInfoContractListVm();
                             data.id = int.Parse(dataReader["id"].ToString());
                             data.AreaId = StringExtensions.ToNullableInt(dataReader["AreaId"].ToString());
                             data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
@@ -282,9 +184,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Contract/List/ByArea")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractListViewModel>>> ContractListByAreaId(int AreaId)
+        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractListByAreaId(int AreaId)
         {
-            List<AmlakInfoContractListViewModel> ContractView = new List<AmlakInfoContractListViewModel>();
+            List<AmlakInfoContractListVm> ContractView = new List<AmlakInfoContractListVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -296,7 +198,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoContractListViewModel data = new AmlakInfoContractListViewModel();
+                            AmlakInfoContractListVm data = new AmlakInfoContractListVm();
                             data.id = int.Parse(dataReader["id"].ToString());
                             data.AreaId = StringExtensions.ToNullableInt(dataReader["AreaId"].ToString());
                             data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
@@ -340,9 +242,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Contract/Read")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractViewModel>>> ContractRead(int ContractId)
+        public async Task<ApiResult<List<AmlakInfoContractReadVm>>> ContractRead(int ContractId)
         {
-            List<AmlakInfoContractViewModel> ContractSearchView = new List<AmlakInfoContractViewModel>();
+            List<AmlakInfoContractReadVm> ContractSearchView = new List<AmlakInfoContractReadVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -354,7 +256,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoContractViewModel data = new AmlakInfoContractViewModel();
+                            AmlakInfoContractReadVm data = new AmlakInfoContractReadVm();
                             data.id = int.Parse(dataReader["id"].ToString());
                             data.Number = dataReader["Number"].ToString();
                             data.AreaId = int.Parse(dataReader["AreaId"].ToString());
@@ -374,7 +276,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                             data.Description = dataReader["Description"].ToString();
                             data.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
                             data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
-                            data.DoingMethodId = StringExtensions.ToNullableInt(dataReader["DoingMethodId"].ToString());
+                            data.DoingMethodId = dataReader["DoingMethodId"].ToString();
                             data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
                             data.DateFrom = dataReader["DateFrom"].ToString();
                             data.DateFromShamsi = dataReader["DateFrom"].ToString();
@@ -398,9 +300,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Contract/Insert")]
         [HttpPost]
-        public async Task<ApiResult<AmlakInfoContractListViewModel>> ContractInsert([FromBody] ContractAmlakInsertParamViewModel param)
+        public async Task<ApiResult<AmlakInfoContractListVm>> ContractInsert([FromBody] AmlakInfoContractInsertVm param)
         {
-            AmlakInfoContractListViewModel data = new AmlakInfoContractListViewModel();
+            AmlakInfoContractListVm data = new AmlakInfoContractListVm();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Insert", sqlconnect))
@@ -474,7 +376,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Contract/Update")]
         [HttpPost]
-        public async Task<ApiResult<string>> ContractUpdate([FromBody] ContractAmlakUpdateParamViewModel param)
+        public async Task<ApiResult<string>> ContractUpdate([FromBody] AmlakInfoContractUpdateVm param)
         {
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -533,11 +435,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
           [Route("Contract/Upload")]
         [HttpPost]
-        public async Task<ApiResult<string>> ContractUploadFile(ContractFileUploadModel fileUpload)
+        public async Task<ApiResult<string>> ContractUploadFile(ContractFileUploadVm fileUpload)
         {
             string issuccess = "ناموفق";
 
-            string fileName = await UploadFile(fileUpload.FormFile, "Contracts/"+fileUpload.ContractId);
+            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "Contracts/"+fileUpload.ContractId);
             if (fileName!=""){
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -546,7 +448,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("ContractId", fileUpload.ContractId);
                         sqlCommand.Parameters.AddWithValue("FileName", fileName);
-                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.Title);
+                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.FileTitle);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     }
@@ -560,54 +462,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(issuccess);
         }
 
-        private async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,png,gif,bmp"){
-
-            if (!CheckFileType(file, extensions))
-                return "";
-            
-            string fileName;
-
-            var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-            fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
-            var folderPath = Path.Combine("wwwroot", "Upload", path);
-
-            if (!Directory.Exists(folderPath)){
-                Directory.CreateDirectory(folderPath);
-            }
-
-            var pathfile = Path.Combine(folderPath, fileName);
-
-            using var stream = new FileStream(pathfile, FileMode.Create);
-            await file.CopyToAsync(stream);
-
-            return fileName;
-        }
-
-        private bool CheckFileType(IFormFile file, string extensions){
-            if (file == null || string.IsNullOrEmpty(extensions)){
-                return false;
-            }
-            
-            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-
-            var allowedExtensions = extensions.Split(',');
-            foreach (var extension in allowedExtensions){
-                if (fileExtension.Equals("."+extension.Trim().ToLowerInvariant(), StringComparison.OrdinalIgnoreCase)){
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         
         [Route("Contract/Files")]
         [HttpGet]
-        public async Task<ApiResult<List<GetListContractAttachFiles>>> ContractAttachFiles(int contractId)
+        public async Task<ApiResult<List<ContractFilesListVm>>> ContractAttachFiles(int contractId)
         {
             if (contractId == 0) BadRequest();
 
-            List<GetListContractAttachFiles> output = new List<GetListContractAttachFiles>();
+            List<ContractFilesListVm> output = new List<ContractFilesListVm>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -620,7 +482,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     var prefixUrls = "/Upload/Contracts/"+contractId+"/";
                     while (dataReader.Read())
                     {
-                        GetListContractAttachFiles fetchView = new GetListContractAttachFiles();
+                        ContractFilesListVm fetchView = new ContractFilesListVm();
                         fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
                         fetchView.ContractId = StringExtensions.ToNullableInt(dataReader["ContractId"].ToString());
                         fetchView.FileName = prefixUrls+Path.GetFileName(dataReader["FileName"]+"");
@@ -641,9 +503,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("Supplier/List")]
         [HttpGet]
-        public async Task<ApiResult<List<SupplierAmlakInfoUpdateDto>>> SuppliersList(string txtSerach)
+        public async Task<ApiResult<List<AmlakInfoSupplierUpdateVm>>> SuppliersList(string txtSerach)
         {
-            List<SupplierAmlakInfoUpdateDto> ContractView = new List<SupplierAmlakInfoUpdateDto>();
+            List<AmlakInfoSupplierUpdateVm> ContractView = new List<AmlakInfoSupplierUpdateVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -655,7 +517,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            SupplierAmlakInfoUpdateDto data = new SupplierAmlakInfoUpdateDto();
+                            AmlakInfoSupplierUpdateVm data = new AmlakInfoSupplierUpdateVm();
                             data.Id = int.Parse(dataReader["Id"].ToString());
                             data.FirstName = dataReader["FirstName"].ToString();
                             data.LastName = dataReader["LastName"].ToString();
@@ -674,9 +536,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Supplier/Read")]
         [HttpGet]
-        public async Task<ApiResult<List<SupplierAmlakInfoUpdateDto>>> SuppliersRead(PublicParamIdViewModel param)
+        public async Task<ApiResult<List<AmlakInfoSupplierUpdateVm>>> SuppliersRead(PublicParamIdViewModel param)
         {
-            List<SupplierAmlakInfoUpdateDto> ContractView = new List<SupplierAmlakInfoUpdateDto>();
+            List<AmlakInfoSupplierUpdateVm> ContractView = new List<AmlakInfoSupplierUpdateVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -688,7 +550,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            SupplierAmlakInfoUpdateDto data = new SupplierAmlakInfoUpdateDto();
+                            AmlakInfoSupplierUpdateVm data = new AmlakInfoSupplierUpdateVm();
                             data.Id = int.Parse(dataReader["Id"].ToString());
                             data.FirstName = dataReader["FirstName"].ToString();
                             data.LastName = dataReader["LastName"].ToString();
@@ -707,9 +569,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Supplier/Insert")]
         [HttpPost]
-        public async Task<ApiResult<SupplierAmlakInfoUpdateDto>> SupplierInsert([FromBody] SupplierAmlakInfoInsertDto param)
+        public async Task<ApiResult<AmlakInfoSupplierUpdateVm>> SupplierInsert([FromBody] AmlakInfoSupplierInsertVm param)
         {
-            SupplierAmlakInfoUpdateDto supp = new SupplierAmlakInfoUpdateDto();
+            AmlakInfoSupplierUpdateVm supp = new AmlakInfoSupplierUpdateVm();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP012_SuppliersAmlak_Insert", sqlconnect))
@@ -740,7 +602,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Supplier/Update")]
         [HttpPost]
-        public async Task<ApiResult<string>> SupplierUpdate([FromBody] SupplierAmlakInfoUpdateDto param)
+        public async Task<ApiResult<string>> SupplierUpdate([FromBody] AmlakInfoSupplierUpdateVm param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -794,9 +656,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfo/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoPrivateReadViewModel>>> AmlakInfoList(AmlakInfoSerachParamDto param)
+        public async Task<ApiResult<List<AmlakInfoReadVm>>> AmlakInfoList(AmlakInfoReadInputVm param)
         {
-            List<AmlakInfoPrivateReadViewModel> data = new List<AmlakInfoPrivateReadViewModel>();
+            List<AmlakInfoReadVm> data = new List<AmlakInfoReadVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -809,7 +671,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
+                            AmlakInfoReadVm row = new AmlakInfoReadVm();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AreaId = int.Parse(dataReader["AreaId"].ToString());
                             row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
@@ -839,9 +701,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfo/Read")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoPrivateReadViewModel>>> AmlakInfoRead(PublicParamIdViewModel param)
+        public async Task<ApiResult<List<AmlakInfoReadVm>>> AmlakInfoRead(PublicParamIdViewModel param)
         {
-            List<AmlakInfoPrivateReadViewModel> data = new List<AmlakInfoPrivateReadViewModel>();
+            List<AmlakInfoReadVm> data = new List<AmlakInfoReadVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -853,7 +715,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoPrivateReadViewModel row = new AmlakInfoPrivateReadViewModel();
+                            AmlakInfoReadVm row = new AmlakInfoReadVm();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AreaId = int.Parse(dataReader["AreaId"].ToString());
                             row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
@@ -885,7 +747,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("AmlakInfo/Update")]
         [HttpPost]
-        public async Task<ApiResult<string>> AmlakInfoUpdate([FromBody] AmlakInfoUpdateViewModel param)
+        public async Task<ApiResult<string>> AmlakInfoUpdate([FromBody] AmlakInfoUpdateVm param)
         {
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -945,9 +807,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("AmlakInfo/Kind")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoKindComViewModel>>> AmlakInfoKind()
+        public async Task<ApiResult<List<AmlakInfoKindVm>>> AmlakInfoKind()
         {
-            List<AmlakInfoKindComViewModel> data = new List<AmlakInfoKindComViewModel>();
+            List<AmlakInfoKindVm> data = new List<AmlakInfoKindVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -958,7 +820,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoKindComViewModel row = new AmlakInfoKindComViewModel();
+                            AmlakInfoKindVm row = new AmlakInfoKindVm();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
                             data.Add(row);
@@ -973,11 +835,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
               
         [Route("AmlakInfo/Upload")]
         [HttpPost]
-        public async Task<ApiResult<string>> AmlakInfoUploadFile(AmlakInfoFileUploadModel fileUpload)
+        public async Task<ApiResult<string>> AmlakInfoUploadFile(AmlakInfoFileUploadVm fileUpload)
         {
             string issuccess = "ناموفق";
 
-            string fileName = await UploadFile(fileUpload.FormFile, "AmlakInfos/"+fileUpload.AmlakInfoId);
+            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakInfos/"+fileUpload.AmlakInfoId);
             if (fileName!=""){
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -986,7 +848,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlconnect.Open();
                         sqlCommand.Parameters.AddWithValue("AmlakInfoId", fileUpload.AmlakInfoId);
                         sqlCommand.Parameters.AddWithValue("FileName", fileName);
-                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.Title);
+                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.FileTitle);
+                        sqlCommand.Parameters.AddWithValue("Type", fileUpload.Type);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     }
@@ -1002,11 +865,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfo/Files")]
         [HttpGet]
-        public async Task<ApiResult<List<GetListAmlakInfoAttachFiles>>> AmlakInfoAttachFiles(int amlakInfoId)
+        public async Task<ApiResult<List<AmlakInfoFilesListVm>>> AmlakInfoAttachFiles(int amlakInfoId)
         {
             if (amlakInfoId == 0) BadRequest();
 
-            List<GetListAmlakInfoAttachFiles> output = new List<GetListAmlakInfoAttachFiles>();
+            List<AmlakInfoFilesListVm> output = new List<AmlakInfoFilesListVm>();
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -1019,11 +882,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     var prefixUrls = "/Upload/AmlakInfos/"+amlakInfoId+"/";
                     while (dataReader.Read())
                     {
-                        GetListAmlakInfoAttachFiles fetchView = new GetListAmlakInfoAttachFiles();
+                        AmlakInfoFilesListVm fetchView = new AmlakInfoFilesListVm();
                         fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
                         fetchView.AmlakInfoId = StringExtensions.ToNullableInt(dataReader["AmlakInfoId"].ToString());
                         fetchView.FileName = prefixUrls+Path.GetFileName(dataReader["FileName"]+"");
                         fetchView.FileTitle = dataReader["FileTitle"].ToString();
+                        fetchView.Type = dataReader["Type"].ToString();
                         output.Add(fetchView);
 
                         //dataReader.NextResult();
