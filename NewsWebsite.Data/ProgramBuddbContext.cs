@@ -7,6 +7,7 @@ using NewsWebsite.Data.Mapping;
 using NewsWebsite.Entities;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Data.Models;
+using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
 namespace NewsWebsite.Data
 {
@@ -43,6 +44,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<TblProjects> TblProjects { get; set; }
         public virtual DbSet<TblVasets> TblVasets { get; set; }
         public virtual DbSet<TblYears> TblYears { get; set; }
+        public virtual DbSet<AmlakPrivateNew> AmlakPrivateNews { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
