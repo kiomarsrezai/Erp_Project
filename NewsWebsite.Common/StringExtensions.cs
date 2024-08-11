@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace NewsWebsite.Common
 {
@@ -167,5 +168,18 @@ namespace NewsWebsite.Common
             string[] month = { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
             return month;
         }
+        
+        public static int ParseInt(this string? input){
+            if (input == null)
+                return 0;
+        
+            string cleanedInput = Regex.Replace(input, "[^0-9]", "");
+
+            if (cleanedInput == "")
+                return 0;
+
+            return int.Parse(cleanedInput);
+        }
+        
     }
 }

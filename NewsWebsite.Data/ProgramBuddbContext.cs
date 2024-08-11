@@ -45,6 +45,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<TblVasets> TblVasets { get; set; }
         public virtual DbSet<TblYears> TblYears { get; set; }
         public virtual DbSet<AmlakPrivateNew> AmlakPrivateNews { get; set; }
+        public virtual DbSet<AmlakPrivateFile> AmlakPrivateFiles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
