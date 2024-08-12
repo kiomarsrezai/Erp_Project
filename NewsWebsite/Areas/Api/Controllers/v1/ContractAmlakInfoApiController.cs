@@ -19,10 +19,15 @@ using System.IO;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Models;
+using NewsWebsite.Data.Models.AmlakInfo;
 using NewsWebsite.Data.Repositories;
+using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
+using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
+using System.Linq;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -186,6 +191,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractListByAreaId(int AreaId)
         {
+            // var items = await _db.AmlakInfoContracts.AreaId(AreaId).ToListAsync();
+            // var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
+            //
+            // return Ok(finalItems);
+            //
             List<AmlakInfoContractListVm> ContractView = new List<AmlakInfoContractListVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -654,152 +664,114 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Route("AmlakInfo/List")]
+           [Route("AmlakInfo/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoReadVm>>> AmlakInfoList(AmlakInfoReadInputVm param)
-        {
-            List<AmlakInfoReadVm> data = new List<AmlakInfoReadVm>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Search", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                        sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            AmlakInfoReadVm row = new AmlakInfoReadVm();
-                            row.Id = int.Parse(dataReader["Id"].ToString());
-                            row.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                            row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
-                            row.TotalContract = int.Parse(dataReader["TotalContract"].ToString());
-                            row.IsSubmited = StringExtensions.ToNullablebool(dataReader["IsSubmited"].ToString());
-                            row.IsContracted = StringExtensions.ToNullablebool(dataReader["IsContracted"].ToString());
-                            row.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
-                            row.AreaName = dataReader["AreaName"].ToString();
-                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
-                            row.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                            row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                            row.AmlakInfolate = dataReader["AmlakInfolate"].ToString();
-                            row.AmlakInfolong = dataReader["AmlakInfolong"].ToString();
-                            row.CodeUsing = dataReader["CodeUsing"].ToString();
-                            row.TypeUsing = dataReader["TypeUsing"].ToString();
-                            row.CurrentStatus = dataReader["CurrentStatus"].ToString();
-                            row.Structure = dataReader["Structure"].ToString();
-                            row.Owner = dataReader["Owner"].ToString();
-                            data.Add(row);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(data);
+        public async Task<ApiResult<List<AmlakInfoListVm>>> AmlakInfoList(AmlakInfoReadInputVm param){
+            // var items = await _db.AmlakInfos
+            //     .Include(a=>a.Area)
+            //     .Include(a=>a.AmlakInfoKind)
+            //     .AreaId(param.AreaId)
+            //     .ToListAsync();
+            
+            var items = await _db.AmlakInfos
+                .Include(a => a.Area)
+                .Include(a => a.AmlakInfoKind)
+                .Where(a => a.AreaId == param.AreaId)
+                .ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(items);
+
+            return Ok(finalItems);
         }
 
         [Route("AmlakInfo/Read")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoReadVm>>> AmlakInfoRead(PublicParamIdViewModel param)
-        {
-            List<AmlakInfoReadVm> data = new List<AmlakInfoReadVm>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Read", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            AmlakInfoReadVm row = new AmlakInfoReadVm();
-                            row.Id = int.Parse(dataReader["Id"].ToString());
-                            row.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                            row.AmlakInfoKindId = int.Parse(dataReader["AmlakInfoKindId"].ToString());
-                            row.TotalContract = int.Parse(dataReader["TotalContract"].ToString());
-                            row.IsSubmited = StringExtensions.ToNullablebool(dataReader["IsSubmited"].ToString());
-                            row.IsContracted = StringExtensions.ToNullablebool(dataReader["IsContracted"].ToString());
-                            row.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
-                            row.AreaName = dataReader["AreaName"].ToString();
-                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
-                            row.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                            row.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                            row.AmlakInfolate = dataReader["AmlakInfolate"].ToString();
-                            row.AmlakInfolong = dataReader["AmlakInfolong"].ToString();
-                            row.CodeUsing = dataReader["AmlakInfoId"].ToString();
-                            row.TypeUsing = dataReader["TypeUsing"].ToString();
-                            row.CodeUsing = dataReader["CodeUsing"].ToString();
-                            row.CurrentStatus = dataReader["CurrentStatus"].ToString();
-                            row.Structure = dataReader["Structure"].ToString();
-                            row.Owner = dataReader["Owner"].ToString();
-                            data.Add(row);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
+        public async Task<ApiResult<AmlakInfoReadVm>> AmlakInfoRead(PublicParamIdViewModel param){
+            var item = await _db.AmlakInfos.Include(a=>a.Area).Include(a=>a.AmlakInfoKind).Id(param.Id).FirstAsync();
+            var finalItem = MyMapper.MapTo<AmlakInfo, AmlakInfoReadVm>(item);
+        
+            return Ok(finalItem);
+        }
+        //
+        //
+        [Route("AmlakInfo/Update")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AmlakInfoUpdate([FromBody] AmlakInfoUpdateVm param){
+            var item = await _db.AmlakInfos.Id(param.Id).FirstOrDefaultAsync();
+            if(item==null)
+                return BadRequest("آیتم پیدا نشد");
+        
+            item.AreaId = param.AreaId;
+            // item.IsSubmited = param.IsSubmited;
+            // item.Masahat = param.Masahat;
+            item.AmlakInfoKindId = param.AmlakInfoKindId;
+            item.EstateInfoName = param.EstateInfoName;
+            item.EstateInfoAddress = param.EstateInfoAddress;
+            item.CurrentStatus = param.CurrentStatus;
+            item.Structure = param.Structure;
+            item.Owner = param.Owner;
+            await _db.SaveChangesAsync();
+        
+            return Ok("با موفقیت انجام شد");
+        }
+        //
+        //
+        [Route("AmlakInfo/Upload")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AmlakInfoUploadFile(AmlakInfoFileUploadVm fileUpload){
+            if (fileUpload.AmlakInfoId == null)
+                return BadRequest(new{ message = "شناسه ملک نامعتبر می باشد" });
+        
+        
+            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakInfos/" + fileUpload.AmlakInfoId);
+            if (fileName != ""){
+                var item = new AmlakInfoFile();
+                item.AmlakInfoId = fileUpload.AmlakInfoId ?? 0;
+                item.FileName = fileName;
+                item.FileTitle = fileUpload.FileTitle;
+                item.Type = fileUpload.Type;
+                // return Helpers.dd(fileUpload.FileTitle);
+                _db.Add(item);
+                await _db.SaveChangesAsync();
             }
-            return Ok(data);
+            else{
+                return BadRequest(new{ message = "فایل نامعتبر می باشد" });
+            }
+        
+            return Ok("موفق");
+        }
+        //
+        [Route("AmlakInfo/Files")]
+        [HttpGet]
+        public async Task<ApiResult<List<AmlakInfoFilesListVm>>> AmlakInfoAttachFiles(int AmlakInfoId){
+            if (AmlakInfoId == 0) BadRequest();
+        
+            var items = await _db.AmlakInfoFiles.Where(a => a.AmlakInfoId == AmlakInfoId).ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakInfoFile, AmlakInfoFilesListVm>(items);
+            
+            foreach (var item in finalItems){
+                item.FileName = "/Upload/AmlakInfos/" +item.AmlakInfoId+"/"+ item.FileName;
+            }
+
+        
+            return Ok(finalItems);
         }
 
         
-        [Route("AmlakInfo/Update")]
-        [HttpPost]
-        public async Task<ApiResult<string>> AmlakInfoUpdate([FromBody] AmlakInfoUpdateVm param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", param.AmlakInfoKindId);
-                    sqlCommand.Parameters.AddWithValue("EstateInfoName", param.EstateInfoName);
-                    sqlCommand.Parameters.AddWithValue("EstateInfoAddress", param.EstateInfoAddress);
-                    sqlCommand.Parameters.AddWithValue("IsSubmited", param.IsSubmited);
-                    sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
-                    sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
-                    sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
-                    sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
         [Route("AmlakInfo/Delete")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
         {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Delete", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+            
+            var item = await _db.AmlakInfos.Id(param.Id).FirstAsync();
+            // todo: check has contract or not
+            
+            var images = await _db.AmlakInfoFiles.Where(a=>a.AmlakInfoId==param.Id).ToListAsync();
+            // todo: remove files from server
+            _db.RemoveRange(images);
+            _db.Remove(item);
+            _db.SaveChanges();
+            
+            return Ok("حذف شد");
         }
 
         
@@ -809,93 +781,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoKindVm>>> AmlakInfoKind()
         {
-            List<AmlakInfoKindVm> data = new List<AmlakInfoKindVm>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfoKind_Com", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            AmlakInfoKindVm row = new AmlakInfoKindVm();
-                            row.Id = int.Parse(dataReader["Id"].ToString());
-                            row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
-                            data.Add(row);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(data);
+            
+            var items = await _db.AmlakInfoKinds.ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakInfoKind, AmlakInfoKindVm>(items);
+
+            return Ok(finalItems);
         }
 
               
-        [Route("AmlakInfo/Upload")]
-        [HttpPost]
-        public async Task<ApiResult<string>> AmlakInfoUploadFile(AmlakInfoFileUploadVm fileUpload)
-        {
-            string issuccess = "ناموفق";
-
-            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakInfos/"+fileUpload.AmlakInfoId);
-            if (fileName!=""){
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP0_AmlakInfoFileDetail_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", fileUpload.AmlakInfoId);
-                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
-                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.FileTitle);
-                        sqlCommand.Parameters.AddWithValue("Type", fileUpload.Type);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    }
-                }
-                issuccess = "موفق";
-                
-            }else{
-                return BadRequest(new { message = "فایل نامعتبر می باشد" });
-            }
-
-            return Ok(issuccess);
-        }
-
-        [Route("AmlakInfo/Files")]
-        [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoFilesListVm>>> AmlakInfoAttachFiles(int amlakInfoId)
-        {
-            if (amlakInfoId == 0) BadRequest();
-
-            List<AmlakInfoFilesListVm> output = new List<AmlakInfoFilesListVm>();
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_GetListAmlakInfoAttachFiles", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AmlakInfoId", amlakInfoId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    var prefixUrls = "/Upload/AmlakInfos/"+amlakInfoId+"/";
-                    while (dataReader.Read())
-                    {
-                        AmlakInfoFilesListVm fetchView = new AmlakInfoFilesListVm();
-                        fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
-                        fetchView.AmlakInfoId = StringExtensions.ToNullableInt(dataReader["AmlakInfoId"].ToString());
-                        fetchView.FileName = prefixUrls+Path.GetFileName(dataReader["FileName"]+"");
-                        fetchView.FileTitle = dataReader["FileTitle"].ToString();
-                        fetchView.Type = dataReader["Type"].ToString();
-                        output.Add(fetchView);
-
-                        //dataReader.NextResult();
-                    }
-                }
-            }
-            return Ok(output);
-        }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------

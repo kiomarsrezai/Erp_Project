@@ -151,8 +151,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
 
         [Route("AmlakPrivate/Read")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakPrivateReadVm>>> AmlakPrivateRead(PublicParamIdViewModel param){
-            var item = await _db.AmlakPrivateNews.Id(param.Id).ToListAsync();
+        public async Task<ApiResult<AmlakPrivateReadVm>> AmlakPrivateRead(PublicParamIdViewModel param){
+            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstAsync();
             var finalItem = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateReadVm>(item);
 
             return Ok(finalItem);
@@ -208,6 +208,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             var items = await _db.AmlakPrivateFiles.Where(a => a.AmlakPrivateId == AmlakPrivateId).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakPrivateFile, AmlakPrivateFilesListVm>(items);
 
+
+            foreach (var item in finalItems){
+                item.FileName = "/Upload/AmlakPrivates/" +item.AmlakPrivateId+"/"+ item.FileName;
+            }
+            
             return Ok(finalItems);
         }
     }

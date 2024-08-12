@@ -45,8 +45,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
     public class AmlakPrivateReadInputVm {
         public int AreaId{ get; set; }
-        public string Masahat{ get; set; }
-        public string TypeUsing{ get; set; }
     }
 
     

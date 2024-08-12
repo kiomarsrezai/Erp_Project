@@ -26,3 +26,8 @@ edit [SP012_ContractAmlak_Update]
 
 edit SP0_AmlakInfoFileDetail_Insert
 edit SP000_GetListAmlakInfoAttachFiles
+
+
+    add [TblAmlakPrivateAttachs]
+
+    in TblAmlakInfoAttachs , TblAmlakPrivateAttachs => AttachId to Id

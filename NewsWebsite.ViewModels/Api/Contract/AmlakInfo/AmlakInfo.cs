@@ -1,4 +1,15 @@
-﻿namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
+using NewsWebsite.ViewModels.Api.GeneralVm;
+using NewsWebsite.ViewModels.Api.Public;
+
+namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
+    
+    
     public class AmlakInfoBaseModel {
         public int Id{ get; set; }
         public int AreaId{ get; set; }
@@ -12,6 +23,20 @@
         public string Owner{ get; set; } // AmlakInfoOwners
     }
 
+    public class AmlakInfoListVm : AmlakInfoBaseModel {
+        public string AreaName{ get; set; }
+        public string AmlakInfoKindName{ get; set; }
+        public string AmlakInfolate{ get; set; }
+        public string AmlakInfolong{ get; set; }
+        public string CodeUsing{ get; set; }
+        public int TotalContract{ get; set; }
+        public bool? IsContracted{ get; set; }
+        public string TypeUsing{ get; set; }
+        
+        public AmlakInfoKindVm AmlakInfoKind{ get; set; }
+        public AreaViewModel Area{ get; set; }
+    }
+
     public class AmlakInfoReadVm : AmlakInfoBaseModel {
         public string AreaName{ get; set; }
         public string AmlakInfoKindName{ get; set; }
@@ -21,6 +46,9 @@
         public int TotalContract{ get; set; }
         public bool? IsContracted{ get; set; }
         public string TypeUsing{ get; set; }
+        
+        public AmlakInfoKindVm AmlakInfoKind{ get; set; }
+        public AreaViewModel Area{ get; set; }
     }
 
     public class AmlakInfoUpdateVm : AmlakInfoBaseModel {
