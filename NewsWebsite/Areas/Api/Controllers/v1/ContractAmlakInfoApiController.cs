@@ -133,179 +133,32 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("Contract/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int AmlakInfoId)
-        {
-            List<AmlakInfoContractListVm> ContractView = new List<AmlakInfoContractListVm>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfoContractList", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", AmlakInfoId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            AmlakInfoContractListVm data = new AmlakInfoContractListVm();
-                            data.id = int.Parse(dataReader["id"].ToString());
-                            data.AreaId = StringExtensions.ToNullableInt(dataReader["AreaId"].ToString());
-                            data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
-                            data.Number = dataReader["Number"].ToString();
-                            data.AreaName = dataReader["AreaName"].ToString();
-                            data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
-                            data.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                            data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                            data.Sarparast = dataReader["Sarparast"].ToString();
-                            data.Modir = dataReader["Modir"].ToString();
-                            data.Nemayande = dataReader["Nemayande"].ToString();
-                            data.TenderNumber = dataReader["TenderNumber"].ToString();
-                            data.TenderDate = dataReader["TenderDate"].ToString();
-                            data.TypeUsing = dataReader["TypeUsing"].ToString();
-                            data.ContractType = dataReader["ContractType"].ToString();
-                            data.Date = dataReader["Date"].ToString();
-                            data.DateShamsi = dataReader["Date"].ToString();
-                            data.Description = dataReader["Description"].ToString();
-                            data.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
-                            data.DoingMethodId = dataReader["DoingMethodId"].ToString();
-                            data.SupplierFullName = dataReader["SupplierFullName"].ToString();
-                            data.DateFrom = dataReader["DateFrom"].ToString();
-                            data.DateFromShamsi = dataReader["DateFrom"].ToString();
-                            data.DateEnd = dataReader["DateEnd"].ToString();
-                            data.DateEndShamsi = dataReader["DateEnd"].ToString();
-                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
-                            data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
-                            data.Final = bool.Parse(dataReader["Final"].ToString());
-                            data.IsSubmited = bool.Parse(dataReader["IsSubmited"].ToString());
+        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int AmlakInfoId,int AreaId){
+            var items = await _db.AmlakInfoContracts
+                .AmlakInfoId(AmlakInfoId)
+                .AreaId(AreaId)
+                .ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
 
-                            ContractView.Add(data);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(ContractView);
-        }
-
-        [Route("Contract/List/ByArea")]
-        [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractListByAreaId(int AreaId)
-        {
-            // var items = await _db.AmlakInfoContracts.AreaId(AreaId).ToListAsync();
-            // var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
-            //
-            // return Ok(finalItems);
-            //
-            List<AmlakInfoContractListVm> ContractView = new List<AmlakInfoContractListVm>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Search", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("areaId", AreaId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            AmlakInfoContractListVm data = new AmlakInfoContractListVm();
-                            data.id = int.Parse(dataReader["id"].ToString());
-                            data.AreaId = StringExtensions.ToNullableInt(dataReader["AreaId"].ToString());
-                            data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
-                            data.Number = dataReader["Number"].ToString();
-                            data.AreaName = dataReader["AreaName"].ToString();
-                            data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
-                            data.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                            data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                            data.Sarparast = dataReader["Sarparast"].ToString();
-                            data.Modir = dataReader["Modir"].ToString();
-                            data.Nemayande = dataReader["Nemayande"].ToString();
-                            data.TenderNumber = dataReader["TenderNumber"].ToString();
-                            data.TenderDate = dataReader["TenderDate"].ToString();
-                            data.TypeUsing = dataReader["TypeUsing"].ToString();
-                            data.ContractType = dataReader["ContractType"].ToString();
-                            data.Date = dataReader["Date"].ToString();
-                            data.DateShamsi = dataReader["Date"].ToString();
-                            data.Description = dataReader["Description"].ToString();
-                            data.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
-                            data.DoingMethodId = dataReader["DoingMethodId"].ToString();
-                            data.SupplierFullName = dataReader["SupplierFullName"].ToString();
-                            data.DateFrom = dataReader["DateFrom"].ToString();
-                            data.DateFromShamsi = dataReader["DateFrom"].ToString();
-                            data.DateEnd = dataReader["DateEnd"].ToString();
-                            data.DateEndShamsi = dataReader["DateEnd"].ToString();
-                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
-                            data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
-                            data.Final = bool.Parse(dataReader["Final"].ToString());
-                            data.IsSubmited = bool.Parse(dataReader["IsSubmited"].ToString());
-
-                            ContractView.Add(data);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(ContractView);
+            return Ok(finalItems);
         }
 
        
 
         [Route("Contract/Read")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractReadVm>>> ContractRead(int ContractId)
+        public async Task<ApiResult<AmlakInfoContractReadVm>> ContractRead(int ContractId)
         {
-            List<AmlakInfoContractReadVm> ContractSearchView = new List<AmlakInfoContractReadVm>();
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfoContract_Read", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("ContractId", ContractId);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        while (await dataReader.ReadAsync())
-                        {
-                            AmlakInfoContractReadVm data = new AmlakInfoContractReadVm();
-                            data.id = int.Parse(dataReader["id"].ToString());
-                            data.Number = dataReader["Number"].ToString();
-                            data.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                            data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
-                            data.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                            data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                            data.Sarparast = dataReader["Sarparast"].ToString();
-                            data.Modir = dataReader["Modir"].ToString();
-                            data.Nemayande = dataReader["Nemayande"].ToString();
-                            data.ModatValue = dataReader["ModatValue"].ToString();
-                            data.TenderNumber = dataReader["TenderNumber"].ToString();
-                            data.TenderDate = dataReader["TenderDate"].ToString();
-                            data.TypeUsing = dataReader["TypeUsing"].ToString();
-                            data.ContractType = dataReader["ContractType"].ToString();
-                            data.Date = dataReader["Date"].ToString();
-                            data.DateShamsi = dataReader["Date"].ToString();
-                            data.Description = dataReader["Description"].ToString();
-                            data.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
-                            data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
-                            data.DoingMethodId = dataReader["DoingMethodId"].ToString();
-                            data.SuppliersId = StringExtensions.ToNullableInt(dataReader["SuppliersId"].ToString());
-                            data.DateFrom = dataReader["DateFrom"].ToString();
-                            data.DateFromShamsi = dataReader["DateFrom"].ToString();
-                            data.DateEnd = dataReader["DateEnd"].ToString();
-                            data.DateEndShamsi = dataReader["DateEnd"].ToString();
-                            data.Amount = Int64.Parse(dataReader["Amount"].ToString());
-                            data.AmountMonth = Int64.Parse(dataReader["AmountMonth"].ToString());
-                            data.Zemanat_Price = Int64.Parse(dataReader["Zemanat_Price"].ToString());
-                            data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
-                            data.Final = bool.Parse(dataReader["Final"].ToString());
-                            data.IsSubmited = bool.Parse(dataReader["IsSubmited"].ToString());
+            
+            var item = await _db.AmlakInfoContracts
+                .Id(ContractId)
+                .Include(a=>a.Prices)
+                .Include(a=>a.Suppliers)
+                .ThenInclude(s=>s.Supplier)
+                .FirstAsync();
+            var finalItem = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractReadVm>(item);
 
-                            ContractSearchView.Add(data);
-                        }
-                    }
-                    sqlconnect.Close();
-                }
-            }
-            return Ok(ContractSearchView);
+            return Ok(finalItem);
         }
 
         [Route("Contract/Insert")]
@@ -315,70 +168,70 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             AmlakInfoContractListVm data = new AmlakInfoContractListVm();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("Number", param.Number);
-                    sqlCommand.Parameters.AddWithValue("Date", param.Date);
-                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
-                    sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
-                    sqlCommand.Parameters.AddWithValue("DoingMethodId", 6);
-                    sqlCommand.Parameters.AddWithValue("AmlakId", param.AmlakId);
-                    sqlCommand.Parameters.AddWithValue("TenderNumber", param.TenderNumber);
-                    sqlCommand.Parameters.AddWithValue("TenderDate", param.TenderDate);
-                    sqlCommand.Parameters.AddWithValue("Sarparast", param.Sarparast);
-                    sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
-                    sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
-                    sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
-                    sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
-                    sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
-                    sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
-                    sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
-                    sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
-                    sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
-                    sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
-                    sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
-                    sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
-                    sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
-
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        data.id = int.Parse(dataReader["id"].ToString());
-                        data.Number = dataReader["Number"].ToString();
-                        data.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                        data.AreaName = dataReader["AreaName"].ToString();
-                        data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
-                        data.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                        data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                        data.Sarparast = dataReader["Sarparast"].ToString();
-                        data.Modir = dataReader["Modir"].ToString();
-                        data.ModatValue = dataReader["ModatValue"].ToString();
-                        data.Nemayande = dataReader["Nemayande"].ToString();
-                        data.TenderNumber = dataReader["TenderNumber"].ToString();
-                        data.TenderDate = dataReader["TenderDate"].ToString();
-                        data.TypeUsing = dataReader["TypeUsing"].ToString();
-                        data.ContractType = dataReader["ContractType"].ToString();
-                        data.Date = dataReader["Date"].ToString();
-                        data.DateShamsi = dataReader["Date"].ToString();
-                        data.Description = dataReader["Description"].ToString();
-                        data.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
-                        data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
-                        data.DoingMethodId = dataReader["DoingMethodId"].ToString();
-                        data.SupplierFullName = dataReader["SupplierFullName"].ToString();
-                        data.DateFrom = dataReader["DateFrom"].ToString();
-                        data.DateFromShamsi = dataReader["DateFrom"].ToString();
-                        data.DateEnd = dataReader["DateEnd"].ToString();
-                        data.DateEndShamsi = dataReader["DateEnd"].ToString();
-                        data.Amount = Int64.Parse(dataReader["Amount"].ToString());
-                        data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
-                        data.Final = bool.Parse(dataReader["Final"].ToString());
-                        data.IsSubmited = bool.Parse(dataReader["IsSubmited"].ToString());
-
-                    }
-                }
+                // using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Insert", sqlconnect))
+                // {
+                //     sqlconnect.Open();
+                //     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                //     sqlCommand.Parameters.AddWithValue("Number", param.Number);
+                //     sqlCommand.Parameters.AddWithValue("Date", param.Date);
+                //     sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                //     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
+                //     sqlCommand.Parameters.AddWithValue("DoingMethodId", 6);
+                //     sqlCommand.Parameters.AddWithValue("AmlakId", param.AmlakId);
+                //     sqlCommand.Parameters.AddWithValue("TenderNumber", param.TenderNumber);
+                //     sqlCommand.Parameters.AddWithValue("TenderDate", param.TenderDate);
+                //     sqlCommand.Parameters.AddWithValue("Sarparast", param.Sarparast);
+                //     sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
+                //     sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
+                //     sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
+                //     sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
+                //     sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
+                //     sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
+                //     sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
+                //     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
+                //     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
+                //     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
+                //     sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
+                //     sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
+                //     sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
+                //
+                //     sqlCommand.CommandType = CommandType.StoredProcedure;
+                //     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                //     while (dataReader.Read())
+                //     {
+                //         data.id = int.Parse(dataReader["id"].ToString());
+                //         data.Number = dataReader["Number"].ToString();
+                //         data.AreaId = int.Parse(dataReader["AreaId"].ToString());
+                //         data.AreaName = dataReader["AreaName"].ToString();
+                //         data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
+                //         data.EstateInfoName = dataReader["EstateInfoName"].ToString();
+                //         data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
+                //         data.Sarparast = dataReader["Sarparast"].ToString();
+                //         data.Modir = dataReader["Modir"].ToString();
+                //         data.ModatValue = dataReader["ModatValue"].ToString();
+                //         data.Nemayande = dataReader["Nemayande"].ToString();
+                //         data.TenderNumber = dataReader["TenderNumber"].ToString();
+                //         data.TenderDate = dataReader["TenderDate"].ToString();
+                //         data.TypeUsing = dataReader["TypeUsing"].ToString();
+                //         data.ContractType = dataReader["ContractType"].ToString();
+                //         data.Date = dataReader["Date"].ToString();
+                //         data.DateShamsi = dataReader["Date"].ToString();
+                //         data.Description = dataReader["Description"].ToString();
+                //         data.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
+                //         data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
+                //         data.DoingMethodId = dataReader["DoingMethodId"].ToString();
+                //         data.SupplierFullName = dataReader["SupplierFullName"].ToString();
+                //         data.DateFrom = dataReader["DateFrom"].ToString();
+                //         data.DateFromShamsi = dataReader["DateFrom"].ToString();
+                //         data.DateEnd = dataReader["DateEnd"].ToString();
+                //         data.DateEndShamsi = dataReader["DateEnd"].ToString();
+                //         data.Amount = Int64.Parse(dataReader["Amount"].ToString());
+                //         data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
+                //         data.Final = bool.Parse(dataReader["Final"].ToString());
+                //         data.IsSubmited = bool.Parse(dataReader["IsSubmited"].ToString());
+                //
+                //     }
+                // }
             }
 
             return Ok(data);
@@ -390,37 +243,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("Number", param.Number);
-                    sqlCommand.Parameters.AddWithValue("Date", param.Date);
-                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
-                    sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
-                    sqlCommand.Parameters.AddWithValue("DoingMethodId", 6);
-                    sqlCommand.Parameters.AddWithValue("AmlakId", param.AmlakId);
-                    sqlCommand.Parameters.AddWithValue("TenderNumber", param.TenderNumber);
-                    sqlCommand.Parameters.AddWithValue("TenderDate", param.TenderDate);
-                    sqlCommand.Parameters.AddWithValue("Sarparast", param.Sarparast);
-                    sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
-                    sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
-                    sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
-                    sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
-                    sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
-                    sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
-                    sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
-                    sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
-                    sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
-                    sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
-                    sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
-                    sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
-                    sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-
-                }
+                // using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Update", sqlconnect))
+                // {
+                //     sqlconnect.Open();
+                //     sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                //     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+                //     sqlCommand.Parameters.AddWithValue("Number", param.Number);
+                //     sqlCommand.Parameters.AddWithValue("Date", param.Date);
+                //     sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                //     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
+                //     sqlCommand.Parameters.AddWithValue("DoingMethodId", 6);
+                //     sqlCommand.Parameters.AddWithValue("AmlakId", param.AmlakId);
+                //     sqlCommand.Parameters.AddWithValue("TenderNumber", param.TenderNumber);
+                //     sqlCommand.Parameters.AddWithValue("TenderDate", param.TenderDate);
+                //     sqlCommand.Parameters.AddWithValue("Sarparast", param.Sarparast);
+                //     sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
+                //     sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
+                //     sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
+                //     sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
+                //     sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
+                //     sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
+                //     sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
+                //     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
+                //     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
+                //     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
+                //     sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
+                //     sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
+                //     sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
+                //     sqlCommand.CommandType = CommandType.StoredProcedure;
+                //     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                //
+                // }
             }
             return Ok("با موفقیت انجام شد");
         }
@@ -702,7 +555,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
             item.AreaId = param.AreaId;
             // item.IsSubmited = param.IsSubmited;
-            // item.Masahat = param.Masahat;
+            item.Masahat = param.Masahat;
             item.AmlakInfoKindId = param.AmlakInfoKindId;
             item.EstateInfoName = param.EstateInfoName;
             item.EstateInfoAddress = param.EstateInfoAddress;
