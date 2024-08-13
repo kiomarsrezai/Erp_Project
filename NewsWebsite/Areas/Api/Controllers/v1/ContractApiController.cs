@@ -27,6 +27,7 @@ using System.Net;
 using System.Security.Policy;
 using System.Net.Mime;
 using System.Text;
+using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -467,9 +468,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AmlakInfoKindCom")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoKindComViewModel>>> Ac_AmlakInfoKindCom()
+        public async Task<ApiResult<List<AmlakInfoKindVm>>> Ac_AmlakInfoKindCom()
         {
-            List<AmlakInfoKindComViewModel> data = new List<AmlakInfoKindComViewModel>();
+            List<AmlakInfoKindVm> data = new List<AmlakInfoKindVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
                 {
@@ -480,7 +481,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                         while (await dataReader.ReadAsync())
                         {
-                            AmlakInfoKindComViewModel row = new AmlakInfoKindComViewModel();
+                            AmlakInfoKindVm row = new AmlakInfoKindVm();
                             row.Id = int.Parse(dataReader["Id"].ToString());
                             row.AmlakInfoKindName = dataReader["AmlakInfoKindName"].ToString();
                             data.Add(row);

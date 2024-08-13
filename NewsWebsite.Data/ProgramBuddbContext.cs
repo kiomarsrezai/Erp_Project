@@ -7,6 +7,9 @@ using NewsWebsite.Data.Mapping;
 using NewsWebsite.Entities;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.Data.Models;
+using NewsWebsite.Data.Models.AmlakInfo;
+using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
+using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
 namespace NewsWebsite.Data
 {
@@ -43,6 +46,17 @@ namespace NewsWebsite.Data
         public virtual DbSet<TblProjects> TblProjects { get; set; }
         public virtual DbSet<TblVasets> TblVasets { get; set; }
         public virtual DbSet<TblYears> TblYears { get; set; }
+        // public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }
+        public virtual DbSet<AmlakPrivateNew> AmlakPrivateNews { get; set; }
+        public virtual DbSet<AmlakPrivateFile> AmlakPrivateFiles { get; set; }
+        public virtual DbSet<AmlakInfo> AmlakInfos { get; set; }
+        public virtual DbSet<AmlakInfoKind> AmlakInfoKinds { get; set; }
+        public virtual DbSet<AmlakInfoFile> AmlakInfoFiles { get; set; }
+        public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }
+        public virtual DbSet<AmlakInfoContractPrice> AmlakInfoContractPrices { get; set; }
+        public virtual DbSet<AmlakInfoContractSupplier> AmlakInfoContractSuppliers { get; set; }
+        public virtual DbSet<AmlakInfoContractFile> AmlakInfoContractFiles { get; set; }
+        public virtual DbSet<Supplier> Suppliers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
