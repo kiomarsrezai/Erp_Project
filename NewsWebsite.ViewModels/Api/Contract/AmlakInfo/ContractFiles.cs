@@ -5,29 +5,27 @@ using NewsWebsite.ViewModels.Api.Public;
 namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     
     // Model --------------------------------------------------------------
-    [Table("TblAmlakInfoAttachs")]
-    public class AmlakInfoFile:BaseModel {
-        public int AmlakInfoId{ get; set; }
+    [Table("TblContractAttachs")]
+    public class AmlakInfoContractFile:BaseModel {
+        public int ContractId{ get; set; }
         public string FileName{ get; set; }
         public string FileTitle{ get; set; }
-        public string Type{ get; set; }
     }
 
     
     // View Models ---------------------------------------------------------
 
-    public class AmlakInfoFilesBaseModel {
-        public int? AmlakInfoId{ get; set; }
+    public class AmlakInfoContractFilesBaseModel {
+        public int? ContractId{ get; set; }
         public string? FileTitle{ get; set; }
-        public string? Type{ get; set; }
     }
 
 
-    public class AmlakInfoFilesListVm : AmlakInfoFilesBaseModel {
+    public class AmlakInfoContractFilesListVm : AmlakInfoContractFilesBaseModel {
         public string FileName{ get; set; }
     }
 
-    public class AmlakInfoFileUploadVm : AmlakInfoFilesBaseModel {
+    public class AmlakInfoContractFileUploadVm : AmlakInfoContractFilesBaseModel {
         public IFormFile FormFile{ get; set; }
     }
 }

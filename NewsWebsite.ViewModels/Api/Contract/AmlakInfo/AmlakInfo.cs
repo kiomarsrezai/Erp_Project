@@ -63,13 +63,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     
     
     public class AmlakInfoReadContractVm : AmlakInfoBaseModel {
-        public string AreaName{ get; set; }
-        public string AmlakInfoKindName{ get; set; }
-        public string AmlakInfolate{ get; set; }
-        public string AmlakInfolong{ get; set; }
-        public string CodeUsing{ get; set; }
-        public int TotalContract{ get; set; }
-        public bool? IsContracted{ get; set; }
         public string TypeUsing{ get; set; }
     }
     

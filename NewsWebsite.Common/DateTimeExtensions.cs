@@ -19,6 +19,21 @@ namespace NewsWebsite.Common
             return persianDateTime.ToString(format);
         }
 
+        public static string ConvertMiladiToShamsi(this string? date, string format)
+        {
+            if (string.IsNullOrEmpty(date))
+                return string.Empty;
+
+            if (DateTime.TryParse(date, out DateTime parsedDate))
+            {
+                PersianDateTime persianDateTime = new PersianDateTime(parsedDate);
+                return persianDateTime.ToString(format);
+            }
+
+            return string.Empty; 
+        }
+        
+
 
         public static bool IsLeapYear(this DateTime? date)
         {

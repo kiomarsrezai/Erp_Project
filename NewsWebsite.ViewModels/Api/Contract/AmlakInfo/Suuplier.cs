@@ -14,4 +14,7 @@
     public class AmlakInfoSupplierUpdateVm : AmlakInfoSupplierBaseModel {
         public int Id{ get; set; }
     }
+    public class AmlakInfoSupplierContractReadVm : AmlakInfoSupplierBaseModel {
+        public int Id{ get; set; }
+    }
 }

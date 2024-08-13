@@ -10,7 +10,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int ContractId{ get; set; }
         // public AmlakInfoContractListVm Contract{ get; set; }
         public int SupplierId{ get; set; }
-        public AmlakInfoSupplierBaseModel Supplier{ get; set; }
+        public AmlakInfoSupplierContractReadVm Supplier{ get; set; }
     }
     
 }

@@ -140,6 +140,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
 
+            foreach (var finalItem in finalItems)
+                finalItem.DateShamsi = finalItem.Date.ConvertMiladiToShamsi( "yyyy/MM/dd");;
+            
             return Ok(finalItems);
         }
 
@@ -152,129 +155,169 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             var item = await _db.AmlakInfoContracts
                 .Id(ContractId)
+                .Include(a=>a.AmlakInfo)
                 .Include(a=>a.Prices)
                 .Include(a=>a.Suppliers)
                 .ThenInclude(s=>s.Supplier)
                 .FirstAsync();
+            
+            
             var finalItem = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractReadVm>(item);
+
+            finalItem.DateShamsi = finalItem.Date.ConvertMiladiToShamsi( "yyyy/MM/dd");;
+            finalItem.DateFromShamsi = finalItem.DateFrom.ConvertMiladiToShamsi( "yyyy/MM/dd");;
+            finalItem.DateEndShamsi = finalItem.DateEnd.ConvertMiladiToShamsi( "yyyy/MM/dd");;
 
             return Ok(finalItem);
         }
 
         [Route("Contract/Insert")]
         [HttpPost]
-        public async Task<ApiResult<AmlakInfoContractListVm>> ContractInsert([FromBody] AmlakInfoContractInsertVm param)
-        {
-            AmlakInfoContractListVm data = new AmlakInfoContractListVm();
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                // using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Insert", sqlconnect))
-                // {
-                //     sqlconnect.Open();
-                //     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                //     sqlCommand.Parameters.AddWithValue("Number", param.Number);
-                //     sqlCommand.Parameters.AddWithValue("Date", param.Date);
-                //     sqlCommand.Parameters.AddWithValue("Description", param.Description);
-                //     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
-                //     sqlCommand.Parameters.AddWithValue("DoingMethodId", 6);
-                //     sqlCommand.Parameters.AddWithValue("AmlakId", param.AmlakId);
-                //     sqlCommand.Parameters.AddWithValue("TenderNumber", param.TenderNumber);
-                //     sqlCommand.Parameters.AddWithValue("TenderDate", param.TenderDate);
-                //     sqlCommand.Parameters.AddWithValue("Sarparast", param.Sarparast);
-                //     sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
-                //     sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
-                //     sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
-                //     sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
-                //     sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
-                //     sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
-                //     sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
-                //     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
-                //     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
-                //     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
-                //     sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
-                //     sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
-                //     sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
-                //
-                //     sqlCommand.CommandType = CommandType.StoredProcedure;
-                //     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                //     while (dataReader.Read())
-                //     {
-                //         data.id = int.Parse(dataReader["id"].ToString());
-                //         data.Number = dataReader["Number"].ToString();
-                //         data.AreaId = int.Parse(dataReader["AreaId"].ToString());
-                //         data.AreaName = dataReader["AreaName"].ToString();
-                //         data.Masahat = StringExtensions.ToNullablefloat(dataReader["Masahat"].ToString());
-                //         data.EstateInfoName = dataReader["EstateInfoName"].ToString();
-                //         data.EstateInfoAddress = dataReader["EstateInfoAddress"].ToString();
-                //         data.Sarparast = dataReader["Sarparast"].ToString();
-                //         data.Modir = dataReader["Modir"].ToString();
-                //         data.ModatValue = dataReader["ModatValue"].ToString();
-                //         data.Nemayande = dataReader["Nemayande"].ToString();
-                //         data.TenderNumber = dataReader["TenderNumber"].ToString();
-                //         data.TenderDate = dataReader["TenderDate"].ToString();
-                //         data.TypeUsing = dataReader["TypeUsing"].ToString();
-                //         data.ContractType = dataReader["ContractType"].ToString();
-                //         data.Date = dataReader["Date"].ToString();
-                //         data.DateShamsi = dataReader["Date"].ToString();
-                //         data.Description = dataReader["Description"].ToString();
-                //         data.AmlakInfoId = dataReader["AmlakInfoId"].ToString();
-                //         data.AmlakId = StringExtensions.ToNullableInt(dataReader["AmlakId"].ToString());
-                //         data.DoingMethodId = dataReader["DoingMethodId"].ToString();
-                //         data.SupplierFullName = dataReader["SupplierFullName"].ToString();
-                //         data.DateFrom = dataReader["DateFrom"].ToString();
-                //         data.DateFromShamsi = dataReader["DateFrom"].ToString();
-                //         data.DateEnd = dataReader["DateEnd"].ToString();
-                //         data.DateEndShamsi = dataReader["DateEnd"].ToString();
-                //         data.Amount = Int64.Parse(dataReader["Amount"].ToString());
-                //         data.Surplus = Int64.Parse(dataReader["Surplus"].ToString());
-                //         data.Final = bool.Parse(dataReader["Final"].ToString());
-                //         data.IsSubmited = bool.Parse(dataReader["IsSubmited"].ToString());
-                //
-                //     }
-                // }
-            }
+        public async Task<ApiResult<string>> ContractInsert([FromBody] AmlakInfoContractInsertVm param){
 
-            return Ok(data);
+            var amlakInfo =await  _db.AmlakInfos.Id( param.AmlakInfoId).FirstOrDefaultAsync();
+            if (amlakInfo == null)
+                return BadRequest("ملک یافت نشد");
+            
+            // insert contract 
+
+            var contract = new AmlakInfoContract();
+            contract.AmlakInfoId=param.AmlakInfoId;
+            contract.AreaId=param.AreaId;
+            contract.DoingMethodId=param.DoingMethodId;
+            contract.Number=param.Number;
+            contract.Date=param.Date;
+            contract.Description=param.Description;
+            contract.DateFrom=param.DateFrom;
+            contract.DateEnd=param.DateEnd;
+            contract.ZemanatPrice=param.ZemanatPrice;
+            contract.Type=param.Type;
+            contract.ModatValue=param.ModatValue;
+            contract.Nemayande=param.Nemayande;
+            contract.Modir=param.Modir;
+            contract.Sarparast=param.Sarparast;
+            contract.TenderNumber=param.TenderNumber;
+            contract.TenderDate=param.TenderDate;
+
+            _db.Add(contract);
+            await _db.SaveChangesAsync();
+
+            
+            // update amlak info 
+            if (amlakInfo.Masahat == null || amlakInfo.Masahat == 0)
+                amlakInfo.Masahat = param.Masahat;
+            if (string.IsNullOrEmpty(amlakInfo.Structure))
+                amlakInfo.Structure=param.Structure;
+            if (string.IsNullOrEmpty(amlakInfo.Owner))
+                amlakInfo.Owner=param.Owner;
+            if (string.IsNullOrEmpty(amlakInfo.TypeUsing))
+                amlakInfo.TypeUsing=param.TypeUsing;
+            
+
+            
+
+            foreach (var price in param.Prices){
+
+                var amlakInfoPrice = new AmlakInfoContractPrice();
+                amlakInfoPrice.ContractId = contract.Id;
+                amlakInfoPrice.Year = price.Year;
+                amlakInfoPrice.Deposit= price.Deposit;
+                amlakInfoPrice.Rent= price.Rent;
+
+                _db.Add(amlakInfoPrice);
+            }
+            
+            foreach (var supplierId in param.SupplierIds){
+
+                var amlakInfoSupplier = new AmlakInfoContractSupplier();
+                amlakInfoSupplier.ContractId = contract.Id;
+                amlakInfoSupplier.SupplierId = supplierId;
+
+                _db.Add(amlakInfoSupplier);
+            }
+            
+            await _db.SaveChangesAsync();
+
+            return Ok("با موفقیت انجام شد");
         }
 
+        
+        
         [Route("Contract/Update")]
         [HttpPost]
         public async Task<ApiResult<string>> ContractUpdate([FromBody] AmlakInfoContractUpdateVm param)
         {
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                // using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Update", sqlconnect))
-                // {
-                //     sqlconnect.Open();
-                //     sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                //     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                //     sqlCommand.Parameters.AddWithValue("Number", param.Number);
-                //     sqlCommand.Parameters.AddWithValue("Date", param.Date);
-                //     sqlCommand.Parameters.AddWithValue("Description", param.Description);
-                //     sqlCommand.Parameters.AddWithValue("SuppliersId", param.SuppliersId);
-                //     sqlCommand.Parameters.AddWithValue("DoingMethodId", 6);
-                //     sqlCommand.Parameters.AddWithValue("AmlakId", param.AmlakId);
-                //     sqlCommand.Parameters.AddWithValue("TenderNumber", param.TenderNumber);
-                //     sqlCommand.Parameters.AddWithValue("TenderDate", param.TenderDate);
-                //     sqlCommand.Parameters.AddWithValue("Sarparast", param.Sarparast);
-                //     sqlCommand.Parameters.AddWithValue("Nemayande", param.Nemayande);
-                //     sqlCommand.Parameters.AddWithValue("Modir", param.Modir);
-                //     sqlCommand.Parameters.AddWithValue("Masahat", param.Masahat);
-                //     sqlCommand.Parameters.AddWithValue("TypeUsing", param.TypeUsing);
-                //     sqlCommand.Parameters.AddWithValue("CurrentStatus", param.CurrentStatus);
-                //     sqlCommand.Parameters.AddWithValue("Structure", param.Structure);
-                //     sqlCommand.Parameters.AddWithValue("Owner", param.Owner);
-                //     sqlCommand.Parameters.AddWithValue("DateFrom", param.DateFrom);
-                //     sqlCommand.Parameters.AddWithValue("DateEnd", param.DateEnd);
-                //     sqlCommand.Parameters.AddWithValue("Amount", param.Amount);
-                //     sqlCommand.Parameters.AddWithValue("AmountMonth", param.AmountMonth);
-                //     sqlCommand.Parameters.AddWithValue("Zemanat_Price", param.Zemanat_Price);
-                //     sqlCommand.Parameters.AddWithValue("ModatValue", param.ModatValue);
-                //     sqlCommand.CommandType = CommandType.StoredProcedure;
-                //     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                //
-                // }
+            
+            var contract =await  _db.AmlakInfoContracts.Id( param.Id).FirstOrDefaultAsync();
+            if (contract == null)
+                return BadRequest("قرارداد یافت نشد");
+
+            var amlakInfo =await  _db.AmlakInfos.Id( contract.AmlakInfoId).FirstOrDefaultAsync();
+            if (amlakInfo == null)
+                return BadRequest("ملک یافت نشد");
+            
+            
+            // update contract 
+            contract.DoingMethodId=param.DoingMethodId;
+            contract.Number=param.Number;
+            contract.Date=param.Date;
+            contract.Description=param.Description;
+            contract.DateFrom=param.DateFrom;
+            contract.DateEnd=param.DateEnd;
+            contract.ZemanatPrice=param.ZemanatPrice;
+            contract.Type=param.Type;
+            contract.ModatValue=param.ModatValue;
+            contract.Nemayande=param.Nemayande;
+            contract.Modir=param.Modir;
+            contract.Sarparast=param.Sarparast;
+            contract.TenderNumber=param.TenderNumber;
+            contract.TenderDate=param.TenderDate;
+
+
+            
+            
+            // update amlak info 
+            if (amlakInfo.Masahat == null || amlakInfo.Masahat == 0)
+                amlakInfo.Masahat = param.Masahat;
+            if (string.IsNullOrEmpty(amlakInfo.Structure))
+                amlakInfo.Structure=param.Structure;
+            if (string.IsNullOrEmpty(amlakInfo.Owner))
+                amlakInfo.Owner=param.Owner;
+            if (string.IsNullOrEmpty(amlakInfo.TypeUsing))
+                amlakInfo.TypeUsing=param.TypeUsing;
+
+
+            var prices = await _db.AmlakInfoContractPrices.Where(a => a.ContractId == param.Id).ToListAsync();
+            _db.RemoveRange(prices);
+            
+            var suppliers = await _db.AmlakInfoContractSuppliers.Where(a => a.ContractId == param.Id).ToListAsync();
+            _db.RemoveRange(suppliers);
+            
+            await _db.SaveChangesAsync();
+
+
+            foreach (var price in param.Prices){
+
+                var amlakInfoPrice = new AmlakInfoContractPrice();
+                amlakInfoPrice.ContractId = contract.Id;
+                amlakInfoPrice.Year = price.Year;
+                amlakInfoPrice.Deposit= price.Deposit;
+                amlakInfoPrice.Rent= price.Rent;
+
+                _db.Add(amlakInfoPrice);
             }
+            
+            foreach (var supplierId in param.SupplierIds){
+
+                var amlakInfoSupplier = new AmlakInfoContractSupplier();
+                amlakInfoSupplier.ContractId = contract.Id;
+                amlakInfoSupplier.SupplierId = supplierId;
+
+                _db.Add(amlakInfoSupplier);
+            }
+            
+            await _db.SaveChangesAsync();
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -296,69 +339,43 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
           return Ok("با موفقیت انجام شد");
         }
         
-          [Route("Contract/Upload")]
+        [Route("Contract/Upload")]
         [HttpPost]
-        public async Task<ApiResult<string>> ContractUploadFile(ContractFileUploadVm fileUpload)
-        {
-            string issuccess = "ناموفق";
-
-            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "Contracts/"+fileUpload.ContractId);
-            if (fileName!=""){
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("[SP0_ContractFileDetail_Insert]", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("ContractId", fileUpload.ContractId);
-                        sqlCommand.Parameters.AddWithValue("FileName", fileName);
-                        sqlCommand.Parameters.AddWithValue("Title", fileUpload.FileTitle);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    }
-                }
-                issuccess = "موفق";
-                
+        public async Task<ApiResult<string>> ContractUploadFile(AmlakInfoContractFileUploadVm fileUpload){
+            if (fileUpload.ContractId == null)
+                return BadRequest(new{ message = "شناسه قرارداد نامعتبر می باشد" });
+        
+            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "Contracts/" + fileUpload.ContractId);
+            if (fileName != ""){
+                var item = new AmlakInfoContractFile();
+                item.ContractId = fileUpload.ContractId ?? 0;
+                item.FileName = fileName;
+                item.FileTitle = fileUpload.FileTitle;
+                _db.Add(item);
+                await _db.SaveChangesAsync();
             }else{
-                return BadRequest(new { message = "فایل نامعتبر می باشد" });
+                return BadRequest(new{ message = "فایل نامعتبر می باشد" });
             }
-
-            return Ok(issuccess);
+        
+            return Ok("موفق");
         }
 
-        
         [Route("Contract/Files")]
         [HttpGet]
-        public async Task<ApiResult<List<ContractFilesListVm>>> ContractAttachFiles(int contractId)
-        {
+        public async Task<ApiResult<List<AmlakInfoContractFilesListVm>>> ContractAttachFiles(int contractId){
             if (contractId == 0) BadRequest();
-
-            List<ContractFilesListVm> output = new List<ContractFilesListVm>();
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_GetListContractAttachFiles", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("ContractId", contractId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    var prefixUrls = "/Upload/Contracts/"+contractId+"/";
-                    while (dataReader.Read())
-                    {
-                        ContractFilesListVm fetchView = new ContractFilesListVm();
-                        fetchView.AttachID = StringExtensions.ToNullableInt(dataReader["AttachID"].ToString());
-                        fetchView.ContractId = StringExtensions.ToNullableInt(dataReader["ContractId"].ToString());
-                        fetchView.FileName = prefixUrls+Path.GetFileName(dataReader["FileName"]+"");
-                        fetchView.FileTitle = dataReader["FileTitle"].ToString();
-                        output.Add(fetchView);
-
-                        //dataReader.NextResult();
-                    }
-                }
-            }
-            return Ok(output);
-        }
         
+            var items = await _db.AmlakInfoContractFiles.Where(a => a.ContractId == contractId).ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakInfoContractFile, AmlakInfoContractFilesListVm>(items);
+            
+            foreach (var item in finalItems){
+                item.FileName = "/Upload/Contracts/" +item.ContractId+"/"+ item.FileName;
+            }
+
+        
+            return Ok(finalItems);
+        }
+
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------

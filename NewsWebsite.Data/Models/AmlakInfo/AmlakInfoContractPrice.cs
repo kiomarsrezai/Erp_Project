@@ -8,9 +8,9 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
     public class AmlakInfoContractPrice:BaseModel {
         
         public int ContractId{ get; set; }
-        // public AmlakInfoContract Contract{ get; set; }
+        public AmlakInfoContract Contract{ get; set; }
         public int Year{ get; set; }
-        public Int64 Diposit{ get; set; }
+        public Int64 Deposit{ get; set; }
         public Int64 Rent{ get; set; }
         
         

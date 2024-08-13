@@ -8,9 +8,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     public class AmlakInfoContractPriceVm:BaseModel {
         
         public int ContractId{ get; set; }
-        public AmlakInfoContractListVm Contract{ get; set; }
         public int Year{ get; set; }
-        public Int64 Diposit{ get; set; }
+        public Int64 Deposit{ get; set; }
         public Int64 Rent{ get; set; }
     }
     

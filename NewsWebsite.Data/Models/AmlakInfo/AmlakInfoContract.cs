@@ -18,7 +18,7 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public string DateFrom{ get; set; }
         public string DateEnd{ get; set; }
         public Int64 ZemanatPrice{ get; set; }
-        public int Type{ get; set; }
+        public string Type{ get; set; }
         public int ModatValue{ get; set; }
         public string Nemayande{ get; set; }
         public string Modir{ get; set; }
@@ -28,6 +28,7 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         
         public ICollection<AmlakInfoContractSupplier> Suppliers{ get; set; }
         public ICollection<AmlakInfoContractPrice> Prices{ get; set; }
+        public virtual AmlakInfo AmlakInfo { get; set; }
     }
     
     

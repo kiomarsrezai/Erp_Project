@@ -53,6 +53,9 @@ namespace NewsWebsite.Data
         public virtual DbSet<AmlakInfoKind> AmlakInfoKinds { get; set; }
         public virtual DbSet<AmlakInfoFile> AmlakInfoFiles { get; set; }
         public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }
+        public virtual DbSet<AmlakInfoContractPrice> AmlakInfoContractPrices { get; set; }
+        public virtual DbSet<AmlakInfoContractSupplier> AmlakInfoContractSuppliers { get; set; }
+        public virtual DbSet<AmlakInfoContractFile> AmlakInfoContractFiles { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
