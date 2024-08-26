@@ -152,7 +152,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakPrivate/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakPrivateReadVm>> AmlakPrivateRead(PublicParamIdViewModel param){
-            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstAsync();
+            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstOrDefaultAsync();
+            if (item == null)
+                return BadRequest("پیدا نشد");
+            
             var finalItem = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateReadVm>(item);
 
             return Ok(finalItem);
