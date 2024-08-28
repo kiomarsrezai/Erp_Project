@@ -179,7 +179,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.SadaCode = param.SadaCode;
             await _db.SaveChangesAsync();
 
-            return Ok("با موفقیت انجام شد");
+            return Ok(item.Id.ToString());
         }
 
 

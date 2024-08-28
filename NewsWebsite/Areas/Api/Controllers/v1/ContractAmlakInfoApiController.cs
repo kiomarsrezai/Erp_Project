@@ -257,7 +257,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             await _db.SaveChangesAsync();
 
-            return Ok("با موفقیت انجام شد");
+            return Ok(contract.Id.ToString());
         }
 
         
@@ -337,7 +337,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             await _db.SaveChangesAsync();
 
-            return Ok("با موفقیت انجام شد");
+            return Ok(contract.Id.ToString());
         }
 
         [Route("Contract/Delete")]
@@ -604,7 +604,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             item.Owner = param.Owner;
             await _db.SaveChangesAsync();
         
-            return Ok("با موفقیت انجام شد");
+            return Ok(item.Id.ToString());
         }
         //
         //

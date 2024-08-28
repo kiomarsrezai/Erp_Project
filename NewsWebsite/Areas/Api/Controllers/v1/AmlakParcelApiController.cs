@@ -82,7 +82,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.Title = param.Title;
             item.Type = param.Type + "";
             item.Status = "Pending";
-            item.Comment = "";
+            item.Comment = param.Comment;
             _db.Add(item);
             await _db.SaveChangesAsync();
 
@@ -90,7 +90,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.FileKrooki= await UploadHelper.UploadFile(param.FileKrooki, "AmlakParcels/" + item.Id);
             await _db.SaveChangesAsync();
             
-            return Ok("با موفقیت انجام شد");
+            return Ok(item.Id.ToString());
         }
 
         
@@ -111,7 +111,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.Title = param.Title;
             item.Type = param.Type + "";
             item.Status = "Pending";
-            item.Comment = item.Comment+ "\n"+param.Comment;
+            item.Comment = item.Comment+ "<br>"+param.Comment;
 
             if (param.FileDWG != null){
                 var oldFile = item.FileDWG;
@@ -125,19 +125,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             }
             await _db.SaveChangesAsync();
 
-            return Ok("با موفقیت انجام شد");
+            return Ok(item.Id.ToString());
         }
         
         [Route("AmlakParcel/Status")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakParcelUpdateStatus( AmlakParcelUpdateStatusVm param){
-            
+
             var item = await _db.AmlakParcels.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
-                return BadRequest("پیدا نشد");
+                return BadRequest("پیدا نشد111");
 
             item.Status = param.Status;
-            item.Comment = item.Comment+"\n"+param.Comment;
+            item.Comment = item.Comment+"<br>"+param.Comment;
             await _db.SaveChangesAsync();
 
             return Ok("با موفقیت انجام شد");
