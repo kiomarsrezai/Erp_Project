@@ -8,7 +8,6 @@ using NewsWebsite.ViewModels.Api.Public;
 namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     [Table("tblAmlakParcel")]
     public class AmlakParcel:BaseModel {
-        public int Id{ get; set; }
         public string Title{ get; set; }
         public string FileDWG{ get; set; }
         public string FileKrooki{ get; set; }

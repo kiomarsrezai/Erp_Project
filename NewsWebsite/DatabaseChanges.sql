@@ -1,1 +1,3 @@
 add tblAmlakParcel
+add tblAmlakArchive
+add TblAmlakArchiveAttachs
