@@ -116,6 +116,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
                         SdiId = feature.Id,
                         Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
                         Masahat = "",
+                        PredictionUsage="",
                         Title = feature.Id,
                         TypeUsing = "",
                         SadaCode = feature.Properties.Pelaksabti
@@ -165,10 +166,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakPrivate/Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakPrivateUpdate([FromBody] AmlakPrivateUpdateVm param){
-            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstAsync();
+            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstOrDefaultAsync();
+            if (item == null)
+                return BadRequest(new{ message = "یافت نشد" });
 
+            
             item.AreaId = param.AreaId;
             item.Masahat = param.Masahat + "";
+            item.PredictionUsage = param.PredictionUsage;
             item.Title = param.Title;
             item.TypeUsing = param.TypeUsing;
             item.SadaCode = param.SadaCode;

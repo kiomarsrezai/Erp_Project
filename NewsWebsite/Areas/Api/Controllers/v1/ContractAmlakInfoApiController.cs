@@ -152,10 +152,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("Contract/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int AmlakInfoId,int AreaId){
+        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int amlakInfoId,int areaId){
             var items = await _db.AmlakInfoContracts
-                .AmlakInfoId(AmlakInfoId)
-                .AreaId(AreaId)
+                .AmlakInfoId(amlakInfoId)
+                .AreaId(areaId)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
 
@@ -566,6 +566,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 .Include(a => a.Area)
                 .Include(a => a.AmlakInfoKind)
                 .Where(a => a.AreaId == param.AreaId)
+                .Where(a => a.Rentable == param.Rentable)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(items);
 
