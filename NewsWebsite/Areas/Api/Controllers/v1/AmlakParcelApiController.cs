@@ -137,7 +137,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
                 return BadRequest("پیدا نشد111");
 
             item.Status = param.Status;
-            item.Comment = item.Comment+"<br>"+param.Comment;
+            item.Comment = item.Comment+ "<br>" + Helpers.MiladiToHejri(DateTime.Now.ToString()) + ":" +param.Comment;
             await _db.SaveChangesAsync();
 
             return Ok("با موفقیت انجام شد");

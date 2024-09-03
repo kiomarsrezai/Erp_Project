@@ -566,6 +566,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 .Include(a => a.Area)
                 .Include(a => a.AmlakInfoKind)
                 .Where(a => a.AreaId == param.AreaId)
+                .Where(a => a.AmlakInfoKindId == param.AmlakInfoKindId)
                 .Where(a => a.Rentable == param.Rentable)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(items);

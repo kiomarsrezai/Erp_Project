@@ -11,6 +11,7 @@ using NewsWebsite.Data.Models.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakArchive;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
+using NewsWebsite.ViewModels.Api.Contract.AmlakCompliant;
 
 namespace NewsWebsite.Data
 {
@@ -61,6 +62,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<AmlakParcel> AmlakParcels { get; set; }
         public virtual DbSet<AmlakArchive> AmlakArchives { get; set; }
         public virtual DbSet<AmlakArchiveFile> AmlakArchiveFiles { get; set; }
+        public virtual DbSet<AmlakCompliant> AmlakCompliants { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
