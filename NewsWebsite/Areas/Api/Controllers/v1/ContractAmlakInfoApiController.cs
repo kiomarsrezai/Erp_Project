@@ -137,8 +137,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
             var amlakInfosCount = await _db.AmlakInfos.CountAsync();
             var contractAmlakInfosCount = await _db.AmlakInfoContracts.CountAsync();
-            var parcels=0;
-            var archives=0;
+            var parcels = await _db.AmlakParcels.CountAsync();
+            var archives = await _db.AmlakArchives.CountAsync();
             
             
             return Ok(new {amlakPrivatesCount,amlakInfosCount,contractAmlakInfosCount,parcels,archives});
@@ -676,10 +676,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("AmlakInfo/Kind")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoKindVm>>> AmlakInfoKind()
+        public async Task<ApiResult<List<AmlakInfoKindVm>>> AmlakInfoKind(int rentable=1)
         {
             
-            var items = await _db.AmlakInfoKinds.ToListAsync();
+            var items = await _db.AmlakInfoKinds.Rentable(rentable).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoKind, AmlakInfoKindVm>(items);
 
             return Ok(finalItems);

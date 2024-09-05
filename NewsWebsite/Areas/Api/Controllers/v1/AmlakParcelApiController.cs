@@ -46,7 +46,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakParcel/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakParcelListVm>>> AmlakParcelList(AmlakParcelReadInputVm param){
-            var items = await _db.AmlakParcels.Type(param.Type).ToListAsync();
+            var items = await _db.AmlakParcels.Type(param.Type).Title(param.Title).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakParcel, AmlakParcelListVm>(items);
 
             return Ok(finalItems);

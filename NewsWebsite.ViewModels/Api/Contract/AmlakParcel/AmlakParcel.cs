@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using NewsWebsite.ViewModels.Api.Public;
+using Microsoft.EntityFrameworkCore;
 
 namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     [Table("tblAmlakParcel")]
@@ -69,6 +70,12 @@ public static class AmlakParcelExtensions {
     public static IQueryable<AmlakParcel> Type(this IQueryable<AmlakParcel> query, string? value){
         if (BaseModel.CheckParameter(value,0)){
             return query.Where(e => e.Type == value);
+        }
+        return query;
+    }
+    public static IQueryable<AmlakParcel> Title(this IQueryable<AmlakParcel> query, string? value){
+        if (BaseModel.CheckParameter(value,0)){
+            return query.Where(e => EF.Functions.Like(e.Title, $"%{value}%"));
         }
         return query;
     }
