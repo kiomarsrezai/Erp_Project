@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,6 +112,14 @@ namespace NewsWebsite
 
 
             app.UseStaticFiles();
+            
+            // add DWG file as static file
+            var provider2 = new FileExtensionContentTypeProvider();
+            provider2.Mappings[".dwg"] = "application/acad";
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = provider2
+            });
 
             app.UseCustomIdentityServices();
 
