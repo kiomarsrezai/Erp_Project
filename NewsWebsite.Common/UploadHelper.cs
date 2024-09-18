@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace NewsWebsite.Common {
     public class UploadHelper {
-        public static async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,png,gif,bmp"){
+        public static async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,jpeg,png,gif,bmp"){
 
             if (!CheckFileType(file, extensions))
                 return "";
@@ -28,7 +28,7 @@ namespace NewsWebsite.Common {
             return fileName;
         }
 
-        private static bool CheckFileType(IFormFile file, string extensions){
+        public static bool CheckFileType(IFormFile file, string extensions){
             if (file == null || string.IsNullOrEmpty(extensions)){
                 return false;
             }
@@ -45,5 +45,25 @@ namespace NewsWebsite.Common {
             return false;
         }
 
+        
+        public static bool DeleteFile(string fileName, string path){
+
+            var folderPath = Path.Combine("wwwroot", "Upload", path);
+
+            // if (!Directory.Exists(folderPath)){
+            //     return true;
+            //     Directory.CreateDirectory(folderPath);
+            // }
+
+            var pathfile = Path.Combine(folderPath, fileName);
+
+            if (File.Exists(pathfile)){
+                File.Delete(pathfile);
+            }
+            
+            return true;
+        }
+
+        
     }
 }

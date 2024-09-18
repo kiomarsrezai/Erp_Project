@@ -58,6 +58,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     public class AmlakInfoReadInputVm {
         public int? AreaId{ get; set; }
         public int? AmlakInfoKindId{ get; set; }
+        public int Rentable{ get; set; } = 1;
     }
 
     

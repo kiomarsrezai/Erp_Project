@@ -45,6 +45,7 @@
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
     <Folder Include="wwwroot\Upload\AmlakInfo\" />
+    <Folder Include="wwwroot\Upload\AmlakParcels\1\" />
     <Folder Include="wwwroot\Upload\Contracts\" />
   </ItemGroup>
 
@@ -169,6 +170,10 @@
     <Content Update="wwwroot\CacheFiles\assets\vendor\bootstrap-table\dist\extensions\export\bootstrap-table-export.min.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\186\638494667302787770.png" />
   </ItemGroup>
 
 </Project>

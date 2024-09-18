@@ -15,6 +15,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string SadaCode{ get; set; } 
         public string SdiId{ get; set; }
         public string Coordinates{ get; set; }
+        public string PredictionUsage{ get; set; } // sell , arrest , special , Participation , separation
     }
 
     
@@ -22,6 +23,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int Id{ get; set; }
         public int AreaId{ get; set; }
         public string Title{ get; set; }
+        public string PredictionUsage{ get; set; }
         public string SadaCode{ get; set; } 
     }
 

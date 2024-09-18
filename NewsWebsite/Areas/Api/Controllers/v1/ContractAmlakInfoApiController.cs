@@ -131,12 +131,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
         
+        [Route("Contract/Dashboard")]
+        [HttpGet]
+        public async Task<ApiResult<object>> ContractList(){
+            var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
+            var amlakInfosCount = await _db.AmlakInfos.CountAsync();
+            var contractAmlakInfosCount = await _db.AmlakInfoContracts.CountAsync();
+            var parcels = await _db.AmlakParcels.CountAsync();
+            var archives = await _db.AmlakArchives.CountAsync();
+            
+            
+            return Ok(new {amlakPrivatesCount,amlakInfosCount,contractAmlakInfosCount,parcels,archives});
+        }
+
+
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
+        
         [Route("Contract/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int AmlakInfoId,int AreaId){
+        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int amlakInfoId,int areaId){
             var items = await _db.AmlakInfoContracts
-                .AmlakInfoId(AmlakInfoId)
-                .AreaId(AreaId)
+                .AmlakInfoId(amlakInfoId)
+                .AreaId(areaId)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
 
@@ -238,7 +257,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             await _db.SaveChangesAsync();
 
-            return Ok("با موفقیت انجام شد");
+            return Ok(contract.Id.ToString());
         }
 
         
@@ -318,7 +337,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             await _db.SaveChangesAsync();
 
-            return Ok("با موفقیت انجام شد");
+            return Ok(contract.Id.ToString());
         }
 
         [Route("Contract/Delete")]
@@ -547,6 +566,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 .Include(a => a.Area)
                 .Include(a => a.AmlakInfoKind)
                 .Where(a => a.AreaId == param.AreaId)
+                .Where(a => a.AmlakInfoKindId == param.AmlakInfoKindId)
+                .Where(a => a.Rentable == param.Rentable)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(items);
 
@@ -556,7 +577,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("AmlakInfo/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakInfoReadVm>> AmlakInfoRead(PublicParamIdViewModel param){
-            var item = await _db.AmlakInfos.Include(a=>a.Area).Include(a=>a.AmlakInfoKind).Id(param.Id).FirstAsync();
+            var item = await _db.AmlakInfos.Include(a=>a.Area).Include(a=>a.AmlakInfoKind).Id(param.Id).FirstOrDefaultAsync();
+            if (item == null)
+                return BadRequest("پیدا نشد");
+            
             var finalItem = MyMapper.MapTo<AmlakInfo, AmlakInfoReadVm>(item);
         
             return Ok(finalItem);
@@ -581,7 +605,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             item.Owner = param.Owner;
             await _db.SaveChangesAsync();
         
-            return Ok("با موفقیت انجام شد");
+            return Ok(item.Id.ToString());
         }
         //
         //
@@ -632,7 +656,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<string>> AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
         {
             
-            var item = await _db.AmlakInfos.Id(param.Id).FirstAsync();
+            var item = await _db.AmlakInfos.Id(param.Id).FirstOrDefaultAsync();
+            if (item == null)
+                return BadRequest("پیدا نشد");
+            
             // todo: check has contract or not
             
             var images = await _db.AmlakInfoFiles.Where(a=>a.AmlakInfoId==param.Id).ToListAsync();
@@ -649,10 +676,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("AmlakInfo/Kind")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoKindVm>>> AmlakInfoKind()
+        public async Task<ApiResult<List<AmlakInfoKindVm>>> AmlakInfoKind(int rentable=1)
         {
             
-            var items = await _db.AmlakInfoKinds.ToListAsync();
+            var items = await _db.AmlakInfoKinds.Rentable(rentable).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoKind, AmlakInfoKindVm>(items);
 
             return Ok(finalItems);

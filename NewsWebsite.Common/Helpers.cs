@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -115,6 +116,33 @@ public static class Helpers {
         }
 
         dd(result);
+    }
+
+
+
+
+    public static string MiladiToHejri(DateTime miladiDate){
+        return MiladiToHejri(miladiDate.ToString());
+    }
+
+    public static string MiladiToHejri(string miladiDate ){
+        if (miladiDate!=null && DateTime.TryParse(miladiDate, out DateTime miladiDateTime) && miladiDateTime.Year>1){
+            PersianCalendar pc = new PersianCalendar();
+
+            int year = pc.GetYear(miladiDateTime);
+            int month = pc.GetMonth(miladiDateTime);
+            int day = pc.GetDayOfMonth(miladiDateTime);
+            string persianDate = $"{year:D4}/{month:D2}/{day:D2}";
+
+            if (miladiDateTime.TimeOfDay != TimeSpan.Zero){
+                string time = miladiDateTime.ToString("HH:mm:ss");
+                persianDate += $" {time}";
+            }
+
+            return persianDate;
+        }
+
+        return "0000/00/00 00:00:00";
     }
 }
 

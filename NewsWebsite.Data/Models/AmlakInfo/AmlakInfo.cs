@@ -22,6 +22,7 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public string CodeUsing{ get; set; }
         public bool? IsContracted{ get; set; }
         public string TypeUsing{ get; set; }
+        public int Rentable{ get; set; } 
         
         public virtual  AmlakInfoKind AmlakInfoKind{ get; set; }
         public virtual  TblAreas Area{ get; set; }
