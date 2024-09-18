@@ -134,6 +134,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Close();
                 }
             }
+            else
+            if (refreshFormViewModel.yearId == 34)
+            {
+                using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9900_Akh_TO_Olden_Then_Budget_1403_Main", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.Parameters.AddWithValue("areaId", refreshFormViewModel.areaId);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        sqlCommand.ExecuteReader();
+                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                    }
+                    sqlconnect.Close();
+                }
+            }
             return Ok();
         }
 
