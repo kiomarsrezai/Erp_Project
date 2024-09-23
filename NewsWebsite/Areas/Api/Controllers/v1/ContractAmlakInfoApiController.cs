@@ -34,7 +34,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class ContractAmlakInfoApiController : ControllerBase
+    public class ContractAmlakInfoApiController : EnhancedController
     {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
@@ -134,6 +134,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("Contract/Dashboard")]
         [HttpGet]
         public async Task<ApiResult<object>> ContractList(){
+            await CheckUserAuth(_db);
+
             var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
             var amlakInfosCount = await _db.AmlakInfos.CountAsync();
             var contractAmlakInfosCount = await _db.AmlakInfoContracts.CountAsync();
@@ -153,6 +155,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("Contract/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int amlakInfoId,int areaId){
+            await CheckUserAuth(_db);
+
             var items = await _db.AmlakInfoContracts
                 .AmlakInfoId(amlakInfoId)
                 .AreaId(areaId)
@@ -169,8 +173,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Contract/Read")]
         [HttpGet]
-        public async Task<ApiResult<AmlakInfoContractReadVm>> ContractRead(int ContractId)
-        {
+        public async Task<ApiResult<AmlakInfoContractReadVm>> ContractRead(int ContractId){
+            await CheckUserAuth(_db);
             
             var item = await _db.AmlakInfoContracts
                 .Id(ContractId)
@@ -193,6 +197,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("Contract/Insert")]
         [HttpPost]
         public async Task<ApiResult<string>> ContractInsert([FromBody] AmlakInfoContractInsertVm param){
+            await CheckUserAuth(_db);
 
             var amlakInfo =await  _db.AmlakInfos.Id( param.AmlakInfoId).FirstOrDefaultAsync();
             if (amlakInfo == null)
@@ -264,8 +269,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("Contract/Update")]
         [HttpPost]
-        public async Task<ApiResult<string>> ContractUpdate([FromBody] AmlakInfoContractUpdateVm param)
-        {
+        public async Task<ApiResult<string>> ContractUpdate([FromBody] AmlakInfoContractUpdateVm param){
+            await CheckUserAuth(_db);
             
             var contract =await  _db.AmlakInfoContracts.Id( param.Id).FirstOrDefaultAsync();
             if (contract == null)
@@ -342,8 +347,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Contract/Delete")]
         [HttpPost]
-        public async Task<ApiResult<string>> ContractDelete([FromBody] PublicParamIdViewModel param)
-        {
+        public async Task<ApiResult<string>> ContractDelete([FromBody] PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Delete", sqlconnect))
@@ -361,6 +367,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("Contract/Upload")]
         [HttpPost]
         public async Task<ApiResult<string>> ContractUploadFile(AmlakInfoContractFileUploadVm fileUpload){
+            await CheckUserAuth(_db);
+
             if (fileUpload.ContractId == null)
                 return BadRequest(new{ message = "شناسه قرارداد نامعتبر می باشد" });
         
@@ -382,6 +390,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("Contract/Files")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoContractFilesListVm>>> ContractAttachFiles(int contractId){
+            await CheckUserAuth(_db);
+
             if (contractId == 0) BadRequest();
         
             var items = await _db.AmlakInfoContractFiles.Where(a => a.ContractId == contractId).ToListAsync();
@@ -402,8 +412,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("Supplier/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoSupplierUpdateVm>>> SuppliersList(string txtSerach)
-        {
+        public async Task<ApiResult<List<AmlakInfoSupplierUpdateVm>>> SuppliersList(string txtSerach){
+            await CheckUserAuth(_db);
+
             List<AmlakInfoSupplierUpdateVm> ContractView = new List<AmlakInfoSupplierUpdateVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -435,8 +446,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Supplier/Read")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoSupplierUpdateVm>>> SuppliersRead(PublicParamIdViewModel param)
-        {
+        public async Task<ApiResult<List<AmlakInfoSupplierUpdateVm>>> SuppliersRead(PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             List<AmlakInfoSupplierUpdateVm> ContractView = new List<AmlakInfoSupplierUpdateVm>();
             {
                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
@@ -468,8 +480,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Supplier/Insert")]
         [HttpPost]
-        public async Task<ApiResult<AmlakInfoSupplierUpdateVm>> SupplierInsert([FromBody] AmlakInfoSupplierInsertVm param)
-        {
+        public async Task<ApiResult<AmlakInfoSupplierUpdateVm>> SupplierInsert([FromBody] AmlakInfoSupplierInsertVm param){
+            await CheckUserAuth(_db);
+
             AmlakInfoSupplierUpdateVm supp = new AmlakInfoSupplierUpdateVm();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -501,8 +514,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Supplier/Update")]
         [HttpPost]
-        public async Task<ApiResult<string>> SupplierUpdate([FromBody] AmlakInfoSupplierUpdateVm param)
-        {
+        public async Task<ApiResult<string>> SupplierUpdate([FromBody] AmlakInfoSupplierUpdateVm param){
+            await CheckUserAuth(_db);
+
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -532,8 +546,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("Supplier/Delete")]
         [HttpPost]
-        public async Task<ApiResult<string>> SupplierDelete([FromBody] PublicParamIdViewModel param)
-        {
+        public async Task<ApiResult<string>> SupplierDelete([FromBody] PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             //string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -556,6 +571,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
            [Route("AmlakInfo/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoListVm>>> AmlakInfoList(AmlakInfoReadInputVm param){
+            await CheckUserAuth(_db);
+
             // var items = await _db.AmlakInfos
             //     .Include(a=>a.Area)
             //     .Include(a=>a.AmlakInfoKind)
@@ -577,6 +594,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("AmlakInfo/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakInfoReadVm>> AmlakInfoRead(PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakInfos.Include(a=>a.Area).Include(a=>a.AmlakInfoKind).Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -590,6 +609,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("AmlakInfo/Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakInfoUpdate([FromBody] AmlakInfoUpdateVm param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakInfos.Id(param.Id).FirstOrDefaultAsync();
             if(item==null)
                 return BadRequest("آیتم پیدا نشد");
@@ -612,6 +633,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("AmlakInfo/Upload")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakInfoUploadFile(AmlakInfoFileUploadVm fileUpload){
+            await CheckUserAuth(_db);
             if (fileUpload.AmlakInfoId == null)
                 return BadRequest(new{ message = "شناسه ملک نامعتبر می باشد" });
         
@@ -637,6 +659,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("AmlakInfo/Files")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoFilesListVm>>> AmlakInfoAttachFiles(int AmlakInfoId){
+            await CheckUserAuth(_db);
             if (AmlakInfoId == 0) BadRequest();
         
             var items = await _db.AmlakInfoFiles.Where(a => a.AmlakInfoId == AmlakInfoId).ToListAsync();
@@ -655,7 +678,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpPost]
         public async Task<ApiResult<string>> AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
         {
-            
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakInfos.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -678,7 +702,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoKindVm>>> AmlakInfoKind(int rentable=1)
         {
-            
+            await CheckUserAuth(_db);
+
             var items = await _db.AmlakInfoKinds.Rentable(rentable).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoKind, AmlakInfoKindVm>(items);
 
@@ -695,11 +720,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [Route("Test11")]
         [HttpGet]
         public async Task<ApiResult<TblBudgets>> Test11(int ContractId){
+            await CheckUserAuth(_db);
 
             TblBudgets b = _db.TblBudgets.FirstOrDefault();
             
             return Ok( b);
-
         }
     }
 }

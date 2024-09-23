@@ -26,7 +26,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class AmlakArchiveApiController : ControllerBase {
+    public class AmlakArchiveApiController : EnhancedController {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -48,6 +48,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakArchive/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakArchiveListVm>>> AmlakArchiveList(AmlakArchiveReadInputVm param){
+            await CheckUserAuth(_db);
+
             var items = await _db.AmlakArchives
                 .ArchiveCode(param.ArchiveCode)
                 .AmlakCode(param.AmlakCode)
@@ -62,6 +64,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakArchive/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakArchiveReadVm>> AmlakArchiveRead(PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakArchives.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -75,6 +79,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakArchive/Store")]
         [HttpPost]
         public async Task<ApiResult<AmlakArchiveStoreResultVm>> AmlakArchiveUpdate([FromBody] AmlakArchiveStoreVm param){
+            await CheckUserAuth(_db);
+
             var item = new AmlakArchive();
         
             item.ArchiveCode = param.ArchiveCode;
@@ -102,6 +108,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakArchive/Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakArchiveUpdate([FromBody] AmlakArchiveUpdateVm param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakArchives.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -127,6 +135,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakArchive/Upload")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakArchiveUploadFile(AmlakArchiveFileUploadVm fileUpload){
+            await CheckUserAuth(_db);
+
             if (fileUpload.AmlakArchiveId == null)
                 return BadRequest(new{ message = "شناسه ملک نامعتبر می باشد" });
         
@@ -153,6 +163,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakArchive/Files")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakArchiveFilesListVm>>> AmlakArchiveAttachFiles(int AmlakArchiveId){
+            await CheckUserAuth(_db);
+
             if (AmlakArchiveId == 0) BadRequest();
         
             var items = await _db.AmlakArchiveFiles.Where(a => a.AmlakArchiveId == AmlakArchiveId).ToListAsync();
@@ -169,6 +181,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakArchive/File/Edit")]
         [HttpPatch]
         public async Task<ApiResult<string>> AmlakArchiveAttachFileEdit(int amlakArchiveFileId,string title){
+            await CheckUserAuth(_db);
+
             if (amlakArchiveFileId == 0) BadRequest();
         
             var item = await _db.AmlakArchiveFiles.Where(a => a.Id == amlakArchiveFileId).FirstOrDefaultAsync();

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using NewsWebsite.Common;
 
 namespace NewsWebsite.IocConfig.Api.Middlewares
 {
@@ -71,7 +72,18 @@ namespace NewsWebsite.IocConfig.Api.Middlewares
                 await WriteToResponseAsync();
 
             }
+            catch (ErrMessageException ex){
+                Message.Add(ex.Message);
+                httpStatusCode = ex.StatusCode;
+                
+                await WriteToResponseAsync();
+            }  
+            catch (DDException exception){
+                context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(exception.Message);
 
+            }
             catch (Exception exception)
             {
                 if(_evn.IsDevelopment())

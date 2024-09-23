@@ -25,7 +25,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class ContractAmlakPrivateApiController : ControllerBase {
+    public class ContractAmlakPrivateApiController : EnhancedController {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -144,6 +144,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakPrivate/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakPrivateListVm>>> AmlakPrivateList(AmlakPrivateReadInputVm param){
+            await CheckUserAuth(_db);
+
             var items = await _db.AmlakPrivateNews.AreaId(param.AreaId).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateListVm>(items);
 
@@ -153,6 +155,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakPrivate/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakPrivateReadVm>> AmlakPrivateRead(PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakPrivateNews.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -166,6 +170,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakPrivate/Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakPrivateUpdate([FromBody] AmlakPrivateUpdateVm param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakPrivateNews.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest(new{ message = "یافت نشد" });
@@ -186,6 +192,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakPrivate/Upload")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakPrivateUploadFile(AmlakPrivateFileUploadVm fileUpload){
+            await CheckUserAuth(_db);
+
             if (fileUpload.AmlakPrivateId == null)
                 return BadRequest(new{ message = "شناسه ملک نامعتبر می باشد" });
 
@@ -211,6 +219,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakPrivate/Files")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakPrivateFilesListVm>>> AmlakPrivateAttachFiles(int AmlakPrivateId){
+            await CheckUserAuth(_db);
+
             if (AmlakPrivateId == 0) BadRequest();
 
             var items = await _db.AmlakPrivateFiles.Where(a => a.AmlakPrivateId == AmlakPrivateId).ToListAsync();

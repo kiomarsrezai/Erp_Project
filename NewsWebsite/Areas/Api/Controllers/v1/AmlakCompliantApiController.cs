@@ -25,7 +25,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class AmlakCompliantApiController : ControllerBase {
+    public class AmlakCompliantApiController : EnhancedController {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -47,6 +47,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakCompliant/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakCompliantListVm>>> AmlakCompliantList(AmlakCompliantReadInputVm param){
+            await CheckUserAuth(_db);
+
             var items = await _db.AmlakCompliants
                 .AmlakInfoId(param.AmlakInfoId)
                 .Subject(param.Subject)
@@ -61,6 +63,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakCompliant/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakCompliantReadVm>> AmlakCompliantRead(PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakCompliants.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -74,6 +78,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakCompliant/Store")]
         [HttpPost]
         public async Task<ApiResult<AmlakCompliantStoreResultVm>> AmlakCompliantUpdate([FromBody] AmlakCompliantStoreVm param){
+            await CheckUserAuth(_db);
+
             var amlakInfo = await _db.AmlakInfos.Id(param.AmlakInfoId).FirstOrDefaultAsync();
             if (amlakInfo == null)
                 return BadRequest("پیدا نشد");
@@ -100,6 +106,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakCompliant/Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakCompliantUpdate([FromBody] AmlakCompliantUpdateVm param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakCompliants.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -117,6 +125,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakCompliant/Status")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakCompliantUpdateStatus([FromBody] AmlakCompliantUpdateStatusVm param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakCompliants.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");

@@ -24,7 +24,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class AmlakParcelApiController : ControllerBase {
+    public class AmlakParcelApiController : EnhancedController {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -46,6 +46,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakParcel/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakParcelListVm>>> AmlakParcelList(AmlakParcelReadInputVm param){
+            await CheckUserAuth(_db);
+
             var items = await _db.AmlakParcels.Type(param.Type).Title(param.Title).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakParcel, AmlakParcelListVm>(items);
 
@@ -55,6 +57,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakParcel/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakParcelReadVm>> AmlakParcelRead(PublicParamIdViewModel param){
+            await CheckUserAuth(_db);
+
             var item = await _db.AmlakParcels.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
@@ -73,6 +77,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakParcel/Store")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakParcelStore( AmlakParcelStoreVm param){
+            await CheckUserAuth(_db);
+
             if (!UploadHelper.CheckFileType(param.FileDWG, "dwg"))
                 return BadRequest("پسوند فایل DWG نادرست می باشد");
             if (!UploadHelper.CheckFileType(param.FileKrooki,"jpg,jpeg,png,gif,bmp"))
@@ -98,6 +104,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [HttpPost]
         public async Task<ApiResult<string>> AmlakParcelUpdate( AmlakParcelUpdateVm param){
             
+            await CheckUserAuth(_db);
+
             if (param.FileDWG!=null && !UploadHelper.CheckFileType(param.FileDWG, "dwg"))
                 return BadRequest("پسوند فایل DWG نادرست می باشد");
             
@@ -131,6 +139,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         [Route("AmlakParcel/Status")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakParcelUpdateStatus( AmlakParcelUpdateStatusVm param){
+
+            await CheckUserAuth(_db);
 
             var item = await _db.AmlakParcels.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
