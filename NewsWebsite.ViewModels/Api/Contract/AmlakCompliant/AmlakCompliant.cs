@@ -17,14 +17,16 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         public string Status{ get; set; } // 
         public string Date{ get; set; }
         public string Steps{ get; set; }
-        public DateTime CreatedAt{ get; set; }
-        
+        public DateTime? CreatedAt{ get; set; }
+        public DateTime? UpdatedAt{ get; set; }
+
         
         
         [NotMapped]
-        public string? CreatedAtFa{
-            get{ return Helpers.MiladiToHejri(CreatedAt); }
-        }
+        public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
+
+        [NotMapped]
+        public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
         
     }
 
@@ -40,6 +42,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         public int AmlakInfoId{ get; set; }
         public string Status{ get; set; }
         public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
+
     }
 
     public class AmlakCompliantReadVm : AmlakCompliantBaseModel {
@@ -49,6 +53,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         public string Description{ get; set; }
         public string Steps{ get; set; }
         public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
 
     }
     public class AmlakCompliantStoreVm : AmlakCompliantBaseModel {

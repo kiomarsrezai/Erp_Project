@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Public;
 
 namespace NewsWebsite.Data.Models.AmlakInfo {
@@ -25,10 +26,20 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public string Sarparast{ get; set; }
         public string TenderNumber{ get; set; }
         public string TenderDate{ get; set; }
+        public DateTime? CreatedAt{ get; set; }
+        public DateTime? UpdatedAt{ get; set; }
+
         
         public ICollection<AmlakInfoContractSupplier> Suppliers{ get; set; }
         public ICollection<AmlakInfoContractPrice> Prices{ get; set; }
         public virtual AmlakInfo AmlakInfo { get; set; }
+        
+        
+        [NotMapped]
+        public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
+
+        [NotMapped]
+        public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
     }
     
     

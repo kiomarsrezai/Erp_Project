@@ -31,6 +31,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int AmlakInfoId{ get; set; }
         public int AreaId{ get; set; }
         public string DateShamsi{ get; set; }= "";
+        public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
 
     }
 
@@ -40,7 +42,10 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string DateShamsi{ get; set; }= "";
         public string DateFromShamsi{ get; set; }= "";
         public string DateEndShamsi{ get; set; } = "";
+        public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
 
+        
         public ICollection<AmlakInfoContractSupplierVm> Suppliers{ get; set; }
         public ICollection<AmlakInfoContractPriceVm> Prices{ get; set; }
         public AmlakInfoReadContractVm AmlakInfo {get; set; }

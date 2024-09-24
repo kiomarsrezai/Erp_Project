@@ -32,7 +32,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int TotalContract{ get; set; }
         public bool? IsContracted{ get; set; }
         public string TypeUsing{ get; set; }
-        
+        public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
+
         public AmlakInfoKindVm AmlakInfoKind{ get; set; }
         public AreaViewModel Area{ get; set; }
     }
@@ -46,7 +48,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int TotalContract{ get; set; }
         public bool? IsContracted{ get; set; }
         public string TypeUsing{ get; set; }
-        
+        public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
+
         public AmlakInfoKindVm AmlakInfoKind{ get; set; }
         public AreaViewModel Area{ get; set; }
     }

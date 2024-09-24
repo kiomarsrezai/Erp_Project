@@ -20,7 +20,7 @@ using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
-namespace NewsWebsite.Areas.Api.Controllers.v1 {
+namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
@@ -81,7 +81,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
 
             if (!UploadHelper.CheckFileType(param.FileDWG, "dwg"))
                 return BadRequest("پسوند فایل DWG نادرست می باشد");
-            if (!UploadHelper.CheckFileType(param.FileKrooki,"jpg,jpeg,png,gif,bmp"))
+            if (param.FileKrooki!=null && !UploadHelper.CheckFileType(param.FileKrooki,"jpg,jpeg,png,gif,bmp"))
                 return BadRequest("فایل کروکی باید عکس باشد");
                 
             var item = new AmlakParcel();
@@ -89,11 +89,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.Type = param.Type + "";
             item.Status = "Pending";
             item.Comment = param.Comment;
+            item.CreatedAt = Helpers.GetServerDateTimeType();
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
             _db.Add(item);
             await _db.SaveChangesAsync();
 
             item.FileDWG = await UploadHelper.UploadFile(param.FileDWG, "AmlakParcels/" + item.Id,"dwg");
-            item.FileKrooki= await UploadHelper.UploadFile(param.FileKrooki, "AmlakParcels/" + item.Id);
+            if(param.FileKrooki!=null)
+                item.FileKrooki= await UploadHelper.UploadFile(param.FileKrooki, "AmlakParcels/" + item.Id);
+            
             await _db.SaveChangesAsync();
             
             return Ok(item.Id.ToString());
@@ -120,7 +124,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.Type = param.Type + "";
             item.Status = "Pending";
             item.Comment = item.Comment+ "<br>"+param.Comment;
-
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
+            
             if (param.FileDWG != null){
                 var oldFile = item.FileDWG;
                 item.FileDWG = await UploadHelper.UploadFile(param.FileDWG, "AmlakParcels/" + item.Id,"dwg");

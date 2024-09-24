@@ -76,7 +76,7 @@ namespace NewsWebsite.IocConfig.Api.Swagger
                 c.OperationFilter<UnauthorizedResponsesOperationFilter>(true, "Bearer");
                 c.AddSecurityDefinition ("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\" \n   Bearer eyJhbGciOiJBMTI4S1ciLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwidHlwIjoiSldUIn0.zFxsRfN-nlj-024J3znVTWXHZmlE93B7aPJtYk2s_6ZauOT70PAVzQ.ovPqgq2hKX-vkZcGkSo9OQ.XX-qZAwdHfPww_HVJ0_fNSi4Ncg-3ZWRoPS8HL34eCCbXhjnYagNaDylM7dKv4CjHOJugQJLNExDc-HusB5RM9ymAknp2QSrCHUGZvgFz2MALscrUUCLS320dCJX3RaOOzTq3Iv0Nvkrj4GCMQ_U496w_Oz5aQf81hAZBIQ76qDb1NT7BZr0-TwSsFIRvhqSEzjDdgLrfKAR0n97PG2fNP0QsXYjUZNlHaNHG8elQwePIsV23xR4d4v5G4q6ANVKX3qpXigjdmBDL71yKafVwXb_fSdJxH0WiERsf3OZ6SPc2UyFBX41et7JL4K2ugQU1plSOB1aD26SDd1czpzgHe3jOJnYubpjfOPHQR9cA9ytC9aNluN1I8eotyIdUMT38g0MIz9ZD86bH9VTmjmiBxMtUDXwR_NKwRC9cVHp8TRZ4vzPPyeBAu022XtiPi-bXmGKg-1LM773_36SwXPl3Z7f6ZOzEe8x68jOnpbmUr8HRLms1tCXQF-7pnoPQQ45WavfK0I9FR_O4yuqlv5CtjNuCn5KZd--R2JW5Jk4uqmnd8S3wK3lxi_RPtqpzZMTpy1wKq5zR6FOvjZVnwl2cyc82dmZQ9Pef1ogX0XMWpEkPdM9No1Kmpv3gFX0RDnX6r2AzGhv-3h7Ry4g_LQNDg.ilK04Chyfuk7r56jcG90ZQ",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                 });

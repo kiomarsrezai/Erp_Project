@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using NewsWebsite.ViewModels.Api.Public;
 using Microsoft.EntityFrameworkCore;
+using NewsWebsite.Common;
 
 namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     [Table("tblAmlakParcel")]
@@ -15,6 +16,14 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Type{ get; set; } // municipality ,  archive , contract
         public string Status{ get; set; } // pending , accepted , rejected , removed
         public string Comment{ get; set; }
+        public DateTime? CreatedAt{ get; set; }
+        public DateTime? UpdatedAt{ get; set; }
+
+        [NotMapped]
+        public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
+
+        [NotMapped]
+        public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
     }
 
     
@@ -26,6 +35,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     public class AmlakParcelListVm : AmlakParcelBaseModel {
         public int Id{ get; set; }
         public string Status{ get; set; } // pending , accepted , rejected , removed
+        public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
     }
 
     public class AmlakParcelReadVm : AmlakParcelBaseModel {
@@ -34,7 +45,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string FileKrooki{ get; set; }
         public string Comment{ get; set; }
         public string Status{ get; set; } // pending , accepted , rejected , removed
-    
+        public string CreatedAtFa{ get; set; }
+        public string UpdatedAtFa{ get; set; }
+
     }
     public class AmlakParcelStoreVm : AmlakParcelBaseModel {
         public IFormFile FileDWG{ get; set; }

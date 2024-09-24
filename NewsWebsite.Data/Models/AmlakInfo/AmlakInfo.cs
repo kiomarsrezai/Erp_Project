@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Public;
 
@@ -23,12 +25,20 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public bool? IsContracted{ get; set; }
         public string TypeUsing{ get; set; }
         public int Rentable{ get; set; } 
-        
+        public DateTime? CreatedAt{ get; set; }
+        public DateTime? UpdatedAt{ get; set; }
+
         public virtual  AmlakInfoKind AmlakInfoKind{ get; set; }
         public virtual  TblAreas Area{ get; set; }
         
         public ICollection<AmlakInfoContract> Contracts{ get; set; }
         
+        
+        [NotMapped]
+        public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
+
+        [NotMapped]
+        public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
     }    
 
     
@@ -38,6 +48,12 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public static IQueryable<AmlakInfo> AreaId(this IQueryable<AmlakInfo> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.AreaId == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakInfo> AmlakInfoKindId(this IQueryable<AmlakInfo> query, int? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.AmlakInfoKindId == value);
             }
             return query;
         }

@@ -19,10 +19,11 @@ using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
 using System.Linq;
+using NewsWebsite.Data.Models.AmlakArchive;
 using NewsWebsite.ViewModels.Api.Contract.AmlakArchive;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
-namespace NewsWebsite.Areas.Api.Controllers.v1 {
+namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
@@ -44,6 +45,91 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpGet]
+        [Route("AmlakArchive/updateFromSdi")]
+        public async Task<IActionResult> UpdateDataFromSdiArchive(){
+            // var options = new RestClientOptions("https://sdi.ahvaz.ir")
+            // {
+            //     MaxTimeout = -1,
+            // };
+            // var client = new RestClient(options);
+            // var request = new RestRequest("/geoapi/user/login/", Method.Post);
+            // request.AddHeader("content-type", "application/json");
+            // request.AddHeader("Accept", "application/json, text/plain, */*");
+            // request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
+            // var body = @"{" + "\n" +
+            // @" ""username"": ""ERP_Fava""," + "\n" +
+            // @" ""password"":" + "\n" +
+            // @"""123456""," + "\n" +
+            // @" ""appId"": ""mobilegis""" + "\n" +
+            // @"}";
+            // request.AddStringBody(body, DataFormat.Json);
+            // RestResponse responselogin = await client.ExecuteAsync(request);
+            // var resplogin = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(responselogin.Content.ToString());
+            //
+            // //var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
+            // //{
+            // //    MaxTimeout = -1,
+            // //};
+            // //var client2 = new RestClient(options2);
+            // //var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey="+ resplogin.api_key.ToString(), Method.Get);
+            // //request.AddHeader("content-type", "application/json");
+            // //request.AddHeader("Accept", "application/json, text/plain, */*");
+            // //request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
+            // //RestResponse response2 = await client2.ExecuteAsync(request2);
+            // ////UTF8Encoding uTF8Encoding = new UTF8Encoding();
+            // ////uTF8Encoding.GetBytes(response2.Content.ToString());
+            // //byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
+            // //string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
+            // var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
+            // {
+            //     MaxTimeout = -1,
+            // };
+            // var client2 = new RestClient(options2);
+            // var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=all_polygon_amlak_472&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey=e434be85d126299659334f104feffb18f51328a6", Method.Post);
+            // request2.AddHeader("content-type", "application/json");
+            // request2.AddHeader("Accept", "application/json, text/plain, */*");
+            // request2.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
+            // RestResponse response2 = await client2.ExecuteAsync(request2);
+            // byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
+            // string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
+
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "archive.json");
+            string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+
+
+            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
+
+            for (int i = 0; i < respLayer.TotalFeatures; i++){
+                var feature = respLayer.Features[i];
+
+                var oldItem = await _db.AmlakArchives.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
+
+                if (oldItem == null){
+                    var item = new AmlakArchive(){
+                        Id = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
+                        SdiId = feature.Id,
+                        Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
+                        IsSubmitted = 0,
+                        CreatedAt = Helpers.GetServerDateTimeType(),
+                        UpdatedAt = Helpers.GetServerDateTimeType(),
+                    };
+                    _db.Add(item);
+                    await _db.SaveChangesAsync();
+                }
+                else{
+                    oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
+                    await _db.SaveChangesAsync();
+                }
+            }
+
+
+            return Ok("موفق");
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
 
         [Route("AmlakArchive/List")]
         [HttpGet]
@@ -53,8 +139,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             var items = await _db.AmlakArchives
                 .ArchiveCode(param.ArchiveCode)
                 .AmlakCode(param.AmlakCode)
-                .JamCode(param.JamCode)
-                .AreaCode(param.AreaCode)
+                .AreaId(param.AreaId)
+                
+                .Include(a=>a.Area)
+                .Include(a=>a.Owner)
+                
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakArchive, AmlakArchiveListVm>(items);
         
@@ -66,7 +155,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         public async Task<ApiResult<AmlakArchiveReadVm>> AmlakArchiveRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakArchives.Id(param.Id).FirstOrDefaultAsync();
+            var item = await _db.AmlakArchives.Id(param.Id)
+                .Include(a=>a.Area)
+                .Include(a=>a.Owner)
+                .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
             
@@ -75,34 +167,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             return Ok(finalItem);
         }
         
-        
-        [Route("AmlakArchive/Store")]
-        [HttpPost]
-        public async Task<ApiResult<AmlakArchiveStoreResultVm>> AmlakArchiveUpdate([FromBody] AmlakArchiveStoreVm param){
-            await CheckUserAuth(_db);
-
-            var item = new AmlakArchive();
-        
-            item.ArchiveCode = param.ArchiveCode;
-            item.AmlakCode = param.AmlakCode;
-            item.JamCode = param.JamCode;
-            item.AreaCode = param.AreaCode;
-            item.Section = param.Section;
-            item.Plaque1 = param.Plaque1;
-            item.Plaque2 = param.Plaque2;
-            item.Owner = param.Owner;
-            item.Description = param.Description;
-            item.Address = param.Address;
-            item.Latitude = param.Latitude;
-            item.Longitude = param.Longitude;
-            _db.Add(item);
-            await _db.SaveChangesAsync();
-
-            var result = new AmlakArchiveStoreResultVm();
-            result.Id = item.Id;
-            result.Message = "با موفقیت انجام شد";
-            return Ok(result);
-        }
         
         
         [Route("AmlakArchive/Update")]
@@ -114,18 +178,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             if (item == null)
                 return BadRequest("پیدا نشد");
 
+            item.AreaId = param.AreaId;
+            item.OwnerId = param.OwnerId;
             item.ArchiveCode = param.ArchiveCode;
             item.AmlakCode = param.AmlakCode;
-            item.JamCode = param.JamCode;
-            item.AreaCode = param.AreaCode;
             item.Section = param.Section;
             item.Plaque1 = param.Plaque1;
             item.Plaque2 = param.Plaque2;
-            item.Owner = param.Owner;
             item.Description = param.Description;
             item.Address = param.Address;
-            item.Latitude = param.Latitude;
-            item.Longitude = param.Longitude;
+            item.IsSubmitted = 1;
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
         
             return Ok("با موفقیت انجام شد");

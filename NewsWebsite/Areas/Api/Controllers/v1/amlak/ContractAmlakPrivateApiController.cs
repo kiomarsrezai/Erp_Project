@@ -20,8 +20,9 @@ using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NewsWebsite.Data.Models.AmlakPrivate;
 
-namespace NewsWebsite.Areas.Api.Controllers.v1 {
+namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
@@ -97,17 +98,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             for (int i = 0; i < respLayer.TotalFeatures; i++){
                 var feature = respLayer.Features[i];
 
-                List<List<List<double>>> nestedList = new List<List<List<double>>>{
-                    new List<List<double>>{
-                        new List<double>{ 1.1, 2.2, 3.3 },
-                        new List<double>{ 4.4, 5.5, 6.6 }
-                    },
-                    new List<List<double>>{
-                        new List<double>{ 7.7, 8.8, 9.9 }
-                    }
-                };
-
-                
                 var oldItem = await _db.AmlakPrivateNews.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
 
                 if (oldItem == null){
@@ -115,11 +105,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
                         AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
                         SdiId = feature.Id,
                         Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
-                        Masahat = "",
+                        Masahat = 0,
                         PredictionUsage="",
                         Title = feature.Id,
                         TypeUsing = "",
-                        SadaCode = feature.Properties.Pelaksabti
+                        DocumentType = 0,
+                        SadaCode = feature.Properties.Pelaksabti,
+                        CreatedAt = Helpers.GetServerDateTimeType(),
+                        UpdatedAt = Helpers.GetServerDateTimeType(),
                     };
                     _db.Add(item);
                     await _db.SaveChangesAsync();
@@ -146,7 +139,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         public async Task<ApiResult<List<AmlakPrivateListVm>>> AmlakPrivateList(AmlakPrivateReadInputVm param){
             await CheckUserAuth(_db);
 
-            var items = await _db.AmlakPrivateNews.AreaId(param.AreaId).ToListAsync();
+            var items = await _db.AmlakPrivateNews
+                .AreaId(param.AreaId).OwnerId(param.OwnerId).TypeUsing(param.TypeUsing)
+                .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
+                
+                .Include(a=>a.Area)
+                .Include(a=>a.Owner)
+                
+                .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateListVm>(items);
 
             return Ok(finalItems);
@@ -157,7 +157,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
         public async Task<ApiResult<AmlakPrivateReadVm>> AmlakPrivateRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstOrDefaultAsync();
+            var item = await _db.AmlakPrivateNews.Id(param.Id)
+                .Include(a=>a.Area)
+                .Include(a=>a.Owner)
+                .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
             
@@ -178,11 +181,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
 
             
             item.AreaId = param.AreaId;
-            item.Masahat = param.Masahat + "";
+            item.OwnerId = param.OwnerId;
+            item.Masahat = param.Masahat;
             item.PredictionUsage = param.PredictionUsage;
             item.Title = param.Title;
             item.TypeUsing = param.TypeUsing;
+            item.DocumentType = param.DocumentType;
             item.SadaCode = param.SadaCode;
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
             return Ok(item.Id.ToString());
@@ -233,5 +239,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             
             return Ok(finalItems);
         }
+        
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
+        [Route("AmlakPrivateDocHistory/List")]
+        [HttpGet]
+        public async Task<ApiResult<List<AmlakPrivateDocHistoryListVm>>> AmlakPrivateDocHistoryList(int amlakPrivateId){
+            await CheckUserAuth(_db);
+
+            var items = await _db.AmlakPrivateDocHistories.AmlakPrivateId(amlakPrivateId).ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakPrivateDocHistory, AmlakPrivateDocHistoryListVm>(items);
+
+            return Ok(finalItems);
+        }
+
+        [Route("AmlakPrivateDocHistory/Store")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AmlakPrivateDocHistoryStore( AmlakPrivateDocHistoryStoreVm param){
+            await CheckUserAuth(_db);
+
+            var item = new AmlakPrivateDocHistory();
+            item.AmlakPrivateId = param.AmlakPrivateId;
+            item.Status = param.Status;
+            item.Desc = param.Desc;
+            item.Date = Helpers.GetServerDateTimeType();
+            _db.Add(item);
+            await _db.SaveChangesAsync();
+
+            return Ok("موفق");
+        }
+
     }
 }

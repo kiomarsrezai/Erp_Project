@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace NewsWebsite.Common {
     public class UploadHelper {
-        public static async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,jpeg,png,gif,bmp"){
-
+        public static async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,jpeg,png,gif,bmp",int maxSizeMB=30){
+            
             if (!CheckFileType(file, extensions))
                 return "";
+            
+            if (file.Length>maxSizeMB * 1024 * 1024)
+                throw new ErrMessageException("حجم فایل بیشتر از "+maxSizeMB+" مگابایت مجاز نمی باشد.");
             
             string fileName;
 

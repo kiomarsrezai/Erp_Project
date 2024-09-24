@@ -29,7 +29,7 @@ using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
 
-namespace NewsWebsite.Areas.Api.Controllers.v1
+namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
@@ -130,28 +130,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
-        
-        [Route("Contract/Dashboard")]
-        [HttpGet]
-        public async Task<ApiResult<object>> ContractList(){
-            await CheckUserAuth(_db);
-
-            var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
-            var amlakInfosCount = await _db.AmlakInfos.CountAsync();
-            var contractAmlakInfosCount = await _db.AmlakInfoContracts.CountAsync();
-            var parcels = await _db.AmlakParcels.CountAsync();
-            var archives = await _db.AmlakArchives.CountAsync();
-            
-            
-            return Ok(new {amlakPrivatesCount,amlakInfosCount,contractAmlakInfosCount,parcels,archives});
-        }
-
-
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-
-        
         [Route("Contract/List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int amlakInfoId,int areaId){
@@ -222,20 +200,33 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             contract.Sarparast=param.Sarparast;
             contract.TenderNumber=param.TenderNumber;
             contract.TenderDate=param.TenderDate;
-
+            contract.CreatedAt = Helpers.GetServerDateTimeType();
+            contract.UpdatedAt = Helpers.GetServerDateTimeType();
+            
             _db.Add(contract);
             await _db.SaveChangesAsync();
 
-            
+
             // update amlak info 
-            if (amlakInfo.Masahat == null || amlakInfo.Masahat == 0)
+            if (amlakInfo.Masahat == null || amlakInfo.Masahat == 0){
                 amlakInfo.Masahat = param.Masahat;
-            if (string.IsNullOrEmpty(amlakInfo.Structure))
-                amlakInfo.Structure=param.Structure;
-            if (string.IsNullOrEmpty(amlakInfo.Owner))
-                amlakInfo.Owner=param.Owner;
-            if (string.IsNullOrEmpty(amlakInfo.TypeUsing))
-                amlakInfo.TypeUsing=param.TypeUsing;
+                amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
+            }
+
+            if (string.IsNullOrEmpty(amlakInfo.Structure)){
+                amlakInfo.Structure = param.Structure;
+                amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
+            }
+
+            if (string.IsNullOrEmpty(amlakInfo.Owner)){
+                amlakInfo.Owner = param.Owner;
+                amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
+            }
+
+            if (string.IsNullOrEmpty(amlakInfo.TypeUsing)){
+                amlakInfo.TypeUsing = param.TypeUsing;
+                amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
+            }
             
 
             
@@ -296,7 +287,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             contract.Sarparast=param.Sarparast;
             contract.TenderNumber=param.TenderNumber;
             contract.TenderDate=param.TenderDate;
-
+            contract.UpdatedAt = Helpers.GetServerDateTimeType();
 
             
             
@@ -582,8 +573,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var items = await _db.AmlakInfos
                 .Include(a => a.Area)
                 .Include(a => a.AmlakInfoKind)
-                .Where(a => a.AreaId == param.AreaId)
-                .Where(a => a.AmlakInfoKindId == param.AmlakInfoKindId)
+                .AreaId(param.AreaId)
+                .AmlakInfoKindId(param.AmlakInfoKindId)
                 .Where(a => a.Rentable == param.Rentable)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(items);
@@ -624,6 +615,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             item.CurrentStatus = param.CurrentStatus;
             item.Structure = param.Structure;
             item.Owner = param.Owner;
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
         
             return Ok(item.Id.ToString());
@@ -710,21 +702,5 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(finalItems);
         }
 
-              
-
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-
-        
-        [Route("Test11")]
-        [HttpGet]
-        public async Task<ApiResult<TblBudgets>> Test11(int ContractId){
-            await CheckUserAuth(_db);
-
-            TblBudgets b = _db.TblBudgets.FirstOrDefault();
-            
-            return Ok( b);
-        }
     }
 }

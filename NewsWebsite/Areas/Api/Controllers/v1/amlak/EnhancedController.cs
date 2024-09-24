@@ -8,11 +8,12 @@ using NewsWebsite.Common;
 using NewsWebsite.Data;
 using NewsWebsite.Entities.identity;
 
-namespace NewsWebsite.Areas.Api.Controllers.v1 {
+namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     public class EnhancedController:ControllerBase {
         public async Task<User> CheckUserAuth(ProgramBuddbContext _db){
             var authHeader = Request.Headers["Authorization"].ToString();
-            
+
+            return new User(); // todo : disable
             if (authHeader == null || !authHeader.StartsWith("Bearer "))
                 throw new ErrMessageException("UnAuthorized", HttpStatusCode.Conflict);
             

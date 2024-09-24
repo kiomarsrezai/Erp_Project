@@ -21,7 +21,7 @@ using NewsWebsite.ViewModels;
 using System.Linq;
 using NewsWebsite.ViewModels.Api.Contract.AmlakCompliant;
 
-namespace NewsWebsite.Areas.Api.Controllers.v1 {
+namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
@@ -92,7 +92,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.Date = param.Date;
             item.Description = param.Description;
             item.Steps = param.Steps;
-            item.CreatedAt = DateTime.Now;
+            item.CreatedAt = Helpers.GetServerDateTimeType();
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
             _db.Add(item);
             await _db.SaveChangesAsync();
 
@@ -116,6 +117,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
             item.FileNumber = param.FileNumber;
             item.Date = param.Date;
             item.Description = param.Description;
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
             return Ok("با موفقیت انجام شد");
@@ -133,6 +135,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1 {
 
             item.Status = param.Status;
             item.Steps = item.Steps + "<br>" + Helpers.MiladiToHejri(DateTime.Now.ToString()) + ":" + param.Steps;
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
             return Ok("با موفقیت انجام شد");

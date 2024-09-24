@@ -1,0 +1,1330 @@
+﻿{
+  "type": "FeatureCollection",
+  "totalFeatures": 1123,
+  "features": [
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.1",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64238421,
+              31.38873572
+            ],
+            [
+              48.64234932,
+              31.38848254
+            ],
+            [
+              48.64227509,
+              31.38843229
+            ],
+            [
+              48.64219541,
+              31.38844029
+            ],
+            [
+              48.64223935,
+              31.38876002
+            ],
+            [
+              48.64237427,
+              31.38874645
+            ],
+            [
+              48.64238421,
+              31.38873572
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 4,
+        "pelaksabti": "6-21092",
+        "mantaqe": "2",
+        "gis_code": "213034007",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.2",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64223935,
+              31.38876002
+            ],
+            [
+              48.64219541,
+              31.38844029
+            ],
+            [
+              48.64216463,
+              31.38844343
+            ],
+            [
+              48.64204932,
+              31.3884551
+            ],
+            [
+              48.64209316,
+              31.38877483
+            ],
+            [
+              48.64223935,
+              31.38876002
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 5,
+        "pelaksabti": "6-21093",
+        "mantaqe": "2",
+        "gis_code": "213034006",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.3",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64209316,
+              31.38877483
+            ],
+            [
+              48.64204932,
+              31.3884551
+            ],
+            [
+              48.64190312,
+              31.38846982
+            ],
+            [
+              48.64194707,
+              31.38878955
+            ],
+            [
+              48.64209316,
+              31.38877483
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 6,
+        "pelaksabti": "6-21094",
+        "mantaqe": "2",
+        "gis_code": "213034005",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.4",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64175704,
+              31.38848454
+            ],
+            [
+              48.64180087,
+              31.38880435
+            ],
+            [
+              48.64194707,
+              31.38878955
+            ],
+            [
+              48.64190312,
+              31.38846982
+            ],
+            [
+              48.64175704,
+              31.38848454
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 7,
+        "pelaksabti": "6-21095",
+        "mantaqe": "2",
+        "gis_code": "213034004",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.5",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64161084,
+              31.38849935
+            ],
+            [
+              48.64165468,
+              31.38881907
+            ],
+            [
+              48.64180087,
+              31.38880435
+            ],
+            [
+              48.64175704,
+              31.38848454
+            ],
+            [
+              48.64161084,
+              31.38849935
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 8,
+        "pelaksabti": "6-21096",
+        "mantaqe": "2",
+        "gis_code": "213034003",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.6",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64146465,
+              31.38851406
+            ],
+            [
+              48.64150859,
+              31.38883388
+            ],
+            [
+              48.64165468,
+              31.38881907
+            ],
+            [
+              48.64161084,
+              31.38849935
+            ],
+            [
+              48.64146465,
+              31.38851406
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 9,
+        "pelaksabti": "6-21097",
+        "mantaqe": "2",
+        "gis_code": "213034002",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.7",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64150859,
+              31.38883388
+            ],
+            [
+              48.64146465,
+              31.38851406
+            ],
+            [
+              48.64132973,
+              31.38852772
+            ],
+            [
+              48.6413199,
+              31.38853837
+            ],
+            [
+              48.64136116,
+              31.38883901
+            ],
+            [
+              48.64137357,
+              31.38884745
+            ],
+            [
+              48.64150859,
+              31.38883388
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 10,
+        "pelaksabti": "6-21098",
+        "mantaqe": "2",
+        "gis_code": "213034001",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.8",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64107224,
+              31.38837246
+            ],
+            [
+              48.64103276,
+              31.38808456
+            ],
+            [
+              48.64088246,
+              31.38809974
+            ],
+            [
+              48.64092194,
+              31.38838764
+            ],
+            [
+              48.64107224,
+              31.38837246
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 12,
+        "pelaksabti": "6-21115",
+        "mantaqe": "2",
+        "gis_code": "213030006",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.9",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64072886,
+              31.38809096
+            ],
+            [
+              48.64077164,
+              31.38840273
+            ],
+            [
+              48.64092194,
+              31.38838764
+            ],
+            [
+              48.64088246,
+              31.38809974
+            ],
+            [
+              48.64087917,
+              31.38807578
+            ],
+            [
+              48.64072886,
+              31.38809096
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 13,
+        "pelaksabti": "6-21114",
+        "mantaqe": "2",
+        "gis_code": "213030005",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.10",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64057856,
+              31.38810605
+            ],
+            [
+              48.64062133,
+              31.38841791
+            ],
+            [
+              48.64077164,
+              31.38840273
+            ],
+            [
+              48.64072886,
+              31.38809096
+            ],
+            [
+              48.64057856,
+              31.38810605
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 14,
+        "pelaksabti": "6-21113",
+        "mantaqe": "2",
+        "gis_code": "213030004",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.11",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64062133,
+              31.38841791
+            ],
+            [
+              48.64057856,
+              31.38810605
+            ],
+            [
+              48.64051448,
+              31.38811254
+            ],
+            [
+              48.64042815,
+              31.38812123
+            ],
+            [
+              48.64047092,
+              31.38843309
+            ],
+            [
+              48.64062133,
+              31.38841791
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 15,
+        "pelaksabti": "6-21112",
+        "mantaqe": "2",
+        "gis_code": "213030003",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.12",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64027785,
+              31.38813641
+            ],
+            [
+              48.64032062,
+              31.38844827
+            ],
+            [
+              48.64047092,
+              31.38843309
+            ],
+            [
+              48.64042815,
+              31.38812123
+            ],
+            [
+              48.64027785,
+              31.38813641
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 16,
+        "pelaksabti": "6-21111",
+        "mantaqe": "2",
+        "gis_code": "213030002",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.13",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.64016249,
+              31.3884064
+            ],
+            [
+              48.64023672,
+              31.38845674
+            ],
+            [
+              48.64032062,
+              31.38844827
+            ],
+            [
+              48.64027785,
+              31.38813641
+            ],
+            [
+              48.64012754,
+              31.38815159
+            ],
+            [
+              48.64016249,
+              31.3884064
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 17,
+        "pelaksabti": "6-21110",
+        "mantaqe": "2",
+        "gis_code": "213030001",
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.14",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.6353395,
+              31.37856338
+            ],
+            [
+              48.63528311,
+              31.37815142
+            ],
+            [
+              48.63503259,
+              31.37817666
+            ],
+            [
+              48.63508902,
+              31.37858862
+            ],
+            [
+              48.6353395,
+              31.37856338
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 20,
+        "pelaksabti": "6-1472",
+        "mantaqe": "2",
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.15",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77031834,
+              31.38320866
+            ],
+            [
+              48.77048447,
+              31.38308781
+            ],
+            [
+              48.7701553,
+              31.38275846
+            ],
+            [
+              48.76998719,
+              31.38288731
+            ],
+            [
+              48.76997595,
+              31.38293131
+            ],
+            [
+              48.77025857,
+              31.38321096
+            ],
+            [
+              48.77031834,
+              31.38320866
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 21,
+        "pelaksabti": "908-233",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.16",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77193575,
+              31.38259442
+            ],
+            [
+              48.77157005,
+              31.38286579
+            ],
+            [
+              48.77203077,
+              31.38332275
+            ],
+            [
+              48.77209437,
+              31.38327556
+            ],
+            [
+              48.77203042,
+              31.38321213
+            ],
+            [
+              48.77226892,
+              31.38303515
+            ],
+            [
+              48.77233287,
+              31.38309858
+            ],
+            [
+              48.77239647,
+              31.38305138
+            ],
+            [
+              48.77193575,
+              31.38259442
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 22,
+        "pelaksabti": "908-31",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.17",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77193575,
+              31.38259442
+            ],
+            [
+              48.77174321,
+              31.38240345
+            ],
+            [
+              48.77137751,
+              31.38267482
+            ],
+            [
+              48.77157005,
+              31.38286579
+            ],
+            [
+              48.77193575,
+              31.38259442
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 23,
+        "pelaksabti": "908-184",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.18",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77088333,
+              31.3815214
+            ],
+            [
+              48.77049391,
+              31.3811402
+            ],
+            [
+              48.77047129,
+              31.3811454
+            ],
+            [
+              48.77042388,
+              31.38118101
+            ],
+            [
+              48.77049313,
+              31.38124887
+            ],
+            [
+              48.77025584,
+              31.38142712
+            ],
+            [
+              48.77018658,
+              31.38135926
+            ],
+            [
+              48.77010748,
+              31.38141868
+            ],
+            [
+              48.77053995,
+              31.38184193
+            ],
+            [
+              48.77057868,
+              31.38187977
+            ],
+            [
+              48.77095804,
+              31.38159454
+            ],
+            [
+              48.77088333,
+              31.3815214
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 24,
+        "pelaksabti": "908-481",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.19",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77117283,
+              31.38180468
+            ],
+            [
+              48.77095804,
+              31.38159454
+            ],
+            [
+              48.77057868,
+              31.38187977
+            ],
+            [
+              48.77079343,
+              31.38209002
+            ],
+            [
+              48.77117283,
+              31.38180468
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 25,
+        "pelaksabti": "908-340",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.20",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.7708197,
+              31.38283835
+            ],
+            [
+              48.77048964,
+              31.38251097
+            ],
+            [
+              48.77015573,
+              31.38275874
+            ],
+            [
+              48.7704858,
+              31.38308612
+            ],
+            [
+              48.7708197,
+              31.38283835
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 26,
+        "pelaksabti": "908-234",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.21",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77091702,
+              31.38247999
+            ],
+            [
+              48.77079777,
+              31.38256848
+            ],
+            [
+              48.7709628,
+              31.38273217
+            ],
+            [
+              48.77106242,
+              31.38265825
+            ],
+            [
+              48.77106507,
+              31.38262683
+            ],
+            [
+              48.77091702,
+              31.38247999
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 27,
+        "pelaksabti": "908-236",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.22",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77091702,
+              31.38247999
+            ],
+            [
+              48.77076897,
+              31.38233315
+            ],
+            [
+              48.77073235,
+              31.38233087
+            ],
+            [
+              48.77063274,
+              31.38240479
+            ],
+            [
+              48.77079777,
+              31.38256848
+            ],
+            [
+              48.77091702,
+              31.38247999
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 28,
+        "pelaksabti": "908-254",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.23",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.77222263,
+              31.38041424
+            ],
+            [
+              48.77183245,
+              31.38002418
+            ],
+            [
+              48.77153036,
+              31.3802043
+            ],
+            [
+              48.77190684,
+              31.38058068
+            ],
+            [
+              48.77196823,
+              31.38060302
+            ],
+            [
+              48.77222263,
+              31.38041424
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 29,
+        "pelaksabti": "908-366",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.24",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.7693254,
+              31.3817248
+            ],
+            [
+              48.7692614,
+              31.38165903
+            ],
+            [
+              48.76921769,
+              31.38168447
+            ],
+            [
+              48.76928506,
+              31.38175369
+            ],
+            [
+              48.7693254,
+              31.3817248
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 30,
+        "pelaksabti": "908-443",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.25",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.76936574,
+              31.3816959
+            ],
+            [
+              48.76930512,
+              31.3816336
+            ],
+            [
+              48.7692614,
+              31.38165903
+            ],
+            [
+              48.7693254,
+              31.3817248
+            ],
+            [
+              48.76936574,
+              31.3816959
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 31,
+        "pelaksabti": "908-444",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.26",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.76940609,
+              31.381667
+            ],
+            [
+              48.76934883,
+              31.38160816
+            ],
+            [
+              48.76930512,
+              31.3816336
+            ],
+            [
+              48.76936574,
+              31.3816959
+            ],
+            [
+              48.76940609,
+              31.381667
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 32,
+        "pelaksabti": "908-445",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.27",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.76944643,
+              31.38163811
+            ],
+            [
+              48.76939254,
+              31.38158273
+            ],
+            [
+              48.76934883,
+              31.38160816
+            ],
+            [
+              48.76940609,
+              31.381667
+            ],
+            [
+              48.76944643,
+              31.38163811
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 33,
+        "pelaksabti": "908-446",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.28",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.76948678,
+              31.38160921
+            ],
+            [
+              48.76943625,
+              31.38155729
+            ],
+            [
+              48.76939254,
+              31.38158273
+            ],
+            [
+              48.76944643,
+              31.38163811
+            ],
+            [
+              48.76948678,
+              31.38160921
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 34,
+        "pelaksabti": "908-447",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "all_polygon_amlak_472.1123",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              48.68882929,
+              31.32268514
+            ],
+            [
+              48.68873491,
+              31.32251331
+            ],
+            [
+              48.68870279,
+              31.32252882
+            ],
+            [
+              48.68877782,
+              31.32266524
+            ],
+            [
+              48.68879654,
+              31.32269929
+            ],
+            [
+              48.68882929,
+              31.32268514
+            ]
+          ]
+        ]
+      },
+      "geometry_name": "the_geom",
+      "properties": {
+        "fid_1": 1122,
+        "pelaksabti": "2409-1",
+        "mantaqe": null,
+        "gis_code": null,
+        "created_user": "poshtiban",
+        "created_date": "2022-03-13T10:46:24Z",
+        "last_edited_user": "poshtiban",
+        "last_edited_date": "2022-03-13T10:46:24Z"
+      }
+    }
+  ],
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::4326"
+    }
+  }
+}

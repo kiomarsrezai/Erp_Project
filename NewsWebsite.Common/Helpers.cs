@@ -121,7 +121,9 @@ public static class Helpers {
 
 
 
-    public static string MiladiToHejri(DateTime miladiDate){
+    public static string MiladiToHejri(DateTime? miladiDate){
+        if (miladiDate == null)
+            return "0000/00/00 00:00:00";
         return MiladiToHejri(miladiDate.ToString());
     }
 
@@ -144,6 +146,32 @@ public static class Helpers {
 
         return "0000/00/00 00:00:00";
     }
+    
+    
+    
+    
+    public static DateTime GetTimeZonedDatetime(){
+        // TimeZoneInfo tehranTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Tehran");
+        // DateTime serverTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tehranTimeZone);
+        DateTime serverTime = DateTime.Now;
+        return serverTime;
+    }
+
+    public static string GetServerDateTime(){
+        return GetTimeZonedDatetime().ToString("yyyy-MM-dd HH:mm:ss");
+    }
+    public static DateTime GetServerDateTimeType(){
+        return GetTimeZonedDatetime();
+    }
+
+    public static string GetServerDate(){
+        return GetTimeZonedDatetime().ToString("yyyy-MM-dd");
+    }
+
+    public static string GetServerTime(){
+        return GetTimeZonedDatetime().ToString("HH:mm:ss");
+    }
+
 }
 
 }
