@@ -44,6 +44,7 @@
     <Folder Include="ViewModels\Api\Budget\BudgetSeprator\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
+    <Folder Include="wwwroot\tmp\" />
     <Folder Include="wwwroot\Upload\AmlakInfo\" />
     <Folder Include="wwwroot\Upload\AmlakParcels\1\" />
     <Folder Include="wwwroot\Upload\Contracts\" />
@@ -152,6 +153,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">

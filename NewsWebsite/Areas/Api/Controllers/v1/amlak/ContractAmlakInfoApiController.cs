@@ -28,6 +28,8 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 {
@@ -598,6 +600,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                     break;
                 
             }
+
+            if (param.Export == 1){
+                param.Page = 1;
+                param.PageRows = 100000;
+            }
             
             if (param.ForMap == 0){
                 builder = builder
@@ -609,11 +616,48 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
            
             var items = await builder.ToListAsync();
             
+            if (param.Export == 1){
+                var fileUrl = ExportExcelAmlak(items);
+                return Ok(new {fileUrl});
+            }
+            
             var finalItems = MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(items);
 
             return Ok(new {items=finalItems,pageCount});
         }
 
+        
+        
+        private static object ExportExcelAmlak(List<AmlakInfo> items){
+            var finalItems = new List<List<object>>();
+
+            foreach (var item in items){
+                var row = new List<object>();
+                row.Add(item.Id);
+                row.Add(item.Area.AreaName);
+                row.Add(item.IsSubmited);
+                row.Add(item.Masahat);
+                row.Add(item.AmlakInfoKind.AmlakInfoKindName);
+                row.Add(item.EstateInfoName);
+                row.Add(item.EstateInfoAddress);
+                row.Add(item.CurrentStatus);
+                row.Add(item.Structure);
+                row.Add(item.Owner);
+                row.Add(item.AmlakInfolate);
+                row.Add(item.AmlakInfolong);
+                row.Add(item.CodeUsing);
+                row.Add(item.TypeUsing);
+                
+                finalItems.Add(row);
+            }
+
+            return Helpers.ExportExcelFile(finalItems, "amlak_info");
+        }
+
+        
+        
+        
+        
         [Route("AmlakInfo/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakInfoReadVm>> AmlakInfoRead(PublicParamIdViewModel param){

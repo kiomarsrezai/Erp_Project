@@ -145,6 +145,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
             
+            
+            if (param.Export == 1){
+                param.Page = 1;
+                param.PageRows = 100000;
+            }
             if (param.ForMap == 0){
                 builder = builder
                     .Include(a => a.Area)
@@ -152,10 +157,48 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     .Page2(param.Page, param.PageRows);
             }
             var items = await builder.ToListAsync();
+            
+             
+            if (param.Export == 1){
+                var fileUrl = ExportExcel(items);
+                return Ok(new {fileUrl});
+            }
+            
             var finalItems = MyMapper.MapTo<AmlakArchive, AmlakArchiveListVm>(items);
         
             return Ok(new{items=finalItems,pageCount});
         }
+        
+        
+          
+        private static object ExportExcel(List<AmlakArchive> items){
+            var finalItems = new List<List<object>>();
+
+            foreach (var item in items){
+                var row = new List<object>();
+                row.Add(item.Id);
+                row.Add(item.SdiId);
+                row.Add(item.IsSubmitted);
+                row.Add(item.Area.AreaName);
+                row.Add(item.Owner.AreaName);
+                row.Add(item.ArchiveCode);
+                row.Add(item.AmlakCode);
+                row.Add(item.Section);
+                row.Add(item.Plaque1);
+                row.Add(item.Plaque2);
+                row.Add(item.Description);
+                row.Add(item.Address);
+                row.Add(item.Coordinates);
+                row.Add(item.CreatedAtFa);
+                row.Add(item.UpdatedAtFa);
+                
+                finalItems.Add(row);
+            }
+
+            return Helpers.ExportExcelFile(finalItems, "amlak_archive");
+        }
+
+
         
         [Route("AmlakArchive/Read")]
         [HttpGet]

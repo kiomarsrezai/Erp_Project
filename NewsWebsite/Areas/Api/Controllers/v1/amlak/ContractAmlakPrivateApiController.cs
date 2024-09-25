@@ -149,6 +149,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
 
+            
+            if (param.Export == 1){
+                param.Page = 1;
+                param.PageRows = 100000;
+            }
+            
             if (param.ForMap == 0){
                 builder = builder
                     .Include(a => a.Area)
@@ -158,9 +164,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             var items=await builder.ToListAsync();
 
 
+            
             if (param.Export == 1){
-                
-                // todo: 
+                var fileUrl = ExportExcel(items);
+                return Ok(new {fileUrl});
             }
             
             var finalItems = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateListVm>(items);
@@ -168,6 +175,36 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Ok(new{items=finalItems,pageCount});
         }
 
+        
+          
+        private static object ExportExcel(List<AmlakPrivateNew> items){
+            var finalItems = new List<List<object>>();
+
+            foreach (var item in items){
+                var row = new List<object>();
+                row.Add(item.Id);
+                row.Add(item.Area.AreaName);
+                row.Add(item.Owner.AreaName);
+                row.Add(item.Title);
+                row.Add(item.Masahat);
+                row.Add(item.TypeUsing);
+                row.Add(item.DocumentType);
+                row.Add(item.SadaCode);
+                row.Add(item.SajamCode);
+                row.Add(item.SdiId);
+                row.Add(item.Coordinates);
+                row.Add(item.PredictionUsage);
+                row.Add(item.CreatedAtFa);
+                row.Add(item.UpdatedAtFa);
+                
+                finalItems.Add(row);
+            }
+
+            return Helpers.ExportExcelFile(finalItems, "amlak_private");
+        }
+
+
+        
         [Route("AmlakPrivate/Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakPrivateReadVm>> AmlakPrivateRead(PublicParamIdViewModel param){
@@ -287,6 +324,63 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             return Ok("موفق");
         }
+
+         
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
+        [Route("AmlakPrivate/Report")]
+        [HttpPost]
+        public async Task<ApiResult<object>> AmlakPrivateReport( AmlakPrivateDocHistoryStoreVm param){
+            await CheckUserAuth(_db);
+
+            var areaStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.AreaId)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+            var ownerStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.OwnerId)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+            
+            var documentTypeStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.DocumentType)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+            
+            var usageStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.PredictionUsage)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+
+            return Ok(new{areaStats,ownerStats,documentTypeStats,usageStats});
+        }
+
 
     }
 }

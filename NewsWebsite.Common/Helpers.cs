@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace NewsWebsite.Common {
@@ -214,6 +217,49 @@ public static class Helpers {
         return GetTimeZonedDatetime().ToString("HH:mm:ss");
     }
 
+    
+    
+    
+      
+    public static string ExportExcelFile(List<List<object>> items,string excelFileName,string filename=null){
+        // Path to the template file
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/excel_templetes/{excelFileName}.xlsx");
+
+        // Open the template
+        using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.Read)){
+            IWorkbook workbook = new XSSFWorkbook(file);
+            ISheet sheet = workbook.GetSheetAt(0); // Assuming data should go into the first sheet
+
+            // Start populating from row 1 (assuming row 0 contains headers)
+            int rowIndex = 1;
+
+            foreach (var item in items){
+                IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+                for (int i = 0; i < item.Count; i++){
+                    row.CreateCell(i).SetCellValue(item[i]+""); 
+
+                }
+                rowIndex++;
+            }
+
+            if (filename == null)
+                filename = Path.GetFileNameWithoutExtension(excelFileName);
+            else
+                filename = Path.GetFileNameWithoutExtension(filename);
+            
+            // Save the file to a temporary location
+            string tmpPath = "/tmp/" + $"{filename}_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.xlsx";
+            string tempFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"+tmpPath);
+
+            using (FileStream outputFile = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write)){
+                workbook.Write(outputFile); // Write to the file
+            }
+            workbook.Close();
+            
+            return tmpPath; // Return the path to the saved file
+        }
+    }
+    
 }
 
 }
