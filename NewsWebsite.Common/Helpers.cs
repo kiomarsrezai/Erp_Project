@@ -148,6 +148,48 @@ public static class Helpers {
     }
     
     
+    public static string HejriToMiladi(string hejriDate ){
+      
+        string[] formats = { "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd" };
+
+        if (hejriDate!=null && DateTime.TryParseExact(hejriDate, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime hejriDateTime))
+        {
+            PersianCalendar pc = new PersianCalendar();
+            int year = int.Parse(hejriDateTime.ToString("yyyy", CultureInfo.InvariantCulture));
+            int month = int.Parse(hejriDateTime.ToString("MM", CultureInfo.InvariantCulture));
+            int day = int.Parse(hejriDateTime.ToString("dd", CultureInfo.InvariantCulture));
+
+            if (formats[0].Length <= hejriDate.Length)
+            {
+                int hour = hejriDateTime.Hour;
+                int minute = hejriDateTime.Minute;
+                int second = hejriDateTime.Second;
+
+                DateTime miladiDateTime2 = pc.ToDateTime(year, month, day, hour, minute, second, 0);
+
+                return miladiDateTime2.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+            else
+            {
+                DateTime miladiDateTime2 = pc.ToDateTime(year, month, day, 0, 0, 0, 0);
+
+                return miladiDateTime2.ToString("yyyy-MM-dd");
+            }
+        }
+
+        return "0000-00-00 00:00:00";
+
+
+    }
+    
+    public static DateTime HejriToMiladiDateTime(string hejriDate){
+        string dateString = HejriToMiladi(hejriDate);
+        DateTime dateTime;
+
+        return DateTime.Parse(dateString);
+    }
+        
+    
     
     
     public static DateTime GetTimeZonedDatetime(){

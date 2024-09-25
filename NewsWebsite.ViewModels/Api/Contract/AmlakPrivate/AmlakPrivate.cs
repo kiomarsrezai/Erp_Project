@@ -14,6 +14,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Title{ get; set; }
         public string PredictionUsage{ get; set; }
         public string SadaCode{ get; set; } 
+        public string SajamCode{ get; set; } 
         public int Masahat{ get; set; }
         public string TypeUsing{ get; set; }
         public int DocumentType{ get; set; }
@@ -50,6 +51,13 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int MasahatFrom{ get; set; }
         public int MasahatTo{ get; set; }
         public int DocumentType{ get; set; }
+        public string SadaCode{ get; set; }
+        public string SajamCode{ get; set; }
+        public int ForMap{ get; set; } = 0;
+        public int Export{ get; set; } = 0;
+        public int Page{ get; set; } = 1;
+        public int PageRows{ get; set; } = 10;
+        public string Search{ get; set; }
     }
 
 

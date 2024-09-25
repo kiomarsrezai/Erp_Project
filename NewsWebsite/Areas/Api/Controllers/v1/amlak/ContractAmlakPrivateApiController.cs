@@ -20,6 +20,7 @@ using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Storage;
 using NewsWebsite.Data.Models.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
@@ -136,20 +137,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [Route("AmlakPrivate/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakPrivateListVm>>> AmlakPrivateList(AmlakPrivateReadInputVm param){
+        public async Task<ApiResult<object>> AmlakPrivateList(AmlakPrivateReadInputVm param){
             await CheckUserAuth(_db);
 
-            var items = await _db.AmlakPrivateNews
+            var builder = _db.AmlakPrivateNews
                 .AreaId(param.AreaId).OwnerId(param.OwnerId).TypeUsing(param.TypeUsing)
+                .SadaCode(param.SadaCode).SajamCode(param.SajamCode).DocumentType(param.DocumentType)
                 .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
+                .Search(param.Search);
+
+            
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
+
+            if (param.ForMap == 0){
+                builder = builder
+                    .Include(a => a.Area)
+                    .Include(a => a.Owner)
+                    .Page2(param.Page, param.PageRows);
+            }
+            var items=await builder.ToListAsync();
+
+
+            if (param.Export == 1){
                 
-                .Include(a=>a.Area)
-                .Include(a=>a.Owner)
-                
-                .ToListAsync();
+                // todo: 
+            }
+            
             var finalItems = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateListVm>(items);
 
-            return Ok(finalItems);
+            return Ok(new{items=finalItems,pageCount});
         }
 
         [Route("AmlakPrivate/Read")]
@@ -188,6 +204,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.TypeUsing = param.TypeUsing;
             item.DocumentType = param.DocumentType;
             item.SadaCode = param.SadaCode;
+            item.SajamCode = param.SajamCode;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 

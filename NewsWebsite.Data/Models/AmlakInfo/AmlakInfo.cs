@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Public;
@@ -45,6 +46,12 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
 
     public static class AmlakInfoExtensions {
 
+        public static IQueryable<AmlakInfo> Rentable(this IQueryable<AmlakInfo> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                return query.Where(e => e.Rentable == value);
+            }
+            return query;
+        }
         public static IQueryable<AmlakInfo> AreaId(this IQueryable<AmlakInfo> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.AreaId == value);
@@ -54,6 +61,13 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public static IQueryable<AmlakInfo> AmlakInfoKindId(this IQueryable<AmlakInfo> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.AmlakInfoKindId == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakInfo> Search(this IQueryable<AmlakInfo> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(a=> EF.Functions.Like(a.EstateInfoName, $"%{value}%") || 
+                                       EF.Functions.Like(a.EstateInfoAddress, $"%{value}%"));
             }
             return query;
         }

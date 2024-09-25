@@ -68,6 +68,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     
     }
     public class AmlakParcelReadInputVm : AmlakParcelBaseModel {
+        
+        public int Page{ get; set; } = 1;
+        public int PageRows{ get; set; } = 10;
     }
 
 

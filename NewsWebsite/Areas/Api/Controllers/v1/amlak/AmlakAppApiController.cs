@@ -28,6 +28,7 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NewsWebsite.Data.Models.AmlakArchive;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 {
@@ -62,16 +63,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             await CheckUserAuth(_db);
 
             var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
-            var amlakInfosCount = await _db.AmlakInfos.CountAsync();
-            var contractAmlakInfosCount = await _db.AmlakInfoContracts.CountAsync();
-            var parcels = await _db.AmlakParcels.CountAsync();
-            var archives = await _db.AmlakArchives.CountAsync();
+            var parcelsCount = await _db.AmlakParcels.CountAsync();
+            var archivesCount = await _db.AmlakArchives.CountAsync();
+            var amlakInfosNonRentableAllCount = await _db.AmlakInfos.Rentable(0).CountAsync();
+            var amlakInfosRentableAllCount = await _db.AmlakInfos.Rentable(1).CountAsync();
+            var amlakInfosRentableWithContractCount = await _db.AmlakInfos.Rentable(1).Where(ai => ai.Contracts.Any()).CountAsync();
+            var amlakInfosRentableWithoutContractCount = await _db.AmlakInfos.Rentable(1).Where(ai => !ai.Contracts.Any()).CountAsync();
+            var amlakInfosRentableWithActiveContractCount =await _db.AmlakInfos.Rentable(1).Where(ai => ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now)).CountAsync();
+            var amlakInfosRentableWithoutActiveContractCount =  await _db.AmlakInfos.Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now)).CountAsync();
+            var contractAmlakInfosAllCount = await _db.AmlakInfoContracts.CountAsync();
+            var contractAmlakInfosActiveCount = await _db.AmlakInfoContracts.Where(c=>c.DateEnd == null || c.DateEnd > DateTime.Now).CountAsync();
             
             
-            return Ok(new {amlakPrivatesCount,amlakInfosCount,contractAmlakInfosCount,parcels,archives});
+            return Ok(new {amlakPrivatesCount,parcelsCount,archivesCount,amlakInfosNonRentableAllCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,contractAmlakInfosAllCount,contractAmlakInfosActiveCount,});
         }
-
-
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -100,14 +105,40 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Route("Test11")]
+        [Route("GeneralSearch")]
         [HttpGet]
-        public async Task<ApiResult<TblBudgets>> Test11(int ContractId){
+        public async Task<ApiResult<object>> GeneralSearch(string text){
             await CheckUserAuth(_db);
 
-            TblBudgets b = _db.TblBudgets.FirstOrDefault();
+            var amlakInfos = await _db.AmlakInfos.Where(a=> EF.Functions.Like(a.EstateInfoName, $"%{text}%") || 
+                                                            EF.Functions.Like(a.EstateInfoAddress, $"%{text}%")
+                                                        ).ToListAsync();
+            var amlakPrivates = await _db.AmlakPrivateNews.Where(a=> EF.Functions.Like(a.Title, $"%{text}%") || 
+                                                        EF.Functions.Like(a.TypeUsing, $"%{text}%")
+                                                        ).ToListAsync();
             
-            return Ok( b);
+              var amlakArchives = await _db.AmlakArchives.Where(a=> EF.Functions.Like(a.Address, $"%{text}%") || 
+                                                                    EF.Functions.Like(a.Description, $"%{text}%")
+                                                        ).ToListAsync();
+            
+            
+            return Ok(new {amlakInfos,amlakPrivates,amlakArchives});
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
+        [Route("Test11")]
+        [HttpGet]
+        public async Task<ApiResult<object>> Test11(int ContractId){
+            await CheckUserAuth(_db);
+
+            var builder = _db.AmlakArchives;
+
+            var i = await builder.AreaId(ContractId).ToListAsync();
+            var pageCount = await builder.CountAsync();
+
+            return Ok( new{i,pageCount});
         }
     }
 }

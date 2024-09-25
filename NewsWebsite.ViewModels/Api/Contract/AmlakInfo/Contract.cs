@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
+using NewsWebsite.ViewModels.Api.GeneralVm;
 using NewsWebsite.ViewModels.Api.Public;
 
 namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     
     public class AmlakInfoContractBaseModel {
+        public int OwnerId{ get; set; }
         public int DoingMethodId{ get; set; }
         public string Number{ get; set; } // Deposit , Rent , license
         public string Date{ get; set; }
@@ -29,16 +31,18 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     public class AmlakInfoContractListVm : AmlakInfoContractBaseModel {
         public int Id{ get; set; }
         public int AmlakInfoId{ get; set; }
-        public int AreaId{ get; set; }
+        public int OwnerId{ get; set; }
         public string DateShamsi{ get; set; }= "";
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
+        
+        public AreaViewModel Owner {get; set; }
 
     }
 
     public class AmlakInfoContractReadVm : AmlakInfoContractBaseModel {
         public int AmlakInfoId{ get; set; }
-        public int AreaId{ get; set; }
+        public int OwnerId{ get; set; }
         public string DateShamsi{ get; set; }= "";
         public string DateFromShamsi{ get; set; }= "";
         public string DateEndShamsi{ get; set; } = "";
@@ -49,13 +53,14 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public ICollection<AmlakInfoContractSupplierVm> Suppliers{ get; set; }
         public ICollection<AmlakInfoContractPriceVm> Prices{ get; set; }
         public AmlakInfoReadContractVm AmlakInfo {get; set; }
+        public AreaViewModel Owner {get; set; }
         
     }
 
 
     public class AmlakInfoContractInsertVm : AmlakInfoContractBaseModel {
         public int AmlakInfoId{ get; set; }
-        public int AreaId{ get; set; }
+        public int OwnerId{ get; set; }
 
         // amlak info data
         public float? Masahat{ get; set; }

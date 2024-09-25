@@ -63,6 +63,13 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int? AreaId{ get; set; }
         public int? AmlakInfoKindId{ get; set; }
         public int Rentable{ get; set; } = 1;
+        public int ContractStatus{ get; set; } = 0;
+        public string Search{ get; set; }
+        
+        public int ForMap{ get; set; } = 0;
+        public int Export{ get; set; } = 0;
+        public int Page{ get; set; } = 1;
+        public int PageRows{ get; set; } = 10;
     }
 
     

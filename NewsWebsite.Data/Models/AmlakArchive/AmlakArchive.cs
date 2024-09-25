@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Public;
 
@@ -58,6 +59,19 @@ namespace NewsWebsite.Data.Models.AmlakArchive {
         public static IQueryable<AmlakArchive> AreaId(this IQueryable<AmlakArchive> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.AreaId == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakArchive> OwnerId(this IQueryable<AmlakArchive> query, int? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.OwnerId == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakArchive> Search(this IQueryable<AmlakArchive> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(a => EF.Functions.Like(a.Address, $"%{value}%") ||
+                                        EF.Functions.Like(a.Description, $"%{value}%"));
             }
             return query;
         }

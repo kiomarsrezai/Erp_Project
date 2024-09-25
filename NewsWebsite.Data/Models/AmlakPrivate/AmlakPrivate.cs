@@ -17,6 +17,7 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string TypeUsing{ get; set; }
         public int DocumentType{ get; set; }
         public string SadaCode{ get; set; } 
+        public string SajamCode{ get; set; } 
         public string SdiId{ get; set; }
         public string Coordinates{ get; set; }
         public string PredictionUsage{ get; set; } // sell , arrest , special , Participation , separation
@@ -67,13 +68,34 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         }
         public static IQueryable<AmlakPrivateNew> DocumentType(this IQueryable<AmlakPrivateNew> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
-                return query.Where(e => e.DocumentType <= value);
+                return query.Where(e => e.DocumentType == value);
             }
             return query;
         }
         public static IQueryable<AmlakPrivateNew> TypeUsing(this IQueryable<AmlakPrivateNew> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => EF.Functions.Like(e.TypeUsing, $"%{value}%"));
+            }
+            return query;
+        }
+        public static IQueryable<AmlakPrivateNew> SadaCode(this IQueryable<AmlakPrivateNew> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.SadaCode == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakPrivateNew> SajamCode(this IQueryable<AmlakPrivateNew> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.SajamCode == value);
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakPrivateNew> Search(this IQueryable<AmlakPrivateNew> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(a=> EF.Functions.Like(a.Title, $"%{value}%") || 
+                                      EF.Functions.Like(a.TypeUsing, $"%{value}%")
+                );
             }
             return query;
         }

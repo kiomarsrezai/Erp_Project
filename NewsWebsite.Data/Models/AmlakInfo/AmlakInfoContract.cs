@@ -11,13 +11,13 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
     public class AmlakInfoContract:BaseModel {
         
         public int AmlakInfoId{ get; set; }
-        public int AreaId{ get; set; }
+        public int OwnerId{ get; set; }
         public int DoingMethodId{ get; set; }
         public string Number{ get; set; } // Deposit , Rent , license
         public string Date{ get; set; }
         public string Description{ get; set; }
-        public string DateFrom{ get; set; }
-        public string DateEnd{ get; set; }
+        public DateTime DateFrom{ get; set; }
+        public DateTime DateEnd{ get; set; }
         public Int64 ZemanatPrice{ get; set; }
         public string Type{ get; set; }
         public int ModatValue{ get; set; }
@@ -33,7 +33,14 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public ICollection<AmlakInfoContractSupplier> Suppliers{ get; set; }
         public ICollection<AmlakInfoContractPrice> Prices{ get; set; }
         public virtual AmlakInfo AmlakInfo { get; set; }
+        public virtual TblAreas Owner { get; set; }
         
+        
+        [NotMapped]
+        public string? DateFromFa{get{ return Helpers.MiladiToHejri(DateFrom); }}
+
+        [NotMapped]
+        public string? DateEndFa{get{ return Helpers.MiladiToHejri(DateEnd); }}
         
         [NotMapped]
         public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
@@ -52,9 +59,9 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             return query;
         }
         
-        public static IQueryable<AmlakInfoContract> AreaId(this IQueryable<AmlakInfoContract> query, int? value){
+        public static IQueryable<AmlakInfoContract> OwnerId(this IQueryable<AmlakInfoContract> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
-                return query.Where(e => e.AreaId == value);
+                return query.Where(e => e.OwnerId == value);
             }
             return query;
         }

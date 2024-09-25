@@ -132,19 +132,26 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
         [Route("Contract/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractListVm>>> ContractList(int amlakInfoId,int areaId){
+        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int page=1,int pageRows=10){
             await CheckUserAuth(_db);
 
-            var items = await _db.AmlakInfoContracts
+            var builder = _db.AmlakInfoContracts
                 .AmlakInfoId(amlakInfoId)
-                .AreaId(areaId)
+                .OwnerId(ownerId);
+
+            
+            var items = await builder
+                .Include(a=>a.Owner)
+                .Page2(page,pageRows)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
 
             foreach (var finalItem in finalItems)
                 finalItem.DateShamsi = finalItem.Date.ConvertMiladiToShamsi( "yyyy/MM/dd");;
             
-            return Ok(finalItems);
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(pageRows));
+            
+            return Ok(new{items=finalItems,pageCount});
         }
 
        
@@ -158,6 +165,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .Id(ContractId)
                 .Include(a=>a.AmlakInfo)
                 .Include(a=>a.Prices)
+                .Include(a=>a.Owner)
                 .Include(a=>a.Suppliers)
                 .ThenInclude(s=>s.Supplier)
                 .FirstAsync();
@@ -185,13 +193,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
             var contract = new AmlakInfoContract();
             contract.AmlakInfoId=param.AmlakInfoId;
-            contract.AreaId=param.AreaId;
+            contract.OwnerId=param.OwnerId;
             contract.DoingMethodId=param.DoingMethodId;
             contract.Number=param.Number;
             contract.Date=param.Date;
             contract.Description=param.Description;
-            contract.DateFrom=param.DateFrom;
-            contract.DateEnd=param.DateEnd;
+            contract.DateFrom=Helpers.HejriToMiladiDateTime(param.DateFrom);
+            contract.DateEnd=Helpers.HejriToMiladiDateTime(param.DateEnd);
             contract.ZemanatPrice=param.ZemanatPrice;
             contract.Type=param.Type;
             contract.ModatValue=param.ModatValue;
@@ -273,12 +281,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             
             // update contract 
+            contract.OwnerId=param.OwnerId;
             contract.DoingMethodId=param.DoingMethodId;
             contract.Number=param.Number;
             contract.Date=param.Date;
             contract.Description=param.Description;
-            contract.DateFrom=param.DateFrom;
-            contract.DateEnd=param.DateEnd;
+            contract.DateFrom=Helpers.HejriToMiladiDateTime(param.DateFrom);
+            contract.DateEnd=Helpers.HejriToMiladiDateTime(param.DateEnd);
             contract.ZemanatPrice=param.ZemanatPrice;
             contract.Type=param.Type;
             contract.ModatValue=param.ModatValue;
@@ -559,27 +568,50 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
-           [Route("AmlakInfo/List")]
+        [Route("AmlakInfo/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoListVm>>> AmlakInfoList(AmlakInfoReadInputVm param){
+        public async Task<ApiResult<object>> AmlakInfoList(AmlakInfoReadInputVm param){
             await CheckUserAuth(_db);
 
-            // var items = await _db.AmlakInfos
-            //     .Include(a=>a.Area)
-            //     .Include(a=>a.AmlakInfoKind)
-            //     .AreaId(param.AreaId)
-            //     .ToListAsync();
-            
-            var items = await _db.AmlakInfos
-                .Include(a => a.Area)
-                .Include(a => a.AmlakInfoKind)
+            var builder = _db.AmlakInfos
+                .Search(param.Search)
                 .AreaId(param.AreaId)
                 .AmlakInfoKindId(param.AmlakInfoKindId)
-                .Where(a => a.Rentable == param.Rentable)
-                .ToListAsync();
+                .Where(a => a.Rentable == param.Rentable);
+            
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
+            
+            switch (param.ContractStatus){
+                case 0: // all
+                    break;
+                case 1: // withContract
+                    builder = builder.Where(ai => ai.Contracts.Any());
+                    break;
+                case 2: // withoutContract
+                    builder = builder.Where(ai => !ai.Contracts.Any());
+                    break;
+                case 3: // withActiveContract
+                    builder = builder.Where(ai => ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now));
+                    break;
+                case 4: // withoutActiveContract
+                    builder = builder.Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now));
+                    break;
+                
+            }
+            
+            if (param.ForMap == 0){
+                builder = builder
+                    .Include(a => a.Area)
+                    .Include(a => a.AmlakInfoKind)
+                    .Page2(param.Page, param.PageRows);
+            }
+
+           
+            var items = await builder.ToListAsync();
+            
             var finalItems = MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(items);
 
-            return Ok(finalItems);
+            return Ok(new {items=finalItems,pageCount});
         }
 
         [Route("AmlakInfo/Read")]

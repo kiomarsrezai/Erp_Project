@@ -133,21 +133,28 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [Route("AmlakArchive/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakArchiveListVm>>> AmlakArchiveList(AmlakArchiveReadInputVm param){
+        public async Task<ApiResult<object>> AmlakArchiveList(AmlakArchiveReadInputVm param){
             await CheckUserAuth(_db);
 
-            var items = await _db.AmlakArchives
+            var builder = _db.AmlakArchives
                 .ArchiveCode(param.ArchiveCode)
                 .AmlakCode(param.AmlakCode)
                 .AreaId(param.AreaId)
-                
-                .Include(a=>a.Area)
-                .Include(a=>a.Owner)
-                
-                .ToListAsync();
+                .OwnerId(param.OwnerId)
+                .Search(param.Search);
+
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
+            
+            if (param.ForMap == 0){
+                builder = builder
+                    .Include(a => a.Area)
+                    .Include(a => a.Owner)
+                    .Page2(param.Page, param.PageRows);
+            }
+            var items = await builder.ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakArchive, AmlakArchiveListVm>(items);
         
-            return Ok(finalItems);
+            return Ok(new{items=finalItems,pageCount});
         }
         
         [Route("AmlakArchive/Read")]

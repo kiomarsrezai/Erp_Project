@@ -45,13 +45,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [Route("AmlakParcel/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakParcelListVm>>> AmlakParcelList(AmlakParcelReadInputVm param){
+        public async Task<ApiResult<object>> AmlakParcelList(AmlakParcelReadInputVm param){
             await CheckUserAuth(_db);
 
-            var items = await _db.AmlakParcels.Type(param.Type).Title(param.Title).ToListAsync();
+            var builder = _db.AmlakParcels.Type(param.Type).Title(param.Title);
+            var items = await builder.Page2(param.Page,param.PageRows).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakParcel, AmlakParcelListVm>(items);
+            
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
 
-            return Ok(finalItems);
+            return Ok(new{items=finalItems,pageCount});
         }
 
         [Route("AmlakParcel/Read")]
