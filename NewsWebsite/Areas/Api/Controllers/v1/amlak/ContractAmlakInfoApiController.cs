@@ -741,6 +741,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             return Ok(finalItems);
         }
 
+         
+        [Route("AmlakInfo/File/Edit")]
+        [HttpPatch]
+        public async Task<ApiResult<string>>AmlakInfoAttachFileEdit(int fileId,string title){
+            await CheckUserAuth(_db);
+
+            if (fileId == 0) BadRequest();
+        
+            var item = await _db.AmlakInfoFiles.Where(a => a.Id == fileId).FirstOrDefaultAsync();
+            if (item == null)
+                BadRequest("خطا");
+
+            item.FileTitle = title;
+            await _db.SaveChangesAsync();
+            
+            return Ok("انجام شد");
+        }
         
         [Route("AmlakInfo/Delete")]
         [HttpPost]

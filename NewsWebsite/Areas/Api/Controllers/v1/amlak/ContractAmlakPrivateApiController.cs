@@ -294,6 +294,24 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Ok(finalItems);
         }
         
+        
+           
+        [Route("AmlakPrivate/File/Edit")]
+        [HttpPatch]
+        public async Task<ApiResult<string>>AmlakPrivateAttachFileEdit(int fileId,string title){
+            await CheckUserAuth(_db);
+
+            if (fileId == 0) BadRequest();
+        
+            var item = await _db.AmlakPrivateFiles.Where(a => a.Id == fileId).FirstOrDefaultAsync();
+            if (item == null)
+                BadRequest("خطا");
+
+            item.FileTitle = title;
+            await _db.SaveChangesAsync();
+            
+            return Ok("انجام شد");
+        }
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -303,7 +321,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         public async Task<ApiResult<List<AmlakPrivateDocHistoryListVm>>> AmlakPrivateDocHistoryList(int amlakPrivateId){
             await CheckUserAuth(_db);
 
-            var items = await _db.AmlakPrivateDocHistories.AmlakPrivateId(amlakPrivateId).ToListAsync();
+            var items = await _db.AmlakPrivateDocHistories.AmlakPrivateId(amlakPrivateId).OrderByDescending(a=>a.Id).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakPrivateDocHistory, AmlakPrivateDocHistoryListVm>(items);
 
             return Ok(finalItems);
