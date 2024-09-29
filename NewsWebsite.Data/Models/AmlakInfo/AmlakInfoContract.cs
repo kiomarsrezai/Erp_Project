@@ -37,6 +37,13 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         
         
         [NotMapped]
+        public string? DateFa{get{ return Helpers.MiladiToHejri(Date); }}
+
+            [NotMapped]
+        public string? TenderDateFa{get{ return Helpers.MiladiToHejri(TenderDate); }}
+
+        
+        [NotMapped]
         public string? DateFromFa{get{ return Helpers.MiladiToHejri(DateFrom); }}
 
         [NotMapped]

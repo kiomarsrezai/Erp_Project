@@ -152,11 +152,11 @@ public static class Helpers {
     
     
     public static string HejriToMiladi(string hejriDate ){
-      
-        string[] formats = { "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd" };
+        string[] formats = { "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd","yyyy/MM/dd hh:mm:ss tt" };
 
         if (hejriDate!=null && DateTime.TryParseExact(hejriDate, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime hejriDateTime))
         {
+        // Helpers.dd(hejriDate);
             PersianCalendar pc = new PersianCalendar();
             int year = int.Parse(hejriDateTime.ToString("yyyy", CultureInfo.InvariantCulture));
             int month = int.Parse(hejriDateTime.ToString("MM", CultureInfo.InvariantCulture));

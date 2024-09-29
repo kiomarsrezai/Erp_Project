@@ -148,8 +148,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
 
-            foreach (var finalItem in finalItems)
-                finalItem.DateShamsi = finalItem.Date.ConvertMiladiToShamsi( "yyyy/MM/dd");;
             
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(pageRows));
             
@@ -175,10 +173,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             var finalItem = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractReadVm>(item);
 
-            finalItem.DateShamsi = finalItem.Date.ConvertMiladiToShamsi( "yyyy/MM/dd");;
-            finalItem.DateFromShamsi = finalItem.DateFrom.ConvertMiladiToShamsi( "yyyy/MM/dd");;
-            finalItem.DateEndShamsi = finalItem.DateEnd.ConvertMiladiToShamsi( "yyyy/MM/dd");;
-
             return Ok(finalItem);
         }
 
@@ -200,8 +194,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.Number=param.Number;
             contract.Date=param.Date;
             contract.Description=param.Description;
-            contract.DateFrom=Helpers.HejriToMiladiDateTime(param.DateFrom);
-            contract.DateEnd=Helpers.HejriToMiladiDateTime(param.DateEnd);
+            contract.DateFrom=DateTime.Parse(param.DateFrom);
+            contract.DateEnd=DateTime.Parse(param.DateEnd);
             contract.ZemanatPrice=param.ZemanatPrice;
             contract.Type=param.Type;
             contract.ModatValue=param.ModatValue;
@@ -266,30 +260,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             return Ok(contract.Id.ToString());
         }
 
-        
-        
+
+
         [Route("Contract/Update")]
         [HttpPost]
         public async Task<ApiResult<string>> ContractUpdate([FromBody] AmlakInfoContractUpdateVm param){
             await CheckUserAuth(_db);
-            
-            var contract =await  _db.AmlakInfoContracts.Id( param.Id).FirstOrDefaultAsync();
+
+            var contract = await _db.AmlakInfoContracts.Id(param.Id).FirstOrDefaultAsync();
             if (contract == null)
                 return BadRequest("قرارداد یافت نشد");
 
-            var amlakInfo =await  _db.AmlakInfos.Id( contract.AmlakInfoId).FirstOrDefaultAsync();
+            var amlakInfo = await _db.AmlakInfos.Id(contract.AmlakInfoId).FirstOrDefaultAsync();
             if (amlakInfo == null)
                 return BadRequest("ملک یافت نشد");
-            
-            
-            // update contract 
+
+            // Helpers.dd(new{ param.DateEnd , a=DateTime.Parse(param.DateEnd) });
+        // update contract 
             contract.OwnerId=param.OwnerId;
             contract.DoingMethodId=param.DoingMethodId;
             contract.Number=param.Number;
             contract.Date=param.Date;
             contract.Description=param.Description;
-            contract.DateFrom=Helpers.HejriToMiladiDateTime(param.DateFrom);
-            contract.DateEnd=Helpers.HejriToMiladiDateTime(param.DateEnd);
+            contract.DateFrom=DateTime.Parse(param.DateFrom);
+            contract.DateEnd=DateTime.Parse(param.DateEnd);
             contract.ZemanatPrice=param.ZemanatPrice;
             contract.Type=param.Type;
             contract.ModatValue=param.ModatValue;

@@ -20,3 +20,31 @@ add CreatedAt,UpdatedAt DateTime in tblAmlakParcel
 add CreatedAt,UpdatedAt DateTime in tblAmlakPrivateNew
 add CreatedAt,UpdatedAt DateTime in tblContractAmlakInfo
        
+
+       
+       
+       
+       USE [ProgramBudDB]
+GO
+
+/****** Object:  Table [dbo].[tblAmlakPrivateDocHistory]    Script Date: 9/29/2024 2:19:45 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblAmlakPrivateDocHistory](
+    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [AmlakPrivateId] [int] NULL,
+    [Status] [nvarchar](50) NULL,
+    [Desc] [nvarchar](1000) NULL,
+    [Date] [datetime] NULL,
+    CONSTRAINT [PK_tblAmlakPrivateDocHistory] PRIMARY KEY CLUSTERED
+(
+[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
+

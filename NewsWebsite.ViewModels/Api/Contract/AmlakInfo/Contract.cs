@@ -15,8 +15,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string Number{ get; set; } // Deposit , Rent , license
         public string Date{ get; set; }
         public string Description{ get; set; }
-        public string DateFrom{ get; set; }
-        public string DateEnd{ get; set; }
         public Int64 ZemanatPrice{ get; set; }
         public string Type{ get; set; }
         public int ModatValue{ get; set; }
@@ -32,7 +30,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int Id{ get; set; }
         public int AmlakInfoId{ get; set; }
         public int OwnerId{ get; set; }
-        public string DateShamsi{ get; set; }= "";
+        public string DateFa{ get; set; }= "";
+        public DateTime DateFrom{ get; set; }
+        public DateTime DateEnd{ get; set; }
+        public string DateFromFa{ get; set; } = "";
+        public string DateEndFa{ get; set; } = "";
+        public string TenderDateFa{ get; set; } = "";
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
         
@@ -43,9 +46,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     public class AmlakInfoContractReadVm : AmlakInfoContractBaseModel {
         public int AmlakInfoId{ get; set; }
         public int OwnerId{ get; set; }
-        public string DateShamsi{ get; set; }= "";
-        public string DateFromShamsi{ get; set; }= "";
-        public string DateEndShamsi{ get; set; } = "";
+        public string DateFa{ get; set; }= "";
+        public DateTime DateFrom{ get; set; }
+        public DateTime DateEnd{ get; set; }
+        public string DateFromFa{ get; set; } = "";
+        public string DateEndFa{ get; set; } = "";
+        public string TenderDateFa{ get; set; } = "";
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
 
@@ -70,7 +76,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string? TypeUsing{ get; set; }
         public List<PricesInputVm> Prices{ get; set; }
         public List<int> SupplierIds{ get; set; }
-        
+        public string DateFrom{ get; set; }
+        public string DateEnd{ get; set; }
     }
     
     public class PricesInputVm {
@@ -90,5 +97,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string? TypeUsing{ get; set; }
         public List<PricesInputVm> Prices{ get; set; }
         public List<int> SupplierIds{ get; set; }
+        public string DateFrom{ get; set; }
+        public string DateEnd{ get; set; }
     }
 }

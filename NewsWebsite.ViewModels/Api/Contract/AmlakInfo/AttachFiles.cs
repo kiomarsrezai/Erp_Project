@@ -24,6 +24,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
 
 
     public class AmlakInfoFilesListVm : AmlakInfoFilesBaseModel {
+        public int Id{ get; set; }
         public string FileName{ get; set; }
     }
 

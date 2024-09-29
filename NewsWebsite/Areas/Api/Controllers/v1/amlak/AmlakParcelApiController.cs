@@ -90,7 +90,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             var item = new AmlakParcel();
             item.Title = param.Title;
             item.Type = param.Type + "";
-            item.Status = "Pending";
+            item.Status = "1"; // pending
             item.Comment = param.Comment;
             item.CreatedAt = Helpers.GetServerDateTimeType();
             item.UpdatedAt = Helpers.GetServerDateTimeType();

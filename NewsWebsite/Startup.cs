@@ -70,6 +70,10 @@ namespace NewsWebsite
                 options.AccessDeniedPath = "/Admin/Manage/AccessDenied";
             });
 
+            // services.AddControllers().AddJsonOptions(options =>
+            // {
+            //     options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+            // });
             services.AddMvc();
         }
 

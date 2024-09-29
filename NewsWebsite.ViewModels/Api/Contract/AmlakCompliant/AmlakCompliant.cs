@@ -23,6 +23,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         
         
         [NotMapped]
+        public string? DateFa{get{ return Helpers.MiladiToHejri(Date); }}
+        
+        [NotMapped]
         public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
 
         [NotMapped]
@@ -35,6 +38,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         public string Subject{ get; set; }
         public string FileNumber{ get; set; }
         public string Date{ get; set; }
+        public string DateFa{ get; set; }
     }
 
     public class AmlakCompliantListVm : AmlakCompliantBaseModel {
