@@ -17,9 +17,9 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public int AmlakInfoKindId{ get; set; }
         public string EstateInfoName{ get; set; }
         public string EstateInfoAddress{ get; set; }
-        public string CurrentStatus{ get; set; } // AmlakInfoStatuses
-        public string Structure{ get; set; } // AmlakInfoStructures
-        public string Owner{ get; set; } // AmlakInfoOwners
+        public string CurrentStatus{ get; set; } 
+        public string Structure{ get; set; } 
+        public string Owner{ get; set; } 
         public string AmlakInfolate{ get; set; }
         public string AmlakInfolong{ get; set; }
         public string CodeUsing{ get; set; }
@@ -40,6 +40,16 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+        
+                
+        [NotMapped]
+        public string? OwnerText{get{ return Helpers.UC(Owner,"amlakInfoOwner"); }}    
+        
+        [NotMapped]
+        public string? StructureText{get{ return Helpers.UC(Structure,"amlakInfoStructure"); }}
+        
+        [NotMapped]
+        public string? CurrentStatusText{get{ return Helpers.UC(CurrentStatus,"amlakInfoCurrentStatus"); }}
     }    
 
     

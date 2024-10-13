@@ -33,6 +33,9 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+        
+        [NotMapped]
+        public string? DocumentTypeText{get{ return Helpers.UC(DocumentType,"amlakPrivateDocumentType"); }}
     }
     
     //-------------------------------------------------------------------------------------------------

@@ -18,22 +18,22 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
-using System.Linq;
-using NewsWebsite.Data.Models.AmlakArchive;
-using NewsWebsite.ViewModels.Api.Contract.AmlakArchive;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Storage;
+using NewsWebsite.Data.Models.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class AmlakArchiveApiController : EnhancedController {
+    public class ContractAmlakPrivateApiController : EnhancedController {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
         protected readonly ProgramBuddbContext _db;
 
-        public AmlakArchiveApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment, ProgramBuddbContext db){
+        public ContractAmlakPrivateApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment, ProgramBuddbContext db){
             _config = config;
             _uw = uw;
             _webHostEnvironment = webHostEnvironment;
@@ -41,13 +41,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
 
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------------------------------------------------------------
-
         [HttpGet]
-        [Route("updateFromSdi")]
-        public async Task<IActionResult> UpdateDataFromSdiArchive(){
+        [Route("all_polygon_amlak_472")]
+        public async Task<IActionResult> UpdateDataFromSdi_ahvaz_kiosk(){
             // var options = new RestClientOptions("https://sdi.ahvaz.ir")
             // {
             //     MaxTimeout = -1,
@@ -94,23 +90,28 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             // byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
             // string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
 
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "archive.json");
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "amlak.json");
             string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
 
 
             var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
 
-            for (int i = 0; i < respLayer.TotalFeatures-1; i++){
+            for (int i = 0; i < respLayer.TotalFeatures; i++){
                 var feature = respLayer.Features[i];
 
-                var oldItem = await _db.AmlakArchives.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
+                var oldItem = await _db.AmlakPrivateNews.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
 
                 if (oldItem == null){
-                    var item = new AmlakArchive(){
+                    var item = new AmlakPrivateNew{
                         AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
                         SdiId = feature.Id,
                         Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
-                        IsSubmitted = 0,
+                        Masahat = 0,
+                        PredictionUsage="",
+                        Title = feature.Id,
+                        TypeUsing = "",
+                        DocumentType = 0,
+                        SadaCode = feature.Properties.Pelaksabti,
                         CreatedAt = Helpers.GetServerDateTimeType(),
                         UpdatedAt = Helpers.GetServerDateTimeType(),
                     };
@@ -118,7 +119,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     await _db.SaveChangesAsync();
                 }
                 else{
+                    oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
                     oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
+                    oldItem.Title = feature.Id;
                     await _db.SaveChangesAsync();
                 }
             }
@@ -126,6 +129,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             return Ok("موفق");
         }
+
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -133,131 +137,131 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [Route("List")]
         [HttpGet]
-        public async Task<ApiResult<object>> AmlakArchiveList(AmlakArchiveReadInputVm param){
+        public async Task<ApiResult<object>> AmlakPrivateList(AmlakPrivateReadInputVm param){
             await CheckUserAuth(_db);
 
-            var builder = _db.AmlakArchives
-                .ArchiveCode(param.ArchiveCode)
-                .AmlakCode(param.AmlakCode)
-                .AreaId(param.AreaId)
-                .OwnerId(param.OwnerId)
+            var builder = _db.AmlakPrivateNews
+                .AreaId(param.AreaId).OwnerId(param.OwnerId).TypeUsing(param.TypeUsing)
+                .SadaCode(param.SadaCode).SajamCode(param.SajamCode).DocumentType(param.DocumentType)
+                .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
                 .Search(param.Search);
 
-            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
             
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
+
             
             if (param.Export == 1){
                 param.Page = 1;
                 param.PageRows = 100000;
             }
+            
             if (param.ForMap == 0){
                 builder = builder
                     .Include(a => a.Area)
                     .Include(a => a.Owner)
                     .Page2(param.Page, param.PageRows);
             }
-            var items = await builder.ToListAsync();
+            var items=await builder.ToListAsync();
+
+
             
-             
             if (param.Export == 1){
                 var fileUrl = ExportExcel(items);
                 return Ok(new {fileUrl});
             }
             
-            var finalItems = MyMapper.MapTo<AmlakArchive, AmlakArchiveListVm>(items);
-        
+            var finalItems = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateListVm>(items);
+
             return Ok(new{items=finalItems,pageCount});
         }
-        
+
         
           
-        private static object ExportExcel(List<AmlakArchive> items){
+        private static object ExportExcel(List<AmlakPrivateNew> items){
             var finalItems = new List<List<object>>();
 
             foreach (var item in items){
                 var row = new List<object>();
                 row.Add(item.Id);
-                row.Add(item.SdiId);
-                row.Add(item.IsSubmitted);
                 row.Add(item.Area.AreaName);
                 row.Add(item.Owner.AreaName);
-                row.Add(item.ArchiveCode);
-                row.Add(item.AmlakCode);
-                row.Add(item.Section);
-                row.Add(item.Plaque1);
-                row.Add(item.Plaque2);
-                row.Add(item.Description);
-                row.Add(item.Address);
+                row.Add(item.Title);
+                row.Add(item.Masahat);
+                row.Add(item.TypeUsing);
+                row.Add(item.DocumentType);
+                row.Add(item.SadaCode);
+                row.Add(item.SajamCode);
+                row.Add(item.SdiId);
                 row.Add(item.Coordinates);
+                row.Add(item.PredictionUsage);
                 row.Add(item.CreatedAtFa);
                 row.Add(item.UpdatedAtFa);
                 
                 finalItems.Add(row);
             }
 
-            return Helpers.ExportExcelFile(finalItems, "amlak_archive");
+            return Helpers.ExportExcelFile(finalItems, "amlak_private");
         }
 
 
         
         [Route("Read")]
         [HttpGet]
-        public async Task<ApiResult<AmlakArchiveReadVm>> AmlakArchiveRead(PublicParamIdViewModel param){
+        public async Task<ApiResult<AmlakPrivateReadVm>> AmlakPrivateRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakArchives.Id(param.Id)
+            var item = await _db.AmlakPrivateNews.Id(param.Id)
                 .Include(a=>a.Area)
                 .Include(a=>a.Owner)
                 .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
             
-            var finalItem = MyMapper.MapTo<AmlakArchive, AmlakArchiveReadVm>(item);
-        
+            var finalItem = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateReadVm>(item);
+
             return Ok(finalItem);
         }
-        
-        
-        
+
+
         [Route("Update")]
         [HttpPost]
-        public async Task<ApiResult<string>> AmlakArchiveUpdate([FromBody] AmlakArchiveUpdateVm param){
+        public async Task<ApiResult<string>> AmlakPrivateUpdate([FromBody] AmlakPrivateUpdateVm param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakArchives.Id(param.Id).FirstOrDefaultAsync();
+            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
-                return BadRequest("پیدا نشد");
+                return BadRequest(new{ message = "یافت نشد" });
 
+            
             item.AreaId = param.AreaId;
             item.OwnerId = param.OwnerId;
-            item.ArchiveCode = param.ArchiveCode;
-            item.AmlakCode = param.AmlakCode;
-            item.Section = param.Section;
-            item.Plaque1 = param.Plaque1;
-            item.Plaque2 = param.Plaque2;
-            item.Description = param.Description;
-            item.Address = param.Address;
-            item.IsSubmitted = 1;
+            item.Masahat = param.Masahat;
+            item.PredictionUsage = param.PredictionUsage;
+            item.Title = param.Title;
+            item.TypeUsing = param.TypeUsing;
+            item.DocumentType = param.DocumentType;
+            item.SadaCode = param.SadaCode;
+            item.SajamCode = param.SajamCode;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
-        
-            return Ok("با موفقیت انجام شد");
+
+            return Ok(item.Id.ToString());
         }
-        
-        
+
+
         [Route("Upload")]
         [HttpPost]
-        public async Task<ApiResult<string>> AmlakArchiveUploadFile(AmlakArchiveFileUploadVm fileUpload){
+        public async Task<ApiResult<string>> AmlakPrivateUploadFile(AmlakPrivateFileUploadVm fileUpload){
             await CheckUserAuth(_db);
 
-            if (fileUpload.AmlakArchiveId == null)
+            if (fileUpload.AmlakPrivateId == null)
                 return BadRequest(new{ message = "شناسه ملک نامعتبر می باشد" });
-        
-        
-            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakArchives/" + fileUpload.AmlakArchiveId);
+
+
+            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakPrivates/" + fileUpload.AmlakPrivateId);
             if (fileName != ""){
-                var item = new AmlakArchiveFile();
-                item.AmlakArchiveId = fileUpload.AmlakArchiveId ?? 0;
+                var item = new AmlakPrivateFile();
+                item.AmlakPrivateId = fileUpload.AmlakPrivateId ?? 0;
                 item.FileName = fileName;
                 item.FileTitle = fileUpload.FileTitle;
                 item.Type = fileUpload.Type;
@@ -268,37 +272,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             else{
                 return BadRequest(new{ message = "فایل نامعتبر می باشد" });
             }
-        
+
             return Ok("موفق");
         }
-        
-        
+
         [Route("Files")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakArchiveFilesListVm>>> AmlakArchiveAttachFiles(int AmlakArchiveId){
+        public async Task<ApiResult<List<AmlakPrivateFilesListVm>>> AmlakPrivateAttachFiles(int AmlakPrivateId){
             await CheckUserAuth(_db);
 
-            if (AmlakArchiveId == 0) BadRequest();
-        
-            var items = await _db.AmlakArchiveFiles.Where(a => a.AmlakArchiveId == AmlakArchiveId).ToListAsync();
-            var finalItems = MyMapper.MapTo<AmlakArchiveFile, AmlakArchiveFilesListVm>(items);
-        
-        
+            if (AmlakPrivateId == 0) BadRequest();
+
+            var items = await _db.AmlakPrivateFiles.Where(a => a.AmlakPrivateId == AmlakPrivateId).ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakPrivateFile, AmlakPrivateFilesListVm>(items);
+
+
             foreach (var item in finalItems){
-                item.FileName = "/Upload/AmlakArchives/" +item.AmlakArchiveId+"/"+ item.FileName;
+                item.FileName = "/Upload/AmlakPrivates/" +item.AmlakPrivateId+"/"+ item.FileName;
             }
             
             return Ok(finalItems);
         }
         
+        
+           
         [Route("File/Edit")]
         [HttpPatch]
-        public async Task<ApiResult<string>> AmlakArchiveAttachFileEdit(int amlakArchiveFileId,string title){
+        public async Task<ApiResult<string>>AmlakPrivateAttachFileEdit(int fileId,string title){
             await CheckUserAuth(_db);
 
-            if (amlakArchiveFileId == 0) BadRequest();
+            if (fileId == 0) BadRequest();
         
-            var item = await _db.AmlakArchiveFiles.Where(a => a.Id == amlakArchiveFileId).FirstOrDefaultAsync();
+            var item = await _db.AmlakPrivateFiles.Where(a => a.Id == fileId).FirstOrDefaultAsync();
             if (item == null)
                 BadRequest("خطا");
 
@@ -307,5 +312,93 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             
             return Ok("انجام شد");
         }
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
+        [Route("DocHistory/List")]
+        [HttpGet]
+        public async Task<ApiResult<List<AmlakPrivateDocHistoryListVm>>> AmlakPrivateDocHistoryList(int amlakPrivateId){
+            await CheckUserAuth(_db);
+
+            var items = await _db.AmlakPrivateDocHistories.AmlakPrivateId(amlakPrivateId).OrderByDescending(a=>a.Id).ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakPrivateDocHistory, AmlakPrivateDocHistoryListVm>(items);
+
+            return Ok(finalItems);
+        }
+
+        [Route("DocHistory/Store")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AmlakPrivateDocHistoryStore( AmlakPrivateDocHistoryStoreVm param){
+            await CheckUserAuth(_db);
+
+            var item = new AmlakPrivateDocHistory();
+            item.AmlakPrivateId = param.AmlakPrivateId;
+            item.Status = param.Status;
+            item.Desc = param.Desc;
+            item.Date = Helpers.GetServerDateTimeType();
+            _db.Add(item);
+            await _db.SaveChangesAsync();
+
+            return Ok("موفق");
+        }
+
+         
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
+        [Route("Report")]
+        [HttpPost]
+        public async Task<ApiResult<object>> AmlakPrivateReport( AmlakPrivateDocHistoryStoreVm param){
+            await CheckUserAuth(_db);
+
+            var areaStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.AreaId)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+            var ownerStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.OwnerId)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+            
+            var documentTypeStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.DocumentType)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+            
+            var usageStats = await _db.AmlakPrivateNews
+                .GroupBy(x => x.PredictionUsage)
+                .Select(g => new 
+                { 
+                    Value = g.Key, 
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / _db.AmlakPrivateNews.Count() * 100
+                })
+                .ToListAsync();
+
+
+            return Ok(new{areaStats,ownerStats,documentTypeStats,usageStats});
+        }
+
+
     }
 }

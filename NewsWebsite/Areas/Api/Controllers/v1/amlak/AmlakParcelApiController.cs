@@ -43,7 +43,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        [Route("AmlakParcel/List")]
+        [Route("List")]
         [HttpGet]
         public async Task<ApiResult<object>> AmlakParcelList(AmlakParcelReadInputVm param){
             await CheckUserAuth(_db);
@@ -57,7 +57,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Ok(new{items=finalItems,pageCount});
         }
 
-        [Route("AmlakParcel/Read")]
+        [Route("Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakParcelReadVm>> AmlakParcelRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
@@ -77,7 +77,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
 
-        [Route("AmlakParcel/Store")]
+        [Route("Store")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakParcelStore( AmlakParcelStoreVm param){
             await CheckUserAuth(_db);
@@ -107,7 +107,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
         
-        [Route("AmlakParcel/Update")]
+        [Route("Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakParcelUpdate( AmlakParcelUpdateVm param){
             
@@ -144,7 +144,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Ok(item.Id.ToString());
         }
         
-        [Route("AmlakParcel/Status")]
+        [Route("Status")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakParcelUpdateStatus( AmlakParcelUpdateStatusVm param){
 

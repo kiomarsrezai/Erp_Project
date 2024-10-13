@@ -21,6 +21,10 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string? DateFa{
             get{ return Helpers.MiladiToHejri(Date); }
         }
+        
+         
+        [NotMapped]
+        public string? StatusText{get{ return Helpers.UC(Status,"documentHistoryStatus"); }}
     }
 
     

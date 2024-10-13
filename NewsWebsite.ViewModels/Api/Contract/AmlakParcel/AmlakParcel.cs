@@ -24,6 +24,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+        
+        [NotMapped]
+        public string? StatusText{get{ return Helpers.UC(Status,"parcelStatus"); }}
+        
+        [NotMapped]
+        public string? parcelTypeText{get{ return Helpers.UC(Type,"parcelType"); }}
     }
 
     

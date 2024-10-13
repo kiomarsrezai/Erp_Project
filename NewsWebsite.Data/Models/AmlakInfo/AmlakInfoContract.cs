@@ -54,6 +54,11 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+        
+        
+        [NotMapped]
+        public string? TypeText{get{ return Helpers.UC(Type,"amlakInfoContractType"); }}
+
     }
     
     

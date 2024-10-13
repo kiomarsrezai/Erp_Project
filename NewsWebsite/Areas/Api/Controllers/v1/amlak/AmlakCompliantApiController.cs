@@ -44,7 +44,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        [Route("AmlakCompliant/List")]
+        [Route("List")]
         [HttpGet]
         public async Task<ApiResult<List<AmlakCompliantListVm>>> AmlakCompliantList(AmlakCompliantReadInputVm param){
             await CheckUserAuth(_db);
@@ -60,7 +60,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Ok(finalItems);
         }
 
-        [Route("AmlakCompliant/Read")]
+        [Route("Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakCompliantReadVm>> AmlakCompliantRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
@@ -75,7 +75,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
 
-        [Route("AmlakCompliant/Store")]
+        [Route("Store")]
         [HttpPost]
         public async Task<ApiResult<AmlakCompliantStoreResultVm>> AmlakCompliantUpdate([FromBody] AmlakCompliantStoreVm param){
             await CheckUserAuth(_db);
@@ -104,7 +104,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
 
-        [Route("AmlakCompliant/Update")]
+        [Route("Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakCompliantUpdate([FromBody] AmlakCompliantUpdateVm param){
             await CheckUserAuth(_db);
@@ -124,7 +124,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
         
-        [Route("AmlakCompliant/Status")]
+        [Route("Status")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakCompliantUpdateStatus([FromBody] AmlakCompliantUpdateStatusVm param){
             await CheckUserAuth(_db);
