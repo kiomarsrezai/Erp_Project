@@ -138,7 +138,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .ContractParty(param.ContractParty)
                 .Search(param.Search);
 
-            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
+            var pageCount = (int)Math.Ceiling((await builder.IsSubmitted(1).CountAsync())/Convert.ToDouble(param.PageRows));
             
             
             if (param.Export == 1){
@@ -148,6 +148,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             if (param.ForMap == 0){
                 builder = builder
                     .IsSubmitted(1)
+                    .OrderBy(param.Sort,param.SortType)
                     .Page2(param.Page, param.PageRows);
             }
             var items = await builder.ToListAsync();

@@ -58,6 +58,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int Page{ get; set; } = 1;
         public int PageRows{ get; set; } = 10;
         public string Search{ get; set; }
+        public string Sort{ get; set; }="Id";
+        public string SortType{ get; set; }="desc";
     }
 
 

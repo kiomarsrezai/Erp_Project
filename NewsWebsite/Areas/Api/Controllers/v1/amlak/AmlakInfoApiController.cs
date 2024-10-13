@@ -102,28 +102,56 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             RestResponse response2 = await client2.ExecuteAsync(request2);
             byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
             string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
-            var respLayer = JsonConvert.DeserializeObject<ResponseLayerDto>(newmessage.ToString());
 
-            for (int i = 0; i <= respLayer.totalFeatures; i++)
-            {
-                using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-                {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("AmlakInfoId", respLayer.features[i].id);
-                        sqlCommand.Parameters.AddWithValue("AreaId", respLayer.features[i].properties.mantaqe);
-                        sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", 3);
-                        sqlCommand.Parameters.AddWithValue("EstateInfoName", respLayer.features[i].properties.name);
-                        sqlCommand.Parameters.AddWithValue("EstateInfoAddress", respLayer.features[i].properties.adress);
-                        sqlCommand.Parameters.AddWithValue("AmlakInfolong", respLayer.features[i].geometry.coordinates[0][0].ToString());
-                        sqlCommand.Parameters.AddWithValue("AmlakInfolate", respLayer.features[i].geometry.coordinates[0][1].ToString());
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
 
-                    }
+            for (int i = 0; i < respLayer.TotalFeatures; i++){
+                var feature = respLayer.Features[i];
+
+                var oldItem = await _db.AmlakInfos.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
+
+                if (oldItem == null){
+                    var item = new AmlakInfo(){
+                        SdiId = feature.Id,
+                        AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
+                        Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
+                        Masahat = 0,
+                        AmlakInfoKindId= 3,
+                        EstateInfoName = feature.Properties.Name,
+                        EstateInfoAddress = feature.Properties.Address,
+                        CreatedAt = Helpers.GetServerDateTimeType(),
+                        UpdatedAt = Helpers.GetServerDateTimeType(),
+                    };
+                    _db.Add(item);
+                    await _db.SaveChangesAsync();
+                }
+                else{
+                    oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
+                    oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
+                    await _db.SaveChangesAsync();
                 }
             }
+            
+            // for (int i = 0; i <= respLayer.totalFeatures; i++)
+            // {
+            //     using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            //     {
+            //         using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
+            //         {
+            //             sqlconnect.Open();
+            //             sqlCommand.Parameters.AddWithValue("AmlakInfoId", respLayer.features[i].id);
+            //             sqlCommand.Parameters.AddWithValue("AreaId", respLayer.features[i].properties.mantaqe);
+            //             sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", 3);
+            //             sqlCommand.Parameters.AddWithValue("EstateInfoName", respLayer.features[i].properties.name);
+            //             sqlCommand.Parameters.AddWithValue("EstateInfoAddress", respLayer.features[i].properties.adress);
+            //             sqlCommand.Parameters.AddWithValue("AmlakInfolong", respLayer.features[i].geometry.coordinates[0][0].ToString());
+            //             sqlCommand.Parameters.AddWithValue("AmlakInfolate", respLayer.features[i].geometry.coordinates[0][1].ToString());
+            //             sqlCommand.CommandType = CommandType.StoredProcedure;
+            //             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            //
+            //         }
+            //     }
+            // }
 
             return Ok(respLayer);
         }
@@ -141,8 +169,28 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var builder = _db.AmlakInfos
                 .Search(param.Search)
                 .AreaId(param.AreaId)
+                .OwnerId(param.OwnerId)
                 .AmlakInfoKindId(param.AmlakInfoKindId)
                 .Where(a => a.Rentable == param.Rentable);
+            
+            if (!string.IsNullOrEmpty(param.SupplierName)){
+                builder = builder
+                    .Join(_db.AmlakInfoContracts,
+                        a => a.Id,
+                        c => c.AmlakInfoId,
+                        (a, c) => new { AmlakInfo = a, Contract = c })
+                    .Join(_db.AmlakInfoContractSuppliers,
+                        ac => ac.Contract.Id,
+                        cs => cs.ContractId,
+                        (ac, cs) => new { ac.AmlakInfo, ContractSupplier = cs })
+                    .Join(_db.Suppliers,
+                        acs => acs.ContractSupplier.SupplierId,
+                        s => s.Id,
+                        (acs, s) => new { acs.AmlakInfo, Supplier = s })
+                    .Where(acs => acs.Supplier.FirstName.Contains(param.SupplierName) || acs.Supplier.LastName.Contains(param.SupplierName) || (acs.Supplier.FirstName+" "+acs.Supplier.LastName).Contains(param.SupplierName))
+                    .Select(acs => acs.AmlakInfo);
+            }
+ 
             
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
             
@@ -172,8 +220,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             if (param.ForMap == 0){
                 builder = builder
                     .Include(a => a.Area)
+                    .Include(a => a.Owner)
                     .Include(a => a.AmlakInfoKind)
+                    .OrderBy(param.Sort,param.SortType)
                     .Page2(param.Page, param.PageRows);
+            }
+            else{
+                builder = builder
+                    .Include(a => a.AmlakInfoKind);
             }
 
            
@@ -197,17 +251,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             foreach (var item in items){
                 var row = new List<object>();
                 row.Add(item.Id);
+                row.Add(item.Owner.AreaName);
                 row.Add(item.Area.AreaName);
                 row.Add(item.IsSubmited);
                 row.Add(item.Masahat);
                 row.Add(item.AmlakInfoKind.AmlakInfoKindName);
                 row.Add(item.EstateInfoName);
                 row.Add(item.EstateInfoAddress);
-                row.Add(item.CurrentStatus);
-                row.Add(item.Structure);
-                row.Add(item.Owner);
-                row.Add(item.AmlakInfolate);
-                row.Add(item.AmlakInfolong);
+                row.Add(item.CurrentStatusText);
+                row.Add(item.StructureText);
+                row.Add(item.OwnerTypeText);
+                row.Add(item.Coordinates);
                 row.Add(item.CodeUsing);
                 row.Add(item.TypeUsing);
                 
@@ -226,7 +280,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         public async Task<ApiResult<AmlakInfoReadVm>> AmlakInfoRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakInfos.Include(a=>a.Area).Include(a=>a.AmlakInfoKind).Id(param.Id).FirstOrDefaultAsync();
+            var item = await _db.AmlakInfos
+                .Include(a=>a.Area)
+                .Include(a => a.Owner)
+                .Include(a=>a.AmlakInfoKind)
+                .Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
             
@@ -245,6 +303,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             if(item==null)
                 return BadRequest("آیتم پیدا نشد");
         
+            item.OwnerId = param.OwnerId;
             item.AreaId = param.AreaId;
             // item.IsSubmited = param.IsSubmited;
             item.Masahat = param.Masahat;
@@ -253,7 +312,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             item.EstateInfoAddress = param.EstateInfoAddress;
             item.CurrentStatus = param.CurrentStatus;
             item.Structure = param.Structure;
-            item.Owner = param.Owner;
+            item.OwnerType = param.OwnerType;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
         

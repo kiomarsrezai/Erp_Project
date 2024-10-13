@@ -54,6 +54,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .Subject(param.Subject)
                 .FileNumber(param.FileNumber)
                 .Status(param.Status)
+                .OrderBy(param.Sort,param.SortType)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakCompliant, AmlakCompliantListVm>(items);
 

@@ -154,6 +154,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 builder = builder
                     .Include(a => a.Area)
                     .Include(a => a.Owner)
+                    .OrderBy(param.Sort,param.SortType)
                     .Page2(param.Page, param.PageRows);
             }
             var items = await builder.ToListAsync();
@@ -230,6 +231,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             item.AreaId = param.AreaId;
             item.OwnerId = param.OwnerId;
+            item.Title = param.Title;
             item.ArchiveCode = param.ArchiveCode;
             item.AmlakCode = param.AmlakCode;
             item.Section = param.Section;

@@ -32,3 +32,12 @@ CREATE TABLE [dbo].[tblAmlakagreement](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
     ) ON [PRIMARY]
     GO
+
+
+
+
+add OwnerId in tblAmlakInfo default 0
+add Coordinates in tblAmlakInfo
+remove lat , lng ,IsContracted in tblAmlakInfo
+change owner to ownerType
+

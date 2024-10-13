@@ -89,6 +89,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         public string Subject{ get; set; }
         public string FileNumber{ get; set; }
         public string Status{ get; set; }
+        public string Sort{ get; set; }="Id";
+        public string SortType{ get; set; }="desc";
     }
 
     public class AmlakCompliantStoreResultVm {

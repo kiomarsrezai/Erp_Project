@@ -11,6 +11,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakArchive {
     public class AmlakArchiveBaseModel {
         public int AreaId{ get; set; }
         public int OwnerId{ get; set; }
+        public string Title{ get; set; }
         public string ArchiveCode{ get; set; }
         public string AmlakCode{ get; set; }
         public string JamCode{ get; set; }
@@ -25,6 +26,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakArchive {
         public string Coordinates{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
+        public string Title{ get; set; }
+        public string ArchiveCode{ get; set; }
         
         public AreaViewModel Area{ get; set; }
         public AreaViewModel Owner{ get; set; }
@@ -61,6 +64,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakArchive {
         public int Export{ get; set; } = 0;
         public int Page{ get; set; } = 1;
         public int PageRows{ get; set; } = 10;
+        public string Sort{ get; set; }="Id";
+        public string SortType{ get; set; }="desc";
     }
 
     public class AmlakArchiveStoreResultVm {

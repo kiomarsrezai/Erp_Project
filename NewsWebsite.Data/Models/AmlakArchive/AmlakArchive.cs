@@ -14,6 +14,7 @@ namespace NewsWebsite.Data.Models.AmlakArchive {
         public int IsSubmitted{ get; set; }
         public int AreaId{ get; set; }
         public int OwnerId{ get; set; }
+        public string Title{ get; set; }
         public string ArchiveCode{ get; set; }
         public string AmlakCode{ get; set; }
         public string Section{ get; set; }
@@ -71,6 +72,7 @@ namespace NewsWebsite.Data.Models.AmlakArchive {
         public static IQueryable<AmlakArchive> Search(this IQueryable<AmlakArchive> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(a => EF.Functions.Like(a.Address, $"%{value}%") ||
+                                        EF.Functions.Like(a.Title, $"%{value}%") ||
                                         EF.Functions.Like(a.Description, $"%{value}%"));
             }
             return query;

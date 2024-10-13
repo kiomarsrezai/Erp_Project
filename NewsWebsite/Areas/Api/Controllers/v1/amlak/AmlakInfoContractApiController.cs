@@ -58,7 +58,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
         [Route("List")]
         [HttpGet]
-        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int page=1,int pageRows=10){
+        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakInfoContracts
@@ -68,6 +68,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             var items = await builder
                 .Include(a=>a.Owner)
+                .OrderBy(sort,sortType)
                 .Page2(page,pageRows)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
@@ -112,7 +113,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             // insert contract 
 
             var contract = new AmlakInfoContract();
-            contract.AmlakInfoId=param.AmlakInfoId;
             contract.OwnerId=param.OwnerId;
             contract.DoingMethodId=param.DoingMethodId;
             contract.Number=param.Number;
@@ -146,8 +146,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
             }
 
-            if (string.IsNullOrEmpty(amlakInfo.Owner)){
-                amlakInfo.Owner = param.Owner;
+            if (string.IsNullOrEmpty(amlakInfo.OwnerType)){
+                amlakInfo.OwnerType = param.Owner;
                 amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
             }
 
@@ -221,13 +221,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             
             // update amlak info 
-            if (amlakInfo.Masahat == null || amlakInfo.Masahat == 0)
+            // if (amlakInfo.Masahat == null || amlakInfo.Masahat == 0)
                 amlakInfo.Masahat = param.Masahat;
-            if (string.IsNullOrEmpty(amlakInfo.Structure))
+            // if (string.IsNullOrEmpty(amlakInfo.Structure))
                 amlakInfo.Structure=param.Structure;
-            if (string.IsNullOrEmpty(amlakInfo.Owner))
-                amlakInfo.Owner=param.Owner;
-            if (string.IsNullOrEmpty(amlakInfo.TypeUsing))
+            // if (string.IsNullOrEmpty(amlakInfo.OwnerType))
+                amlakInfo.OwnerType=param.Owner;
+            // if (string.IsNullOrEmpty(amlakInfo.TypeUsing))
                 amlakInfo.TypeUsing=param.TypeUsing;
 
 

@@ -27,13 +27,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class ContractAmlakPrivateApiController : EnhancedController {
+    public class AmlakPrivateApiController : EnhancedController {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
         protected readonly ProgramBuddbContext _db;
 
-        public ContractAmlakPrivateApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment, ProgramBuddbContext db){
+        public AmlakPrivateApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment, ProgramBuddbContext db){
             _config = config;
             _uw = uw;
             _webHostEnvironment = webHostEnvironment;
@@ -159,6 +159,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 builder = builder
                     .Include(a => a.Area)
                     .Include(a => a.Owner)
+                    .OrderBy(param.Sort,param.SortType)
                     .Page2(param.Page, param.PageRows);
             }
             var items=await builder.ToListAsync();
@@ -188,12 +189,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.Title);
                 row.Add(item.Masahat);
                 row.Add(item.TypeUsing);
-                row.Add(item.DocumentType);
+                row.Add(item.DocumentTypeText);
                 row.Add(item.SadaCode);
                 row.Add(item.SajamCode);
                 row.Add(item.SdiId);
                 row.Add(item.Coordinates);
-                row.Add(item.PredictionUsage);
+                row.Add(item.PredictionUsageText);
                 row.Add(item.CreatedAtFa);
                 row.Add(item.UpdatedAtFa);
                 

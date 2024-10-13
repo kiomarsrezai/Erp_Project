@@ -49,7 +49,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakParcels.Type(param.Type).Title(param.Title);
-            var items = await builder.Page2(param.Page,param.PageRows).ToListAsync();
+            var items = await builder.OrderBy(param.Sort,param.SortType).Page2(param.Page,param.PageRows).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakParcel, AmlakParcelListVm>(items);
             
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
