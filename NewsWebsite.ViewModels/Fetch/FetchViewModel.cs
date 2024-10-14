@@ -87,6 +87,7 @@ namespace NewsWebsite.ViewModels.Fetch
         public Int64 Supply { get; set; }
         public Int64 Expense { get; set; }
         public Int64 BudgetNext { get; set; }
-
+        public string ProctorId { get; set; }
+        public string ExecutionId { get; set; }
     }
 }

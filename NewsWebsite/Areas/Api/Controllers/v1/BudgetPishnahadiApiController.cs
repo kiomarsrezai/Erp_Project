@@ -135,19 +135,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
-        [Route("BudgetProposalInlineUpdate")]
+        [Route("BudgetProposalEditInlineUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgetProposalInlineUpdate([FromBody] BudgetProposalUpdateViewModel param)
+        public async Task<ApiResult<string>> BudgetProposalEditInlineUpdate([FromBody] BudgetProposalUpdateViewModel param)
         {
             string readercount = null;
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
-                using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposal_Inline_Update", sqlconnect))
+                using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposalEdit_Inline_Update", sqlconnect))
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
                     sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("proctorId", param.ProctorId);
+                    sqlCommand.Parameters.AddWithValue("executionId", param.ExecutionId);
                     sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
                     sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
                     sqlCommand.Parameters.AddWithValue("BudgetNext", param.BudgetNext);
@@ -218,6 +220,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         row.AreaId = int.Parse(dataReader["AreaId"].ToString());
                         row.AreaName = dataReader["AreaName"].ToString();
+                        row.ProctorId = dataReader["ProctorId"].ToString();
+                        row.ExecutionId = dataReader["ExecutionId"].ToString();
                         row.Code = dataReader["Code"].ToString();
                         row.Description = dataReader["Description"].ToString();
                         row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
