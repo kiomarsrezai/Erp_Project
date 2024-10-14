@@ -35,9 +35,51 @@ CREATE TABLE [dbo].[tblAmlakagreement](
 
 
 
-
+add Title to amlakArchive nvarchar(250)
+    
 add OwnerId in tblAmlakInfo default 0
 add Coordinates in tblAmlakInfo
 remove lat , lng ,IsContracted in tblAmlakInfo
 change owner to ownerType
 
+change SajamCode to JamCode in tblAmlakPrivateNew
+
+
+
+
+ALTER TABLE tblAmlakPrivateNew
+    ADD
+        MainPlateNumber NVARCHAR(50),
+    SubPlateNumber NVARCHAR(50),
+    Section NVARCHAR(50),
+    Address NVARCHAR(50),
+    UsageOnDocument NVARCHAR(50),
+    PropertyType NVARCHAR(50),
+    OwnershipType NVARCHAR(50),
+    OwnershipPercentage NVARCHAR(50),
+    TransferredFrom NVARCHAR(50),
+    InPossessionOf NVARCHAR(50),
+    UsageUrban NVARCHAR(50),
+    BlockedStatusSimakUnitWindow NVARCHAR(50),
+    Status NVARCHAR(50),
+    Notes NVARCHAR(50),
+    ArchiveLocation NVARCHAR(50),
+    DocumentSerial NVARCHAR(50),
+    DocumentSeries NVARCHAR(50),
+    DocumentAlphabet NVARCHAR(50),
+    PropertyCode NVARCHAR(50),
+    Year NVARCHAR(50),
+    EntryDate NVARCHAR(50),
+    InternalDate NVARCHAR(50),
+    ProductiveAssetStrategies NVARCHAR(50),
+    SimakCode NVARCHAR(50);
+
+
+add SdiPlateNumber to tblAmlakPrivateNew  NVARCHAR(50)
+change type of  Masahat to float  NVARCHAR(50)
+
+update tblAmlakPrivateNew
+set SdiPlateNumber=SadaCode
+
+update tblAmlakPrivateNew
+set SadaCode=''

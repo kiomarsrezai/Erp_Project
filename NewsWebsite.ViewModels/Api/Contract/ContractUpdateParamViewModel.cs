@@ -14,7 +14,7 @@ namespace NewsWebsite.ViewModels.Api.Contract
         public int SuppliersId { get; set; }
         public int? DoingMethodId { get; set; }
         public int AmlakId { get; set; }
-        public float? Masahat { get; set; }
+        public double? Masahat { get; set; }
         public string DateFrom { get; set; }
         public string DateEnd { get; set; }
         public Int64 Amount { get; set; }

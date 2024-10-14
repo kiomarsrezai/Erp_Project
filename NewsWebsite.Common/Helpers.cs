@@ -286,5 +286,28 @@ public static class Helpers {
 
         return stringValue;
     }
+    public static object UCReverse(this string? stringValue, string key,object defaultVal=null){
+        var jsonPath = "utils.json"; // Adjust the path as needed
+        var jsonData = File.ReadAllText(jsonPath);
+        var jsonObject = JObject.Parse(jsonData);
+
+        foreach (var property in jsonObject.Properties()){
+            string key1 = property.Name;
+            JToken value = property.Value;
+
+            if (key1 == key){
+                foreach (var nestedProperty in value.Children<JProperty>()){
+                    if (nestedProperty.Value.ToString() == stringValue){
+                        return nestedProperty.Name;
+                    }
+                }
+            }
+        }
+
+        if (defaultVal != null)
+            return defaultVal;
+        
+        return stringValue;
+    }
 }
 }

@@ -15,7 +15,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int OwnerId{ get; set; }
         public int AreaId{ get; set; }
         public bool? IsSubmited{ get; set; }
-        public float? Masahat{ get; set; }
+        public double? Masahat{ get; set; }
         public int AmlakInfoKindId{ get; set; }
         public string EstateInfoName{ get; set; }
         public string EstateInfoAddress{ get; set; }

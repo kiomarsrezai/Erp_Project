@@ -14,8 +14,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Title{ get; set; }
         public string PredictionUsage{ get; set; }
         public string SadaCode{ get; set; } 
-        public string SajamCode{ get; set; } 
-        public int Masahat{ get; set; }
+        public string JamCode{ get; set; } 
+        public double Masahat{ get; set; }
         public string TypeUsing{ get; set; }
         public int DocumentType{ get; set; }
     }
@@ -33,6 +33,30 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     public class AmlakPrivateReadVm : AmlakPrivateBaseModel {
         public string SdiId{ get; set; }
         public string Coordinates{ get; set; }
+        public string SimakCode { get; set; }
+        public string MainPlateNumber { get; set; }
+        public string SubPlateNumber { get; set; }
+        public string Section { get; set; }
+        public string Address { get; set; }
+        public string UsageOnDocument { get; set; }
+        public string UsageUrban { get; set; }
+        public string PropertyType { get; set; }
+        public string OwnershipType { get; set; }
+        public string OwnershipPercentage { get; set; }
+        public string TransferredFrom { get; set; }
+        public string InPossessionOf { get; set; }
+        public string BlockedStatusSimakUnitWindow { get; set; }
+        public string Status { get; set; }
+        public string Notes { get; set; }
+        public string ArchiveLocation { get; set; }
+        public string DocumentSerial { get; set; }
+        public string DocumentSeries { get; set; }
+        public string DocumentAlphabet { get; set; }
+        public string PropertyCode { get; set; }
+        public string Year { get; set; }
+        public string EntryDate { get; set; }
+        public string InternalDate { get; set; }
+        public string ProductiveAssetStrategies { get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
 
@@ -41,6 +65,30 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     }
 
     public class AmlakPrivateUpdateVm : AmlakPrivateBaseModel {
+        public string SimakCode { get; set; }
+        public string MainPlateNumber { get; set; }
+        public string SubPlateNumber { get; set; }
+        public string Section { get; set; }
+        public string Address { get; set; }
+        public string UsageOnDocument { get; set; }
+        public string UsageUrban { get; set; }
+        public string PropertyType { get; set; }
+        public string OwnershipType { get; set; }
+        public string OwnershipPercentage { get; set; }
+        public string TransferredFrom { get; set; }
+        public string InPossessionOf { get; set; }
+        public string BlockedStatusSimakUnitWindow { get; set; }
+        public string Status { get; set; }
+        public string Notes { get; set; }
+        public string ArchiveLocation { get; set; }
+        public string DocumentSerial { get; set; }
+        public string DocumentSeries { get; set; }
+        public string DocumentAlphabet { get; set; }
+        public string PropertyCode { get; set; }
+        public string Year { get; set; }
+        public string EntryDate { get; set; }
+        public string InternalDate { get; set; }
+        public string ProductiveAssetStrategies { get; set; }
     }
 
 
@@ -48,11 +96,13 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int AreaId{ get; set; }
         public int OwnerId{ get; set; }
         public string TypeUsing{ get; set; }
-        public int MasahatFrom{ get; set; }
-        public int MasahatTo{ get; set; }
+        public double MasahatFrom{ get; set; }
+        public double MasahatTo{ get; set; }
         public int DocumentType{ get; set; }
         public string SadaCode{ get; set; }
-        public string SajamCode{ get; set; }
+        public string JamCode{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;
         public int Page{ get; set; } = 1;
