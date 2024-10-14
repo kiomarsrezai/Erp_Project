@@ -24,6 +24,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+        
+        [NotMapped]
+        public string? StatusText{get{ return Helpers.UC(Status,"parcelStatus"); }}
+        
+        [NotMapped]
+        public string? parcelTypeText{get{ return Helpers.UC(Type,"parcelType"); }}
     }
 
     
@@ -71,6 +77,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         
         public int Page{ get; set; } = 1;
         public int PageRows{ get; set; } = 10;
+        public string Sort{ get; set; }="Id";
+        public string SortType{ get; set; }="desc";
     }
 
 

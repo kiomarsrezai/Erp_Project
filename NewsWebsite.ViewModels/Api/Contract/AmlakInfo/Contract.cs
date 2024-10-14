@@ -69,7 +69,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int OwnerId{ get; set; }
 
         // amlak info data
-        public float? Masahat{ get; set; }
+        public double? Masahat{ get; set; }
         // public string? CurrentStatus{ get; set; }
         public string? Structure{ get; set; }
         public string? Owner{ get; set; }
@@ -90,7 +90,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
 
     public class AmlakInfoContractUpdateVm : AmlakInfoContractBaseModel {
         public int Id{ get; set; }
-        public float? Masahat{ get; set; }
+        public double? Masahat{ get; set; }
         // public string? CurrentStatus{ get; set; }
         public string? Structure{ get; set; }
         public string? Owner{ get; set; }

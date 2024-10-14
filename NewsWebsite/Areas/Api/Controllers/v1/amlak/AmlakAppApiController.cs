@@ -29,6 +29,7 @@ using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
 using NewsWebsite.Data.Models.AmlakArchive;
+using NewsWebsite.Data.Models.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 {
@@ -65,12 +66,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
             var parcelsCount = await _db.AmlakParcels.CountAsync();
             var archivesCount = await _db.AmlakArchives.CountAsync();
+            
             var amlakInfosNonRentableAllCount = await _db.AmlakInfos.Rentable(0).CountAsync();
             var amlakInfosRentableAllCount = await _db.AmlakInfos.Rentable(1).CountAsync();
             var amlakInfosRentableWithContractCount = await _db.AmlakInfos.Rentable(1).Where(ai => ai.Contracts.Any()).CountAsync();
             var amlakInfosRentableWithoutContractCount = await _db.AmlakInfos.Rentable(1).Where(ai => !ai.Contracts.Any()).CountAsync();
             var amlakInfosRentableWithActiveContractCount =await _db.AmlakInfos.Rentable(1).Where(ai => ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now)).CountAsync();
             var amlakInfosRentableWithoutActiveContractCount =  await _db.AmlakInfos.Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now)).CountAsync();
+            
             var contractAmlakInfosAllCount = await _db.AmlakInfoContracts.CountAsync();
             var contractAmlakInfosActiveCount = await _db.AmlakInfoContracts.Where(c=>c.DateEnd == null || c.DateEnd > DateTime.Now).CountAsync();
             

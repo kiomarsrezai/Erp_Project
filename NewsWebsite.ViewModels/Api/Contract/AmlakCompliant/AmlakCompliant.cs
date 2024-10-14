@@ -31,6 +31,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
         
+        [NotMapped]
+        public string? SubjectText{get{ return Helpers.UC(Subject,"compliantSubject"); }}
+        
+        [NotMapped]
+        public string? StatusText{get{ return Helpers.UC(Status,"compliantStatus"); }}
+        
     }
 
     
@@ -45,6 +51,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         public int Id{ get; set; }
         public int AmlakInfoId{ get; set; }
         public string Status{ get; set; }
+        public string StatusText{ get; set; }
+        public string SubjectText{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
 
@@ -81,6 +89,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakCompliant {
         public string Subject{ get; set; }
         public string FileNumber{ get; set; }
         public string Status{ get; set; }
+        public string Sort{ get; set; }="Id";
+        public string SortType{ get; set; }="desc";
     }
 
     public class AmlakCompliantStoreResultVm {

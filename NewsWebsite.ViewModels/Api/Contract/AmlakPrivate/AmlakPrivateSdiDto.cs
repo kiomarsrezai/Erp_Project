@@ -31,6 +31,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public DateTime CreatedDate{ get; set; }
         public string LastEditedUser{ get; set; }
         public DateTime LastEditedDate{ get; set; }
+        public string Name{ get; set; }
+        public string Address{ get; set; }
     }
 
     public class Crs {

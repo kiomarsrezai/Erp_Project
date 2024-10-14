@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -259,7 +260,54 @@ public static class Helpers {
             return tmpPath; // Return the path to the saved file
         }
     }
-    
-}
 
+
+    public static string UC(this int? value, string key){
+        return UC(value.ToString(), key);
+    }
+
+    public static string UC(this string? stringValue, string key){
+        var jsonPath = "utils.json"; // Adjust the path as needed
+        var jsonData = File.ReadAllText(jsonPath);
+        var jsonObject = JObject.Parse(jsonData);
+
+        foreach (var property in jsonObject.Properties()){
+            string key1 = property.Name;
+            JToken value = property.Value;
+
+            if (key1 == key){
+                foreach (var nestedProperty in value.Children<JProperty>()){
+                    if (nestedProperty.Name == stringValue){
+                        return nestedProperty.Value.ToString();
+                    }
+                }
+            }
+        }
+
+        return stringValue;
+    }
+    public static object UCReverse(this string? stringValue, string key,object defaultVal=null){
+        var jsonPath = "utils.json"; // Adjust the path as needed
+        var jsonData = File.ReadAllText(jsonPath);
+        var jsonObject = JObject.Parse(jsonData);
+
+        foreach (var property in jsonObject.Properties()){
+            string key1 = property.Name;
+            JToken value = property.Value;
+
+            if (key1 == key){
+                foreach (var nestedProperty in value.Children<JProperty>()){
+                    if (nestedProperty.Value.ToString() == stringValue){
+                        return nestedProperty.Name;
+                    }
+                }
+            }
+        }
+
+        if (defaultVal != null)
+            return defaultVal;
+        
+        return stringValue;
+    }
+}
 }

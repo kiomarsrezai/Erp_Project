@@ -19,21 +19,21 @@ using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
 using System.Linq;
-using NewsWebsite.Data.Models.AmlakArchive;
-using NewsWebsite.ViewModels.Api.Contract.AmlakArchive;
+using NewsWebsite.Data.Models.AmlakAgreement;
+using NewsWebsite.ViewModels.Api.Contract.AmlakAgreement;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class AmlakArchiveApiController : EnhancedController {
+    public class AmlakAgreementApiController : EnhancedController {
         public readonly IConfiguration _config;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
         protected readonly ProgramBuddbContext _db;
 
-        public AmlakArchiveApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment, ProgramBuddbContext db){
+        public AmlakAgreementApiController(IUnitOfWork uw, IConfiguration config, IWebHostEnvironment webHostEnvironment, ProgramBuddbContext db){
             _config = config;
             _uw = uw;
             _webHostEnvironment = webHostEnvironment;
@@ -47,7 +47,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [HttpGet]
         [Route("updateFromSdi")]
-        public async Task<IActionResult> UpdateDataFromSdiArchive(){
+        public async Task<IActionResult> UpdateDataFromSdiAgreement(){
             // var options = new RestClientOptions("https://sdi.ahvaz.ir")
             // {
             //     MaxTimeout = -1,
@@ -94,7 +94,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             // byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
             // string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
 
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "archive.json");
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Agreement.json");
             string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
 
 
@@ -102,12 +102,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             for (int i = 0; i < respLayer.TotalFeatures-1; i++){
                 var feature = respLayer.Features[i];
-
-                var oldItem = await _db.AmlakArchives.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
+                var oldItem = await _db.AmlakAgreements.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
 
                 if (oldItem == null){
-                    var item = new AmlakArchive(){
-                        AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
+                    var item = new AmlakAgreement(){
                         SdiId = feature.Id,
                         Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
                         IsSubmitted = 0,
@@ -133,17 +131,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [Route("List")]
         [HttpGet]
-        public async Task<ApiResult<object>> AmlakArchiveList(AmlakArchiveReadInputVm param){
+        public async Task<ApiResult<object>> AmlakAgreementList(AmlakAgreementReadInputVm param){
             await CheckUserAuth(_db);
 
-            var builder = _db.AmlakArchives
-                .ArchiveCode(param.ArchiveCode)
-                .AmlakCode(param.AmlakCode)
-                .AreaId(param.AreaId)
-                .OwnerId(param.OwnerId)
+            var builder = _db.AmlakAgreements
+                .ContractParty(param.ContractParty)
                 .Search(param.Search);
 
-            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
+            var pageCount = (int)Math.Ceiling((await builder.IsSubmitted(1).CountAsync())/Convert.ToDouble(param.PageRows));
             
             
             if (param.Export == 1){
@@ -152,8 +147,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             }
             if (param.ForMap == 0){
                 builder = builder
-                    .Include(a => a.Area)
-                    .Include(a => a.Owner)
+                    .IsSubmitted(1)
                     .OrderBy(param.Sort,param.SortType)
                     .Page2(param.Page, param.PageRows);
             }
@@ -165,14 +159,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 return Ok(new {fileUrl});
             }
             
-            var finalItems = MyMapper.MapTo<AmlakArchive, AmlakArchiveListVm>(items);
+            var finalItems = MyMapper.MapTo<AmlakAgreement, AmlakAgreementListVm>(items);
         
             return Ok(new{items=finalItems,pageCount});
         }
         
         
           
-        private static object ExportExcel(List<AmlakArchive> items){
+        private static object ExportExcel(List<AmlakAgreement> items){
             var finalItems = new List<List<object>>();
 
             foreach (var item in items){
@@ -180,40 +174,37 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.Id);
                 row.Add(item.SdiId);
                 row.Add(item.IsSubmitted);
-                row.Add(item.Area.AreaName);
-                row.Add(item.Owner.AreaName);
-                row.Add(item.ArchiveCode);
-                row.Add(item.AmlakCode);
-                row.Add(item.Section);
-                row.Add(item.Plaque1);
-                row.Add(item.Plaque2);
+                row.Add(item.Title);
+                row.Add(item.DateFa);
+                row.Add(item.ContractParty);
+                row.Add(item.AmountMunicipality);
+                row.Add(item.AmountContractParty);
+                row.Add(item.DateFromFa);
+                row.Add(item.DateToFa);
                 row.Add(item.Description);
-                row.Add(item.Address);
                 row.Add(item.Coordinates);
+                row.Add(item.Address);
                 row.Add(item.CreatedAtFa);
                 row.Add(item.UpdatedAtFa);
-                
                 finalItems.Add(row);
             }
 
-            return Helpers.ExportExcelFile(finalItems, "amlak_archive");
+            return Helpers.ExportExcelFile(finalItems, "amlak_Agreement");
         }
 
 
         
         [Route("Read")]
         [HttpGet]
-        public async Task<ApiResult<AmlakArchiveReadVm>> AmlakArchiveRead(PublicParamIdViewModel param){
+        public async Task<ApiResult<AmlakAgreementReadVm>> AmlakAgreementRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakArchives.Id(param.Id)
-                .Include(a=>a.Area)
-                .Include(a=>a.Owner)
+            var item = await _db.AmlakAgreements.Id(param.Id)
                 .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
             
-            var finalItem = MyMapper.MapTo<AmlakArchive, AmlakArchiveReadVm>(item);
+            var finalItem = MyMapper.MapTo<AmlakAgreement, AmlakAgreementReadVm>(item);
         
             return Ok(finalItem);
         }
@@ -222,23 +213,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         
         [Route("Update")]
         [HttpPost]
-        public async Task<ApiResult<string>> AmlakArchiveUpdate([FromBody] AmlakArchiveUpdateVm param){
+        public async Task<ApiResult<string>> AmlakAgreementUpdate([FromBody] AmlakAgreementUpdateVm param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakArchives.Id(param.Id).FirstOrDefaultAsync();
+            var item = await _db.AmlakAgreements.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
 
-            item.AreaId = param.AreaId;
-            item.OwnerId = param.OwnerId;
             item.Title = param.Title;
-            item.ArchiveCode = param.ArchiveCode;
-            item.AmlakCode = param.AmlakCode;
-            item.Section = param.Section;
-            item.Plaque1 = param.Plaque1;
-            item.Plaque2 = param.Plaque2;
+            item.Date = DateTime.Parse(param.Date);
+            item.ContractParty = param.ContractParty;
+            item.AmountMunicipality = param.AmountMunicipality;
+            item.AmountContractParty = param.AmountContractParty;
+            item.DateFrom = param.DateFrom != "" ? DateTime.Parse(param.DateFrom) : (DateTime?)null;
+            item.DateTo = param.DateTo != "" ? DateTime.Parse(param.DateTo) : (DateTime?)null;
             item.Description = param.Description;
-            item.Address = param.Address;
+            item.Address = param.Description;
             item.IsSubmitted = 1;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
@@ -249,17 +239,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         
         [Route("Upload")]
         [HttpPost]
-        public async Task<ApiResult<string>> AmlakArchiveUploadFile(AmlakArchiveFileUploadVm fileUpload){
+        public async Task<ApiResult<string>> AmlakAgreementUploadFile(AmlakAgreementFileUploadVm fileUpload){
             await CheckUserAuth(_db);
 
-            if (fileUpload.AmlakArchiveId == null)
+            if (fileUpload.AmlakAgreementId == null)
                 return BadRequest(new{ message = "شناسه ملک نامعتبر می باشد" });
         
         
-            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakArchives/" + fileUpload.AmlakArchiveId);
+            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakAgreements/" + fileUpload.AmlakAgreementId);
             if (fileName != ""){
-                var item = new AmlakArchiveFile();
-                item.AmlakArchiveId = fileUpload.AmlakArchiveId ?? 0;
+                var item = new AmlakAgreementFile();
+                item.AmlakAgreementId = fileUpload.AmlakAgreementId ?? 0;
                 item.FileName = fileName;
                 item.FileTitle = fileUpload.FileTitle;
                 item.Type = fileUpload.Type;
@@ -277,17 +267,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         
         [Route("Files")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakArchiveFilesListVm>>> AmlakArchiveAttachFiles(int AmlakArchiveId){
+        public async Task<ApiResult<List<AmlakAgreementFilesListVm>>> AmlakAgreementAttachFiles(int AmlakAgreementId){
             await CheckUserAuth(_db);
 
-            if (AmlakArchiveId == 0) BadRequest();
+            if (AmlakAgreementId == 0) BadRequest();
         
-            var items = await _db.AmlakArchiveFiles.Where(a => a.AmlakArchiveId == AmlakArchiveId).ToListAsync();
-            var finalItems = MyMapper.MapTo<AmlakArchiveFile, AmlakArchiveFilesListVm>(items);
+            var items = await _db.AmlakAgreementFiles.Where(a => a.AmlakAgreementId == AmlakAgreementId).ToListAsync();
+            var finalItems = MyMapper.MapTo<AmlakAgreementFile, AmlakAgreementFilesListVm>(items);
         
         
             foreach (var item in finalItems){
-                item.FileName = "/Upload/AmlakArchives/" +item.AmlakArchiveId+"/"+ item.FileName;
+                item.FileName = "/Upload/AmlakAgreements/" +item.AmlakAgreementId+"/"+ item.FileName;
             }
             
             return Ok(finalItems);
@@ -295,12 +285,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         
         [Route("File/Edit")]
         [HttpPatch]
-        public async Task<ApiResult<string>> AmlakArchiveAttachFileEdit(int amlakArchiveFileId,string title){
+        public async Task<ApiResult<string>> AmlakAgreementAttachFileEdit(int amlakAgreementFileId,string title){
             await CheckUserAuth(_db);
 
-            if (amlakArchiveFileId == 0) BadRequest();
+            if (amlakAgreementFileId == 0) BadRequest();
         
-            var item = await _db.AmlakArchiveFiles.Where(a => a.Id == amlakArchiveFileId).FirstOrDefaultAsync();
+            var item = await _db.AmlakAgreementFiles.Where(a => a.Id == amlakAgreementFileId).FirstOrDefaultAsync();
             if (item == null)
                 BadRequest("خطا");
 

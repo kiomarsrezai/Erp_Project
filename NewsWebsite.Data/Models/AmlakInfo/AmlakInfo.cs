@@ -11,19 +11,19 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
     [Table("tblAmlakInfo")]
     public class AmlakInfo:BaseModel {
         public int Id{ get; set; }
+        public int OwnerId{ get; set; }
         public int AreaId{ get; set; }
+        public string SdiId{ get; set; }
         public bool? IsSubmited{ get; set; }
         public double? Masahat{ get; set; }
         public int AmlakInfoKindId{ get; set; }
         public string EstateInfoName{ get; set; }
         public string EstateInfoAddress{ get; set; }
-        public string CurrentStatus{ get; set; } // AmlakInfoStatuses
-        public string Structure{ get; set; } // AmlakInfoStructures
-        public string Owner{ get; set; } // AmlakInfoOwners
-        public string AmlakInfolate{ get; set; }
-        public string AmlakInfolong{ get; set; }
+        public string CurrentStatus{ get; set; } 
+        public string Structure{ get; set; } 
+        public string OwnerType{ get; set; } 
+        public string Coordinates{ get; set; }
         public string CodeUsing{ get; set; }
-        public bool? IsContracted{ get; set; }
         public string TypeUsing{ get; set; }
         public int Rentable{ get; set; } 
         public DateTime? CreatedAt{ get; set; }
@@ -31,6 +31,7 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
 
         public virtual  AmlakInfoKind AmlakInfoKind{ get; set; }
         public virtual  TblAreas Area{ get; set; }
+        public virtual  TblAreas Owner{ get; set; }
         
         public ICollection<AmlakInfoContract> Contracts{ get; set; }
         
@@ -40,6 +41,16 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+        
+                
+        [NotMapped]
+        public string? OwnerTypeText{get{ return Helpers.UC(OwnerType,"amlakInfoOwnerType"); }}    
+        
+        [NotMapped]
+        public string? StructureText{get{ return Helpers.UC(Structure,"amlakInfoStructure"); }}
+        
+        [NotMapped]
+        public string? CurrentStatusText{get{ return Helpers.UC(CurrentStatus,"amlakInfoCurrentStatus"); }}
     }    
 
     
@@ -49,6 +60,12 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public static IQueryable<AmlakInfo> Rentable(this IQueryable<AmlakInfo> query, int? value){
             if (BaseModel.CheckParameter(value,null)){
                 return query.Where(e => e.Rentable == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakInfo> OwnerId(this IQueryable<AmlakInfo> query, int? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.OwnerId == value);
             }
             return query;
         }
