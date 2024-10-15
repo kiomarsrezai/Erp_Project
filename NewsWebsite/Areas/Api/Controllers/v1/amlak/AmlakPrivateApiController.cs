@@ -359,7 +359,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         
             var item = await _db.AmlakPrivateFiles.Where(a => a.Id == fileId).FirstOrDefaultAsync();
             if (item == null)
-                BadRequest("خطا");
+                return BadRequest("خطا");
 
             item.FileTitle = title;
             await _db.SaveChangesAsync();
@@ -518,10 +518,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         public async Task<ApiResult<string>> AmlakPrivateUpdate(ExcelImportInputVm param){
             await CheckUserAuth(_db);
 
-            if (param.FormFile == null)
+            if (param.File == null)
                 return BadRequest(new{ message = "لطفا فایل خود را انتخاب نمایید" });
 
-            IFormFile file =param.FormFile;
+            IFormFile file =param.File;
             string folderName = "tmp";
             string webRootPath = "wwwroot";
             string newPath = Path.Combine(webRootPath, folderName);
@@ -611,7 +611,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
                     // Add to the list of records to update
                     updateCount++;
-                    if (param.justCheck == 0){
+                    if (param.justValidate == 0){
                         await _db.SaveChangesAsync();
                     }
                 }
@@ -621,7 +621,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     // not exists
                 }
             }
-            if (param.justCheck == 1)
+            if (param.justValidate == 1)
                 return Ok(updateCount + " ردیف ویرایش خواهد شد و " + notExistCount + " ردیف پیدا نشد" + "\n ردیف ها : "+notExistRows);
 
             return Ok(updateCount + " ردیف ویرایش شد و " + notExistCount + " ردیف پیدا نشد" + "\n ردیف ها : "+notExistRows);

@@ -225,8 +225,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.ContractParty = param.ContractParty;
             item.AmountMunicipality = param.AmountMunicipality;
             item.AmountContractParty = param.AmountContractParty;
-            item.DateFrom = param.DateFrom != "" ? DateTime.Parse(param.DateFrom) : (DateTime?)null;
-            item.DateTo = param.DateTo != "" ? DateTime.Parse(param.DateTo) : (DateTime?)null;
+            item.DateFrom = !string.IsNullOrEmpty(param.DateFrom) ? DateTime.Parse(param.DateFrom) : (DateTime?)null;
+            item.DateTo = !string.IsNullOrEmpty(param.DateTo) ? DateTime.Parse(param.DateTo) : (DateTime?)null;
             item.Description = param.Description;
             item.Address = param.Description;
             item.IsSubmitted = 1;
@@ -267,12 +267,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         
         [Route("Files")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakAgreementFilesListVm>>> AmlakAgreementAttachFiles(int AmlakAgreementId){
+        public async Task<ApiResult<List<AmlakAgreementFilesListVm>>> AmlakAgreementAttachFiles(int amlakAgreementId){
             await CheckUserAuth(_db);
 
-            if (AmlakAgreementId == 0) BadRequest();
+            if (amlakAgreementId == 0) BadRequest();
         
-            var items = await _db.AmlakAgreementFiles.Where(a => a.AmlakAgreementId == AmlakAgreementId).ToListAsync();
+            var items = await _db.AmlakAgreementFiles.Where(a => a.AmlakAgreementId == amlakAgreementId).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakAgreementFile, AmlakAgreementFilesListVm>(items);
         
         
@@ -292,7 +292,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         
             var item = await _db.AmlakAgreementFiles.Where(a => a.Id == amlakAgreementFileId).FirstOrDefaultAsync();
             if (item == null)
-                BadRequest("خطا");
+                return BadRequest("خطا");
 
             item.FileTitle = title;
             await _db.SaveChangesAsync();

@@ -6,8 +6,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     
     
     public class ExcelImportInputVm {
-        public int? justCheck{ get; set; }
-        public IFormFile FormFile{ get; set; }
+        public int? justValidate{ get; set; }
+        public IFormFile File{ get; set; }
     }
 
 

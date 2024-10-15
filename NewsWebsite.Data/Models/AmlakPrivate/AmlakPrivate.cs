@@ -133,6 +133,13 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
             return query;
         }
         
+        public static IQueryable<AmlakPrivateNew> PropertyType(this IQueryable<AmlakPrivateNew> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.PropertyType == value);
+            }
+            return query;
+        }
+        
         public static IQueryable<AmlakPrivateNew> Search(this IQueryable<AmlakPrivateNew> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(a=> EF.Functions.Like(a.Title, $"%{value}%") || 

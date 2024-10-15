@@ -64,8 +64,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             await CheckUserAuth(_db);
 
             var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
+            var amlakPrivatesSanadTakBargCount = await _db.AmlakPrivateNews.DocumentType(1).CountAsync();
+            var amlakPrivatesSanadDaftarcheCount = await _db.AmlakPrivateNews.DocumentType(3).CountAsync();
+            var amlakPrivatesTypeSakhtemanCount = await _db.AmlakPrivateNews.PropertyType("1").CountAsync();
+            var amlakPrivatesTypeZaminCount = await _db.AmlakPrivateNews.PropertyType("2").CountAsync();
+            var amlakPrivatesTypeKhaneCount = await _db.AmlakPrivateNews.PropertyType("3").CountAsync();
+            
+            
+            
             var parcelsCount = await _db.AmlakParcels.CountAsync();
-            var archivesCount = await _db.AmlakArchives.CountAsync();
+            var parcelsPendingCount = await _db.AmlakParcels.Status("1").CountAsync();
+            var parcelsAcceptedCount = await _db.AmlakParcels.Status("2").CountAsync();
+            var parcelsRejectedCount = await _db.AmlakParcels.Status("3").CountAsync();
+            var parcelsRemovedCount = await _db.AmlakParcels.Status("4").CountAsync();
+            
+            var archivesNotSubmittedCount = await _db.AmlakArchives.IsSubmitted(0).CountAsync();
+            var archivesSubmittedCount = await _db.AmlakArchives.IsSubmitted(1).CountAsync();
             
             var amlakInfosNonRentableAllCount = await _db.AmlakInfos.Rentable(0).CountAsync();
             var amlakInfosRentableAllCount = await _db.AmlakInfos.Rentable(1).CountAsync();
@@ -76,9 +90,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             var contractAmlakInfosAllCount = await _db.AmlakInfoContracts.CountAsync();
             var contractAmlakInfosActiveCount = await _db.AmlakInfoContracts.Where(c=>c.DateEnd == null || c.DateEnd > DateTime.Now).CountAsync();
+            var contractAmlakInfos2MonthActiveCount = await _db.AmlakInfoContracts.LessThanNMonth(2).CountAsync();
             
             
-            return Ok(new {amlakPrivatesCount,parcelsCount,archivesCount,amlakInfosNonRentableAllCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,contractAmlakInfosAllCount,contractAmlakInfosActiveCount,});
+            return Ok(new {amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,parcelsCount,parcelsPendingCount,parcelsAcceptedCount,parcelsRejectedCount,parcelsRemovedCount,archivesNotSubmittedCount,archivesSubmittedCount,amlakInfosNonRentableAllCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,contractAmlakInfosAllCount,contractAmlakInfosActiveCount,contractAmlakInfos2MonthActiveCount});
         }
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------

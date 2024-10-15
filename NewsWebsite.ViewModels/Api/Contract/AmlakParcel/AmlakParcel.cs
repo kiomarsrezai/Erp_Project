@@ -103,4 +103,10 @@ public static class AmlakParcelExtensions {
         }
         return query;
     }
+    public static IQueryable<AmlakParcel> Status(this IQueryable<AmlakParcel> query, string? value){
+        if (BaseModel.CheckParameter(value,0)){
+            return query.Where(e => EF.Functions.Like(e.Status, $"%{value}%"));
+        }
+        return query;
+    }
 }

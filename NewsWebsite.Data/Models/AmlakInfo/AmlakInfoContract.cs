@@ -77,5 +77,12 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             }
             return query;
         }
+        
+        public static IQueryable<AmlakInfoContract> LessThanNMonth(this IQueryable<AmlakInfoContract> query, int value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(c=> c.DateEnd >= DateTime.Now &&  c.DateEnd <= DateTime.Now.AddDays(value*31));
+            }
+            return query;
+        }
     }
 }

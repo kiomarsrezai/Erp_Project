@@ -18,6 +18,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public double Masahat{ get; set; }
         public string TypeUsing{ get; set; }
         public int DocumentType{ get; set; }
+        public string MainPlateNumber { get; set; }
+        public string SubPlateNumber { get; set; }
     }
 
     public class AmlakPrivateListVm : AmlakPrivateBaseModel {
@@ -34,8 +36,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string SdiId{ get; set; }
         public string Coordinates{ get; set; }
         public string SimakCode { get; set; }
-        public string MainPlateNumber { get; set; }
-        public string SubPlateNumber { get; set; }
         public string Section { get; set; }
         public string Address { get; set; }
         public string UsageOnDocument { get; set; }
@@ -66,8 +66,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
     public class AmlakPrivateUpdateVm : AmlakPrivateBaseModel {
         public string SimakCode { get; set; }
-        public string MainPlateNumber { get; set; }
-        public string SubPlateNumber { get; set; }
         public string Section { get; set; }
         public string Address { get; set; }
         public string UsageOnDocument { get; set; }

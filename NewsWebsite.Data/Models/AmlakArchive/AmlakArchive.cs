@@ -69,6 +69,12 @@ namespace NewsWebsite.Data.Models.AmlakArchive {
             }
             return query;
         }
+        public static IQueryable<AmlakArchive> IsSubmitted(this IQueryable<AmlakArchive> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                return query.Where(e => e.IsSubmitted == value);
+            }
+            return query;
+        }
         public static IQueryable<AmlakArchive> Search(this IQueryable<AmlakArchive> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(a => EF.Functions.Like(a.Address, $"%{value}%") ||

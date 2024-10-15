@@ -373,7 +373,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         
             var item = await _db.AmlakInfoFiles.Where(a => a.Id == fileId).FirstOrDefaultAsync();
             if (item == null)
-                BadRequest("خطا");
+                return BadRequest("خطا");
 
             item.FileTitle = title;
             await _db.SaveChangesAsync();
