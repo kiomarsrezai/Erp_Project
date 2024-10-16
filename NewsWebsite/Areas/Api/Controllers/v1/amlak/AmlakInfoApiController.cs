@@ -192,7 +192,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             }
  
             
-            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
             
             switch (param.ContractStatus){
                 case 0: // all
@@ -211,6 +210,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                     break;
                 
             }
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
 
             if (param.Export == 1){
                 param.Page = 1;

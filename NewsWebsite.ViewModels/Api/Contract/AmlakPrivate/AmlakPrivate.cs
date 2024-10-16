@@ -91,16 +91,17 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
 
     public class AmlakPrivateReadInputVm {
-        public int AreaId{ get; set; }
-        public int OwnerId{ get; set; }
+        public int? AreaId{ get; set; }
+        public int? OwnerId{ get; set; }
         public string TypeUsing{ get; set; }
         public double MasahatFrom{ get; set; }
         public double MasahatTo{ get; set; }
-        public int DocumentType{ get; set; }
+        public int? DocumentType{ get; set; }
         public string SadaCode{ get; set; }
         public string JamCode{ get; set; }
         public string MainPlateNumber{ get; set; }
         public string SubPlateNumber{ get; set; }
+        public int? PropertyType{ get; set; }
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;
         public int Page{ get; set; } = 1;

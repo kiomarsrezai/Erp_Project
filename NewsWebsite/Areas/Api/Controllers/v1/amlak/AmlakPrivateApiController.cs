@@ -149,7 +149,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .SadaCode(param.SadaCode).JamCode(param.JamCode).DocumentType(param.DocumentType)
                 .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
-                .Search(param.Search);
+                .PropertyType(param.PropertyType).Search(param.Search);
 
             
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
@@ -547,77 +547,78 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 if (row == null) continue;
                 if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
 
-
                 // Read data from the Excel sheet
-                var MainPlateNumber = getCellInt(row,0);
-                var SubPlateNumber = getCellInt(row,1);
-                if (MainPlateNumber==0 && SubPlateNumber==0 ) continue;
+                var mainPlateNumber = getCellInt(row,0);
+                var subPlateNumber = getCellInt(row,1);
+                if (mainPlateNumber==0 && subPlateNumber==0 ) continue;
 
                 // Generate SdiPlateNumber
-                var SdiPlateNumber = $"{MainPlateNumber}-{SubPlateNumber}";
+                var sdiPlateNumber = $"{mainPlateNumber}-{subPlateNumber}";
 
                 // Fetch the existing record from the database
                 var existingAmlak = await _db.AmlakPrivateNews
-                    .FirstOrDefaultAsync(a => a.SdiPlateNumber == SdiPlateNumber);
+                    .FirstOrDefaultAsync(a => a.SdiPlateNumber == sdiPlateNumber);
 
                 if (existingAmlak != null){
 
 
-                    var AreaId = int.Parse(row.GetCell(2).ToString()) == null ? 52 : int.Parse(row.GetCell(2).ToString());
+                    var areaId = row.GetCell(2) == null ? 52 : getCellInt(row,2);
 
-                    var OwnerId = 0;
-                    if (row.GetCell(8).ToString() == null){
-                        OwnerId = 0;
-                    }else if (row.GetCell(8).ToString() == "شهرداری اهواز"){
-                        OwnerId = 9;
+                    int ownerId;
+                    if (getCell(row, 8) == "شهرداری اهواز"){
+                        ownerId = 9;
                     }else{
-                        OwnerId= int.Parse(row.GetCell(8).ToString()!);
+                        ownerId = getCellInt(row, 8);
                     }
-                    
+                        
 
-                    var masahat = double.Parse(row.GetCell(4).ToString()) == null ? 0 : double.Parse(row.GetCell(4).ToString());
-                    var DocumentType = int.Parse(Helpers.UCReverse(row.GetCell(6).ToString(),"amlakPrivateDocumentType",0).ToString());
+                    var masahat = getCellDouble(row,4);
+                    var documentType = Helpers.UCReverse(getCell(row,6),"amlakPrivateDocumentType",0).ToString();
                     
                     // Update the existing record with new values
-                    existingAmlak.MainPlateNumber =  row.GetCell(0).ToString();;
-                    existingAmlak.SubPlateNumber =  row.GetCell(1).ToString();;
-                    existingAmlak.AreaId =  AreaId;;
-                    existingAmlak.Section =  row.GetCell(3).ToString();;
+                    existingAmlak.MainPlateNumber =  getCell(row,0);
+                    existingAmlak.SubPlateNumber =  getCell(row,1);
+                    existingAmlak.AreaId =  areaId;;
+                    existingAmlak.Section =  getCell(row,3);
                     existingAmlak.Masahat =  masahat;;
-                    existingAmlak.Address =  row.GetCell(5).ToString();;
-                    existingAmlak.DocumentType =  DocumentType;;
-                    existingAmlak.UsageOnDocument =  row.GetCell(7).ToString();;
-                    existingAmlak.OwnerId =  OwnerId;;
-                    existingAmlak.PropertyType =  Helpers.UCReverse(row.GetCell(9).ToString(),"amlakPrivatePropertyType").ToString();;
-                    existingAmlak.OwnershipType =  row.GetCell(10).ToString();;
-                    existingAmlak.OwnershipPercentage =  row.GetCell(11).ToString();;
-                    existingAmlak.TransferredFrom =  row.GetCell(12).ToString();;
-                    existingAmlak.InPossessionOf =  row.GetCell(13).ToString();;
-                    existingAmlak.UsageUrban =  row.GetCell(14).ToString();;
-                    existingAmlak.BlockedStatusSimakUnitWindow =  row.GetCell(15).ToString();;
-                    existingAmlak.Status =  row.GetCell(16).ToString();;
-                    existingAmlak.Notes =  row.GetCell(17).ToString();;
-                    existingAmlak.ArchiveLocation =  row.GetCell(18).ToString();;
-                    existingAmlak.DocumentSerial =  row.GetCell(19).ToString();;
-                    existingAmlak.DocumentSeries =  row.GetCell(20).ToString();;
-                    existingAmlak.DocumentAlphabet =  row.GetCell(21).ToString();;
-                    existingAmlak.JamCode =  row.GetCell(22).ToString();;
-                    existingAmlak.PropertyCode =  row.GetCell(23).ToString();;
-                    existingAmlak.Year =  row.GetCell(24).ToString();;
-                    existingAmlak.EntryDate =  row.GetCell(25).ToString();;
-                    existingAmlak.InternalDate =  row.GetCell(26).ToString();;
-                    existingAmlak.ProductiveAssetStrategies =  row.GetCell(45).ToString();;
-                    existingAmlak.SimakCode =  row.GetCell(46).ToString();;
+                    existingAmlak.Address =  getCell(row,5);
+                    existingAmlak.DocumentType =  documentType==""?0:int.Parse(documentType);;
+                    existingAmlak.UsageOnDocument =  getCell(row,7);
+                    existingAmlak.OwnerId =  ownerId;;
+                    existingAmlak.PropertyType =  Helpers.UCReverse(getCell(row,9),"amlakPrivatePropertyType").ToString();
+                    existingAmlak.OwnershipType =  getCell(row,10);
+                    existingAmlak.OwnershipPercentage =  getCell(row,11);
+                    existingAmlak.TransferredFrom =  getCell(row,12);
+                    existingAmlak.InPossessionOf =  getCell(row,13);
+                    existingAmlak.UsageUrban =  getCell(row,14);
+                    existingAmlak.BlockedStatusSimakUnitWindow =  getCell(row,15);
+                    existingAmlak.Status =  getCell(row,16);
+                    existingAmlak.Notes =  getCell(row,17);
+                    existingAmlak.ArchiveLocation =  getCell(row,18);
+                    existingAmlak.DocumentSerial =  getCell(row,19);
+                    existingAmlak.DocumentSeries =  getCell(row,20);
+                    existingAmlak.DocumentAlphabet =  getCell(row,21);
+                    existingAmlak.JamCode =  getCell(row,22);
+                    existingAmlak.PropertyCode =  getCell(row,23);
+                    existingAmlak.Year =  getCell(row,24);
+                    existingAmlak.EntryDate =  getCell(row,25);
+                    existingAmlak.InternalDate =  getCell(row,26);
+                    existingAmlak.ProductiveAssetStrategies =  getCell(row,45);
+                    existingAmlak.SimakCode =  getCell(row,46);
 
                     // Add to the list of records to update
                     updateCount++;
                     if (param.justValidate == 0){
-                        await _db.SaveChangesAsync();
+                        try{
+                            await _db.SaveChangesAsync();
+                        }catch (Exception e){
+                            return BadRequest("خطاااا / "+mainPlateNumber+" / " +  (i+1));
+                        }
                     }
                 }
                 else{
                     notExistCount++;
-                    notExistRows=notExistRows+SubPlateNumber+",";
+                    notExistRows=notExistRows+ (i - 1) +",";
                     // not exists
                 }
             }
@@ -628,11 +629,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             
         }
 
-        private int getCellInt(IRow row, int i){
-            if(row.GetCell(i).ToString()==null)
-                return 0;
+        private string getCell(IRow row, int i){
+            if(row.GetCell(i)==null)
+                return "";
                 
-            return int.Parse(row.GetCell(i).ToString());
+            return row.GetCell(i).ToString();
+        }
+
+        private int getCellInt(IRow row, int i){
+            if(row.GetCell(i)==null)
+                return 0;
+
+            if (int.TryParse(row.GetCell(i).ToString(), out int resInt))
+                return resInt;
+
+            return 0;
+        }
+
+        private double getCellDouble(IRow row, int i){
+            if(row.GetCell(i)==null)
+                return 0;
+
+            if (double.TryParse(row.GetCell(i).ToString(), out double resdDouble))
+                return resdDouble;
+
+            return 0D;
         }
 
     }

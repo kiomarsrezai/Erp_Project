@@ -78,6 +78,16 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             return query;
         }
         
+        public static IQueryable<AmlakInfoContract> IsActive(this IQueryable<AmlakInfoContract> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                if(value==1)
+                    return query.Where(c=>c.DateEnd == null || c.DateEnd > DateTime.Now);
+                else
+                    return query.Where(c=>c.DateEnd != null && c.DateEnd <= DateTime.Now);
+            }
+            return query;
+        }
+        
         public static IQueryable<AmlakInfoContract> LessThanNMonth(this IQueryable<AmlakInfoContract> query, int value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(c=> c.DateEnd >= DateTime.Now &&  c.DateEnd <= DateTime.Now.AddDays(value*31));

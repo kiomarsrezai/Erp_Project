@@ -141,6 +141,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .AmlakCode(param.AmlakCode)
                 .AreaId(param.AreaId)
                 .OwnerId(param.OwnerId)
+                .IsSubmitted(param.IsSubmitted)
                 .Search(param.Search);
 
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));

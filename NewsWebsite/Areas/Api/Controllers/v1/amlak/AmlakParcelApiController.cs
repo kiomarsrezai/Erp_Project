@@ -152,7 +152,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             var item = await _db.AmlakParcels.Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
-                return BadRequest("پیدا نشد111");
+                return BadRequest("پیدا نشد");
 
             item.Status = param.Status;
             item.Comment = item.Comment+ "<br>" + Helpers.MiladiToHejri(DateTime.Now.ToString()) + ":" +param.Comment;

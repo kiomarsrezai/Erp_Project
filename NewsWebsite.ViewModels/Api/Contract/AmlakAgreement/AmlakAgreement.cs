@@ -12,6 +12,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAgreement {
         public int Id{ get; set; }
         public string Title{ get; set; }
         public string ContractParty{ get; set; }
+        public int MainPlateNumber{ get; set; }
+        public int SubPlateNumber{ get; set; }
+        public int Type{ get; set; }
     }
 
     public class AmlakAgreementListVm : AmlakAgreementBaseModel {
@@ -56,7 +59,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAgreement {
     public class AmlakAgreementReadInputVm  {
         public string ContractParty{ get; set; }
         public string Search{ get; set; }
-        
+        public DateTime? DateFrom{ get; set; }
+        public DateTime? DateTo{ get; set; }
+        public int? MainPlateNumber{ get; set; }
+        public int? SubPlateNumber{ get; set; }
+        public int? Type{ get; set; }
+
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;
         public int Page{ get; set; } = 1;

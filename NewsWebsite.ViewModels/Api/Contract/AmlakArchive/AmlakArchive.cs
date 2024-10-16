@@ -59,6 +59,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakArchive {
         public int AreaId{ get; set; }
         public int OwnerId{ get; set; }
         public string Search{ get; set; }
+        public int? IsSubmitted{ get; set; }
         
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;

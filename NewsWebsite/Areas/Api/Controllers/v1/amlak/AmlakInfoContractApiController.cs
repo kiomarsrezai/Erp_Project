@@ -58,12 +58,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
         [Route("List")]
         [HttpGet]
-        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int lessThanNMonth=0,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
+        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int lessThanNMonth=0,int? isActive=null,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakInfoContracts
                 .AmlakInfoId(amlakInfoId)
                 .LessThanNMonth(lessThanNMonth)
+                .IsActive(isActive)
                 .OwnerId(ownerId);
 
             

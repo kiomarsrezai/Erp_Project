@@ -66,9 +66,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
             var amlakPrivatesSanadTakBargCount = await _db.AmlakPrivateNews.DocumentType(1).CountAsync();
             var amlakPrivatesSanadDaftarcheCount = await _db.AmlakPrivateNews.DocumentType(3).CountAsync();
-            var amlakPrivatesTypeSakhtemanCount = await _db.AmlakPrivateNews.PropertyType("1").CountAsync();
-            var amlakPrivatesTypeZaminCount = await _db.AmlakPrivateNews.PropertyType("2").CountAsync();
-            var amlakPrivatesTypeKhaneCount = await _db.AmlakPrivateNews.PropertyType("3").CountAsync();
+            var amlakPrivatesTypeSakhtemanCount = await _db.AmlakPrivateNews.PropertyType(1).CountAsync();
+            var amlakPrivatesTypeZaminCount = await _db.AmlakPrivateNews.PropertyType(2).CountAsync();
+            var amlakPrivatesTypeKhaneCount = await _db.AmlakPrivateNews.PropertyType(3).CountAsync();
             
             
             
@@ -82,6 +82,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var archivesSubmittedCount = await _db.AmlakArchives.IsSubmitted(1).CountAsync();
             
             var amlakInfosNonRentableAllCount = await _db.AmlakInfos.Rentable(0).CountAsync();
+            var amlakInfosNonRentableParkCount = await _db.AmlakInfos.Rentable(0).AmlakInfoKindId(5).CountAsync();
+            var amlakInfosNonRentableGozarCount = await _db.AmlakInfos.Rentable(0).AmlakInfoKindId(6).CountAsync();
+            var amlakInfosNonRentableOtherCount = amlakInfosNonRentableAllCount-amlakInfosNonRentableParkCount-amlakInfosNonRentableGozarCount;
             var amlakInfosRentableAllCount = await _db.AmlakInfos.Rentable(1).CountAsync();
             var amlakInfosRentableWithContractCount = await _db.AmlakInfos.Rentable(1).Where(ai => ai.Contracts.Any()).CountAsync();
             var amlakInfosRentableWithoutContractCount = await _db.AmlakInfos.Rentable(1).Where(ai => !ai.Contracts.Any()).CountAsync();
@@ -89,11 +92,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var amlakInfosRentableWithoutActiveContractCount =  await _db.AmlakInfos.Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now)).CountAsync();
             
             var contractAmlakInfosAllCount = await _db.AmlakInfoContracts.CountAsync();
-            var contractAmlakInfosActiveCount = await _db.AmlakInfoContracts.Where(c=>c.DateEnd == null || c.DateEnd > DateTime.Now).CountAsync();
+            var contractAmlakInfosActiveCount = await _db.AmlakInfoContracts.IsActive(1).CountAsync();
             var contractAmlakInfos2MonthActiveCount = await _db.AmlakInfoContracts.LessThanNMonth(2).CountAsync();
             
             
-            return Ok(new {amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,parcelsCount,parcelsPendingCount,parcelsAcceptedCount,parcelsRejectedCount,parcelsRemovedCount,archivesNotSubmittedCount,archivesSubmittedCount,amlakInfosNonRentableAllCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,contractAmlakInfosAllCount,contractAmlakInfosActiveCount,contractAmlakInfos2MonthActiveCount});
+            return Ok(new {amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,parcelsCount,parcelsPendingCount,parcelsAcceptedCount,parcelsRejectedCount,parcelsRemovedCount,archivesNotSubmittedCount,archivesSubmittedCount,amlakInfosNonRentableAllCount,amlakInfosNonRentableParkCount,amlakInfosNonRentableGozarCount,amlakInfosNonRentableOtherCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,contractAmlakInfosAllCount,contractAmlakInfosActiveCount,contractAmlakInfos2MonthActiveCount});
         }
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------

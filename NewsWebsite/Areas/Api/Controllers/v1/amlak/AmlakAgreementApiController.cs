@@ -136,6 +136,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             var builder = _db.AmlakAgreements
                 .ContractParty(param.ContractParty)
+                .DateFrom(param.DateFrom)
+                .DateTo(param.DateTo)
+                .MainPlateNumber(param.MainPlateNumber)
+                .SubPlateNumber(param.SubPlateNumber)
+                .Type(param.Type)
                 .Search(param.Search);
 
             var pageCount = (int)Math.Ceiling((await builder.IsSubmitted(1).CountAsync())/Convert.ToDouble(param.PageRows));
@@ -177,6 +182,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.Title);
                 row.Add(item.DateFa);
                 row.Add(item.ContractParty);
+                row.Add(item.MainPlateNumber);
+                row.Add(item.SubPlateNumber);
+                row.Add(item.Type);
                 row.Add(item.AmountMunicipality);
                 row.Add(item.AmountContractParty);
                 row.Add(item.DateFromFa);
@@ -189,7 +197,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 finalItems.Add(row);
             }
 
-            return Helpers.ExportExcelFile(finalItems, "amlak_Agreement");
+            return Helpers.ExportExcelFile(finalItems, "amlak_agreement");
         }
 
 
@@ -223,6 +231,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Title = param.Title;
             item.Date = DateTime.Parse(param.Date);
             item.ContractParty = param.ContractParty;
+            item.MainPlateNumber= param.MainPlateNumber;
+            item.SubPlateNumber= param.SubPlateNumber;
+            item.Type= param.Type;
             item.AmountMunicipality = param.AmountMunicipality;
             item.AmountContractParty = param.AmountContractParty;
             item.DateFrom = !string.IsNullOrEmpty(param.DateFrom) ? DateTime.Parse(param.DateFrom) : (DateTime?)null;
