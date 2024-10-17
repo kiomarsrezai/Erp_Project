@@ -135,6 +135,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return BadRequest(readercount);
         }
 
+        [Route("BudgetProposalModalUpdate")]
+        [HttpPost]
+        public async Task<ApiResult<string>> BudgetProposalModalUpdate([FromBody] BudgetProposalUpdateViewModel param)
+        {
+            string readercount = null;
+
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposal_Inline_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("yearId", param.yearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("proctorId", param.ProctorId);
+                    sqlCommand.Parameters.AddWithValue("executionId", param.ExecutionId);
+                    sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
+                    sqlCommand.Parameters.AddWithValue("BudgetNext", param.BudgetNext);
+                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+           
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
+        }
+
         [Route("BudgetProposalEditInlineUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> BudgetProposalEditInlineUpdate([FromBody] BudgetProposalUpdateViewModel param)
@@ -154,7 +187,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
                     sqlCommand.Parameters.AddWithValue("BudgetNext", param.BudgetNext);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
-           
+
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
