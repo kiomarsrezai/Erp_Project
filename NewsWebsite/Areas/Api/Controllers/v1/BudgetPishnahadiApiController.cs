@@ -134,7 +134,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
-
+      
+        //ثبت بودجه سال جدید پیشنهادی
         [Route("BudgetProposalModalUpdate")]
         [HttpPost]
         public async Task<ApiResult<string>> BudgetProposalModalUpdate([FromBody] BudgetProposalUpdateViewModel param)
@@ -167,6 +168,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             else
                 return BadRequest(readercount);
         }
+
+        //ثبت بودجه اصلاحیه پیشنهادی
 
         [Route("BudgetProposalEditInlineUpdate")]
         [HttpPost]
