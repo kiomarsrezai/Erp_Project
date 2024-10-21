@@ -272,6 +272,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.DateSanad = dataReader["DateSanad"].ToString();
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        fetchView.programOperationDetailsId = dataReader["programOperationDetailsId"].ToString();
 
                         fecthViewModel.Add(fetchView);
                     }

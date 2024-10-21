@@ -39,6 +39,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<Visit> Visits { get; set; }
         public virtual DbSet<Video> Videos { get; set; }
         public virtual DbSet<TblAreas> TblAreas { get; set; }
+        public virtual DbSet<TblBudgetAreaShare> TblBudgetAreaShares { set; get; }
         public virtual DbSet<TblBudgetDetailProject> TblBudgetDetailProject { get; set; }
         public virtual DbSet<TblBudgetDetailProjectArea> TblBudgetDetailProjectArea { get; set; }
         public virtual DbSet<TblBudgetDetails> TblBudgetDetails { get; set; }

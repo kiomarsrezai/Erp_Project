@@ -7,6 +7,7 @@
         public string DateSanad { get; set; }
         public string NumberSanad { get; set; }
         public int KindId { get; set; }
+        public string programOperationDetailsId { get; set; }
     }
 
     public class Param10ViewModel
