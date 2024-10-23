@@ -287,8 +287,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
+
             
             var finalItem = MyMapper.MapTo<AmlakInfo, AmlakInfoReadVm>(item);
+            var activeCount = await _db.AmlakInfoContracts.AmlakInfoId(item.Id).Where(c => c.DateEnd > DateTime.Now).CountAsync();
+            finalItem.IsContracted = activeCount > 0;
         
             return Ok(finalItem);
         }
