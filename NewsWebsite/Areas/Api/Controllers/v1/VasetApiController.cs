@@ -32,9 +32,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             List<VasetSazmanhaViewModel> fecthViewModel = new List<VasetSazmanhaViewModel>();
 
-            string connection = @"Data Source=amcsosrv63\ProBudDb;User Id=sa;Password=Ki@1972424701;Initial Catalog=ProgramBudDb;";
             //string connection = @"Data Source=.;Initial Catalog=ProgramBudDB;User Id=sa;Password=Az12345;Initial Catalog=ProgramBudDb;";
-            using (SqlConnection sqlconnect = new SqlConnection(connection))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Read", sqlconnect))
                 {
@@ -158,17 +157,36 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         [HttpGet]
         public async Task<ApiResult<string>> AC_DeleteRow(int id)
         {
-                 using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Row_Delete", sqlconnect))
                 {
-                    using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Row_Delete", sqlconnect))
-                    {
-                        sqlconnect.Open();
-                        sqlCommand.Parameters.AddWithValue("id", id);
-                        sqlCommand.CommandType = CommandType.StoredProcedure;
-                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                        sqlconnect.Close();
-                    }
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("id", id);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    sqlconnect.Close();
                 }
+            }
+       
+            return Ok("با موفقیت انجام شد");
+        }
+        
+        [Route("DeleteRows")]
+        [HttpGet]
+        public async Task<ApiResult<string>> AC_DeleteRows(string ids)
+        {
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP9000_Mapping_Rows_Delete", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("ids", ids);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    sqlconnect.Close();
+                }
+            }
        
             return Ok("با موفقیت انجام شد");
         }

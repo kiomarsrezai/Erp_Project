@@ -104,7 +104,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UserName = param.UserName;
             item.PhoneNumber = param.PhoneNumber;
             item.Bio = param.Bio;
-            item.Password =new PasswordHasher<AmlakAdmin>().HashPassword(null, "123456aA*");
+            item.Password =new PasswordHasher<AmlakAdmin>().HashPassword(null, param.Password);
             item.CreatedAt = Helpers.GetServerDateTimeType();
             item.UpdatedAt = Helpers.GetServerDateTimeType();
              _db.Add(item);
@@ -187,6 +187,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             //     authProperties);
 
             var adminData = new{
+                Id=admin.Id,
                 FirstName=admin.FirstName,
                 LastName=admin.LastName,
                 UserName=admin.UserName,
@@ -195,8 +196,72 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 Token=GenerateToken(),
             };
 
+            // todo set expire token date
             admin.Token = adminData.Token;
             await _db.SaveChangesAsync();
+            
+            return Ok(adminData);
+        }
+        
+        [Route("ChangePassword")]
+        [HttpPost]
+        public async Task<ApiResult<object>> AmlakAdminChangePasword([FromBody] AmlakAdminChangePasswordVm param){
+
+            if (string.IsNullOrEmpty(param.Token)){
+                return BadRequest("UnAuthenticated");
+            }
+            
+            var admin = await _db.AmlakAdmins.Where(c=>c.Token==param.Token).FirstOrDefaultAsync();
+            if (admin == null)
+                return BadRequest("کاربر یافت نشد");
+
+            
+            var passVerifyResult = new PasswordHasher<AmlakAdmin>().VerifyHashedPassword(null, admin.Password, param.OldPassword);
+            if (passVerifyResult!=PasswordVerificationResult.Success){ // todo: check hash
+                throw new ErrMessageException("رمز عبور صحیح نمی باشد", HttpStatusCode.NotFound);
+            }
+
+            admin.Token = GenerateToken();
+            admin.TokenExpireDate = DateTime.Now.AddDays(1);
+            admin.Password =new PasswordHasher<AmlakAdmin>().HashPassword(null, param.NewPassword);
+            await _db.SaveChangesAsync();
+            
+            return Ok(admin.Token);
+        }
+           
+        [Route("ChangePasswordAdmin")]
+        [HttpPost]
+        public async Task<ApiResult<object>> AmlakAdminChangePaswordAdmin([FromBody] AmlakAdminChangePasswordAdminVm param){
+
+            var admin = await _db.AmlakAdmins.Where(c=>c.Id==param.Id).FirstOrDefaultAsync();
+            if (admin == null)
+                return BadRequest("کاربر یافت نشد");
+
+            admin.Token = "";
+            admin.TokenExpireDate = null;
+            admin.Password =new PasswordHasher<AmlakAdmin>().HashPassword(null, param.NewPassword);
+            await _db.SaveChangesAsync();
+            
+            return Ok(admin.Token);
+        }
+        
+        [Route("User")]
+        [HttpGet]
+        public async Task<ApiResult<object>> AmlakAdminGetUser(string token){
+
+            var admin = await _db.AmlakAdmins.Where(c=>c.Token==token).FirstOrDefaultAsync();
+            if (admin == null)
+                return BadRequest("UnAuthenticated");
+
+            // todo check expire token date
+            var adminData = new{
+                Id=admin.Id,
+                FirstName=admin.FirstName,
+                LastName=admin.LastName,
+                UserName=admin.UserName,
+                Bio=admin.Bio,
+                AmlakLisence=admin.AmlakLisence,
+            };
             
             return Ok(adminData);
         }

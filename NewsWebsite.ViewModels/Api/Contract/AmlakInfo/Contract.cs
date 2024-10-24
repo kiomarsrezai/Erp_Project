@@ -78,6 +78,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public List<int> SupplierIds{ get; set; }
         public string DateFrom{ get; set; }
         public string DateEnd{ get; set; }
+        public string ZemanatEndDate{ get; set; }
     }
     
     public class PricesInputVm {
@@ -99,5 +100,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public List<int> SupplierIds{ get; set; }
         public string DateFrom{ get; set; }
         public string DateEnd{ get; set; }
+        public string ZemanatEndDate{ get; set; }
     }
 }

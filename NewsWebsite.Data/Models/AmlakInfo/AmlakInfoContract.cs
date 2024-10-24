@@ -19,6 +19,7 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public DateTime DateFrom{ get; set; }
         public DateTime DateEnd{ get; set; }
         public Int64 ZemanatPrice{ get; set; }
+        public DateTime? ZemanatEndDate{ get; set; }
         public string Type{ get; set; }
         public int ModatValue{ get; set; }
         public string Nemayande{ get; set; }
@@ -45,9 +46,13 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         
         [NotMapped]
         public string? DateFromFa{get{ return Helpers.MiladiToHejri(DateFrom); }}
+ 
 
         [NotMapped]
         public string? DateEndFa{get{ return Helpers.MiladiToHejri(DateEnd); }}
+        
+        [NotMapped]
+        public string? ZemanatEndDateFa{get{ return Helpers.MiladiToHejri(ZemanatEndDate); }}
         
         [NotMapped]
         public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
@@ -91,6 +96,12 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public static IQueryable<AmlakInfoContract> LessThanNMonth(this IQueryable<AmlakInfoContract> query, int value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(c=> c.DateEnd >= DateTime.Now &&  c.DateEnd <= DateTime.Now.AddDays(value*31));
+            }
+            return query;
+        }
+        public static IQueryable<AmlakInfoContract> LessThanNMonthZemanat(this IQueryable<AmlakInfoContract> query, int value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(c=> c.ZemanatEndDate >= DateTime.Now &&  c.ZemanatEndDate <= DateTime.Now.AddDays(value*31));
             }
             return query;
         }

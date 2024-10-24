@@ -17,6 +17,7 @@ namespace NewsWebsite.Data.Models.AmlakAdmin {
         public string AmlakLisence{ get; set; }
         public string Password { get; set; }
         public string Token { get; set; }
+        public DateTime? TokenExpireDate { get; set; }
         public DateTime? CreatedAt{ get; set; }
         public DateTime? UpdatedAt{ get; set; }
         

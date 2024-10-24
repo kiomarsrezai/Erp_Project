@@ -56,9 +56,11 @@ namespace NewsWebsite.Data
         public virtual DbSet<TblYears> TblYears { get; set; }
         // public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }
         public virtual DbSet<AmlakPrivateNew> AmlakPrivateNews { get; set; }
+        public virtual DbSet<AmlakPrivateGenerating> AmlakPrivateGeneratings { get; set; }
         public virtual DbSet<AmlakPrivateFile> AmlakPrivateFiles { get; set; }
         public virtual DbSet<AmlakPrivateDocHistory> AmlakPrivateDocHistories { get; set; }
         public virtual DbSet<AmlakInfo> AmlakInfos { get; set; }
+        public virtual DbSet<AmlakInfoContractCheck> AmlakInfoContractChecks { get; set; }
         public virtual DbSet<AmlakInfoKind> AmlakInfoKinds { get; set; }
         public virtual DbSet<AmlakInfoFile> AmlakInfoFiles { get; set; }
         public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }

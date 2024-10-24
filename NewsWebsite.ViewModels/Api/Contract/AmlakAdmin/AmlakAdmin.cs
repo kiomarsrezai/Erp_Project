@@ -31,7 +31,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAdmin {
         public string UpdatedAtFa{ get; set; }
     }
     public class AmlakAdminStoreVm : AmlakAdminBaseModel {
-    
+        public string Password{ get; set; }
+
     }
     public class AmlakAdminUpdateVm : AmlakAdminBaseModel {
         public int Id{ get; set; }
@@ -55,6 +56,17 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAdmin {
         public string UserName{ get; set; }
         public string Password{ get; set; }
         public string Remember{ get; set; }
+    }
+    
+    public class AmlakAdminChangePasswordVm {
+        public string Token{ get; set; }
+        public string OldPassword{ get; set; }
+        public string NewPassword{ get; set; }
+    }
+
+    public class AmlakAdminChangePasswordAdminVm {
+        public int Id{ get; set; }
+        public string NewPassword{ get; set; }
     }
 
     public class AmlakAdminStoreResultVm {

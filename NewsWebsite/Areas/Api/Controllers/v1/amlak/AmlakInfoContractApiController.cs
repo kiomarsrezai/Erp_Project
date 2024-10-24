@@ -58,12 +58,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
         [Route("List")]
         [HttpGet]
-        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int lessThanNMonth=0,int? isActive=null,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
+        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int lessThanNMonth=0,int lessThanNMonthZemanat=0,int? isActive=null,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakInfoContracts
                 .AmlakInfoId(amlakInfoId)
                 .LessThanNMonth(lessThanNMonth)
+                .LessThanNMonthZemanat(lessThanNMonthZemanat)
                 .IsActive(isActive)
                 .OwnerId(ownerId);
 
@@ -123,6 +124,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.DateFrom=DateTime.Parse(param.DateFrom);
             contract.DateEnd=DateTime.Parse(param.DateEnd);
             contract.ZemanatPrice=param.ZemanatPrice;
+            contract.ZemanatEndDate=DateTime.Parse(param.ZemanatEndDate);
             contract.Type=param.Type;
             contract.ModatValue=param.ModatValue;
             contract.Nemayande=param.Nemayande;
@@ -211,6 +213,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.DateFrom=DateTime.Parse(param.DateFrom);
             contract.DateEnd=DateTime.Parse(param.DateEnd);
             contract.ZemanatPrice=param.ZemanatPrice;
+            contract.ZemanatEndDate=DateTime.Parse(param.ZemanatEndDate);
             contract.Type=param.Type;
             contract.ModatValue=param.ModatValue;
             contract.Nemayande=param.Nemayande;
