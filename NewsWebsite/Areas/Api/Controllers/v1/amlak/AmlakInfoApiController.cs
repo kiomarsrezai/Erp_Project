@@ -233,6 +233,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
            
             var items = await builder.ToListAsync();
             
+            foreach (var item in items){
+                if (item.Area!=null && item.Area.Id == 9){
+                    item.Area.AreaName = "شهرداری مرکز";
+                }
+                if (item.Owner!=null && item.Owner.Id == 9){
+                    item.Owner.AreaName = "شهرداری مرکز";
+                }
+            }
             if (param.Export == 1){
                 var fileUrl = ExportExcelAmlak(items);
                 return Ok(new {fileUrl});
@@ -288,6 +296,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             if (item == null)
                 return BadRequest("پیدا نشد");
 
+            
+            if (item.Area!=null && item.Area.Id == 9){
+                item.Area.AreaName = "شهرداری مرکز";
+            }
+            if (item.Owner!=null && item.Owner.Id == 9){
+                item.Owner.AreaName = "شهرداری مرکز";
+            }
             
             var finalItem = MyMapper.MapTo<AmlakInfo, AmlakInfoReadVm>(item);
             var activeCount = await _db.AmlakInfoContracts.AmlakInfoId(item.Id).Where(c => c.DateEnd > DateTime.Now).CountAsync();

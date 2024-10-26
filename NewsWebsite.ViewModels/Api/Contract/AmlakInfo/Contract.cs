@@ -52,6 +52,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string DateFromFa{ get; set; } = "";
         public string DateEndFa{ get; set; } = "";
         public string TenderDateFa{ get; set; } = "";
+        public string ZemanatEndDate{ get; set; }
+        public string ZemanatEndDateFa{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
 

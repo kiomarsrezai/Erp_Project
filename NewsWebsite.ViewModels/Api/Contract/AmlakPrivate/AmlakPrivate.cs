@@ -42,9 +42,11 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string UsageUrban { get; set; }
         public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
-        public string OwnershipPercentage { get; set; }
+        public double OwnershipValue { get; set; }
+        public int OwnershipValueTotal { get; set; }
         public string TransferredFrom { get; set; }
-        public string InPossessionOf { get; set; }
+        public int InPossessionOf { get; set; }
+        public string InPossessionOfOther { get; set; }
         public string BlockedStatusSimakUnitWindow { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }
@@ -57,6 +59,14 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string EntryDate { get; set; }
         public string InternalDate { get; set; }
         public string ProductiveAssetStrategies { get; set; }
+        public int BuildingStatus { get; set; }
+        public int BuildingMasahat { get; set; }
+        public int BuildingFloorsNumber { get; set; }
+        public int BuildingUsage { get; set; }
+        public string MeterNumberGas { get; set; }
+        public string MeterNumberWater { get; set; }
+        public string MeterNumberElectricity { get; set; }
+        public string MeterNumberPhone { get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
 
@@ -72,9 +82,11 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string UsageUrban { get; set; }
         public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
-        public string OwnershipPercentage { get; set; }
+        public double OwnershipValue { get; set; }
+        public int OwnershipValueTotal { get; set; }
         public string TransferredFrom { get; set; }
-        public string InPossessionOf { get; set; }
+        public int InPossessionOf { get; set; }
+        public string InPossessionOfOther { get; set; }
         public string BlockedStatusSimakUnitWindow { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }
@@ -87,6 +99,14 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string EntryDate { get; set; }
         public string InternalDate { get; set; }
         public string ProductiveAssetStrategies { get; set; }
+        public int BuildingStatus { get; set; }
+        public int BuildingMasahat { get; set; }
+        public int BuildingFloorsNumber { get; set; }
+        public int BuildingUsage { get; set; }
+        public string MeterNumberGas { get; set; }
+        public string MeterNumberWater { get; set; }
+        public string MeterNumberElectricity { get; set; }
+        public string MeterNumberPhone { get; set; }
     }
 
 

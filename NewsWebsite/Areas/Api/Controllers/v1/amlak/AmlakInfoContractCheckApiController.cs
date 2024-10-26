@@ -62,7 +62,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakInfoContractChecks
-                .AmlakInfoContractId(param.contractId);
+                .AmlakInfoContractId(param.contractId)
+                .IsPassed(param.IsPassed);
 
             
             var items = await builder
@@ -77,6 +78,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             return Ok(new{items=finalItems,pageCount});
         }
 
+        
+        [Route("Read")]
+        [HttpGet]
+        public async Task<ApiResult<AmlakInfoContractCheckListVm>> CheckRead(int id){
+            await CheckUserAuth(_db);
+            
+            var item = await _db.AmlakInfoContractChecks
+                .Id(id)
+                .FirstAsync();
+            
+            
+            var finalItem = MyMapper.MapTo<AmlakInfoContractCheck, AmlakInfoContractCheckListVm>(item);
+
+            return Ok(finalItem);
+        }
+        
        
         [Route("Insert")]
         [HttpPost]
@@ -139,10 +156,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 return BadRequest("چک یافت نشد");
 
             _db.Remove(check);
-            
+            await _db.SaveChangesAsync();
+
           return Ok("با موفقیت انجام شد");
         }
         
+        
+
+        [Route("Pass")]
+        [HttpPost]
+        public async Task<ApiResult<string>> CheckUpdate(int checkId){
+            await CheckUserAuth(_db);
+            
+            var check =await  _db.AmlakInfoContractChecks.Id( checkId).FirstOrDefaultAsync();
+            if (check == null)
+                return BadRequest("چک یافت نشد");
+
+            check.IsPassed=1;
+            await _db.SaveChangesAsync();
+
+            return Ok("انجام شد");
+        }
+
+
 
     }
 }

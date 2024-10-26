@@ -31,9 +31,11 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string UsageUrban { get; set; }
         public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
-        public string OwnershipPercentage { get; set; }
+        public double OwnershipValue { get; set; }
+        public int OwnershipValueTotal { get; set; }
         public string TransferredFrom { get; set; }
-        public string InPossessionOf { get; set; }
+        public int InPossessionOf { get; set; }
+        public string InPossessionOfOther { get; set; }
         public string BlockedStatusSimakUnitWindow { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }
@@ -46,6 +48,14 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string EntryDate { get; set; }
         public string InternalDate { get; set; }
         public string ProductiveAssetStrategies { get; set; }
+        public int BuildingStatus   { get; set; }
+        public int BuildingMasahat   { get; set; }
+        public int BuildingFloorsNumber   { get; set; }
+        public int BuildingUsage   { get; set; }
+        public string MeterNumberGas   { get; set; }
+        public string MeterNumberWater   { get; set; }
+        public string MeterNumberElectricity   { get; set; }
+        public string MeterNumberPhone   { get; set; }
         public DateTime? CreatedAt{ get; set; }
         public DateTime? UpdatedAt{ get; set; }
         
@@ -63,6 +73,12 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string? DocumentTypeText{get{ return Helpers.UC(DocumentType,"amlakPrivateDocumentType"); }}  
         [NotMapped]
         public string? PredictionUsageText{get{ return Helpers.UC(PredictionUsage,"amlakPrivatePredictionUsage"); }}
+        [NotMapped]
+        public string? OwnershipTypeText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateOwnershipType"); }} 
+        [NotMapped]
+        public string? BuildingStatusText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateBuildingStatus"); }}
+        [NotMapped]
+        public string? BuildingUsageText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateBuildingUsage"); }}
     }
     
     //-------------------------------------------------------------------------------------------------

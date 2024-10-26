@@ -20,6 +20,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int Id{ get; set; }
         public int AmlakInfoContractId{ get; set; }
         public int IsPassed{ get; set; }
+        public string DateFa{ get; set; }
 
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
@@ -38,6 +39,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         
     public class AmlakInfoContractCheckListInputVm  {
         public int contractId{ get; set; }
+        public int? IsPassed{ get; set; }
         public int page{ get; set; } = 1;
         public int pageRows{ get; set; } = 10;
         public string sort{ get; set; } = "Id";

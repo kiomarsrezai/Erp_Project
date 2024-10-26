@@ -118,4 +118,65 @@ CREATE TABLE [dbo].[tblAmlakPrivateGenerating](
 ----------------------------------------------------------------
 
 
-add ZemanatEndDate (datetime) to tblContractAmlakInfo
+-- Add ZemanatEndDate (datetime) to tblContractAmlakInfo
+ALTER TABLE tblContractAmlakInfo
+    ADD ZemanatEndDate datetime;
+
+-- Change OwnershipPercentage column name to OwnershipValue and type to int
+UPDATE tblAmlakPrivateNew SET InPossessionOf = ISNULL(TRY_CONVERT(int, InPossessionOf), 9);
+ALTER TABLE tblAmlakPrivateNew
+ALTER COLUMN InPossessionOf int;
+-- Change OwnershipPercentage column name to OwnershipValue and type to int
+UPDATE tblAmlakPrivateNew
+SET OwnershipPercentage = ISNULL(TRY_CONVERT(float, OwnershipPercentage), 0);
+ALTER TABLE tblAmlakPrivateNew
+ALTER COLUMN OwnershipPercentage float;
+EXEC sp_rename 'tblAmlakPrivateNew.OwnershipPercentage', 'OwnershipValue', 'COLUMN';
+
+-- Add OwnershipValueTotal (int) to tblAmlakPrivateNew after OwnershipValue
+ALTER TABLE tblAmlakPrivateNew
+    ADD OwnershipValueTotal int;
+
+-- Add InPossessionOfOther (int) to tblAmlakPrivateNew after InPossessionOf
+ALTER TABLE tblAmlakPrivateNew
+    ADD InPossessionOfOther nvarchar(50);
+
+-- Add BuildingStatus (int) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD BuildingStatus int;
+
+-- Add BuildingMasahat (int) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD BuildingMasahat int;
+
+-- Add BuildingFloorsNumber (int) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD BuildingFloorsNumber int;
+
+-- Add BuildingUsage (int) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD BuildingUsage int;
+
+-- Add MeterNumberGas (varchar 50) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD MeterNumberGas nvarchar(50);
+
+-- Add MeterNumberWater (varchar 50) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD MeterNumberWater nvarchar(50);
+
+-- Add MeterNumberElectricity (varchar 50) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD MeterNumberElectricity nvarchar(50);
+
+-- Add MeterNumberPhone (varchar 50) to tblAmlakPrivateNew
+ALTER TABLE tblAmlakPrivateNew
+    ADD MeterNumberPhone nvarchar(50);
+
+
+UPDATE tblAmlakPrivateNew
+SET OwnershipValueTotal = 0,
+    BuildingStatus = 0,
+    BuildingMasahat = 0,
+    BuildingFloorsNumber = 0,
+    BuildingUsage = 0;

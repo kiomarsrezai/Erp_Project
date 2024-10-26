@@ -31,6 +31,9 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
         
+        [NotMapped]
+        public string? IsPassedText{get{ return Helpers.UC(IsPassed,"contractCheckIsPassed"); }}
+
     }
     
     

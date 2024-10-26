@@ -108,6 +108,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 if (oldItem == null){
                     var item = new AmlakPrivateNew{
                         AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
+                        OwnerId = 9, // شهرداری مرکز
                         SdiId = feature.Id,
                         Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
                         SdiPlateNumber = feature.Properties.Pelaksabti,
@@ -170,6 +171,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             var items=await builder.ToListAsync();
 
 
+            foreach (var item in items){
+                if (item.Area!=null && item.Area.Id == 9){
+                    item.Area.AreaName = "شهرداری مرکز";
+                }
+                if (item.Owner!=null && item.Owner.Id == 9){
+                    item.Owner.AreaName = "شهرداری مرکز";
+                }
+            }
             
             if (param.Export == 1){
                 var fileUrl = ExportExcel(items);
@@ -207,9 +216,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.UsageUrban);
                 row.Add(item.PropertyType);
                 row.Add(item.OwnershipType);
-                row.Add(item.OwnershipPercentage);
+                row.Add(item.OwnershipValue +" از " +item.OwnershipValueTotal);
                 row.Add(item.TransferredFrom);
-                row.Add(item.InPossessionOf);
+                row.Add(item.InPossessionOf + '-'  +item.InPossessionOfOther  );
                 row.Add(item.BlockedStatusSimakUnitWindow);
                 row.Add(item.Status);
                 row.Add(item.Notes);
@@ -222,6 +231,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.EntryDate);
                 row.Add(item.InternalDate);
                 row.Add(item.ProductiveAssetStrategies);
+                row.Add(item.BuildingStatus);
+                row.Add(item.BuildingMasahat);
+                row.Add(item.BuildingFloorsNumber);
+                row.Add(item.BuildingUsage);
+                row.Add(item.MeterNumberGas);
+                row.Add(item.MeterNumberWater);
+                row.Add(item.MeterNumberElectricity);
+                row.Add(item.MeterNumberPhone);
                 row.Add(item.Coordinates);
                 row.Add(item.PredictionUsageText);
                 row.Add(item.CreatedAtFa);
@@ -246,6 +263,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
+            
+            if (item.Area!=null && item.Area.Id == 9){
+                item.Area.AreaName = "شهرداری مرکز";
+            }
+            if (item.Owner!=null && item.Owner.Id == 9){
+                item.Owner.AreaName = "شهرداری مرکز";
+            }
             
             var finalItem = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateReadVm>(item);
 
@@ -281,9 +305,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UsageUrban=param.UsageUrban;
             item.PropertyType=param.PropertyType;
             item.OwnershipType=param.OwnershipType;
-            item.OwnershipPercentage=param.OwnershipPercentage;
+            item.OwnershipValue=param.OwnershipValue;
+            item.OwnershipValueTotal=param.OwnershipValueTotal;
             item.TransferredFrom=param.TransferredFrom;
             item.InPossessionOf=param.InPossessionOf;
+            item.InPossessionOfOther=param.InPossessionOfOther;
             item.BlockedStatusSimakUnitWindow=param.BlockedStatusSimakUnitWindow;
             item.Status=param.Status;
             item.Notes=param.Notes;
@@ -296,6 +322,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.EntryDate=param.EntryDate;
             item.InternalDate=param.InternalDate;
             item.ProductiveAssetStrategies=param.ProductiveAssetStrategies;
+            item.BuildingStatus=param.BuildingStatus;
+            item.BuildingMasahat=param.BuildingMasahat;
+            item.BuildingFloorsNumber=param.BuildingFloorsNumber;
+            item.BuildingUsage=param.BuildingUsage;
+            item.MeterNumberGas=param.MeterNumberGas;
+            item.MeterNumberWater=param.MeterNumberWater;
+            item.MeterNumberElectricity=param.MeterNumberElectricity;
+            item.MeterNumberPhone=param.MeterNumberPhone;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
@@ -587,9 +621,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     existingAmlak.OwnerId =  ownerId;;
                     existingAmlak.PropertyType =  Helpers.UCReverse(getCell(row,9),"amlakPrivatePropertyType").ToString();
                     existingAmlak.OwnershipType =  getCell(row,10);
-                    existingAmlak.OwnershipPercentage =  getCell(row,11);
+                    existingAmlak.OwnershipValue = 0D;//getCell(row,11); // todo:
+                    existingAmlak.OwnershipValueTotal = 0; // getCell(row,11); todo: 
                     existingAmlak.TransferredFrom =  getCell(row,12);
-                    existingAmlak.InPossessionOf =  getCell(row,13);
+                    existingAmlak.InPossessionOf = 9; //  getCell(row,13); // todo: 
                     existingAmlak.UsageUrban =  getCell(row,14);
                     existingAmlak.BlockedStatusSimakUnitWindow =  getCell(row,15);
                     existingAmlak.Status =  getCell(row,16);

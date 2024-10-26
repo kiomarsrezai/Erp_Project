@@ -109,6 +109,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             await CheckUserAuth(_db);
 
             var areas = await _db.TblAreas.Where(a => a.Id <= 9 || a.Id == 52).ToListAsync();
+            foreach (var area in areas){
+                if (area.Id == 9){
+                    area.AreaName = "شهرداری مرکز";
+                }
+            }
             return Ok(new {areas});
         }
 
@@ -118,9 +123,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             await CheckUserAuth(_db);
 
             var owners = await _db.TblAreas.Where(a => a.Id <= 9 || a.StructureId == 2 || a.Id == 52).ToListAsync();
+            foreach (var owner in owners){
+                if (owner.Id == 9){
+                    owner.AreaName = "شهرداری مرکز";
+                }
+            }
             return Ok(new {owners});
         }
 
+        
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
