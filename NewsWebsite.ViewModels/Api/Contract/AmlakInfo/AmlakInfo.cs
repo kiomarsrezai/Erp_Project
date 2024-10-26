@@ -65,6 +65,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int? AmlakInfoKindId{ get; set; }
         public int Rentable{ get; set; } = 1;
         public int ContractStatus{ get; set; } = 0;
+        public int ZemanatStatus{ get; set; } = 0;
         public string SupplierName{ get; set; }
         public int OwnerId{ get; set; }
         public string Search{ get; set; }

@@ -62,18 +62,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakInfoContractChecks
-                .AmlakInfoContractId(param.contractId)
+                .AmlakInfoContractId(param.ContractId)
+                .OwnerId(param.OwnerId)
                 .IsPassed(param.IsPassed);
 
             
             var items = await builder
-                .OrderBy(param.sort,param.sortType)
-                .Page2(param.page,param.pageRows)
+                .OrderBy(param.Sort,param.SortType)
+                .Page2(param.Page,param.PageRows)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContractCheck, AmlakInfoContractCheckListVm>(items);
 
             
-            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.pageRows));
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
             
             return Ok(new{items=finalItems,pageCount});
         }

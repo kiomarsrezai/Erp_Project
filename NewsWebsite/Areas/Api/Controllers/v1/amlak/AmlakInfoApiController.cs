@@ -208,6 +208,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 case 4: // withoutActiveContract
                     builder = builder.Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now));
                     break;
+                case 5: // 2 month to finish
+                    builder = builder.Where(ai => ai.Contracts.Any(c => c.DateEnd != null && c.DateEnd > DateTime.Now && c.DateEnd < DateTime.Now.AddMonths(2)));
+                    break;
+            }
+            switch (param.ZemanatStatus){
+                case 0: // all
+                    break;
+                case 1: // ValidZemanatDate
+                    builder = builder.Where(ai => ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now));
+                    break;
+                case 2: // ExpiredZemanatDate
+                    builder = builder.Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now));
+                    break;
+                
+                case 3: // 2 month to finish
+                    builder = builder.Where(ai => ai.Contracts.Any(c => c.ZemanatEndDate == null && c.ZemanatEndDate > DateTime.Now && c.ZemanatEndDate < DateTime.Now.AddMonths(2)));
+                    break;
                 
             }
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));

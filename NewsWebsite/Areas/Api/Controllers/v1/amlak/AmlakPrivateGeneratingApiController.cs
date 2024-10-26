@@ -91,13 +91,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.ActionHistory=param.ActionHistory;
             item.FollowUpSentTo1=param.FollowUpSentTo1;
             item.LetterNumber1=param.LetterNumber1;
-            item.LetterDate1=DateTime.Parse(param.LetterDate1);
+            if (!string.IsNullOrEmpty(param.LetterDate1)) item.LetterDate1 = DateTime.Parse(param.LetterDate1);
             item.FollowUpSentTo2=param.FollowUpSentTo2;
             item.LetterNumber2=param.LetterNumber2;
-            item.LetterDate2=DateTime.Parse(param.LetterDate2);
+            if (!string.IsNullOrEmpty(param.LetterDate2)) item.LetterDate2 = DateTime.Parse(param.LetterDate2);
             item.FollowUpSentTo3=param.FollowUpSentTo3;
             item.LetterNumber3=param.LetterNumber3;
-            item.LetterDate3=DateTime.Parse(param.LetterDate3);
+            if (!string.IsNullOrEmpty(param.LetterDate3)) item.LetterDate3 = DateTime.Parse(param.LetterDate3);
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
@@ -129,13 +129,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.ActionHistory=param.ActionHistory;
             item.FollowUpSentTo1=param.FollowUpSentTo1;
             item.LetterNumber1=param.LetterNumber1;
-            item.LetterDate1=DateTime.Parse(param.LetterDate1);
+            if (!string.IsNullOrEmpty(param.LetterDate1)) item.LetterDate1 = DateTime.Parse(param.LetterDate1);
             item.FollowUpSentTo2=param.FollowUpSentTo2;
             item.LetterNumber2=param.LetterNumber2;
-            item.LetterDate2=DateTime.Parse(param.LetterDate2);
+            if (!string.IsNullOrEmpty(param.LetterDate2)) item.LetterDate2 = DateTime.Parse(param.LetterDate2);
             item.FollowUpSentTo3=param.FollowUpSentTo3;
             item.LetterNumber3=param.LetterNumber3;
-            item.LetterDate3=DateTime.Parse(param.LetterDate3);
+            if (!string.IsNullOrEmpty(param.LetterDate3)) item.LetterDate3 = DateTime.Parse(param.LetterDate3);
             item.CreatedAt = Helpers.GetServerDateTimeType();
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             _db.Add(item);

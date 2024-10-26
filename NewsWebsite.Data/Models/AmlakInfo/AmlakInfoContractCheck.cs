@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Public;
 
@@ -52,6 +53,15 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             }
             return query;
         }
+        
+           
+        public static IQueryable<AmlakInfoContractCheck> OwnerId(this IQueryable<AmlakInfoContractCheck> query, int? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Include(c=>c.AmlakInfoContract).Where(e => e.AmlakInfoContract.OwnerId == value);
+            }
+            return query;
+        }
+
         
     }
 }

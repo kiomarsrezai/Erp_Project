@@ -38,11 +38,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     
         
     public class AmlakInfoContractCheckListInputVm  {
-        public int contractId{ get; set; }
+        public int ContractId{ get; set; }
+        public int OwnerId{ get; set; }
         public int? IsPassed{ get; set; }
-        public int page{ get; set; } = 1;
-        public int pageRows{ get; set; } = 10;
-        public string sort{ get; set; } = "Id";
-        public string sortType{ get; set; } = "desc";
+        public int Page{ get; set; } = 1;
+        public int PageRows{ get; set; } = 10;
+        public string Sort{ get; set; } = "Id";
+        public string SortType{ get; set; } = "desc";
     }
 }
