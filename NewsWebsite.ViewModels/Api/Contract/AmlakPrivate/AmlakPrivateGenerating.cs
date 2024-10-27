@@ -7,13 +7,14 @@ using NewsWebsite.ViewModels.Api.Public;
 namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     
     public class AmlakPrivateGeneratingBaseModel {
-        public string MunicipalityActionRequired{ get; set; }
-        public string MunicipalityAction{ get; set; } 
+        public int Decision{ get; set; }
+        public int MunicipalityActionRequired{ get; set; }
+        public int MunicipalityAction{ get; set; } 
         public string MunicipalityActionLetterNumber{ get; set; } 
-        public string LegalActionRequired{ get; set; }
+        public int LegalActionRequired{ get; set; }
         public string LegalAction{ get; set; }
         public string LegalActionLetterNumber{ get; set; }
-        public string UrbanPlanningPermitRequired{ get; set; }
+        public int UrbanPlanningPermitRequired{ get; set; }
         public string UrbanPlanningPermitNumber{ get; set; }
         public string UrbanPlanningPermitDate{ get; set; }
         public string DocumentImage{ get; set; }
@@ -21,14 +22,14 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string SurveyMapImage{ get; set; }
         public string PermitImage{ get; set; }
         public string MoldReportImage{ get; set; }
-        public string ActionHistory{ get; set; }
-        public string FollowUpSentTo1{ get; set; }
+        public int ActionHistory{ get; set; }
+        public int FollowUpSentTo1{ get; set; }
         public string LetterNumber1{ get; set; }
         public string LetterDate1{ get; set; }
-        public string FollowUpSentTo2{ get; set; }
+        public int FollowUpSentTo2{ get; set; }
         public string LetterNumber2{ get; set; }
         public string LetterDate2{ get; set; }
-        public string FollowUpSentTo3{ get; set; }
+        public int FollowUpSentTo3{ get; set; }
         public string LetterNumber3{ get; set; }
         public string LetterDate3{ get; set; }
     }

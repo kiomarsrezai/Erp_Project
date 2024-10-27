@@ -180,3 +180,34 @@ SET OwnershipValueTotal = 0,
     BuildingMasahat = 0,
     BuildingFloorsNumber = 0,
     BuildingUsage = 0;
+
+
+update tblAmlakPrivateNew set InternalDate=null
+ALTER TABLE YourTableName ALTER COLUMN InternalDate DATETIME;
+
+
+
+
+USE [ProgramBudDB]
+GO
+
+/****** Object:  Table [dbo].[TblAmlakAttachs]    Script Date: 10/27/2024 3:57:01 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TblAmlakAttachs](
+    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [TargetType] [nvarchar](50) NULL,
+    [TargetId] [int] NULL,
+    [Type] [nvarchar](50) NULL,
+    [FileName] [nvarchar](3000) NULL,
+    [FileTitle] [nvarchar](250) NULL
+    ) ON [PRIMARY]
+    GO
+
+
+
+

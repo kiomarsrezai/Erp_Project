@@ -24,6 +24,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore.Storage;
 using NewsWebsite.Data.Models;
 using NewsWebsite.Data.Models.AmlakPrivate;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -229,7 +230,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.PropertyCode);
                 row.Add(item.Year);
                 row.Add(item.EntryDate);
-                row.Add(item.InternalDate);
+                row.Add(item.InternalDateFa);
                 row.Add(item.ProductiveAssetStrategies);
                 row.Add(item.BuildingStatus);
                 row.Add(item.BuildingMasahat);
@@ -318,9 +319,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.DocumentSeries=param.DocumentSeries;
             item.DocumentAlphabet=param.DocumentAlphabet;
             item.PropertyCode=param.PropertyCode;
-            item.Year=param.Year;
+            item.Year=!string.IsNullOrEmpty(param.InternalDate)?Helpers.MiladiToHejri(param.InternalDate).Substring(0,4):"0"; // todo: : 
             item.EntryDate=param.EntryDate;
-            item.InternalDate=param.InternalDate;
+            item.InternalDate=!string.IsNullOrEmpty(param.InternalDate) ? DateTime.Parse(param.InternalDate) : (DateTime?)null;
             item.ProductiveAssetStrategies=param.ProductiveAssetStrategies;
             item.BuildingStatus=param.BuildingStatus;
             item.BuildingMasahat=param.BuildingMasahat;
@@ -637,7 +638,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     existingAmlak.PropertyCode =  getCell(row,23);
                     existingAmlak.Year =  getCell(row,24);
                     existingAmlak.EntryDate =  getCell(row,25);
-                    existingAmlak.InternalDate =  getCell(row,26);
+                    existingAmlak.InternalDate = null; // todo: if(!string.IsNullOrEmpty(getCell(row,26))) Helpers.HejriToMiladiDateTime(getCell(row,26)) else null;
                     existingAmlak.ProductiveAssetStrategies =  getCell(row,45);
                     existingAmlak.SimakCode =  getCell(row,46);
 

@@ -46,7 +46,7 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string PropertyCode { get; set; }
         public string Year { get; set; }
         public string EntryDate { get; set; }
-        public string InternalDate { get; set; }
+        public DateTime? InternalDate { get; set; }
         public string ProductiveAssetStrategies { get; set; }
         public int BuildingStatus   { get; set; }
         public int BuildingMasahat   { get; set; }
@@ -68,6 +68,8 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+            [NotMapped]
+        public string? InternalDateFa{get{ return Helpers.MiladiToHejri(InternalDate); }}
         
         [NotMapped]
         public string? DocumentTypeText{get{ return Helpers.UC(DocumentType,"amlakPrivateDocumentType"); }}  

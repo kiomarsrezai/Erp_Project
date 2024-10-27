@@ -74,6 +74,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 return BadRequest(new{ message = "یافت نشد" });
 
             
+            item.Decision = param.Decision;
             item.MunicipalityActionRequired = param.MunicipalityActionRequired;
             item.MunicipalityAction = param.MunicipalityAction;
             item.MunicipalityActionLetterNumber = param.MunicipalityActionLetterNumber;
@@ -82,7 +83,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.LegalActionLetterNumber = param.LegalActionLetterNumber;
             item.UrbanPlanningPermitRequired = param.UrbanPlanningPermitRequired;
             item.UrbanPlanningPermitNumber = param.UrbanPlanningPermitNumber;
-            item.UrbanPlanningPermitDate = param.UrbanPlanningPermitDate;
+            if (!string.IsNullOrEmpty(param.UrbanPlanningPermitDate)) item.UrbanPlanningPermitDate = DateTime.Parse(param.UrbanPlanningPermitDate);
             item.DocumentImage=param.DocumentImage;
             item.ArchitecturalMapImage=param.ArchitecturalMapImage;
             item.SurveyMapImage=param.SurveyMapImage;
@@ -120,7 +121,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.LegalActionLetterNumber = param.LegalActionLetterNumber;
             item.UrbanPlanningPermitRequired = param.UrbanPlanningPermitRequired;
             item.UrbanPlanningPermitNumber = param.UrbanPlanningPermitNumber;
-            item.UrbanPlanningPermitDate = param.UrbanPlanningPermitDate;
+            if (!string.IsNullOrEmpty(param.UrbanPlanningPermitDate)) item.UrbanPlanningPermitDate = DateTime.Parse(param.UrbanPlanningPermitDate);
             item.DocumentImage=param.DocumentImage;
             item.ArchitecturalMapImage=param.ArchitecturalMapImage;
             item.SurveyMapImage=param.SurveyMapImage;

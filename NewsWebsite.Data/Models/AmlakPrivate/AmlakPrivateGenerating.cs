@@ -11,28 +11,29 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
     public class AmlakPrivateGenerating:BaseModel {
         public int Id{ get; set; }
         public int AmlakPrivateId{ get; set; }
-        public string MunicipalityActionRequired{ get; set; } // نیاز به اقدام شهرداری
-        public string MunicipalityAction{ get; set; } // اقدام شهرداری
+        public int Decision { get; set; } // نیاز به اقدام شهرداری
+        public int MunicipalityActionRequired{ get; set; } // نیاز به اقدام شهرداری
+        public int MunicipalityAction{ get; set; } // اقدام شهرداری
         public string MunicipalityActionLetterNumber{ get; set; } // شماره نامه اقدام شهرداری
-        public string LegalActionRequired{ get; set; } // نیاز به اقدام حقوقی
+        public int LegalActionRequired{ get; set; } // نیاز به اقدام حقوقی
         public string LegalAction{ get; set; } // اقدام حقوقی
         public string LegalActionLetterNumber{ get; set; } // شماره نامه حقوقی
-        public string UrbanPlanningPermitRequired{ get; set; } // نیاز به پروانه شهرسازی
+        public int UrbanPlanningPermitRequired{ get; set; } // نیاز به پروانه شهرسازی
         public string UrbanPlanningPermitNumber{ get; set; } // شماره پروانه شهرسازی
-        public string UrbanPlanningPermitDate{ get; set; } // تاریخ پروانه شهرسازی
+        public DateTime? UrbanPlanningPermitDate{ get; set; } // تاریخ پروانه شهرسازی
         public string DocumentImage{ get; set; } // تصویر سند
         public string ArchitecturalMapImage{ get; set; } // تصویر نقشه معماری
         public string SurveyMapImage{ get; set; } // تصویر نقشه برداری
         public string PermitImage{ get; set; } // تصویر پروانه
         public string MoldReportImage{ get; set; } // تصویر گزارش مولدسازی
-        public string ActionHistory{ get; set; } // سابقه اقدام
-        public string FollowUpSentTo1{ get; set; } // پیگیری اول ارسال به
+        public int ActionHistory{ get; set; } // سابقه اقدام
+        public int FollowUpSentTo1{ get; set; } // پیگیری اول ارسال به
         public string LetterNumber1{ get; set; } // شماره نامه اول
         public DateTime? LetterDate1{ get; set; } // تاریخ نامه اول
-        public string FollowUpSentTo2{ get; set; } // پیگیری دوم ارسال به
+        public int FollowUpSentTo2{ get; set; } // پیگیری دوم ارسال به
         public string LetterNumber2{ get; set; } // شماره نامه دوم
         public DateTime? LetterDate2{ get; set; } // تاریخ نامه دوم
-        public string FollowUpSentTo3{ get; set; } // پیگیری سوم ارسال به
+        public int FollowUpSentTo3{ get; set; } // پیگیری سوم ارسال به
         public string LetterNumber3{ get; set; } // شماره نامه سوم
         public DateTime? LetterDate3{ get; set; } // تاریخ نامه سوم
         public DateTime? CreatedAt{ get; set; }
@@ -46,6 +47,46 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
+        
+        [NotMapped]
+        public string? UrbanPlanningPermitDateFa{get{ return Helpers.MiladiToHejri(UrbanPlanningPermitDate); }}
+        
+        [NotMapped]
+        public string? LetterDate1Fa{get{ return Helpers.MiladiToHejri(LetterDate1); }}
+        
+        [NotMapped]
+        public string? LetterDate2Fa{get{ return Helpers.MiladiToHejri(LetterDate2); }}
+        
+        [NotMapped]
+        public string? LetterDate3Fa{get{ return Helpers.MiladiToHejri(LetterDate3); }}
+        
+        [NotMapped]
+        public string? DecisionText{get{ return Helpers.UC(Decision,"amlakPrivateGeneratingDecision"); }}
+        
+        [NotMapped]
+        public string? MunicipalityActionRequiredText{get{ return Helpers.UC(MunicipalityActionRequired,"hasOrNotHas"); }}
+         
+        [NotMapped]
+        public string? MunicipalityActionText{get{ return Helpers.UC(MunicipalityAction,"amlakPrivateGeneratingMunicipalityAction"); }}
+        
+        [NotMapped]
+        public string? LegalActionRequiredText{get{ return Helpers.UC(LegalActionRequired,"hasOrNotHas"); }}
+         
+        [NotMapped]
+        public string? UrbanPlanningPermitRequiredText{get{ return Helpers.UC(UrbanPlanningPermitRequired,"hasOrNotHas"); }}
+         
+        [NotMapped]
+        public string? ActionHistoryText{get{ return Helpers.UC(ActionHistory,"amlakPrivateGeneratingActionHistory"); }}
+         
+        [NotMapped]
+        public string? FollowUpSentTo1Text{get{ return Helpers.UC(FollowUpSentTo1,"amlakPrivateGeneratingFollowUpSentTo"); }}
+          
+        [NotMapped]
+        public string? FollowUpSentTo2Text{get{ return Helpers.UC(FollowUpSentTo2,"amlakPrivateGeneratingFollowUpSentTo"); }}
+          
+        [NotMapped]
+        public string? FollowUpSentTo3Text{get{ return Helpers.UC(FollowUpSentTo3,"amlakPrivateGeneratingFollowUpSentTo"); }}
+        
         
     }
     
