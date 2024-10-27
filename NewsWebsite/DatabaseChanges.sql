@@ -208,6 +208,8 @@ CREATE TABLE [dbo].[TblAmlakAttachs](
     ) ON [PRIMARY]
     GO
 
-
-
-
+       DROP TABLE TblAmlakAgreementAttachs
+       DROP TABLE  TblAmlakArchiveAttachs
+       DROP TABLE  TblAmlakInfoAttachs
+       DROP TABLE  TblAmlakPrivateAttachs
+       DROP TABLE TblContractAttachs

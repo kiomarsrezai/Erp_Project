@@ -354,67 +354,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             return Ok(item.Id.ToString());
         }
         //
-        //
-        [Route("Upload")]
-        [HttpPost]
-        public async Task<ApiResult<string>> AmlakInfoUploadFile(AmlakInfoFileUploadVm fileUpload){
-            await CheckUserAuth(_db);
-            if (fileUpload.AmlakInfoId == null)
-                return BadRequest(new{ message = "شناسه ملک نامعتبر می باشد" });
-        
-        
-            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "AmlakInfos/" + fileUpload.AmlakInfoId);
-            if (fileName != ""){
-                var item = new AmlakInfoFile();
-                item.AmlakInfoId = fileUpload.AmlakInfoId ?? 0;
-                item.FileName = fileName;
-                item.FileTitle = fileUpload.FileTitle;
-                item.Type = fileUpload.Type;
-                // return Helpers.dd(fileUpload.FileTitle);
-                _db.Add(item);
-                await _db.SaveChangesAsync();
-            }
-            else{
-                return BadRequest(new{ message = "فایل نامعتبر می باشد" });
-            }
-        
-            return Ok("موفق");
-        }
-        //
-        [Route("Files")]
-        [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoFilesListVm>>> AmlakInfoAttachFiles(int AmlakInfoId){
-            await CheckUserAuth(_db);
-            if (AmlakInfoId == 0) BadRequest();
-        
-            var items = await _db.AmlakInfoFiles.Where(a => a.AmlakInfoId == AmlakInfoId).ToListAsync();
-            var finalItems = MyMapper.MapTo<AmlakInfoFile, AmlakInfoFilesListVm>(items);
-            
-            foreach (var item in finalItems){
-                item.FileName = "/Upload/AmlakInfos/" +item.AmlakInfoId+"/"+ item.FileName;
-            }
-
-        
-            return Ok(finalItems);
-        }
-
-         
-        [Route("File/Edit")]
-        [HttpPatch]
-        public async Task<ApiResult<string>>AmlakInfoAttachFileEdit(int fileId,string title){
-            await CheckUserAuth(_db);
-
-            if (fileId == 0) BadRequest();
-        
-            var item = await _db.AmlakInfoFiles.Where(a => a.Id == fileId).FirstOrDefaultAsync();
-            if (item == null)
-                return BadRequest("خطا");
-
-            item.FileTitle = title;
-            await _db.SaveChangesAsync();
-            
-            return Ok("انجام شد");
-        }
         
         [Route("AmlakInfo/Delete")]
         [HttpPost]
@@ -428,7 +367,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             // todo: check has contract or not
             
-            var images = await _db.AmlakInfoFiles.Where(a=>a.AmlakInfoId==param.Id).ToListAsync();
+            
+            var images = await _db.AmlakAttachs.Where(e=>e.TargetType=="AmlakInfos").Where(a=>a.TargetId==param.Id).ToListAsync();
             // todo: remove files from server
             _db.RemoveRange(images);
             _db.Remove(item);

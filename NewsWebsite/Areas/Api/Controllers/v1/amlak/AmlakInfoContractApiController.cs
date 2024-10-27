@@ -289,46 +289,5 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
           return Ok("با موفقیت انجام شد");
         }
         
-        [Route("Upload")]
-        [HttpPost]
-        public async Task<ApiResult<string>> ContractUploadFile(AmlakInfoContractFileUploadVm fileUpload){
-            await CheckUserAuth(_db);
-
-            if (fileUpload.ContractId == null)
-                return BadRequest(new{ message = "شناسه قرارداد نامعتبر می باشد" });
-        
-            string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, "Contracts/" + fileUpload.ContractId);
-            if (fileName != ""){
-                var item = new AmlakInfoContractFile();
-                item.ContractId = fileUpload.ContractId ?? 0;
-                item.FileName = fileName;
-                item.FileTitle = fileUpload.FileTitle;
-                _db.Add(item);
-                await _db.SaveChangesAsync();
-            }else{
-                return BadRequest(new{ message = "فایل نامعتبر می باشد" });
-            }
-        
-            return Ok("موفق");
-        }
-
-        [Route("Files")]
-        [HttpGet]
-        public async Task<ApiResult<List<AmlakInfoContractFilesListVm>>> ContractAttachFiles(int contractId){
-            await CheckUserAuth(_db);
-
-            if (contractId == 0) BadRequest();
-        
-            var items = await _db.AmlakInfoContractFiles.Where(a => a.ContractId == contractId).ToListAsync();
-            var finalItems = MyMapper.MapTo<AmlakInfoContractFile, AmlakInfoContractFilesListVm>(items);
-            
-            foreach (var item in finalItems){
-                item.FileName = "/Upload/Contracts/" +item.ContractId+"/"+ item.FileName;
-            }
-
-        
-            return Ok(finalItems);
-        }
-
     }
 }

@@ -14,6 +14,7 @@ using NewsWebsite.Data.Models.AmlakInfo;
 using NewsWebsite.Data.Models.AmlakPrivate;
 using NewsWebsite.ViewModels.Api.Contract.AmlakAgreement;
 using NewsWebsite.ViewModels.Api.Contract.AmlakArchive;
+using NewsWebsite.ViewModels.Api.Contract.amlakAttachs;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using NewsWebsite.ViewModels.Api.Contract.AmlakCompliant;
@@ -57,24 +58,20 @@ namespace NewsWebsite.Data
         // public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }
         public virtual DbSet<AmlakPrivateNew> AmlakPrivateNews { get; set; }
         public virtual DbSet<AmlakPrivateGenerating> AmlakPrivateGeneratings { get; set; }
-        public virtual DbSet<AmlakPrivateFile> AmlakPrivateFiles { get; set; }
         public virtual DbSet<AmlakPrivateDocHistory> AmlakPrivateDocHistories { get; set; }
         public virtual DbSet<AmlakInfo> AmlakInfos { get; set; }
         public virtual DbSet<AmlakInfoContractCheck> AmlakInfoContractChecks { get; set; }
         public virtual DbSet<AmlakInfoKind> AmlakInfoKinds { get; set; }
-        public virtual DbSet<AmlakInfoFile> AmlakInfoFiles { get; set; }
         public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }
         public virtual DbSet<AmlakInfoContractPrice> AmlakInfoContractPrices { get; set; }
         public virtual DbSet<AmlakInfoContractSupplier> AmlakInfoContractSuppliers { get; set; }
-        public virtual DbSet<AmlakInfoContractFile> AmlakInfoContractFiles { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<AmlakParcel> AmlakParcels { get; set; }
         public virtual DbSet<AmlakArchive> AmlakArchives { get; set; }
         public virtual DbSet<AmlakAgreement> AmlakAgreements { get; set; }
-        public virtual DbSet<AmlakArchiveFile> AmlakArchiveFiles { get; set; }
         public virtual DbSet<AmlakCompliant> AmlakCompliants { get; set; }
-        public virtual DbSet<AmlakAgreementFile> AmlakAgreementFiles { get; set; }
         public virtual DbSet<AmlakAdmin> AmlakAdmins { get; set; }
+        public virtual DbSet<AmlakAttach> AmlakAttachs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
