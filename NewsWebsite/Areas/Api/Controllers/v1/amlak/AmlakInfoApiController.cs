@@ -299,6 +299,80 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         
         
         
+        [Route("Map")]
+        [HttpGet]
+        public async Task<ApiResult<object>> AmlakInfoListMap(AmlakInfoListMapInputVm param){
+            await CheckUserAuth(_db);
+
+            var builder = _db.AmlakInfos
+                .Search(param.Search)
+                .AreaId(param.AreaId)
+                .OwnerId(param.OwnerId)
+                .AmlakInfoKindId(param.AmlakInfoKindId)
+                .Where(a => a.Rentable == param.Rentable);
+            
+            if (!string.IsNullOrEmpty(param.SupplierName)){
+                builder = builder
+                    .Join(_db.AmlakInfoContracts,
+                        a => a.Id,
+                        c => c.AmlakInfoId,
+                        (a, c) => new { AmlakInfo = a, Contract = c })
+                    .Join(_db.AmlakInfoContractSuppliers,
+                        ac => ac.Contract.Id,
+                        cs => cs.ContractId,
+                        (ac, cs) => new { ac.AmlakInfo, ContractSupplier = cs })
+                    .Join(_db.Suppliers,
+                        acs => acs.ContractSupplier.SupplierId,
+                        s => s.Id,
+                        (acs, s) => new { acs.AmlakInfo, Supplier = s })
+                    .Where(acs => acs.Supplier.FirstName.Contains(param.SupplierName) || acs.Supplier.LastName.Contains(param.SupplierName) || (acs.Supplier.FirstName+" "+acs.Supplier.LastName).Contains(param.SupplierName))
+                    .Select(acs => acs.AmlakInfo);
+            }
+            builder = builder.Include(a => a.AmlakInfoKind);
+
+            
+            var withoutActiveContractsZValid= await builder
+                .Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now))//withoutActiveContract
+                .Where(ai => ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now)) // ValidZemanatDate
+                .ToListAsync();
+            
+            var withoutActiveContractsZExpired= await builder
+                .Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now)) // withoutActiveContract
+                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate < DateTime.Now))//ExpiredZemanatDate
+                .ToListAsync();
+            
+            
+            var activeContracts2MonthZValid= await builder
+                .Where(ai => ai.Contracts.Any(c => c.DateEnd != null && c.DateEnd > DateTime.Now && c.DateEnd < DateTime.Now.AddMonths(2)))
+                .Where(ai => ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now)) // ValidZemanatDate
+                .ToListAsync();
+            var activeContracts2MonthZExpired= await builder
+                .Where(ai => ai.Contracts.Any(c => c.DateEnd != null && c.DateEnd > DateTime.Now && c.DateEnd < DateTime.Now.AddMonths(2)))
+                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate < DateTime.Now))//ExpiredZemanatDate
+                .ToListAsync();
+            
+            
+            var activeContractsMore2MonthZValid= await builder
+                .Where(ai => ai.Contracts.Any(c => c.DateEnd != null && c.DateEnd > DateTime.Now.AddMonths(2)))
+                .Where(ai => ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now)) // ValidZemanatDate
+                .ToListAsync(); 
+            var activeContractsMore2MonthZExpired= await builder
+                .Where(ai => ai.Contracts.Any(c => c.DateEnd != null && c.DateEnd > DateTime.Now.AddMonths(2)))
+                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate < DateTime.Now))//ExpiredZemanatDate
+                .ToListAsync();
+
+            
+            return Ok(new{
+                withoutActiveContractsZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(withoutActiveContractsZValid),
+                withoutActiveContractsZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(withoutActiveContractsZExpired),
+                activeContracts2MonthZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContracts2MonthZValid),
+                activeContracts2MonthZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContracts2MonthZExpired),
+                activeContractsMore2MonthZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContractsMore2MonthZValid),
+                activeContractsMore2MonthZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContractsMore2MonthZExpired)
+            });
+        }
+
+        
         
         [Route("Read")]
         [HttpGet]
