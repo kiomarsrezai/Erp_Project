@@ -117,9 +117,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
             var contract = new AmlakInfoContract();
             contract.OwnerId=param.OwnerId;
-            contract.DoingMethodId=param.DoingMethodId;
+            contract.DoingMethodId=0; // todo: remove
             contract.Number=param.Number;
-            contract.Date=param.Date;
+            contract.Date=DateTime.Parse(param.Date);
             contract.Description=param.Description;
             contract.DateFrom=DateTime.Parse(param.DateFrom);
             contract.DateEnd=DateTime.Parse(param.DateEnd);
@@ -131,7 +131,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.Modir=param.Modir;
             contract.Sarparast=param.Sarparast;
             contract.TenderNumber=param.TenderNumber;
-            contract.TenderDate=param.TenderDate;
+            contract.TenderDate=DateTime.Parse(param.TenderDate);
             contract.CreatedAt = Helpers.GetServerDateTimeType();
             contract.UpdatedAt = Helpers.GetServerDateTimeType();
             
@@ -206,9 +206,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             // Helpers.dd(new{ param.DateEnd , a=DateTime.Parse(param.DateEnd) });
         // update contract 
             contract.OwnerId=param.OwnerId;
-            contract.DoingMethodId=param.DoingMethodId;
+            contract.DoingMethodId=0; // todo: remove
             contract.Number=param.Number;
-            contract.Date=param.Date;
+            contract.Date=DateTime.Parse(param.Date);
             contract.Description=param.Description;
             contract.DateFrom=DateTime.Parse(param.DateFrom);
             contract.DateEnd=DateTime.Parse(param.DateEnd);
@@ -220,7 +220,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.Modir=param.Modir;
             contract.Sarparast=param.Sarparast;
             contract.TenderNumber=param.TenderNumber;
-            contract.TenderDate=param.TenderDate;
+            contract.TenderDate=DateTime.Parse(param.TenderDate);
             contract.UpdatedAt = Helpers.GetServerDateTimeType();
 
             

@@ -213,3 +213,8 @@ CREATE TABLE [dbo].[TblAmlakAttachs](
        DROP TABLE  TblAmlakInfoAttachs
        DROP TABLE  TblAmlakPrivateAttachs
        DROP TABLE TblContractAttachs
+       
+       
+       check all column types of tblContractAmlakInfo
+       
+       

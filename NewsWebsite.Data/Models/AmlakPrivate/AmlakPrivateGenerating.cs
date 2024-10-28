@@ -9,32 +9,31 @@ using NewsWebsite.ViewModels.Api.Public;
 namespace NewsWebsite.Data.Models.AmlakPrivate {
     [Table("tblAmlakPrivateGenerating")]
     public class AmlakPrivateGenerating:BaseModel {
-        public int Id{ get; set; }
-        public int AmlakPrivateId{ get; set; }
-        public int Decision { get; set; } // نیاز به اقدام شهرداری
-        public int MunicipalityActionRequired{ get; set; } // نیاز به اقدام شهرداری
-        public int MunicipalityAction{ get; set; } // اقدام شهرداری
-        public string MunicipalityActionLetterNumber{ get; set; } // شماره نامه اقدام شهرداری
-        public int LegalActionRequired{ get; set; } // نیاز به اقدام حقوقی
-        public string LegalAction{ get; set; } // اقدام حقوقی
-        public string LegalActionLetterNumber{ get; set; } // شماره نامه حقوقی
-        public int UrbanPlanningPermitRequired{ get; set; } // نیاز به پروانه شهرسازی
-        public string UrbanPlanningPermitNumber{ get; set; } // شماره پروانه شهرسازی
+        public int? AmlakPrivateId{ get; set; }
+        public int? Decision { get; set; } // نیاز به اقدام شهرداری
+        public int? MunicipalityActionRequired{ get; set; } // نیاز به اقدام شهرداری
+        public int? MunicipalityAction{ get; set; } // اقدام شهرداری
+        public string? MunicipalityActionLetterNumber{ get; set; } // شماره نامه اقدام شهرداری
+        public int? LegalActionRequired{ get; set; } // نیاز به اقدام حقوقی
+        public string? LegalAction{ get; set; } // اقدام حقوقی
+        public string? LegalActionLetterNumber{ get; set; } // شماره نامه حقوقی
+        public int? UrbanPlanningPermitRequired{ get; set; } // نیاز به پروانه شهرسازی
+        public string? UrbanPlanningPermitNumber{ get; set; } // شماره پروانه شهرسازی
         public DateTime? UrbanPlanningPermitDate{ get; set; } // تاریخ پروانه شهرسازی
-        public string DocumentImage{ get; set; } // تصویر سند
-        public string ArchitecturalMapImage{ get; set; } // تصویر نقشه معماری
-        public string SurveyMapImage{ get; set; } // تصویر نقشه برداری
-        public string PermitImage{ get; set; } // تصویر پروانه
-        public string MoldReportImage{ get; set; } // تصویر گزارش مولدسازی
-        public int ActionHistory{ get; set; } // سابقه اقدام
-        public int FollowUpSentTo1{ get; set; } // پیگیری اول ارسال به
-        public string LetterNumber1{ get; set; } // شماره نامه اول
+        public string? DocumentImage{ get; set; } // تصویر سند
+        public string? ArchitecturalMapImage{ get; set; } // تصویر نقشه معماری
+        public string? SurveyMapImage{ get; set; } // تصویر نقشه برداری
+        public string? PermitImage{ get; set; } // تصویر پروانه
+        public string? MoldReportImage{ get; set; } // تصویر گزارش مولدسازی
+        public int? ActionHistory{ get; set; } // سابقه اقدام
+        public int? FollowUpSentTo1{ get; set; } // پیگیری اول ارسال به
+        public string? LetterNumber1{ get; set; } // شماره نامه اول
         public DateTime? LetterDate1{ get; set; } // تاریخ نامه اول
-        public int FollowUpSentTo2{ get; set; } // پیگیری دوم ارسال به
-        public string LetterNumber2{ get; set; } // شماره نامه دوم
+        public int? FollowUpSentTo2{ get; set; } // پیگیری دوم ارسال به
+        public string? LetterNumber2{ get; set; } // شماره نامه دوم
         public DateTime? LetterDate2{ get; set; } // تاریخ نامه دوم
-        public int FollowUpSentTo3{ get; set; } // پیگیری سوم ارسال به
-        public string LetterNumber3{ get; set; } // شماره نامه سوم
+        public int? FollowUpSentTo3{ get; set; } // پیگیری سوم ارسال به
+        public string? LetterNumber3{ get; set; } // شماره نامه سوم
         public DateTime? LetterDate3{ get; set; } // تاریخ نامه سوم
         public DateTime? CreatedAt{ get; set; }
         public DateTime? UpdatedAt{ get; set; }

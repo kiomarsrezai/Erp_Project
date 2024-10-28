@@ -11,7 +11,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     
     public class AmlakInfoContractBaseModel {
         public int OwnerId{ get; set; }
-        public int DoingMethodId{ get; set; }
+        // public int DoingMethodId{ get; set; }
         public string Number{ get; set; } // Deposit , Rent , license
         public string Date{ get; set; }
         public string Description{ get; set; }

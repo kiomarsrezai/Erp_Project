@@ -42,6 +42,10 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
     public class AmlakPrivateGeneratingReadVm : AmlakPrivateGeneratingBaseModel {
         public int Id{ get; set; }
+        public string UrbanPlanningPermitDateFa{ get; set; }
+        public string LetterDate1Fa{ get; set; }
+        public string LetterDate2Fa{ get; set; }
+        public string LetterDate3Fa{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
     }

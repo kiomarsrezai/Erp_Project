@@ -10,23 +10,23 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
     [Table("tblContractAmlakInfo")]
     public class AmlakInfoContract:BaseModel {
         
-        public int AmlakInfoId{ get; set; }
-        public int OwnerId{ get; set; }
-        public int DoingMethodId{ get; set; }
-        public string Number{ get; set; } // Deposit , Rent , license
-        public string Date{ get; set; }
-        public string Description{ get; set; }
-        public DateTime DateFrom{ get; set; }
-        public DateTime DateEnd{ get; set; }
-        public Int64 ZemanatPrice{ get; set; }
+        public int? AmlakInfoId{ get; set; }
+        public int? OwnerId{ get; set; }
+        public int? DoingMethodId{ get; set; }
+        public string? Number{ get; set; } // Deposit , Rent , license
+        public DateTime? Date{ get; set; }
+        public string? Description{ get; set; }
+        public DateTime? DateFrom{ get; set; }
+        public DateTime? DateEnd{ get; set; }
+        public Int64? ZemanatPrice{ get; set; }
         public DateTime? ZemanatEndDate{ get; set; }
-        public string Type{ get; set; }
-        public int ModatValue{ get; set; }
-        public string Nemayande{ get; set; }
-        public string Modir{ get; set; }
-        public string Sarparast{ get; set; }
-        public string TenderNumber{ get; set; }
-        public string TenderDate{ get; set; }
+        public string? Type{ get; set; }
+        public int? ModatValue{ get; set; }
+        public string? Nemayande{ get; set; }
+        public string? Modir{ get; set; }
+        public string? Sarparast{ get; set; }
+        public string? TenderNumber{ get; set; }
+        public DateTime? TenderDate{ get; set; }
         public DateTime? CreatedAt{ get; set; }
         public DateTime? UpdatedAt{ get; set; }
 

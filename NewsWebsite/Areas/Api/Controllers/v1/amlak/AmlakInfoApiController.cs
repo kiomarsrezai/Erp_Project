@@ -338,7 +338,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             var withoutActiveContractsZExpired= await builder
                 .Where(ai => !ai.Contracts.Any(c => c.DateEnd == null || c.DateEnd > DateTime.Now)) // withoutActiveContract
-                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate < DateTime.Now))//ExpiredZemanatDate
+                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now))//ExpiredZemanatDate
                 .ToListAsync();
             
             
@@ -348,7 +348,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .ToListAsync();
             var activeContracts2MonthZExpired= await builder
                 .Where(ai => ai.Contracts.Any(c => c.DateEnd != null && c.DateEnd > DateTime.Now && c.DateEnd < DateTime.Now.AddMonths(2)))
-                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate < DateTime.Now))//ExpiredZemanatDate
+                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now))//ExpiredZemanatDate
                 .ToListAsync();
             
             
@@ -358,7 +358,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .ToListAsync(); 
             var activeContractsMore2MonthZExpired= await builder
                 .Where(ai => ai.Contracts.Any(c => c.DateEnd != null && c.DateEnd > DateTime.Now.AddMonths(2)))
-                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate < DateTime.Now))//ExpiredZemanatDate
+                .Where(ai => !ai.Contracts.Any(c => c.ZemanatEndDate == null || c.ZemanatEndDate > DateTime.Now))//ExpiredZemanatDate
                 .ToListAsync();
 
             

@@ -91,6 +91,7 @@ namespace NewsWebsite.IocConfig.Api.Middlewares
                     var error = new Dictionary<string, string>
                     {
                         ["Exception"] = exception.Message,
+                        ["InnerException"] =  exception.InnerException?.Message,
                         ["StackTrace"] = exception.StackTrace,
                     };
                     Message.Add(JsonConvert.SerializeObject(error));
