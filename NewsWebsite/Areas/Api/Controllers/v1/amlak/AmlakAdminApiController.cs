@@ -193,7 +193,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 UserName=admin.UserName,
                 Bio=admin.Bio,
                 AmlakLisence=admin.AmlakLisence,
-                Token=GenerateToken(),
+                Token=Helpers.GenerateToken(),
             };
 
             // todo set expire token date
@@ -221,7 +221,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 throw new ErrMessageException("رمز عبور صحیح نمی باشد", HttpStatusCode.NotFound);
             }
 
-            admin.Token = GenerateToken();
+            admin.Token = Helpers.GenerateToken();
             admin.TokenExpireDate = DateTime.Now.AddDays(1);
             admin.Password =new PasswordHasher<AmlakAdmin>().HashPassword(null, param.NewPassword);
             await _db.SaveChangesAsync();
@@ -267,29 +267,5 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
         
         
-        public static string GenerateToken(int length = 50)
-        {
-            char[] chars =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-
-            byte[] data = new byte[4 * length];
-            using (var crypto = RandomNumberGenerator.Create())
-            {
-                crypto.GetBytes(data);
-            }
-
-            var result = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
-            {
-                var rnd = BitConverter.ToUInt32(data, i * 4);
-                var idx = rnd % chars.Length;
-
-                result.Append(chars[idx]);
-            }
-
-            return result.ToString();
-        }
-
-    
     }
 }

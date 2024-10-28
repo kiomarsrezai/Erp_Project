@@ -18,6 +18,7 @@ using NewsWebsite.ViewModels.Api.Contract.amlakAttachs;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using NewsWebsite.ViewModels.Api.Contract.AmlakCompliant;
+using NewsWebsite.ViewModels.UserManager;
 
 namespace NewsWebsite.Data
 {

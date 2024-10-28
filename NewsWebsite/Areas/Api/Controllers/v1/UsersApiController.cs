@@ -156,6 +156,43 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
+        
+        
+        [HttpPost("[Action]")]
+        [AllowAnonymous]
+        public virtual async Task<ApiResult<UserSignViewModel>> SignInNew([FromBody] SignInBaseViewModel ViewModel)
+        {
+            var User = await _Context.Users.Where(c=>c.UserName==ViewModel.UserName).FirstOrDefaultAsync();
+
+            if (User == null)
+                return BadRequest(" نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
+            
+            if (!User.IsActive)
+                return BadRequest(" حساب شما غیرفعال می باشد.");
+            
+            User.Token = Helpers.GenerateToken();
+            UserSignViewModel userSignView = new UserSignViewModel()
+            {
+                Id = User.Id,
+                FirstName = User.FirstName,
+                LastName = User.LastName,
+                Lisence = User.Lisence,
+                Token = User.Token,
+                UserName = User.UserName,
+                Bio = User.Bio,
+                DateNow = DateTime.Now.ToShortDateString()
+            };
+            var passVerifyResult = new PasswordHasher<UserSignViewModel>().VerifyHashedPassword(null, User.PasswordHash, ViewModel.Password);
+            if (passVerifyResult!=PasswordVerificationResult.Success){ // todo: check hash
+                return BadRequest(" نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
+            }
+            //     
+            await _Context.SaveChangesAsync();
+            
+            return Ok(userSignView);
+        }
+
+        
         [Route("UserChangePassword")]
         [HttpPost]
         public virtual async Task<ApiResult<string>> ChangePassword([FromBody] ChangePasswordViewModel ViewModel)
@@ -339,6 +376,57 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             }
             return Ok("کاربر با موفقیت ایجاد شد");
+        }
+
+        [HttpPost("EmployeeInsertNew")]
+        public async Task<ApiResult<string>> CreateNew([FromBody] UserInsertViewModel viewModel)
+        {
+            if (viewModel.UserName == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+
+            var user = new User
+            {
+                UserName = viewModel.UserName,
+                Bio = viewModel.Bio,
+                Email = "",
+                BirthDate = DateTime.Now,
+                RegisterDateTime = DateTime.Now,
+                IsActive = true,
+                SectionId = 9,
+                FirstName = viewModel.FirstName,
+                PhoneNumber = viewModel.PhoneNumber,
+                PasswordHash = new PasswordHasher<User>().HashPassword(null, viewModel.PhoneNumber)
+            };
+
+            _Context.Add(user);
+            await _Context.SaveChangesAsync();
+            
+            return Ok("کاربر با موفقیت ایجاد شد");
+        }
+
+        [HttpPost("RenewPassword")]
+        public async Task<ApiResult<string>> RenewPassword([FromBody] UserRenewPasswordViewModel viewModel)
+        {
+            var User = await _Context.Users.Where(c=>c.Id==viewModel.UserId).FirstOrDefaultAsync();
+
+            if (User == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+            User.PasswordHash = new PasswordHasher<User>().HashPassword(null, User.PhoneNumber);
+            
+            await _Context.SaveChangesAsync();
+            
+            return Ok("رمز عبور بازنشانی شد");
+        }
+
+        [HttpPost("ChangeActivation")]
+        public async Task<ApiResult<string>> RenewPassword([FromBody] UserActivationViewModel viewModel)
+        {
+            var User = await _Context.Users.Where(c=>c.Id==viewModel.UserId).FirstOrDefaultAsync();
+
+            if (User == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+            User.IsActive = viewModel.isActive==1?true:false;
+            
+            await _Context.SaveChangesAsync();
+            
+            return Ok("وضعیت کاربر تغییر یافت");
         }
 
         [HttpPost("UpdateUser")]

@@ -20,6 +20,7 @@ namespace NewsWebsite.ViewModels.UserManager
         //public string Lisence { get; set; }
         public int SectionId { get; set; }
         //public string Token { get; set; }
+        public string PhoneNumber { get; set; }
 
     }
 
