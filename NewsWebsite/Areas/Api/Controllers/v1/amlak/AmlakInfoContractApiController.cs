@@ -116,6 +116,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             // insert contract 
 
             var contract = new AmlakInfoContract();
+            contract.AmlakInfoId=param.AmlakInfoId;
             contract.OwnerId=param.OwnerId;
             contract.DoingMethodId=0; // todo: remove
             contract.Number=param.Number;
