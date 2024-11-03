@@ -53,6 +53,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<TblProgramOperationDetails> TblProgramOperationDetails { get; set; }
         public virtual DbSet<TblProgramOperations> TblProgramOperations { get; set; }
         public virtual DbSet<TblPrograms> TblPrograms { get; set; }
+        public virtual DbSet<TblProgramDetails> TblProgramDetails { get; set; }
         public virtual DbSet<TblProjects> TblProjects { get; set; }
         public virtual DbSet<TblVasets> TblVasets { get; set; }
         public virtual DbSet<TblYears> TblYears { get; set; }

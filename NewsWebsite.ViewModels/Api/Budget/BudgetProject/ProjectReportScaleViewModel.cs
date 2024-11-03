@@ -49,4 +49,29 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetProject
         public int Id { get; set; }
         public string ProjectScaleName { get; set; }
     }
+    
+    
+    
+    public class ProgramBudgetReadViewModel
+    {
+        public int Id { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public string Mosavab { get; set; }
+        public string ProgramDetailsId { get; set; }
+        public string ProgramCode { get; set; }
+        public string ProgramName { get; set; }
+        public string ProgramColor { get; set; }
+        public string BDPAId { get; set; }
+    }
+
+    public class ProgramDetailsReadViewModel
+    {
+        public string Code { get; set; }
+        public string Name1 { get; set; }
+        public string Name2 { get; set; }
+        public string Name3 { get; set; }
+        public string Color { get; set; }
+    }
+
 }

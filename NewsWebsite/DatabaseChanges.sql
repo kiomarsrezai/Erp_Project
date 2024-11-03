@@ -1,189 +1,59 @@
+
+ALTER TABLE tblBudgetDetailProjectArea
+    ADD ProgramDetailsId int;
+
+-------------------------------------------
 USE [ProgramBudDB]
 GO
 
-/****** Object:  Table [dbo].[tblAmlakAdmin]    Script Date: 10/24/2024 10:18:00 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP001_ProgramBudget_Read]    Script Date: 11/3/2024 5:07:00 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[tblAmlakAdmin](
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [FirstName] [nvarchar](100) NULL,
-    [LastName] [nvarchar](100) NULL,
-    [UserName] [nvarchar](100) NULL,
-    [PhoneNumber] [nvarchar](100) NULL,
-    [Bio] [nvarchar](100) NULL,
-    [AmlakLisence] [nvarchar](MAX) NULL,
-    [Password] [nvarchar](500) NULL,
-    [Token] [nvarchar](100) NULL,
-    [TokenExpireDate] [datetime] NULL,
-    [CreatedAt] [datetime] NULL,
-    [UpdatedAt] [datetime] NULL,
-    CONSTRAINT [PK_tblAmlakAdmin] PRIMARY KEY CLUSTERED
-(
-[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-    ) ON [PRIMARY]
-    GO
+
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[SP001_ProgramBudget_Read]
+@yearId int ,
+@areaId int,
+@BudgetProcessId tinyint
+AS
+BEGIN
+
+SELECT        tblCoding.Id, tblCoding.Code, tblCoding.Description, tblBudgetDetailProjectArea.Mosavab,  tblBudgetDetailProjectArea.ProgramDetailsId ,
+              CONCAT(p1.Code,p2.Code,p3.Code) AS ProgramCode, p1.Color AS ProgramColor,p3.Name AS ProgramName,
+              tblBudgetDetailProjectArea.Id AS BDPAId
 
 
 
 
-    ----------------------------------------------------------------
-    ----------------------------------------------------------------
-    ----------------------------------------------------------------
+FROM            TblBudgets INNER JOIN
+                TblBudgetDetails ON TblBudgets.Id = TblBudgetDetails.BudgetId INNER JOIN
+                tblBudgetDetailProject ON TblBudgetDetails.Id = tblBudgetDetailProject.BudgetDetailId INNER JOIN
+                tblBudgetDetailProjectArea ON tblBudgetDetailProject.Id = tblBudgetDetailProjectArea.BudgetDetailProjectId INNER JOIN
+                tblCoding ON TblBudgetDetails.tblCodingId = tblCoding.Id
 
-    USE [ProgramBudDB]
-    GO
-
-/****** Object:  Table [dbo].[tblContractAmlakInfoChecks]    Script Date: 10/24/2024 10:52:06 AM ******/
-    SET ANSI_NULLS ON
-    GO
-
-    SET QUOTED_IDENTIFIER ON
-    GO
-
-CREATE TABLE [dbo].[tblContractAmlakInfoChecks](
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [AmlakInfoContractId] [int] NULL,
-    [Number] [nvarchar](50) NULL,
-    [Date] [datetime] NULL,
-    [Amount] [nvarchar](50) NULL,
-    [Description] [nvarchar](100) NULL,
-    [IsPassed] [int] NULL,
-    [CreatedAt] [datetime] NULL,
-    [UpdatedAt] [datetime] NULL,
-    CONSTRAINT [PK_tblContractAmlakInfoChecks] PRIMARY KEY CLUSTERED
-(
-[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-    ) ON [PRIMARY]
-    GO
+                           LEFT JOIN TblProgramDetails AS p3 ON p3.Id = tblBudgetDetailProjectArea.ProgramDetailsId
+                           LEFT JOIN TblProgramDetails AS p2 ON p2.Id = p3.MotherId
+                           LEFT JOIN TblProgramDetails AS p1 ON p1.Id = p2.MotherId
 
 
 
-    ----------------------------------------------------------------
-----------------------------------------------------------------
-    USE [ProgramBudDB]
-    GO
-
-/****** Object:  Table [dbo].[tblAmlakPrivateGenerating]    Script Date: 10/24/2024 10:51:27 AM ******/
-    SET ANSI_NULLS ON
-    GO
-
-    SET QUOTED_IDENTIFIER ON
-    GO
-
-CREATE TABLE [dbo].[tblAmlakPrivateGenerating](
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [AmlakPrivateId] [int] NULL,
-    [MunicipalityActionRequired] [nvarchar](100) NULL,
-    [MunicipalityAction] [nvarchar](100) NULL,
-    [MunicipalityActionLetterNumber] [nvarchar](100) NULL,
-    [LegalActionRequired] [nvarchar](100) NULL,
-    [LegalAction] [nvarchar](100) NULL,
-    [LegalActionLetterNumber] [nvarchar](100) NULL,
-    [UrbanPlanningPermitRequired] [nvarchar](100) NULL,
-    [UrbanPlanningPermitNumber] [nvarchar](100) NULL,
-    [UrbanPlanningPermitDate] [nvarchar](100) NULL,
-    [DocumentImage] [nvarchar](100) NULL,
-    [ArchitecturalMapImage] [nvarchar](100) NULL,
-    [SurveyMapImage] [nvarchar](100) NULL,
-    [PermitImage] [nvarchar](100) NULL,
-    [MoldReportImage] [nvarchar](100) NULL,
-    [ActionHistory] [nvarchar](100) NULL,
-    [FollowUpSentTo1] [nvarchar](100) NULL,
-    [LetterNumber1] [nvarchar](100) NULL,
-    [LetterDate1] [datetime] NULL,
-    [FollowUpSentTo2] [nvarchar](100) NULL,
-    [LetterNumber2] [nvarchar](100) NULL,
-    [LetterDate2] [datetime] NULL,
-    [FollowUpSentTo3] [nvarchar](100) NULL,
-    [LetterNumber3] [nvarchar](100) NULL,
-    [LetterDate3] [datetime] NULL,
-    [CreatedAt] [datetime] NULL,
-    [UpdatedAt] [datetime] NULL,
-    CONSTRAINT [PK_tblAmlakPrivateGenerating] PRIMARY KEY CLUSTERED
-(
-[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-    ) ON [PRIMARY]
-    GO
+WHERE        (TblBudgets.TblYearId = @yearId) AND (tblBudgetDetailProjectArea.AreaId = @areaId) AND (tblCoding.TblBudgetProcessId = @BudgetProcessId)
+order by tblCoding.Code
 
 
-
-    ----------------------------------------------------------------
-----------------------------------------------------------------
-
-
--- Add ZemanatEndDate (datetime) to tblContractAmlakInfo
-ALTER TABLE tblContractAmlakInfo
-    ADD ZemanatEndDate datetime;
-
--- Change OwnershipPercentage column name to OwnershipValue and type to int
-UPDATE tblAmlakPrivateNew SET InPossessionOf = ISNULL(TRY_CONVERT(int, InPossessionOf), 9);
-ALTER TABLE tblAmlakPrivateNew
-ALTER COLUMN InPossessionOf int;
--- Change OwnershipPercentage column name to OwnershipValue and type to int
-UPDATE tblAmlakPrivateNew
-SET OwnershipPercentage = ISNULL(TRY_CONVERT(float, OwnershipPercentage), 0);
-ALTER TABLE tblAmlakPrivateNew
-ALTER COLUMN OwnershipPercentage float;
-EXEC sp_rename 'tblAmlakPrivateNew.OwnershipPercentage', 'OwnershipValue', 'COLUMN';
-
--- Add OwnershipValueTotal (int) to tblAmlakPrivateNew after OwnershipValue
-ALTER TABLE tblAmlakPrivateNew
-    ADD OwnershipValueTotal int;
-
--- Add InPossessionOfOther (int) to tblAmlakPrivateNew after InPossessionOf
-ALTER TABLE tblAmlakPrivateNew
-    ADD InPossessionOfOther nvarchar(50);
-
--- Add BuildingStatus (int) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD BuildingStatus int;
-
--- Add BuildingMasahat (int) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD BuildingMasahat int;
-
--- Add BuildingFloorsNumber (int) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD BuildingFloorsNumber int;
-
--- Add BuildingUsage (int) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD BuildingUsage int;
-
--- Add MeterNumberGas (varchar 50) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD MeterNumberGas nvarchar(50);
-
--- Add MeterNumberWater (varchar 50) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD MeterNumberWater nvarchar(50);
-
--- Add MeterNumberElectricity (varchar 50) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD MeterNumberElectricity nvarchar(50);
-
--- Add MeterNumberPhone (varchar 50) to tblAmlakPrivateNew
-ALTER TABLE tblAmlakPrivateNew
-    ADD MeterNumberPhone nvarchar(50);
+END
+GO
 
 
-UPDATE tblAmlakPrivateNew
-SET OwnershipValueTotal = 0,
-    BuildingStatus = 0,
-    BuildingMasahat = 0,
-    BuildingFloorsNumber = 0,
-    BuildingUsage = 0;
-
-
-update tblAmlakPrivateNew set InternalDate=null
-ALTER TABLE YourTableName ALTER COLUMN InternalDate DATETIME;
+-------------------------
 
 
 
@@ -191,30 +61,81 @@ ALTER TABLE YourTableName ALTER COLUMN InternalDate DATETIME;
 USE [ProgramBudDB]
 GO
 
-/****** Object:  Table [dbo].[TblAmlakAttachs]    Script Date: 10/27/2024 3:57:01 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP001_ProgramBudget_Update]    Script Date: 11/3/2024 5:07:17 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[TblAmlakAttachs](
-    [Id] [int] IDENTITY(1,1) NOT NULL,
-    [TargetType] [nvarchar](50) NULL,
-    [TargetId] [int] NULL,
-    [Type] [nvarchar](50) NULL,
-    [FileName] [nvarchar](3000) NULL,
-    [FileTitle] [nvarchar](250) NULL
-    ) ON [PRIMARY]
-    GO
 
-       DROP TABLE TblAmlakAgreementAttachs
-       DROP TABLE  TblAmlakArchiveAttachs
-       DROP TABLE  TblAmlakInfoAttachs
-       DROP TABLE  TblAmlakPrivateAttachs
-       DROP TABLE TblContractAttachs
-       
-       
-       check all column types of tblContractAmlakInfo
-       
-       
+
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[SP001_ProgramBudget_Update]
+@Ids NVARCHAR(MAX),
+@programDetailsId int
+AS
+BEGIN
+Update tblBudgetDetailProjectArea set ProgramDetailsId=@programDetailsId
+WHERE Id IN (SELECT Id FROM dbo.fn_SplitString(@Ids, ','))
+END
+GO
+
+
+-----------------------------------
+
+
+USE [ProgramBudDB]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP001_ProgramDetails_Read]    Script Date: 11/3/2024 5:07:36 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[SP001_ProgramDetails_Read]
+@programId int 
+AS
+BEGIN
+
+select
+    p0.Name AS name1,p1.Name AS name2,p2.Name AS name3,
+    CONCAT(p0.Code ,p1.Code ,p2.Code ) AS Code, p0.Color
+
+from (
+         select * from TblProgramDetails where MotherId=0
+     )AS p0
+
+         INNER Join  TblProgramDetails AS p1 ON p0.id=p1.MotherId
+         INNER Join  TblProgramDetails AS p2 ON p1.id=p2.MotherId
+
+order by p0.Code asc ,  p1.Code asc ,  p2.Code asc
+
+END
+
+
+
+GO
+
+
+
+------------------------------------------
+
+
+
+
+
+
