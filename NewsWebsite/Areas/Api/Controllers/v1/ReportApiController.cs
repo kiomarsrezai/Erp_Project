@@ -778,13 +778,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("AbstractRead")]
         [HttpGet]
-        public async Task<ApiResult<List<AbstractViewModel>>> GetAbstractList(int yearId)
+        public async Task<ApiResult<List<AbstractViewModel>>> GetAbstractList(int yearId,string type)
         {
             List<AbstractViewModel> abslist = new List<AbstractViewModel>();
 
-            using (SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand cmd = new SqlCommand("SP500_Abstract", sqlConnection))
+            using (SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("SqlErp"))){
+                var spName = "";
+                if (type == "mosavab"){
+                    spName = "SP500_Abstract";
+                }
+                else{
+                    spName = "SP500_Abstract_Eslahi";
+                }
+                using (SqlCommand cmd = new SqlCommand(spName, sqlConnection))
                 {
                     sqlConnection.Open();
                     cmd.Parameters.AddWithValue("yearId", yearId);
