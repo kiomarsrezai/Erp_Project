@@ -288,3 +288,29 @@ update tblContractAmlakInfo set Status=1
 
 
 
+------------------------------------------
+    USE [ProgramBudDB]
+GO
+
+/****** Object:  Table [dbo].[tblAmlakLogs]    Script Date: 11/7/2024 12:45:47 PM ******/
+SET ANSI_NULLS ON
+    GO
+
+    SET QUOTED_IDENTIFIER ON
+    GO
+
+CREATE TABLE [dbo].[tblAmlakLogs](
+    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [TargetId] [int] NULL,
+    [TargetType] [int] NULL,
+    [Date] [datetime] NULL,
+    [AdminId] [int] NULL,
+    [Description] [nvarchar](500) NULL,
+    CONSTRAINT [PK_tblAmlakLogs] PRIMARY KEY CLUSTERED
+(
+[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
+

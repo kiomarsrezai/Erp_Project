@@ -18,6 +18,7 @@ using NewsWebsite.ViewModels.Api.Contract.amlakAttachs;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using NewsWebsite.ViewModels.Api.Contract.AmlakCompliant;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NewsWebsite.ViewModels.UserManager;
 
 namespace NewsWebsite.Data
@@ -73,6 +74,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<AmlakArchive> AmlakArchives { get; set; }
         public virtual DbSet<AmlakAgreement> AmlakAgreements { get; set; }
         public virtual DbSet<AmlakCompliant> AmlakCompliants { get; set; }
+        public virtual DbSet<AmlakLog> AmlakLogs { get; set; }
         public virtual DbSet<AmlakAdmin> AmlakAdmins { get; set; }
         public virtual DbSet<AmlakAttach> AmlakAttachs { get; set; }
 

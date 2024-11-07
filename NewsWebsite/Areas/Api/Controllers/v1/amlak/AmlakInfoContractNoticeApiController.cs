@@ -28,6 +28,7 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -63,7 +64,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
             var builder = _db.AmlakInfoContractNotices
                 .AmlakInfoContractId(param.ContractId)
-                .SupplierId(param.SupplierId);
+                .SupplierId(param.SupplierId)
+                .DateFrom(param.DateFrom)
+                .DateTo(param.DateTo);
 
             
             var items = await builder
@@ -106,6 +109,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             _db.Add(Notice);
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, Notice.Id, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " ثبت شد.");
+
             return Ok(Notice.Id.ToString());
         }
 
@@ -137,6 +142,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, Notice.Id, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " ویرایش شد.");
+
+            
             return Ok(Notice.Id.ToString());
         }
 
@@ -151,6 +159,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
             _db.Remove(Notice);
             await _db.SaveChangesAsync();
+
+            await SaveLogAsync(_db, Notice.Id, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " حذف شد.");
 
           return Ok("با موفقیت انجام شد");
         }

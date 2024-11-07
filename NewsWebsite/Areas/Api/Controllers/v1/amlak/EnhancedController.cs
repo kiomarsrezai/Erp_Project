@@ -8,6 +8,7 @@ using NewsWebsite.Common;
 using NewsWebsite.Data;
 using NewsWebsite.Data.Models.AmlakAdmin;
 using NewsWebsite.Entities.identity;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     public class EnhancedController:ControllerBase {
@@ -29,5 +30,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             return user;
         }
+        
+        
+        [NonAction]
+        public async Task<bool> SaveLogAsync(ProgramBuddbContext _db, int targetId,TargetTypes targetType,string description){
+            var admin = await CheckUserAuth(_db);
+            
+            var item = new AmlakLog();
+            item.TargetId = targetId;
+            item.TargetType = targetType;
+            item.AdminId = admin.Id;
+            item.Description = description;
+            item.Date = Helpers.GetServerDateTimeType();
+            _db.Add(item);
+            await _db.SaveChangesAsync();
+
+            return true;
+        }
+        
     }
 }
