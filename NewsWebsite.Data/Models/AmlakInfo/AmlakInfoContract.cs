@@ -13,6 +13,7 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public int? AmlakInfoId{ get; set; }
         public int? OwnerId{ get; set; }
         public int? DoingMethodId{ get; set; }
+        public int? Status{ get; set; }
         public string? Number{ get; set; } // Deposit , Rent , license
         public DateTime? Date{ get; set; }
         public string? Description{ get; set; }
@@ -63,6 +64,9 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         
         [NotMapped]
         public string? TypeText{get{ return Helpers.UC(Type,"amlakInfoContractType"); }}
+
+        [NotMapped]
+        public string? StatusText{get{ return Helpers.UC(Type,"amlakInfoContractStatus"); }}
 
     }
     

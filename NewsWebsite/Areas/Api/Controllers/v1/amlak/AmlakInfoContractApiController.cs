@@ -119,6 +119,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.AmlakInfoId=param.AmlakInfoId;
             contract.OwnerId=param.OwnerId;
             contract.DoingMethodId=0; // todo: remove
+            contract.Status=1;
             contract.Number=param.Number;
             contract.Date=DateTime.Parse(param.Date);
             contract.Description=param.Description;
@@ -132,7 +133,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.Modir=param.Modir;
             contract.Sarparast=param.Sarparast;
             contract.TenderNumber=param.TenderNumber;
-            contract.TenderDate=DateTime.Parse(param.TenderDate);
+            contract.TenderDate=string.IsNullOrEmpty(param.TenderDate)? (DateTime?)null : DateTime.Parse(param.TenderDate);
             contract.CreatedAt = Helpers.GetServerDateTimeType();
             contract.UpdatedAt = Helpers.GetServerDateTimeType();
             
@@ -226,7 +227,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.Modir=param.Modir;
             contract.Sarparast=param.Sarparast;
             contract.TenderNumber=param.TenderNumber;
-            contract.TenderDate=DateTime.Parse(param.TenderDate);
+            contract.TenderDate=string.IsNullOrEmpty(param.TenderDate)? (DateTime?)null : DateTime.Parse(param.TenderDate);
             contract.UpdatedAt = Helpers.GetServerDateTimeType();
 
             

@@ -249,3 +249,42 @@ set ExecuteId = @ExecuteId
 where id = @codingId
 
 END
+
+
+
+
+USE [ProgramBudDB]
+GO
+
+/****** Object:  Table [dbo].[tblContractAmlakInfoNotices]    Script Date: 11/7/2024 10:33:13 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblContractAmlakInfoNotices](
+    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [AmlakInfoContractId] [int] NULL,
+    [Title] [int] NULL,
+    [Date] [datetime] NULL,
+    [LetterNumber] [nvarchar](50) NULL,
+    [Description] [nvarchar](500) NULL,
+    [CreatedAt] [datetime] NULL,
+    [UpdatedAt] [datetime] NULL,
+    CONSTRAINT [PK_tblContractAmlakInfoNotices] PRIMARY KEY CLUSTERED
+(
+[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
+
+
+-------------------------------------
+
+add status int to tblContractAmlakInfo
+
+update tblContractAmlakInfo set Status=1
+
+
+

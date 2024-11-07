@@ -29,6 +29,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     public class AmlakInfoContractListVm : AmlakInfoContractBaseModel {
         public int Id{ get; set; }
         public int AmlakInfoId{ get; set; }
+        public int Status{ get; set; }
         public int OwnerId{ get; set; }
         public string DateFa{ get; set; }= "";
         public DateTime DateFrom{ get; set; }
@@ -46,6 +47,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
     public class AmlakInfoContractReadVm : AmlakInfoContractBaseModel {
         public int AmlakInfoId{ get; set; }
         public int OwnerId{ get; set; }
+        public int Status{ get; set; }
         public string DateFa{ get; set; }= "";
         public DateTime DateFrom{ get; set; }
         public DateTime DateEnd{ get; set; }

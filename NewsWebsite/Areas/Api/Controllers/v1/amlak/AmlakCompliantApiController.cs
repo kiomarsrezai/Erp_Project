@@ -51,6 +51,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             var items = await _db.AmlakCompliants
                 .AmlakInfoId(param.AmlakInfoId)
+                .SupplierId(param.SupplierId)
                 .Subject(param.Subject)
                 .FileNumber(param.FileNumber)
                 .Status(param.Status)
@@ -66,7 +67,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         public async Task<ApiResult<AmlakCompliantReadVm>> AmlakCompliantRead(PublicParamIdViewModel param){
             await CheckUserAuth(_db);
 
-            var item = await _db.AmlakCompliants.Id(param.Id).FirstOrDefaultAsync();
+            var item = await _db.AmlakCompliants.Id(param.Id)
+                .Include(c=>c.Contract)
+                .Include(c=>c.Supplier)
+                .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
 
@@ -91,6 +95,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.FileNumber = param.FileNumber;
             item.Status = param.Status;
             item.Date = param.Date;
+            item.SupplierId = param.SupplierId;
+            item.ContractId = param.ContractId;
             item.Description = param.Description;
             item.Steps = param.Steps;
             item.CreatedAt = Helpers.GetServerDateTimeType();
@@ -117,6 +123,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Subject = param.Subject;
             item.FileNumber = param.FileNumber;
             item.Date = param.Date;
+            item.SupplierId = param.SupplierId;
+            item.ContractId = param.ContractId;
             item.Description = param.Description;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();

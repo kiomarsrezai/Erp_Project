@@ -174,16 +174,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         
         
 
-        [Route("Pass")]
+        [Route("PassStatus")]
         [HttpPost]
-        public async Task<ApiResult<string>> CheckUpdate(int checkId){
+        public async Task<ApiResult<string>> CheckUpdate(int checkId,int passStatus){
             await CheckUserAuth(_db);
             
             var check =await  _db.AmlakInfoContractChecks.Id( checkId).FirstOrDefaultAsync();
             if (check == null)
                 return BadRequest("چک یافت نشد");
 
-            check.PassStatus=1;
+            check.PassStatus=passStatus;
             await _db.SaveChangesAsync();
 
             return Ok("انجام شد");

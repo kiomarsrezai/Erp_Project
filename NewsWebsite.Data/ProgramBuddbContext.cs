@@ -63,6 +63,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<AmlakPrivateDocHistory> AmlakPrivateDocHistories { get; set; }
         public virtual DbSet<AmlakInfo> AmlakInfos { get; set; }
         public virtual DbSet<AmlakInfoContractCheck> AmlakInfoContractChecks { get; set; }
+        public virtual DbSet<AmlakInfoContractNotice> AmlakInfoContractNotices { get; set; }
         public virtual DbSet<AmlakInfoKind> AmlakInfoKinds { get; set; }
         public virtual DbSet<AmlakInfoContract> AmlakInfoContracts { get; set; }
         public virtual DbSet<AmlakInfoContractPrice> AmlakInfoContractPrices { get; set; }
