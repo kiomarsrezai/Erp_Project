@@ -64,7 +64,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var builder = _db.AmlakInfoContractChecks
                 .AmlakInfoContractId(param.ContractId)
                 .OwnerId(param.OwnerId)
-                .IsPassed(param.IsPassed);
+                .PassStatus(param.PassStatus)
+                .DateFrom(param.DateFrom)
+                .DateTo(param.DateTo);
 
             
             var items = await builder
@@ -112,6 +114,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             check.Number=param.Number;
             check.Date=DateTime.Parse(param.Date);
             check.Amount=param.Amount;
+            check.CheckType=param.CheckType;
+            check.Issuer=param.Issuer;
+            check.IssuerBank=param.IssuerBank;
+            check.IsSubmitted=param.IsSubmitted;
             check.Description=param.Description;
             check.CreatedAt = Helpers.GetServerDateTimeType();
             check.UpdatedAt = Helpers.GetServerDateTimeType();
@@ -139,6 +145,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             check.Number=param.Number;
             check.Date=DateTime.Parse(param.Date);
             check.Amount=param.Amount;
+            check.CheckType=param.CheckType;
+            check.Issuer=param.Issuer;
+            check.IssuerBank=param.IssuerBank;
+            check.IsSubmitted=param.IsSubmitted;
             check.Description=param.Description;
             check.UpdatedAt = Helpers.GetServerDateTimeType();
             
@@ -173,7 +183,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             if (check == null)
                 return BadRequest("چک یافت نشد");
 
-            check.IsPassed=1;
+            check.PassStatus=1;
             await _db.SaveChangesAsync();
 
             return Ok("انجام شد");

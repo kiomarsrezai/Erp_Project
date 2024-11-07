@@ -125,6 +125,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         public async Task<ApiResult<AmlakInfoSupplierUpdateVm>> SupplierInsert([FromBody] AmlakInfoSupplierInsertVm param){
             await CheckUserAuth(_db);
 
+            var user = await _db.Suppliers.Where(c => c.NationalCode == param.NationalCode).FirstOrDefaultAsync();
+            if (user != null)
+                return BadRequest("کاربر با این کد ملی قبلا ثبت شده است.");
+            
             AmlakInfoSupplierUpdateVm supp = new AmlakInfoSupplierUpdateVm();
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -138,7 +142,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                     sqlCommand.Parameters.AddWithValue("Address", param.Address);
                     sqlCommand.Parameters.AddWithValue("NationalCode", param.NationalCode);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    try{
+
+                        SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (await dataReader.ReadAsync())
                     {
                         supp.Id = int.Parse(dataReader["id"].ToString());
@@ -148,6 +154,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                         supp.CodePost = dataReader["CodePost"].ToString();
                         supp.Address = dataReader["Address"].ToString();
                         supp.NationalCode = dataReader["NationalCode"].ToString();
+                    }
+                    }
+                    catch (Exception e){
+                        Helpers.dd(e.InnerException);
                     }
                 }
             }

@@ -15,8 +15,12 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public string Number{ get; set; } // Deposit , Rent , license
         public DateTime? Date{ get; set; }
         public string Amount{ get; set; }
+        public string Issuer{ get; set; }
+        public string IssuerBank{ get; set; }
         public string Description{ get; set; }
-        public int IsPassed{ get; set; }
+        public int PassStatus{ get; set; }
+        public int CheckType{ get; set; }
+        public int IsSubmitted{ get; set; }
         public DateTime? CreatedAt{ get; set; }
         public DateTime? UpdatedAt{ get; set; }
 
@@ -33,7 +37,11 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
         
         [NotMapped]
-        public string? IsPassedText{get{ return Helpers.UC(IsPassed,"contractCheckIsPassed"); }}
+        public string? PassStatusText{get{ return Helpers.UC(PassStatus,"contractCheckPassStatus"); }}
+
+        [NotMapped]
+        public string? CheckTypeText{get{ return Helpers.UC(CheckType,"contractCheckType"); }}
+
 
     }
     
@@ -47,9 +55,23 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             return query;
         }
         
-        public static IQueryable<AmlakInfoContractCheck> IsPassed(this IQueryable<AmlakInfoContractCheck> query, int? value){
+        public static IQueryable<AmlakInfoContractCheck> PassStatus(this IQueryable<AmlakInfoContractCheck> query, int? value){
             if (BaseModel.CheckParameter(value,null)){
-                return query.Where(e => e.IsPassed == value);
+                return query.Where(e => e.PassStatus == value);
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakInfoContractCheck> CheckType(this IQueryable<AmlakInfoContractCheck> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                return query.Where(e => e.CheckType == value);
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakInfoContractCheck> IsSubmitted(this IQueryable<AmlakInfoContractCheck> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                return query.Where(e => e.IsSubmitted == value);
             }
             return query;
         }
@@ -62,6 +84,21 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             return query;
         }
 
+        
+        public static IQueryable<AmlakInfoContractCheck> DateFrom(this IQueryable<AmlakInfoContractCheck> query, DateTime? value){
+            if (BaseModel.CheckParameter(value,null)){
+                return query.Where(c=>c.Date != null &&  c.Date > value);
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakInfoContractCheck> DateTo(this IQueryable<AmlakInfoContractCheck> query, DateTime? value){
+            if (BaseModel.CheckParameter(value,null)){
+                return query.Where(c=>c.Date != null &&  c.Date < value);
+            }
+            return query;
+        }
+        
         
     }
 }

@@ -161,6 +161,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
             }
             
+            if (string.IsNullOrEmpty(amlakInfo.Code)){
+                amlakInfo.Code = param.Code;
+                amlakInfo.UpdatedAt = Helpers.GetServerDateTimeType();
+            }
+            
 
             
 
@@ -235,6 +240,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 amlakInfo.OwnerType=param.Owner;
             // if (string.IsNullOrEmpty(amlakInfo.TypeUsing))
                 amlakInfo.TypeUsing=param.TypeUsing;
+                
+                amlakInfo.Code=param.Code;
 
 
             var prices = await _db.AmlakInfoContractPrices.Where(a => a.ContractId == param.Id).ToListAsync();

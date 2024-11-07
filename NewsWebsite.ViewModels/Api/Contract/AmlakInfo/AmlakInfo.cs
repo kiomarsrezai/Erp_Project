@@ -22,6 +22,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string CurrentStatus{ get; set; }
         public string Structure{ get; set; }
         public string OwnerType{ get; set; }
+        public string Code{ get; set; }
     }
 
     public class AmlakInfoListVm : AmlakInfoBaseModel {

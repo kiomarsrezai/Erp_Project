@@ -2,7 +2,7 @@ ALTER TABLE tblContractAmlakInfoChecks ADD Issuer VARCHAR(255);
 ALTER TABLE tblContractAmlakInfoChecks ADD IssuerBank VARCHAR(255);
 ALTER TABLE tblContractAmlakInfoChecks ADD CheckType INT;
 ALTER TABLE tblContractAmlakInfoChecks ADD IsSubmitted INT;
-
+update tblContractAmlakInfoChecks set IsSubmitted=0 , Issuer=0,IssuerBank=0,CheckType=1
 change ispassed to PassStatus
        
        

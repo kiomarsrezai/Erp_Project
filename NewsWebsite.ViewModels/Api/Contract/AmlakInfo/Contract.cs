@@ -76,6 +76,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string? Structure{ get; set; }
         public string? Owner{ get; set; }
         public string? TypeUsing{ get; set; }
+        public string? Code{ get; set; }
         public List<PricesInputVm> Prices{ get; set; }
         public List<int> SupplierIds{ get; set; }
         public string DateFrom{ get; set; }
@@ -98,6 +99,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string? Structure{ get; set; }
         public string? Owner{ get; set; }
         public string? TypeUsing{ get; set; }
+        public string? Code{ get; set; }
         public List<PricesInputVm> Prices{ get; set; }
         public List<int> SupplierIds{ get; set; }
         public string DateFrom{ get; set; }

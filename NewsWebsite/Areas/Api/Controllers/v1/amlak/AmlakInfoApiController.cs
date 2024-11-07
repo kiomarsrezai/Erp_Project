@@ -289,6 +289,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 row.Add(item.Coordinates);
                 row.Add(item.CodeUsing);
                 row.Add(item.TypeUsing);
+                row.Add(item.Code);
                 
                 finalItems.Add(row);
             }
@@ -422,6 +423,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             item.CurrentStatus = param.CurrentStatus;
             item.Structure = param.Structure;
             item.OwnerType = param.OwnerType;
+            item.Code = param.Code;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
         
