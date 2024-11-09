@@ -52,10 +52,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             await CheckUserAuth(_db);
 
             var items = await _db.AmlakLogs
+                .Include(c=>c.Admin)
                 .TargetType(param.TargetType)
                 .TargetId(param.TargetId)
                 .AdminId(param.AdminId)
+                .OrderBy(param.Sort,param.SortType).Page2(param.Page, param.PageRows)
                 .ToListAsync();
+
             var finalItems = MyMapper.MapTo<AmlakLog, AmlakLogListVm>(items);
 
             return Ok(finalItems);

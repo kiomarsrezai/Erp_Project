@@ -46,6 +46,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int OwnerId{ get; set; }
         public int? PassStatus{ get; set; }
         public int? CheckType{ get; set; }
+        public int Export{ get; set; } = 0;
         public int Page{ get; set; } = 1;
         public int PageRows{ get; set; } = 10;
         public DateTime? DateFrom{ get; set; }

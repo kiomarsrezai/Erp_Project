@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
@@ -103,6 +104,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             
             await _db.SaveChangesAsync();
             
+            await SaveLogAsync(_db, item.Id, TargetTypes.Parcel, "پارسل اضافه شد");
+
             return Ok(item.Id.ToString());
         }
 
@@ -141,6 +144,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             }
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, item.Id, TargetTypes.Parcel, "پارسل ویرایش شد");
+
             return Ok(item.Id.ToString());
         }
         
@@ -157,6 +162,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Status = param.Status;
             item.Comment = item.Comment+ "<br>" + Helpers.MiladiToHejri(DateTime.Now.ToString()) + ":" +param.Comment;
             await _db.SaveChangesAsync();
+
+            await SaveLogAsync(_db, item.Id, TargetTypes.Parcel, "وضعیت پارسل  به "+param.Status+" ویرایش شد");
 
             return Ok("با موفقیت انجام شد");
         }

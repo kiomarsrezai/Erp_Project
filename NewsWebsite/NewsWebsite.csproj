@@ -45,11 +45,11 @@
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\posters\" />
     <Folder Include="wwwroot\tmp\" />
-    <Folder Include="wwwroot\Upload\AmlakInfo\" />
-    <Folder Include="wwwroot\Upload\AmlakParcels\1\" />
-    <Folder Include="wwwroot\Upload\Contracts\" />
+    <Folder Include="wwwroot\Upload\AmlakInfos\**\*" />
+    <Folder Include="wwwroot\Upload\AmlakParcels\**\*" />
+    <Folder Include="wwwroot\Upload\Contracts\**\*" />
+    <Folder Include="wwwroot\excel_templates\**\*" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="wwwroot\CacheFiles\assets\vendor\bootstrap-table\dist\bootstrap-table-locale-all.js" />
     <None Include="wwwroot\CacheFiles\assets\vendor\bootstrap-table\dist\bootstrap-table-locale-all.min.js" />
@@ -174,8 +174,5 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\186\638494667302787770.png" />
-  </ItemGroup>
 
 </Project>

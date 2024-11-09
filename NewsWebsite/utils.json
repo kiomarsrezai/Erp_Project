@@ -166,10 +166,23 @@
     "3": "فسخ شده"
   },
   "logTargetType": {
-    "amlakInfo": "املاک عمومی",
-    "amlakPrivate": "املاک اختصاصی",
-    "contract": "قرارداد",
-    "Notice": "اخطار",
-    "compliant": "فسخ شده"
+    "AmlakInfo": "املاک عمومی",
+    "AmlakPrivate": "املاک اختصاصی",
+    "Contract": "قرارداد",
+    "Agreement": "توافقات",
+    "Archive": "آرشیو",
+    "Parcel": "پارسل",
+    "Supplier": "طرف قرارداد",
+    "Admin": "مدیر"
+  },
+  "logTargetUrlPrefix": {
+    "AmlakInfo": "amlakinfo",
+    "AmlakPrivate": "amlakprivate",
+    "Contract": "contract",
+    "Agreement": "agreement",
+    "Archive": "archive",
+    "Parcel": "parcel",
+    "Supplier": "supplier",
+    "Admin": "user"
   }
 }

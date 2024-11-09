@@ -24,6 +24,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore.Storage;
 using NewsWebsite.Data.Models;
 using NewsWebsite.Data.Models.AmlakPrivate;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -334,6 +335,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, item.Id, TargetTypes.AmlakPrivate, "ملک خصوصی ویرایش شد");
+
             return Ok(item.Id.ToString());
         }
 
@@ -365,6 +368,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             _db.Add(item);
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, item.AmlakPrivateId, TargetTypes.AmlakPrivate, "وضعیت سند با شناسه "+item.Id+" اضافه شد");
+
+            
             return Ok("موفق");
         }
 

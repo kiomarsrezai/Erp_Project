@@ -14,12 +14,19 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAdmin {
         public int TargetId{ get; set; }
         public string TargetType{ get; set; }
         public string TargetTypeText{ get; set; }
+        public string TargetUrlPrefix{ get; set; }
         public string DateFa{ get; set; }
         public int AdminId{ get; set; }
         public string Description{ get; set; }
     }
 
     public class AmlakLogListVm : AmlakLogBaseModel {
+        public AdminVm Admin{ get; set; }
+
+    }
+    public class AdminVm{
+        public string FirstName{ get; set; }
+        public string LastName{ get; set; }
     }
 
     public class AmlakLogReadVm : AmlakLogBaseModel {

@@ -226,7 +226,7 @@ public static class Helpers {
       
     public static string ExportExcelFile(List<List<object>> items,string excelFileName,string filename=null){
         // Path to the template file
-        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/excel_tamplates/{excelFileName}.xlsx");
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/excel_templates/{excelFileName}.xlsx");
 
         // Open the template
         using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.Read)){

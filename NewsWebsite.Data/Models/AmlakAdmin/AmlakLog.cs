@@ -17,11 +17,16 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakLog {
         public int AdminId{ get; set; }
         public string Description{ get; set; }
 
+        public Data.Models.AmlakAdmin.AmlakAdmin Admin{ get; set; }
+        
         [NotMapped]
         public string? DateFa{get{ return Helpers.MiladiToHejri(Date); }}
         
         [NotMapped]
         public string? TargetTypeText{get{ return Helpers.UC(TargetType.ToString(),"logTargetType"); }}
+
+        [NotMapped]
+        public string? TargetUrlPrefix{get{ return Helpers.UC(TargetType.ToString(),"logTargetUrlPrefix"); }}
 
     }
 
@@ -30,7 +35,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakLog {
         AmlakInfo=1,
         AmlakPrivate=2,
         Contract=3,
-        Aggrement=4,
+        Agreement=4,
         Archive=5,
         Parcel=6,
         Supplier=7,

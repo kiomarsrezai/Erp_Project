@@ -28,6 +28,7 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -155,6 +156,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                         supp.Address = dataReader["Address"].ToString();
                         supp.NationalCode = dataReader["NationalCode"].ToString();
                     }
+                    
+                    await SaveLogAsync(_db, supp.Id, TargetTypes.AmlakPrivate, "طرف قرارداد  اضافه شد");
+
                     }
                     catch (Exception e){
                         Helpers.dd(e.InnerException);

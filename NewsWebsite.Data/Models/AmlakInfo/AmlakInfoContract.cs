@@ -64,6 +64,9 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         
         [NotMapped]
         public string? TypeText{get{ return Helpers.UC(Type,"amlakInfoContractType"); }}
+        
+        [NotMapped]
+        public string? DoingMethodIdText {get{ return Helpers.UC(Type,"DoingMethodId"); }}
 
         [NotMapped]
         public string? StatusText{get{ return Helpers.UC(Type,"amlakInfoContractStatus"); }}

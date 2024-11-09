@@ -109,7 +109,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             _db.Add(Notice);
             await _db.SaveChangesAsync();
 
-            await SaveLogAsync(_db, Notice.Id, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " ثبت شد.");
+            await SaveLogAsync(_db, Notice.AmlakInfoContractId, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " ثبت شد.");
 
             return Ok(Notice.Id.ToString());
         }
@@ -142,7 +142,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             await _db.SaveChangesAsync();
 
-            await SaveLogAsync(_db, Notice.Id, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " ویرایش شد.");
+            await SaveLogAsync(_db, Notice.AmlakInfoContractId, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " ویرایش شد.");
 
             
             return Ok(Notice.Id.ToString());
@@ -160,7 +160,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             _db.Remove(Notice);
             await _db.SaveChangesAsync();
 
-            await SaveLogAsync(_db, Notice.Id, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " حذف شد.");
+            await SaveLogAsync(_db, Notice.AmlakInfoContractId, TargetTypes.Contract, "اخطار با شناسه "+Notice.Id+ " حذف شد.");
 
           return Ok("با موفقیت انجام شد");
         }

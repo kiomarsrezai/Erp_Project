@@ -28,6 +28,7 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -58,7 +59,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
         [Route("List")]
         [HttpGet]
-        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int lessThanNMonth=0,int lessThanNMonthZemanat=0,int? isActive=null,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
+        public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int lessThanNMonth=0,int lessThanNMonthZemanat=0,int? isActive=null,int export=0,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakInfoContracts
@@ -68,18 +69,59 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .IsActive(isActive)
                 .OwnerId(ownerId);
 
-            
+            if (export == 1){
+                page = 1;
+                pageRows = 100000;
+            }
             var items = await builder
                 .Include(a=>a.Owner)
                 .OrderBy(sort,sortType)
                 .Page2(page,pageRows)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContract, AmlakInfoContractListVm>(items);
-
+            
+            if (export == 1){
+                var fileUrl = ExportExcel(items);
+                return Ok(new {fileUrl});
+            }
             
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(pageRows));
             
             return Ok(new{items=finalItems,pageCount});
+        }
+
+        
+        private static object ExportExcel(List<AmlakInfoContract> items){
+            var finalItems = new List<List<object>>();
+
+            foreach (var item in items){
+                var row = new List<object>();
+                row.Add(item.Id);
+                row.Add(item.AmlakInfoId);
+                row.Add(item.Owner.AreaName);
+                row.Add(item.DoingMethodId);
+                row.Add(item.StatusText);
+                row.Add(item.Number);
+                row.Add(item.DateFa);
+                row.Add(item.Description);
+                row.Add(item.DateFromFa);
+                row.Add(item.DateEndFa);
+                row.Add(item.ZemanatPrice);
+                row.Add(item.ZemanatEndDate);
+                row.Add(item.TypeText);
+                row.Add(item.ModatValue);
+                row.Add(item.Nemayande);
+                row.Add(item.Modir);
+                row.Add(item.Sarparast);
+                row.Add(item.TenderNumber);
+                row.Add(item.TenderDate);
+                row.Add(item.CreatedAtFa);
+                row.Add(item.UpdatedAtFa);
+                
+                finalItems.Add(row);
+            }
+
+            return Helpers.ExportExcelFile(finalItems, "amlak_contract");
         }
 
        
@@ -138,6 +180,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             contract.UpdatedAt = Helpers.GetServerDateTimeType();
             
             _db.Add(contract);
+            
+            await SaveLogAsync(_db, contract.Id, TargetTypes.Contract, "قرارداد ثبت شد");
+
             await _db.SaveChangesAsync();
 
 
@@ -251,6 +296,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var suppliers = await _db.AmlakInfoContractSuppliers.Where(a => a.ContractId == param.Id).ToListAsync();
             _db.RemoveRange(suppliers);
             
+            await SaveLogAsync(_db, contract.Id, TargetTypes.Contract, "قرارداد ویرایش شد");
+
             await _db.SaveChangesAsync();
 
 
@@ -295,6 +342,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                  
                 }
             }
+            
+            await SaveLogAsync(_db, param.Id, TargetTypes.Contract, "قرارداد حذف شد");
+
           return Ok("با موفقیت انجام شد");
         }
         

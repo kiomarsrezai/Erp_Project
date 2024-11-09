@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using NewsWebsite.Data.Models.AmlakAdmin;
 using NewsWebsite.ViewModels.Api.Contract.AmlakAdmin;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
@@ -110,7 +111,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
              _db.Add(item);
             await _db.SaveChangesAsync();
         
-            
+            await SaveLogAsync(_db, item.Id, TargetTypes.Admin, "مدیر جدید ثبت شد.");
+
             return Ok("با موفقیت انجام شد");
         }
         
@@ -131,7 +133,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Bio = param.Bio;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
-        
+            
+            await SaveLogAsync(_db, item.Id, TargetTypes.Admin, "اطلاعات مدیر ویرایش شد ");
+
             return Ok("با موفقیت انجام شد");
         }
            
@@ -148,6 +152,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
         
+            await SaveLogAsync(_db, item.Id, TargetTypes.Admin, "دسترسی های مدیر ویرایش شد.");
+
             return Ok("با موفقیت انجام شد");
         }
            
@@ -226,6 +232,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             admin.Password =new PasswordHasher<AmlakAdmin>().HashPassword(null, param.NewPassword);
             await _db.SaveChangesAsync();
             
+            await SaveLogAsync(_db, admin.Id, TargetTypes.Admin, "رمز عبور توسط کاربر تغییر یافت");
+
             return Ok(admin.Token);
         }
            
@@ -241,6 +249,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             admin.TokenExpireDate = null;
             admin.Password =new PasswordHasher<AmlakAdmin>().HashPassword(null, param.NewPassword);
             await _db.SaveChangesAsync();
+            
+            await SaveLogAsync(_db, admin.Id, TargetTypes.Admin, "رمز عبور توسط مدیر تغییر یافت");
             
             return Ok(admin.Token);
         }

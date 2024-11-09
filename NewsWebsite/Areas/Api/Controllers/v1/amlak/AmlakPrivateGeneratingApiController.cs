@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
 using NewsWebsite.Data.Models.AmlakPrivate;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
@@ -102,6 +103,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, (int)item.AmlakPrivateId, TargetTypes.AmlakPrivate, "مولدسازی با شناسه "+item.Id+" ویرایش شد");
+
             return Ok(item.Id.ToString());
         }
 
@@ -142,6 +145,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             _db.Add(item);
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, (int)item.AmlakPrivateId, TargetTypes.AmlakPrivate, "مولدسازی با شناسه "+item.Id+" اضافه شد");
+
+            
             return Ok(item.Id.ToString());
         }
 

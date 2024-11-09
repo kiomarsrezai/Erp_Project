@@ -22,6 +22,7 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
 using NewsWebsite.ViewModels.Api.Contract.amlakAttachs;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -62,10 +63,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 // return Helpers.dd(fileUpload.FileTitle);
                 _db.Add(item);
                 await _db.SaveChangesAsync();
+                
+                if(getTargetType(fileUpload.TargetType)!=null && fileUpload.TargetId!=null)
+                    await SaveLogAsync(_db, (int)fileUpload.TargetId, (TargetTypes)getTargetType(fileUpload.TargetType), "پیوست "+item.Id+" اضافه  شد.");
             }
             else{
                 return BadRequest(new{ message = "فایل نامعتبر می باشد" });
             }
+            
+
 
             return Ok("موفق");
         }
@@ -110,6 +116,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.FileTitle = title;
             await _db.SaveChangesAsync();
             
+            if(getTargetType(item.TargetType)!=null)
+                await SaveLogAsync(_db, item.TargetId, (TargetTypes)getTargetType(item.TargetType), "پیوست "+item.Id+" ویرایش  شد.");
+            
             return Ok("انجام شد");
         }
 
@@ -129,8 +138,39 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             _db.Remove(item);
             await _db.SaveChangesAsync();
             
+            
+            if(getTargetType(item.TargetType)!=null)
+                await SaveLogAsync(_db, item.TargetId, (TargetTypes)getTargetType(item.TargetType), "پیوست "+item.Id+" حذف  شد.");
+            
             return Ok("انجام شد");
         }
 
+        private TargetTypes? getTargetType(string itemTargetType){
+            switch (itemTargetType){
+                case "AmlakInfo":
+                    return TargetTypes.AmlakInfo;
+                
+                case "Agreement":
+                    return TargetTypes.Agreement;
+                
+                case "AmlakPrivate":
+                    return TargetTypes.AmlakPrivate;
+                
+                case "Generating":
+                    return TargetTypes.Contract;
+                
+                case "Archive":
+                    return TargetTypes.Archive;
+                
+                case "ContractCheck":
+                    return TargetTypes.Contract;
+                
+                case "Contract":
+                    return TargetTypes.Contract;
+                
+            }
+
+            return null;
+        }
     }
 }

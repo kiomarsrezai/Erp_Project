@@ -20,6 +20,7 @@ using NewsWebsite.Data;
 using NewsWebsite.ViewModels;
 using System.Linq;
 using NewsWebsite.ViewModels.Api.Contract.AmlakCompliant;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -104,6 +105,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             _db.Add(item);
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, item.AmlakInfoId, TargetTypes.AmlakInfo, "پرونده قضایی  "+item.Id+" اضافه  شد.");
+
+            
             var result = new AmlakCompliantStoreResultVm();
             result.Id = item.Id;
             result.Message = "با موفقیت انجام شد";
@@ -129,6 +133,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, item.AmlakInfoId, TargetTypes.AmlakInfo, "پرونده قضایی  "+item.Id+" ویرایش  شد.");
+
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -146,6 +153,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Steps = item.Steps + "<br>" + Helpers.MiladiToHejri(DateTime.Now.ToString()) + ":" + param.Steps;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
+
+            await SaveLogAsync(_db, item.AmlakInfoId, TargetTypes.AmlakInfo, "پرونده قضایی  "+item.Id+" تغییر وضعیت  داد.");
 
             return Ok("با موفقیت انجام شد");
         }

@@ -28,6 +28,7 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -68,19 +69,50 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .DateFrom(param.DateFrom)
                 .DateTo(param.DateTo);
 
-            
+            if (param.Export == 1){
+                param.Page = 1;
+                param.PageRows = 100000;
+            }
             var items = await builder
                 .OrderBy(param.Sort,param.SortType)
                 .Page2(param.Page,param.PageRows)
                 .ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakInfoContractCheck, AmlakInfoContractCheckListVm>(items);
 
-            
+            if (param.Export == 1){
+                var fileUrl = ExportExcel(items);
+                return Ok(new {fileUrl});
+            }
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
             
             return Ok(new{items=finalItems,pageCount});
         }
 
+        
+        private static object ExportExcel(List<AmlakInfoContractCheck> items){
+            var finalItems = new List<List<object>>();
+
+            foreach (var item in items){
+                var row = new List<object>();
+                row.Add(item.Id);
+                row.Add(item.AmlakInfoContractId);
+                row.Add(item.Number);
+                row.Add(item.DateFa);
+                row.Add(item.Amount);
+                row.Add(item.Issuer);
+                row.Add(item.IssuerBank);
+                row.Add(item.Description);
+                row.Add(item.PassStatusText);
+                row.Add(item.CheckTypeText);
+                row.Add(item.IsSubmitted);
+                row.Add(item.CreatedAtFa);
+                row.Add(item.UpdatedAtFa);
+                
+                finalItems.Add(row);
+            }
+
+            return Helpers.ExportExcelFile(finalItems, "amlak_contract_check");
+        }
         
         [Route("Read")]
         [HttpGet]
@@ -125,6 +157,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             _db.Add(check);
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, contract.Id, TargetTypes.Contract, "چک قرارداد با شناسه "+check.Id+" ثبت شد");
+
             return Ok(check.Id.ToString());
         }
 
@@ -154,6 +188,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             await _db.SaveChangesAsync();
 
+            await SaveLogAsync(_db, check.AmlakInfoContractId, TargetTypes.Contract, "چک قرارداد با شناسه "+check.Id+" ویرایش شد");
+
             return Ok(check.Id.ToString());
         }
 
@@ -168,6 +204,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
             _db.Remove(check);
             await _db.SaveChangesAsync();
+            await SaveLogAsync(_db, check.AmlakInfoContractId, TargetTypes.Contract, "چک قرارداد با شناسه "+check.Id+" حذف شد");
 
           return Ok("با موفقیت انجام شد");
         }
@@ -185,6 +222,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
             check.PassStatus=passStatus;
             await _db.SaveChangesAsync();
+
+            await SaveLogAsync(_db, check.AmlakInfoContractId, TargetTypes.Contract, "وضعیت چک  قرارداد با شناسه "+check.Id+" به "+passStatus+" تغییر یافت");
 
             return Ok("انجام شد");
         }

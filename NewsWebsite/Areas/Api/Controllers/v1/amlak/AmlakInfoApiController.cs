@@ -28,6 +28,7 @@ using NewsWebsite.ViewModels;
 using NewsWebsite.ViewModels.Api.Contract.AmlakInfo;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using System.Linq;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
@@ -124,6 +125,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                     };
                     _db.Add(item);
                     await _db.SaveChangesAsync();
+                    
+                    await SaveLogAsync(_db, item.Id, TargetTypes.AmlakInfo, "ملک عمومی ثبت شد");
+
                 }
                 else{
                     oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
@@ -426,7 +430,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             item.Code = param.Code;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
-        
+            
+            await SaveLogAsync(_db, item.Id, TargetTypes.AmlakInfo, "ملک عمومی ویرایش شد");
+   
             return Ok(item.Id.ToString());
         }
         //
@@ -450,6 +456,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             _db.Remove(item);
             _db.SaveChanges();
             
+            await SaveLogAsync(_db, item.Id, TargetTypes.AmlakInfo, "ملک عمومی حذف شد");
+
             return Ok("حذف شد");
         }
 

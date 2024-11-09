@@ -15,7 +15,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         public async Task<AmlakAdmin> CheckUserAuth(ProgramBuddbContext _db){
             
             // if (HttpContext?.User?.Identity!=null && !HttpContext.User.Identity.IsAuthenticated)
-                // throw new ErrMessageException("UnAuthorized", HttpStatusCode.Conflict);
+            // throw new ErrMessageException("UnAuthorized", HttpStatusCode.Conflict);
             return new AmlakAdmin(); // todo : disable
 
             var authHeader = Request.Headers["Authorization"].ToString();
@@ -31,15 +31,33 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return user;
         }
         
+        public async Task<int> GetUser(ProgramBuddbContext _db){
+            
+            // if (HttpContext?.User?.Identity!=null && !HttpContext.User.Identity.IsAuthenticated)
+                // return 0;
+
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (authHeader == null || !authHeader.StartsWith("Bearer "))
+                return 0;
+            
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+            var user = await _db.AmlakAdmins.Where(u => u.Token == token).FirstOrDefaultAsync();
+            if (user == null){
+                return 0;
+            }
+
+            return user.Id;
+        }
+        
         
         [NonAction]
         public async Task<bool> SaveLogAsync(ProgramBuddbContext _db, int targetId,TargetTypes targetType,string description){
-            var admin = await CheckUserAuth(_db);
+            var adminId = await GetUser(_db); // todo: use CheckUserAuth
             
             var item = new AmlakLog();
             item.TargetId = targetId;
             item.TargetType = targetType;
-            item.AdminId = admin.Id;
+            item.AdminId = adminId;
             item.Description = description;
             item.Date = Helpers.GetServerDateTimeType();
             _db.Add(item);

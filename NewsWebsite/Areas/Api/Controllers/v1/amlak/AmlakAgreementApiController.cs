@@ -21,6 +21,7 @@ using NewsWebsite.ViewModels;
 using System.Linq;
 using NewsWebsite.Data.Models.AmlakAgreement;
 using NewsWebsite.ViewModels.Api.Contract.AmlakAgreement;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
@@ -114,6 +115,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     };
                     _db.Add(item);
                     await _db.SaveChangesAsync();
+                    
+                    await SaveLogAsync(_db, item.Id, TargetTypes.Agreement, "توافق ویرایش شد.");
                 }
                 else{
                     oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
@@ -244,6 +247,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
         
+            await SaveLogAsync(_db, item.Id, TargetTypes.Agreement, "توافق ویرایش شد.");
+
             return Ok("با موفقیت انجام شد");
         }
     }
