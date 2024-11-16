@@ -62,6 +62,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         fetchView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                        fetchView.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
                         fetchView.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
                         fetchView.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
@@ -242,7 +243,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Description = dataReader["Description"].ToString();
                         fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
                         fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
-                        fetchView.CodingKindId = int.Parse(dataReader["CodingKindId"].ToString());
+                        fetchView.CodingKindId = int.TryParse(dataReader["CodingKindId"].ToString(), out var result) ? result : 0;
+
 
                         fecthViewModel.Add(fetchView);
                     }
@@ -388,6 +390,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         BudgetView.Description = dataReader["Description"].ToString();
                         BudgetView.Code = dataReader["Code"].ToString();
+                        BudgetView.Pishnahadi = 0;
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.EditPublic = Int64.Parse(dataReader["EditPublic"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
@@ -511,6 +514,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.ProjectId = int.Parse(dataReader["ProjectId"].ToString());
+                        BudgetView.Pishnahadi = 0;
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.EditProject = Int64.Parse(dataReader["EditProject"].ToString());
                         BudgetView.Expense = Int64.Parse(dataReader["Expense"].ToString());
@@ -738,6 +742,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         BudgetView.Id = int.Parse(dataReader["Id"].ToString());
                         BudgetView.AreaName = dataReader["AreaName"].ToString();
                         //BudgetView.LevelNumber = int.Parse(dataReader["LevelNumber"].ToString());
+                        BudgetView.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
                         BudgetView.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
                         BudgetView.EditArea = Int64.Parse(dataReader["EditArea"].ToString());
                         BudgetView.Supply = Int64.Parse(dataReader["Supply"].ToString());
@@ -769,6 +774,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 {
                     sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
+                    sqlCommand.Parameters.AddWithValue("Pishnahadi", param.Pishnahadi);
                     sqlCommand.Parameters.AddWithValue("Mosavab", param.mosavab);
                     sqlCommand.Parameters.AddWithValue("EditArea", param.EditArea);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -857,6 +863,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         BudgetCodingInfoModalReadViewModal data = new BudgetCodingInfoModalReadViewModal();
                         data.AreaName = dataReader["AreaName"].ToString();
+                        data.Pishnahadi = StringExtensions.ToNullableBigInt(dataReader["Pishnahadi"].ToString());
                         data.Mosavab = StringExtensions.ToNullableBigInt(dataReader["Mosavab"].ToString());
                         data.EditArea = StringExtensions.ToNullableBigInt(dataReader["EditArea"].ToString());
                         data.Expense = StringExtensions.ToNullableBigInt(dataReader["Expense"].ToString());

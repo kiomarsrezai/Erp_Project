@@ -10,6 +10,8 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetArea
 
         public string AreaName { get; set; }
 
+        public long Pishnahadi { get; set; }
+        
         public long Mosavab { get; set; }
 
         public long EditArea { get; set; }

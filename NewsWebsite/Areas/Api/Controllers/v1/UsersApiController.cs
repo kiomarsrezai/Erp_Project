@@ -382,6 +382,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<string>> CreateNew([FromBody] UserInsertViewModel viewModel)
         {
             if (viewModel.UserName == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+            var oldUser = _Context.Users.FirstOrDefault(u => u.UserName == viewModel.UserName);
+            if(oldUser!=null)
+                return BadRequest("این نام کاربری قبلا وجود دارد");
 
             var user = new User
             {
@@ -393,6 +396,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 IsActive = true,
                 SectionId = 9,
                 FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
                 PhoneNumber = viewModel.PhoneNumber,
                 PasswordHash = new PasswordHasher<User>().HashPassword(null, viewModel.PhoneNumber)
             };
@@ -401,6 +405,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             await _Context.SaveChangesAsync();
             
             return Ok("کاربر با موفقیت ایجاد شد");
+        }
+
+        [HttpPost("EmployeeUpdateNew")]
+        public async Task<ApiResult<string>> UpdateNew([FromBody] UserUpdateViewModel viewModel)
+        {
+            if (viewModel.UserName == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+
+            var oldUser = _Context.Users.FirstOrDefault(u => u.UserName == viewModel.UserName && u.Id != viewModel.Id );
+            if(oldUser!=null)
+                return BadRequest("این نام کاربری قبلا وجود دارد");
+            
+            var user = _Context.Users.FirstOrDefault(u => u.Id == viewModel.Id);
+            if (user == null){
+               return BadRequest("کاربر یافت نشد");
+            }
+            
+            user.UserName=viewModel.UserName;
+            user.Bio=viewModel.Bio;
+            user.FirstName=viewModel.FirstName;
+            user.LastName=viewModel.LastName;
+            user.PhoneNumber=viewModel.PhoneNumber;
+            
+            await _Context.SaveChangesAsync();
+            
+            return Ok("کاربر با موفقیت ویرایش شد");
         }
 
         [HttpPost("RenewPassword")]

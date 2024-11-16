@@ -10,6 +10,8 @@ namespace NewsWebsite.ViewModels.Api.Projects
 
         public int ProjectId { get; set; }
 
+        public long Pishnahadi { get; set; }
+
         public long Mosavab { get; set; }
 
         public long EditProject { get; set; }

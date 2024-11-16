@@ -8,6 +8,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
     {
         public int StructureId { get; set; }
         public string AreaName { get; set; }
+        public Int64? Pishnahadi { get; set; }
         public Int64? Mosavab { get; set; }
         public Int64? EditArea { get; set; }
         public Int64? CreditAmount { get; set; }

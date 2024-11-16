@@ -21,6 +21,9 @@ namespace NewsWebsite.ViewModels.Fetch
         [Display(Name = "مصوب")]
         public Int64 Mosavab { get; set; }
 
+        [Display(Name = "پیشنهادی")]
+        public Int64 Pishnahadi { get; set; }
+
         [Display(Name = "عملکرد")]
         public Int64 Expense { get; set; }
 

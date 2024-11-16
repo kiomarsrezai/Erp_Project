@@ -16,6 +16,9 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
 
         public int CodingId { get; set; }
 
+        [Display(Name = "پیشنهادی")]
+        public long Pishnahadi { get; set; }
+
         [Display(Name = "مصوب")]
         public long Mosavab { get; set; }
 
