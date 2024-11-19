@@ -199,12 +199,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Code = dataReader["Code"].ToString();
                         row.Description = dataReader["Description"].ToString();
                         row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
-                        row.Supply = Int64.Parse(dataReader["Supply"].ToString());
+                        row.Supply = Int64.Parse(dataReader["CreditAmount"].ToString());
                         row.Expense = Int64.Parse(dataReader["Expense"].ToString());
                         row.NeedEditYearNow = Int64.Parse(dataReader["NeedEditYearNow"].ToString());
                         row.Edit = Int64.Parse(dataReader["Edit"].ToString());
                         row.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
                         row.Crud = bool.Parse(dataReader["Crud"].ToString());
+                        row.executionName = dataReader["executorName"].ToString();
+                        row.ExecutionId = int.Parse(dataReader["ExecutionId"].ToString());
+                        row.proctorName = dataReader["proctorName"].ToString();
+                        row.ProctorId = int.Parse(dataReader["ProctorId"].ToString());
                         data.Add(row);
                     }
                 }

@@ -23,6 +23,10 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetEdit
         public int levelNumber { get; set; }
         public bool Crud { get; set; }
         public Int64 Edit { get; set; }
+        public string executionName { get; set; }
+        public Int64 ExecutionId { get; set; }
+        public string proctorName { get; set; }
+        public Int64 ProctorId { get; set; }
     }
  
 }
