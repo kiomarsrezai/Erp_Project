@@ -7,6 +7,7 @@ using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
 using NewsWebsite.ViewModels.Api.Public;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
@@ -74,8 +75,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             if (item == null)
                 return BadRequest(new{ message = "یافت نشد" });
 
-            
             item.Decision = param.Decision;
+            item.DecisionLetterNumber = param.DecisionLetterNumber;
+            if (!string.IsNullOrEmpty(param.DecisionLetterDate)) item.DecisionLetterDate = DateTime.Parse(param.DecisionLetterDate);
             item.MunicipalityActionRequired = param.MunicipalityActionRequired;
             item.MunicipalityAction = param.MunicipalityAction;
             item.MunicipalityActionLetterNumber = param.MunicipalityActionLetterNumber;
@@ -103,6 +105,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
 
+            var amlakPrivate = _db.AmlakPrivateNews.FirstOrDefault(c => c.Id == item.AmlakPrivateId);
+            if (amlakPrivate != null){
+                var lastDecision = await _db.AmlakPrivateGeneratings.AmlakPrivateId(item.AmlakPrivateId).OrderByDescending(c=>c.Id).FirstOrDefaultAsync();
+                amlakPrivate.LatestGeneratingDecision =lastDecision.Decision ;
+                await _db.SaveChangesAsync();
+            }
+            
             await SaveLogAsync(_db, (int)item.AmlakPrivateId, TargetTypes.AmlakPrivate, "مولدسازی با شناسه "+item.Id+" ویرایش شد");
 
             return Ok(item.Id.ToString());
@@ -115,6 +124,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             await CheckUserAuth(_db);
 
             var item = new AmlakPrivateGenerating();
+            item.Decision = param.Decision;
+            item.DecisionLetterNumber = param.DecisionLetterNumber;
+            if (!string.IsNullOrEmpty(param.DecisionLetterDate)) item.DecisionLetterDate = DateTime.Parse(param.DecisionLetterDate);
             item.AmlakPrivateId = param.AmlakPrivateId;
             item.MunicipalityActionRequired = param.MunicipalityActionRequired;
             item.MunicipalityAction = param.MunicipalityAction;
@@ -145,6 +157,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             _db.Add(item);
             await _db.SaveChangesAsync();
 
+            var amlakPrivate = _db.AmlakPrivateNews.FirstOrDefault(c => c.Id == param.AmlakPrivateId);
+            if (amlakPrivate != null){
+                amlakPrivate.LatestGeneratingDecision =param.Decision ;
+                await _db.SaveChangesAsync();
+            }
+
+            
             await SaveLogAsync(_db, (int)item.AmlakPrivateId, TargetTypes.AmlakPrivate, "مولدسازی با شناسه "+item.Id+" اضافه شد");
 
             

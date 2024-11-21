@@ -68,7 +68,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     await SaveLogAsync(_db, (int)fileUpload.TargetId, (TargetTypes)getTargetType(fileUpload.TargetType), "پیوست "+item.Id+" اضافه  شد.");
             }
             else{
-                return BadRequest(new{ message = "فایل نامعتبر می باشد" });
+                return BadRequest("!فایل نامعتبر می باشد");
             }
             
 

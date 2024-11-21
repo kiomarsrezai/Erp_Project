@@ -10,7 +10,9 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
     [Table("tblAmlakPrivateGenerating")]
     public class AmlakPrivateGenerating:BaseModel {
         public int? AmlakPrivateId{ get; set; }
-        public int? Decision { get; set; } // نیاز به اقدام شهرداری
+        public int? Decision { get; set; } // تصمیم شورای سیاست گذاری املاک
+        public string? DecisionLetterNumber { get; set; } // شماره نامه تصویو شورا
+        public DateTime? DecisionLetterDate { get; set; } // تاریخ تصمیم شورا
         public int? MunicipalityActionRequired{ get; set; } // نیاز به اقدام شهرداری
         public int? MunicipalityAction{ get; set; } // اقدام شهرداری
         public string? MunicipalityActionLetterNumber{ get; set; } // شماره نامه اقدام شهرداری
@@ -49,6 +51,9 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         
         [NotMapped]
         public string? UrbanPlanningPermitDateFa{get{ return Helpers.MiladiToHejri(UrbanPlanningPermitDate); }}
+        
+        [NotMapped]
+        public string? DecisionLetterDateFa{get{ return Helpers.MiladiToHejri(DecisionLetterDate); }}
         
         [NotMapped]
         public string? LetterDate1Fa{get{ return Helpers.MiladiToHejri(LetterDate1); }}

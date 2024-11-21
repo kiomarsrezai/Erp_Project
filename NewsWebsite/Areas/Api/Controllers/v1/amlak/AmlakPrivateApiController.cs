@@ -46,43 +46,45 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             _db = db;
         }
 
+        
 
         [HttpGet]
-        [Route("all_polygon_amlak_472")]
-        public async Task<IActionResult> UpdateDataFromSdi_ahvaz_kiosk(){
-            // var options = new RestClientOptions("https://sdi.ahvaz.ir")
-            // {
-            //     MaxTimeout = -1,
-            // };
-            // var client = new RestClient(options);
-            // var request = new RestRequest("/geoapi/user/login/", Method.Post);
-            // request.AddHeader("content-type", "application/json");
-            // request.AddHeader("Accept", "application/json, text/plain, */*");
-            // request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            // var body = @"{" + "\n" +
-            // @" ""username"": ""ERP_Fava""," + "\n" +
-            // @" ""password"":" + "\n" +
-            // @"""123456""," + "\n" +
-            // @" ""appId"": ""mobilegis""" + "\n" +
-            // @"}";
-            // request.AddStringBody(body, DataFormat.Json);
-            // RestResponse responselogin = await client.ExecuteAsync(request);
-            // var resplogin = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(responselogin.Content.ToString());
-            //
-            // //var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
-            // //{
-            // //    MaxTimeout = -1,
-            // //};
-            // //var client2 = new RestClient(options2);
-            // //var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey="+ resplogin.api_key.ToString(), Method.Get);
-            // //request.AddHeader("content-type", "application/json");
-            // //request.AddHeader("Accept", "application/json, text/plain, */*");
-            // //request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            // //RestResponse response2 = await client2.ExecuteAsync(request2);
-            // ////UTF8Encoding uTF8Encoding = new UTF8Encoding();
-            // ////uTF8Encoding.GetBytes(response2.Content.ToString());
-            // //byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
-            // //string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
+        [Route("sditest")]
+        public async Task<IActionResult> sdiiiii(){
+            var options = new RestClientOptions("https://sdi.ahvaz.ir")
+            {
+                MaxTimeout = -1,
+            };
+            var client = new RestClient(options);
+            var request = new RestRequest("/geoapi/user/login/", Method.Post);
+            request.AddHeader("content-type", "application/json");
+            request.AddHeader("Accept", "application/json, text/plain, */*");
+            request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
+            var body = @"{" + "\n" +
+            @" ""username"": ""ERP_Fava""," + "\n" +
+            @" ""password"":" + "\n" +
+            @"""123456""," + "\n" +
+            @" ""appId"": ""mobilegis""" + "\n" +
+            @"}";
+            request.AddStringBody(body, DataFormat.Json);
+            RestResponse responselogin = await client.ExecuteAsync(request);
+            var resplogin = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(responselogin.Content.ToString());
+            Helpers.dd(resplogin);
+            
+            //var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
+            //{
+            //    MaxTimeout = -1,
+            //};
+            //var client2 = new RestClient(options2);
+            //var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey="+ resplogin.api_key.ToString(), Method.Get);
+            //request.AddHeader("content-type", "application/json");
+            //request.AddHeader("Accept", "application/json, text/plain, */*");
+            //request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
+            //RestResponse response2 = await client2.ExecuteAsync(request2);
+            ////UTF8Encoding uTF8Encoding = new UTF8Encoding();
+            ////uTF8Encoding.GetBytes(response2.Content.ToString());
+            //byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
+            //string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
             // var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
             // {
             //     MaxTimeout = -1,
@@ -95,47 +97,49 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             // RestResponse response2 = await client2.ExecuteAsync(request2);
             // byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
             // string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
-
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "amlak.json");
-            string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
-
-
-            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
-
-            for (int i = 0; i < respLayer.TotalFeatures; i++){
-                var feature = respLayer.Features[i];
-
-                var oldItem = await _db.AmlakPrivateNews.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
-
-                if (oldItem == null){
-                    var item = new AmlakPrivateNew{
-                        AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
-                        OwnerId = 9, // شهرداری مرکز
-                        SdiId = feature.Id,
-                        Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
-                        SdiPlateNumber = feature.Properties.Pelaksabti,
-                        Masahat = 0,
-                        PredictionUsage="",
-                        Title = feature.Id,
-                        TypeUsing = "",
-                        DocumentType = 0,
-                        CreatedAt = Helpers.GetServerDateTimeType(),
-                        UpdatedAt = Helpers.GetServerDateTimeType(),
-                    };
-                    _db.Add(item);
-                    await _db.SaveChangesAsync();
-                }
-                else{
-                    oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
-                    oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
-                    oldItem.Title = feature.Id;
-                    await _db.SaveChangesAsync();
-                }
-            }
+            //
+            // var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "amlak.json");
+            // string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+            //
+            //
+            // var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
+            //
+            // for (int i = 0; i < respLayer.TotalFeatures; i++){
+            //     var feature = respLayer.Features[i];
+            //
+            //     var oldItem = await _db.AmlakPrivateNews.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
+            //
+            //     if (oldItem == null){
+            //         var item = new AmlakPrivateNew{
+            //             AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
+            //             OwnerId = 9, // شهرداری مرکز
+            //             SdiId = feature.Id,
+            //             Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
+            //             SdiPlateNumber = feature.Properties.Pelaksabti,
+            //             Masahat = 0,
+            //             PredictionUsage="",
+            //             Title = feature.Id,
+            //             TypeUsing = "",
+            //             DocumentType = 0,
+            //             CreatedAt = Helpers.GetServerDateTimeType(),
+            //             UpdatedAt = Helpers.GetServerDateTimeType(),
+            //         };
+            //         _db.Add(item);
+            //         await _db.SaveChangesAsync();
+            //     }
+            //     else{
+            //         oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
+            //         oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
+            //         oldItem.Title = feature.Id;
+            //         await _db.SaveChangesAsync();
+            //     }
+            // }
 
 
             return Ok("موفق");
         }
+
+
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -152,7 +156,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .SadaCode(param.SadaCode).JamCode(param.JamCode).DocumentType(param.DocumentType)
                 .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
-                .PropertyType(param.PropertyType).Search(param.Search);
+                .PropertyType(param.PropertyType).Search(param.Search)
+                .LatestGeneratingDecision(param.LatestGeneratingDecision);
 
             
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
@@ -217,7 +222,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.UsageOnDocument);
                 row.Add(item.UsageUrban);
                 row.Add(item.PropertyType);
-                row.Add(item.OwnershipType);
+                row.Add(item.OwnershipTypeText);
+                row.Add(item.OwnershipValueTypeText);
                 row.Add(item.OwnershipValue +" از " +item.OwnershipValueTotal);
                 row.Add(item.TransferredFrom);
                 row.Add(item.InPossessionOf + '-'  +item.InPossessionOfOther  );
@@ -232,7 +238,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.Year);
                 row.Add(item.EntryDate);
                 row.Add(item.InternalDateFa);
-                row.Add(item.ProductiveAssetStrategies);
+                row.Add(item.LatestGeneratingDecisionText);
                 row.Add(item.BuildingStatus);
                 row.Add(item.BuildingMasahat);
                 row.Add(item.BuildingFloorsNumber);
@@ -307,6 +313,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UsageUrban=param.UsageUrban;
             item.PropertyType=param.PropertyType;
             item.OwnershipType=param.OwnershipType;
+            item.OwnershipValueType=param.OwnershipValueType;
             item.OwnershipValue=param.OwnershipValue;
             item.OwnershipValueTotal=param.OwnershipValueTotal;
             item.TransferredFrom=param.TransferredFrom;
@@ -323,7 +330,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Year=!string.IsNullOrEmpty(param.InternalDate)?Helpers.MiladiToHejri(param.InternalDate).Substring(0,4):"0"; // todo: : 
             item.EntryDate=param.EntryDate;
             item.InternalDate=!string.IsNullOrEmpty(param.InternalDate) ? DateTime.Parse(param.InternalDate) : (DateTime?)null;
-            item.ProductiveAssetStrategies=param.ProductiveAssetStrategies;
+            // item.LatestGeneratingDecision=param.LatestGeneratingDecision;
             item.BuildingStatus=param.BuildingStatus;
             item.BuildingMasahat=param.BuildingMasahat;
             item.BuildingFloorsNumber=param.BuildingFloorsNumber;
@@ -445,10 +452,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
    
             var data8 = await _db.AmlakPrivateNews
-                .GroupBy(x => x.ProductiveAssetStrategies)
+                .GroupBy(x => x.LatestGeneratingDecision)
                 .Select(g => new 
                 { 
-                    Label = g.Key, 
+                    Label = Helpers.UC(g.Key,"amlakPrivateGeneratingDecision"), 
                     Count = g.Count(),
                 })
                 .ToListAsync();
@@ -563,7 +570,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     existingAmlak.UsageOnDocument =  getCell(row,7);
                     existingAmlak.OwnerId =  ownerId;;
                     existingAmlak.PropertyType =  Helpers.UCReverse(getCell(row,9),"amlakPrivatePropertyType").ToString();
-                    existingAmlak.OwnershipType =  getCell(row,10);
+                    existingAmlak.OwnershipType =  "";
+                    existingAmlak.OwnershipValueType =  getCell(row,10);
                     existingAmlak.OwnershipValue = 0D;//getCell(row,11); // todo:
                     existingAmlak.OwnershipValueTotal = 0; // getCell(row,11); todo: 
                     existingAmlak.TransferredFrom =  getCell(row,12);
@@ -581,7 +589,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     existingAmlak.Year =  getCell(row,24);
                     existingAmlak.EntryDate =  getCell(row,25);
                     existingAmlak.InternalDate = null; // todo: if(!string.IsNullOrEmpty(getCell(row,26))) Helpers.HejriToMiladiDateTime(getCell(row,26)) else null;
-                    existingAmlak.ProductiveAssetStrategies =  getCell(row,45);
+                    existingAmlak.LatestGeneratingDecision =  0;
                     existingAmlak.SimakCode =  getCell(row,46);
 
                     // Add to the list of records to update

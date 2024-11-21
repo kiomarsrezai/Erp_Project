@@ -42,6 +42,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string UsageUrban { get; set; }
         public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
+        public string OwnershipValueType { get; set; }
         public double OwnershipValue { get; set; }
         public int OwnershipValueTotal { get; set; }
         public string TransferredFrom { get; set; }
@@ -58,7 +59,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Year { get; set; }
         public string EntryDate { get; set; }
         public string InternalDate { get; set; }
-        public string ProductiveAssetStrategies { get; set; }
+        public int LatestGeneratingDecision { get; set; }
+        public string LatestGeneratingDecisionText { get; set; }
         public int BuildingStatus { get; set; }
         public int BuildingMasahat { get; set; }
         public int BuildingFloorsNumber { get; set; }
@@ -82,6 +84,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string UsageUrban { get; set; }
         public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
+        public string OwnershipValueType { get; set; }
         public double OwnershipValue { get; set; }
         public int OwnershipValueTotal { get; set; }
         public string TransferredFrom { get; set; }
@@ -98,7 +101,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Year { get; set; }
         public string EntryDate { get; set; }
         public string InternalDate { get; set; }
-        public string ProductiveAssetStrategies { get; set; }
         public int BuildingStatus { get; set; }
         public int BuildingMasahat { get; set; }
         public int BuildingFloorsNumber { get; set; }
@@ -122,6 +124,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string MainPlateNumber{ get; set; }
         public string SubPlateNumber{ get; set; }
         public int? PropertyType{ get; set; }
+        public int? LatestGeneratingDecision{ get; set; }
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;
         public int Page{ get; set; } = 1;

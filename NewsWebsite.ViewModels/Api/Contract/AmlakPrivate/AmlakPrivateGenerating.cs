@@ -8,6 +8,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     
     public class AmlakPrivateGeneratingBaseModel {
         public int Decision{ get; set; }
+        public string DecisionLetterNumber{ get; set; }
+        public string DecisionLetterDate{ get; set; }
         public int MunicipalityActionRequired{ get; set; }
         public int MunicipalityAction{ get; set; } 
         public string MunicipalityActionLetterNumber{ get; set; } 
@@ -46,6 +48,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string LetterDate1Fa{ get; set; }
         public string LetterDate2Fa{ get; set; }
         public string LetterDate3Fa{ get; set; }
+        public string DecisionLetterDateFa{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
     }

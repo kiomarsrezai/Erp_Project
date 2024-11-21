@@ -31,6 +31,7 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string UsageUrban { get; set; }
         public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
+        public string OwnershipValueType { get; set; }
         public double OwnershipValue { get; set; }
         public int OwnershipValueTotal { get; set; }
         public string TransferredFrom { get; set; }
@@ -47,7 +48,7 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string Year { get; set; }
         public string EntryDate { get; set; }
         public DateTime? InternalDate { get; set; }
-        public string ProductiveAssetStrategies { get; set; }
+        public int? LatestGeneratingDecision { get; set; }
         public int BuildingStatus   { get; set; }
         public int BuildingMasahat   { get; set; }
         public int BuildingFloorsNumber   { get; set; }
@@ -77,10 +78,14 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string? PredictionUsageText{get{ return Helpers.UC(PredictionUsage,"amlakPrivatePredictionUsage"); }}
         [NotMapped]
         public string? OwnershipTypeText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateOwnershipType"); }} 
+         [NotMapped]
+        public string? OwnershipValueTypeText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateOwnershipValueType"); }} 
         [NotMapped]
         public string? BuildingStatusText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateBuildingStatus"); }}
         [NotMapped]
-        public string? BuildingUsageText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateBuildingUsage"); }}
+        public string? BuildingUsageText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateBuildingUsage"); }} 
+        [NotMapped]
+        public string? LatestGeneratingDecisionText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateGeneratingDecision"); }}
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -154,6 +159,13 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public static IQueryable<AmlakPrivateNew> PropertyType(this IQueryable<AmlakPrivateNew> query, int? value){
             if (BaseModel.CheckParameter(value,null)){
                 return query.Where(e => e.PropertyType == value.ToString());
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakPrivateNew> LatestGeneratingDecision(this IQueryable<AmlakPrivateNew> query, int? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.LatestGeneratingDecision == value);
             }
             return query;
         }
