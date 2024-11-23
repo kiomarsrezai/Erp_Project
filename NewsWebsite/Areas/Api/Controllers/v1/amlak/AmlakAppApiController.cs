@@ -99,9 +99,26 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var contractAmlakInfosAllCount = await _db.AmlakInfoContracts.CountAsync();
             var contractAmlakInfosActiveCount = await _db.AmlakInfoContracts.IsActive(1).CountAsync();
             var contractAmlakInfos2MonthActiveCount = await _db.AmlakInfoContracts.LessThanNMonth(2).CountAsync();
+
+
+            var generatingAllCount = await _db.AmlakPrivateGeneratings.CountAsync();
+            var generating1Count = await _db.AmlakPrivateGeneratings.Decision(1).CountAsync();
+            var generating2Count = await _db.AmlakPrivateGeneratings.Decision(2).CountAsync();
+            var generating3Count = await _db.AmlakPrivateGeneratings.Decision(3).CountAsync();
+            var generating4Count = await _db.AmlakPrivateGeneratings.Decision(4).CountAsync();
+            var generating5Count = await _db.AmlakPrivateGeneratings.Decision(5).CountAsync();
+            var generating6Count = await _db.AmlakPrivateGeneratings.Decision(6).CountAsync();
+            var generating7Count = await _db.AmlakPrivateGeneratings.Decision(7).CountAsync();
             
             
-            return Ok(new {amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,parcelsCount,parcelsPendingCount,parcelsAcceptedCount,parcelsRejectedCount,parcelsRemovedCount,archivesNotSubmittedCount,archivesSubmittedCount,amlakInfosNonRentableAllCount,amlakInfosNonRentableParkCount,amlakInfosNonRentableGozarCount,amlakInfosNonRentableOtherCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,contractAmlakInfosAllCount,contractAmlakInfosActiveCount,contractAmlakInfos2MonthActiveCount});
+            return Ok(new{
+                amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,
+                parcelsCount,parcelsPendingCount,parcelsAcceptedCount,parcelsRejectedCount,parcelsRemovedCount,
+                archivesNotSubmittedCount,archivesSubmittedCount,
+                amlakInfosNonRentableAllCount,amlakInfosNonRentableParkCount,amlakInfosNonRentableGozarCount,amlakInfosNonRentableOtherCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,
+                contractAmlakInfosAllCount,contractAmlakInfosActiveCount,contractAmlakInfos2MonthActiveCount,
+                generatingAllCount,generating1Count,generating2Count,generating3Count,generating4Count,generating5Count,generating6Count,generating7Count
+            });
         }
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------

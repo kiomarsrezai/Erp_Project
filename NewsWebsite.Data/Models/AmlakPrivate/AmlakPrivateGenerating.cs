@@ -108,5 +108,12 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
             return query;
         }
         
+        public static IQueryable<AmlakPrivateGenerating> Decision(this IQueryable<AmlakPrivateGenerating> query, int? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.Decision == value);
+            }
+            return query;
+        }
+        
     }
 }

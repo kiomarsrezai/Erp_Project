@@ -39,10 +39,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         public async Task<ApiResult<object>> AmlakPrivateGeneratingList(AmlakPrivateGeneratingReadInputVm param){
             await CheckUserAuth(_db);
 
-            var builder = _db.AmlakPrivateGeneratings.AmlakPrivateId(param.AmlakPrivateId);
+            var builder = _db.AmlakPrivateGeneratings.AmlakPrivateId(param.AmlakPrivateId).Decision(param.Decision);
 
-            var pageCount = (int)Math.Ceiling((await builder.CountAsync()) / Convert.ToDouble(param.PageRows));
-            var items = await builder.OrderBy(param.Sort, param.SortType).Page2(param.Page, param.PageRows).ToListAsync();
+            var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
+
+            if (param.ForMap == 0){
+                builder = builder
+                    .OrderBy(param.Sort,param.SortType)
+                    .Page2(param.Page, param.PageRows);
+            }
+            else{
+                builder = builder
+                    .Include(a => a.AmlakPrivate);
+            }
+            var items=await builder.ToListAsync();
+
             var finalItems = MyMapper.MapTo<AmlakPrivateGenerating, AmlakPrivateGeneratingListVm>(items);
             return Ok(new{ items = finalItems, pageCount });
         }

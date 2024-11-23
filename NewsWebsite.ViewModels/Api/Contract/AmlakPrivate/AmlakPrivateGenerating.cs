@@ -40,6 +40,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int Id{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
+        public AmlakPrivateListVm AmlakPrivate{ get; set; }
     }
 
     public class AmlakPrivateGeneratingReadVm : AmlakPrivateGeneratingBaseModel {
@@ -63,10 +64,16 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
 
     public class AmlakPrivateGeneratingReadInputVm {
+        public int? AreaId{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
+        public int? Decision{ get; set; }
+        
         public int? AmlakPrivateId{ get; set; }
         public int Page{ get; set; } = 1;
         public int PageRows{ get; set; } = 10;
         public string Sort{ get; set; }="Id";
         public string SortType{ get; set; }="desc";
+        public int ForMap{ get; set; } = 0;
     }
 }
