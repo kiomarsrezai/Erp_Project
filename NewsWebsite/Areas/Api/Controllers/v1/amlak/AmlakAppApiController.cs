@@ -187,6 +187,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         public async Task<ApiResult<object>> Test11(int ContractId){
             await CheckUserAuth(_db);
 
+            var b = 0;
+            var a = 5 / b;
             var builder = _db.AmlakArchives;
 
             var i = await builder.AreaId(ContractId).ToListAsync();

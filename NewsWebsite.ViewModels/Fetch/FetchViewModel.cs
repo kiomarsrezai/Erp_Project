@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using NPOI.SS.Formula.Functions;
 
 namespace NewsWebsite.ViewModels.Fetch
 {
@@ -26,6 +27,9 @@ namespace NewsWebsite.ViewModels.Fetch
 
         [Display(Name = "عملکرد")]
         public Int64 Expense { get; set; }
+
+        [Display(Name = "وضعیت تایید")]
+        public int ConfirmStatus { get; set; }
 
         [Display(Name = "تامین اعتبار")]
         public Int64? CreditAmount { get; set; }

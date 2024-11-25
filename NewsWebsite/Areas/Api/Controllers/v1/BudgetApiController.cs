@@ -66,6 +66,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
                         fetchView.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
                         fetchView.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                        fetchView.ConfirmStatus = int.Parse(dataReader["ConfirmStatus"].ToString());
                         fetchView.Show = (bool)dataReader["Show"];
                         fetchView.Crud = (bool)dataReader["Crud"];
                         fetchView.MotherId = StringExtensions.ToNullableInt(dataReader["MotherId"].ToString());
@@ -87,6 +88,40 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return Ok(fecth);
 
             }
+        }
+
+        [Route("changeConfirmStatus")]
+        [HttpPost]
+        public async Task<ApiResult<string>> FetchIndex([FromBody] BudgetPrposalChangeConfirmStatusViewModel param){
+
+            var areaId = param.areaId;
+            if (areaId == 10 || areaId == 37 || areaId == 39 || areaId == 40 || areaId == 41
+                || areaId == 30|| areaId == 31|| areaId == 32|| areaId == 33|| areaId == 34|| areaId == 35|| areaId == 36|| areaId == 42|| areaId == 43|| areaId == 44)
+                return BadRequest("برای این منطقه مجاز نمی باشد");
+            
+            string readercount = null;
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+            {
+                using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetConfirmStatus_Update", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.Parameters.AddWithValue("YearId", param.yearId);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.areaId);
+                    sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
+                    sqlCommand.Parameters.AddWithValue("status", param.status);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+            else
+                return BadRequest(readercount);
         }
 
         [Route("BudgetConnectRead")]
