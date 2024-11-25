@@ -508,7 +508,22 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
 
-        // private helper methods
+        [HttpGet("SearchLicense")]
+        public async Task<ApiResult<List<UsersViewModel>>> SearchLicense(string license){
+
+            if (license.Length < 3 || !license.Contains("."))
+                return BadRequest("دسترسی وارد شده صحیح نمی باشد");
+            
+            var users = await _Context.Users.Where(a => EF.Functions.Like(a.Lisence, $"%{license}%")) .Select(user => new UsersViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                }).ToListAsync();;
+
+            return Ok(users);
+        }
 
     }
 }
