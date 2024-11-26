@@ -167,9 +167,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var amlakInfos = await _db.AmlakInfos.Where(a=> EF.Functions.Like(a.EstateInfoName, $"%{text}%") || 
                                                             EF.Functions.Like(a.EstateInfoAddress, $"%{text}%")
                                                         ).ToListAsync();
-            var amlakPrivates = await _db.AmlakPrivateNews.Where(a=> EF.Functions.Like(a.Title, $"%{text}%") || 
-                                                        EF.Functions.Like(a.TypeUsing, $"%{text}%")
-                                                        ).ToListAsync();
+            var amlakPrivates = await _db.AmlakPrivateNews.Where(a=> EF.Functions.Like(a.Title, $"%{text}%")).ToListAsync();
             
               var amlakArchives = await _db.AmlakArchives.Where(a=> EF.Functions.Like(a.Address, $"%{text}%") || 
                                                                     EF.Functions.Like(a.Description, $"%{text}%")
@@ -202,88 +200,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         
         [Route("KMZ")]
         [HttpGet]
-        public void CreateKmzFile(){
-
-
-            var priv=_db.AmlakPrivateNews.FirstOrDefault();
-            var coordinates = JsonConvert.DeserializeObject<List<List<double>>>(priv.Coordinates.ToString());
-
-
-// Create a KML document
-            var kml = new Kml();
-            var document = new Document();
-            kml.Feature = document;
-            //----------------------------------------------
-
-            
-// Define the coordinates for the polygon
-            var outerBoundary = new LinearRing();
-            var coordinateCollection = new CoordinateCollection();
-
-            var str = "";
-            foreach (var coordinate in coordinates){
-                str+=coordinate[1] +","+ coordinate[0]+"   /    ";
-                // coordinateCollection.Add(new Vector(coordinate[0], coordinate[1]));
+        public string CreateKmzFile(){
+            // var privs = _db.AmlakPrivateNews.ToList();
+            var privs = _db.AmlakInfos.ToList();
+            var list = new List<Helpers.KMZVM>();
+            foreach (var priv in privs){
+                list.Add(new Helpers.KMZVM{Name = "id:" + priv.Id, Coordinates = priv.Coordinates });
             }
-            outerBoundary.Coordinates = coordinateCollection;
-
-            Helpers.dd(str);
             
-            // var outerBoundary = new LinearRing();
-            // outerBoundary.Coordinates = new CoordinateCollection
-            // {
-            //     new Vector(37.422, -122.084),
-            //     new Vector(37.422, -122.082),
-            //     new Vector(37.420, -122.082),
-            //     new Vector(37.420, -122.084),
-            //     new Vector(37.422, -122.084) // Closing the polygon
-            // };
-
-// Create the polygon
-            var polygon = new Polygon
-            {
-                OuterBoundary = new OuterBoundary { LinearRing = outerBoundary }
-            };
-
-// Create a placemark for the polygon
-            var placemark = new Placemark
-            {
-                Name = "Sample Polygon",
-                Geometry = polygon
-            };
-
-            
-// Add the placemark to the document
-            document.AddFeature(placemark);
-
-            
-            //----------------------------------------------
-// Add a placemark
-            var placemark2 = new Placemark
-            {
-                Name = "Sample Placemark",
-                Geometry = new Point { Coordinate = new Vector(37.422, -122.084) }
-            };
-            document.AddFeature(placemark2);
-            //----------------------------------------------
-
-// Save the KML to a KMZ file
-            using (var memoryStream = new MemoryStream())
-            {
-                KmlFile kmlFile = KmlFile.Create(kml, false);
-                kmlFile.Save(memoryStream);
-
-                using (var fileStream = new FileStream("output.kmz", FileMode.Create))
-                using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true))
-                {
-                    var entry = archive.CreateEntry("doc.kml");
-                    using (var entryStream = entry.Open())
-                    {
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        memoryStream.CopyTo(entryStream);
-                    }
-                }
-            }
+            return Helpers.ExportKmzFile(list,"infooooo"); 
         }
     }
 }

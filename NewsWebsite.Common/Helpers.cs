@@ -16,6 +16,13 @@ using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using SharpKml.Dom;
+using SharpKml.Engine;
+using System.IO;
+using System.IO.Compression;
+using SharpKml.Base;
+using TimeSpan = System.TimeSpan;
+
 
 namespace NewsWebsite.Common {
     
@@ -336,6 +343,74 @@ public static class Helpers {
         return result.ToString();
     }
 
+
+    public class KMZVM {
+        public string Name;
+        public string Coordinates;
+    }
+
+    public static string ExportKmzFile(List<KMZVM> items, string preName = ""){
+// Create a KML document
+        var kml = new Kml();
+        var document = new Document();
+        kml.Feature = document;
+        //----------------------------------------------
+
+
+        // var privs = _db.AmlakPrivateNews.ToList();
+        foreach (var item in items){
+            var outerBoundary = new LinearRing();
+            var coordinateCollection = new CoordinateCollection();
+            var coordinates = JsonConvert.DeserializeObject<List<List<double>>>(item.Coordinates.ToString());
+            // var str = "";
+            if (coordinates.Count == 1){
+                var placemark = new Placemark{
+                    Name = item.Name,
+                    Geometry = new Point{ Coordinate = new Vector(coordinates[0][0], coordinates[0][1]) }
+                };
+                document.AddFeature(placemark);
+            }
+            else{
+                foreach (var coordinate in coordinates){
+                    // str+=coordinate[1] +","+ coordinate[0]+"   /    ";
+                    coordinateCollection.Add(new Vector(coordinate[1], coordinate[0]));
+                }
+
+                outerBoundary.Coordinates = coordinateCollection;
+
+                var polygon1 = new Polygon{
+                    OuterBoundary = new OuterBoundary{ LinearRing = outerBoundary }
+                };
+                var placemark = new Placemark{
+                    Name = item.Name,
+                    Geometry = polygon1
+                };
+                document.AddFeature(placemark);
+            }
+        }
+
+
+        //----------------------------------------------
+
+// Save the KML to a KMZ file
+        using var memoryStream = new MemoryStream();
+        KmlFile kmlFile = KmlFile.Create(kml, false);
+        kmlFile.Save(memoryStream);
+
+        string tmpPath = "/tmp/" + $"{preName}_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.kmz";
+        tmpPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"+tmpPath);
+
+        using var fileStream = new FileStream(tmpPath, FileMode.Create);
+        using var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true);
+
+        var entry = archive.CreateEntry("doc.kml");
+        using var entryStream = entry.Open();
+        memoryStream.Seek(0, SeekOrigin.Begin);
+        memoryStream.CopyTo(entryStream);
+
+        return tmpPath;
+    }
+     
 
 }
 }

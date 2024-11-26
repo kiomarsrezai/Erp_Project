@@ -14,7 +14,6 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public int OwnerId{ get; set; }
         public string Title{ get; set; }
         public double Masahat{ get; set; }
-        public string TypeUsing{ get; set; }
         public int DocumentType{ get; set; }
         public string SadaCode{ get; set; } 
         public string JamCode{ get; set; } 
@@ -46,8 +45,8 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string DocumentAlphabet { get; set; }
         public string PropertyCode { get; set; }
         public string Year { get; set; }
-        public string EntryDate { get; set; }
         public DateTime? InternalDate { get; set; }
+        public DateTime? DocumentDate { get; set; }
         public int? LatestGeneratingDecision { get; set; }
         public int BuildingStatus   { get; set; }
         public int BuildingMasahat   { get; set; }
@@ -69,23 +68,29 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
 
         [NotMapped]
         public string? UpdatedAtFa{get{ return Helpers.MiladiToHejri(UpdatedAt); }}
-            [NotMapped]
+        [NotMapped]
         public string? InternalDateFa{get{ return Helpers.MiladiToHejri(InternalDate); }}
+        [NotMapped]
+        public string? DocumentDateFa{get{ return Helpers.MiladiToHejri(DocumentDate); }}
         
         [NotMapped]
         public string? DocumentTypeText{get{ return Helpers.UC(DocumentType,"amlakPrivateDocumentType"); }}  
         [NotMapped]
         public string? PredictionUsageText{get{ return Helpers.UC(PredictionUsage,"amlakPrivatePredictionUsage"); }}
-        [NotMapped]
-        public string? OwnershipTypeText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateOwnershipType"); }} 
          [NotMapped]
-        public string? OwnershipValueTypeText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateOwnershipValueType"); }} 
+        public string? SectionText{get{ return Helpers.UC(Section,"amlakPrivateSection"); }}
         [NotMapped]
-        public string? BuildingStatusText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateBuildingStatus"); }}
+        public string? OwnershipTypeText{get{ return Helpers.UC(OwnershipType,"amlakPrivateOwnershipType"); }} 
+         [NotMapped]
+        public string? OwnershipValueTypeText{get{ return Helpers.UC(OwnershipValueType,"amlakPrivateOwnershipValueType"); }} 
         [NotMapped]
-        public string? BuildingUsageText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateBuildingUsage"); }} 
+        public string? BuildingStatusText{get{ return Helpers.UC(BuildingStatus,"amlakPrivateBuildingStatus"); }}
         [NotMapped]
-        public string? LatestGeneratingDecisionText{get{ return Helpers.UC(PredictionUsage,"amlakPrivateGeneratingDecision"); }}
+        public string? BuildingUsageText{get{ return Helpers.UC(BuildingUsage,"amlakPrivateBuildingUsage"); }} 
+        [NotMapped]
+        public string? LatestGeneratingDecisionText{get{ return Helpers.UC(LatestGeneratingDecision,"amlakPrivateGeneratingDecision"); }}  
+        [NotMapped]
+        public string? UsageUrbanText{get{ return Helpers.UC(UsageUrban,"amlakPrivateUsageUrban"); }}
     }
     
     //-------------------------------------------------------------------------------------------------
@@ -125,9 +130,9 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
             }
             return query;
         }
-        public static IQueryable<AmlakPrivateNew> TypeUsing(this IQueryable<AmlakPrivateNew> query, string? value){
+        public static IQueryable<AmlakPrivateNew> UsageUrban(this IQueryable<AmlakPrivateNew> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
-                return query.Where(e => EF.Functions.Like(e.TypeUsing, $"%{value}%"));
+                return query.Where(e => EF.Functions.Like(e.UsageUrban, $"%{value}%"));
             }
             return query;
         }
@@ -172,8 +177,7 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         
         public static IQueryable<AmlakPrivateNew> Search(this IQueryable<AmlakPrivateNew> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
-                return query.Where(a=> EF.Functions.Like(a.Title, $"%{value}%") || 
-                                      EF.Functions.Like(a.TypeUsing, $"%{value}%")
+                return query.Where(a=> EF.Functions.Like(a.Title, $"%{value}%") 
                 );
             }
             return query;

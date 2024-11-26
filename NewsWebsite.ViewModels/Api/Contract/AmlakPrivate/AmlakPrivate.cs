@@ -16,7 +16,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string SadaCode{ get; set; } 
         public string JamCode{ get; set; } 
         public double Masahat{ get; set; }
-        public string TypeUsing{ get; set; }
         public int DocumentType{ get; set; }
         public string MainPlateNumber { get; set; }
         public string SubPlateNumber { get; set; }
@@ -59,6 +58,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Year { get; set; }
         public string EntryDate { get; set; }
         public string InternalDate { get; set; }
+        public string InternalDateFa { get; set; }
+        public string DocumentDate { get; set; }
+        public string DocumentDateFa { get; set; }
         public int LatestGeneratingDecision { get; set; }
         public string LatestGeneratingDecisionText { get; set; }
         public int BuildingStatus { get; set; }
@@ -99,8 +101,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string DocumentAlphabet { get; set; }
         public string PropertyCode { get; set; }
         public string Year { get; set; }
-        public string EntryDate { get; set; }
         public string InternalDate { get; set; }
+        public string DocumentDate { get; set; }
         public int BuildingStatus { get; set; }
         public int BuildingMasahat { get; set; }
         public int BuildingFloorsNumber { get; set; }
@@ -115,7 +117,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     public class AmlakPrivateReadInputVm {
         public int? AreaId{ get; set; }
         public int? OwnerId{ get; set; }
-        public string TypeUsing{ get; set; }
+        public string UsageUrban{ get; set; }
         public double MasahatFrom{ get; set; }
         public double MasahatTo{ get; set; }
         public int? DocumentType{ get; set; }
@@ -127,6 +129,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int? LatestGeneratingDecision{ get; set; }
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;
+        public int ExportKMZ{ get; set; } = 0;
         public int Page{ get; set; } = 1;
         public int PageRows{ get; set; } = 10;
         public string Search{ get; set; }

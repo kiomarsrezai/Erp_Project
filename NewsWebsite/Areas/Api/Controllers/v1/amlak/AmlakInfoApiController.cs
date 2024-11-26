@@ -233,7 +233,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             }
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
 
-            if (param.Export == 1){
+            if (param.Export == 1 || param.ExportKMZ ==1){
                 param.Page = 1;
                 param.PageRows = 100000;
             }
@@ -264,6 +264,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             }
             if (param.Export == 1){
                 var fileUrl = ExportExcelAmlak(items);
+                return Ok(new {fileUrl});
+            }
+            if (param.ExportKMZ == 1){
+                var fileUrl = ExportKmz(items);
                 return Ok(new {fileUrl});
             }
             
@@ -302,7 +306,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         }
 
         
-        
+        private static object ExportKmz(List<AmlakInfo> items){
+            var list = new List<Helpers.KMZVM>();
+            foreach (var item in items){
+                list.Add(new Helpers.KMZVM{Name = "id:" + item.Id, Coordinates = item.Coordinates });
+            }
+            
+            return Helpers.ExportKmzFile(list,"amlak_info"); 
+        }
         
         [Route("Map")]
         [HttpGet]
@@ -367,6 +378,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .ToListAsync();
 
             
+            if(param.ContractStatus==1) // قرارداد فعال بیش از 2 ماه
+                return Ok(new{
+                    activeContractsMore2MonthZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContractsMore2MonthZValid),
+                    activeContractsMore2MonthZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContractsMore2MonthZExpired)
+                });
+            
+            if(param.ContractStatus==2) // قرارداد فعال کمتر از 2 ماه
+                return Ok(new{
+                    activeContracts2MonthZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContracts2MonthZValid),
+                    activeContracts2MonthZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContracts2MonthZExpired),
+                });
+             if(param.ContractStatus==3) // بدون قرارداد
+                return Ok(new{
+                    withoutActiveContractsZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(withoutActiveContractsZValid),
+                    withoutActiveContractsZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(withoutActiveContractsZExpired),
+                });
+            
             return Ok(new{
                 withoutActiveContractsZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(withoutActiveContractsZValid),
                 withoutActiveContractsZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(withoutActiveContractsZExpired),
@@ -374,7 +402,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 activeContracts2MonthZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContracts2MonthZExpired),
                 activeContractsMore2MonthZValid= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContractsMore2MonthZValid),
                 activeContractsMore2MonthZExpired= MyMapper.MapTo<AmlakInfo, AmlakInfoListVm>(activeContractsMore2MonthZExpired)
-            });
+            }); 
         }
 
         

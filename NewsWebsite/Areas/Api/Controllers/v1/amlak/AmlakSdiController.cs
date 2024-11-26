@@ -147,7 +147,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                         Masahat = 0,
                         PredictionUsage = "",
                         Title = feature.Id,
-                        TypeUsing = "",
                         DocumentType = 0,
                         CreatedAt = Helpers.GetServerDateTimeType(),
                         UpdatedAt = Helpers.GetServerDateTimeType(),

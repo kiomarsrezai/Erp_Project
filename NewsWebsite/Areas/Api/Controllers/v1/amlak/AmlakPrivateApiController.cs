@@ -152,7 +152,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             await CheckUserAuth(_db);
 
             var builder = _db.AmlakPrivateNews
-                .AreaId(param.AreaId).OwnerId(param.OwnerId).TypeUsing(param.TypeUsing)
+                .AreaId(param.AreaId).OwnerId(param.OwnerId).UsageUrban(param.UsageUrban)
                 .SadaCode(param.SadaCode).JamCode(param.JamCode).DocumentType(param.DocumentType)
                 .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
@@ -163,7 +163,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
 
             
-            if (param.Export == 1){
+            if (param.Export == 1 || param.ExportKMZ == 1){
                 param.Page = 1;
                 param.PageRows = 100000;
             }
@@ -191,6 +191,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 var fileUrl = ExportExcel(items);
                 return Ok(new {fileUrl});
             }
+            if (param.ExportKMZ == 1){
+                var fileUrl = ExportKmz(items);
+                return Ok(new {fileUrl});
+            }
             
             var finalItems = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateListVm>(items);
 
@@ -209,7 +213,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.Owner.AreaName);
                 row.Add(item.Title);
                 row.Add(item.Masahat);
-                row.Add(item.TypeUsing);
                 row.Add(item.DocumentTypeText);
                 row.Add(item.SadaCode);
                 row.Add(item.JamCode);
@@ -217,10 +220,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.SimakCode);
                 row.Add(item.MainPlateNumber);
                 row.Add(item.SubPlateNumber);
-                row.Add(item.Section);
+                row.Add(item.SectionText);
                 row.Add(item.Address);
                 row.Add(item.UsageOnDocument);
-                row.Add(item.UsageUrban);
+                row.Add(item.UsageUrbanText);
                 row.Add(item.PropertyType);
                 row.Add(item.OwnershipTypeText);
                 row.Add(item.OwnershipValueTypeText);
@@ -236,13 +239,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.DocumentAlphabet);
                 row.Add(item.PropertyCode);
                 row.Add(item.Year);
-                row.Add(item.EntryDate);
                 row.Add(item.InternalDateFa);
                 row.Add(item.LatestGeneratingDecisionText);
-                row.Add(item.BuildingStatus);
+                row.Add(item.BuildingStatusText);
                 row.Add(item.BuildingMasahat);
                 row.Add(item.BuildingFloorsNumber);
-                row.Add(item.BuildingUsage);
+                row.Add(item.BuildingUsageText);
                 row.Add(item.MeterNumberGas);
                 row.Add(item.MeterNumberWater);
                 row.Add(item.MeterNumberElectricity);
@@ -258,6 +260,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Helpers.ExportExcelFile(finalItems, "amlak_private");
         }
 
+        private static object ExportKmz(List<AmlakPrivateNew> items){
+            var list = new List<Helpers.KMZVM>();
+            foreach (var item in items){
+                list.Add(new Helpers.KMZVM{Name = "id:" + item.Id, Coordinates = item.Coordinates });
+            }
+            
+            return Helpers.ExportKmzFile(list,"amlak_private"); 
+        }
+        
 
         
         [Route("Read")]
@@ -300,7 +311,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Masahat = param.Masahat;
             item.PredictionUsage = param.PredictionUsage;
             item.Title = param.Title;
-            item.TypeUsing = param.TypeUsing;
             item.DocumentType = param.DocumentType;
             item.SadaCode = param.SadaCode;
             item.JamCode = param.JamCode;
@@ -328,8 +338,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.DocumentAlphabet=param.DocumentAlphabet;
             item.PropertyCode=param.PropertyCode;
             item.Year=!string.IsNullOrEmpty(param.InternalDate)?Helpers.MiladiToHejri(param.InternalDate).Substring(0,4):"0"; // todo: : 
-            item.EntryDate=param.EntryDate;
             item.InternalDate=!string.IsNullOrEmpty(param.InternalDate) ? DateTime.Parse(param.InternalDate) : (DateTime?)null;
+            item.DocumentDate=!string.IsNullOrEmpty(param.DocumentDate) ? DateTime.Parse(param.DocumentDate) : (DateTime?)null;
             // item.LatestGeneratingDecision=param.LatestGeneratingDecision;
             item.BuildingStatus=param.BuildingStatus;
             item.BuildingMasahat=param.BuildingMasahat;
@@ -371,6 +381,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.AmlakPrivateId = param.AmlakPrivateId;
             item.Status = param.Status;
             item.Desc = param.Desc;
+            item.LetterDate =!string.IsNullOrEmpty( param.LetterDate) ? DateTime.Parse( param.LetterDate) : (DateTime?)null;;
+            item.LetterNumber = param.LetterNumber;
             item.Date = Helpers.GetServerDateTimeType();
             _db.Add(item);
             await _db.SaveChangesAsync();
@@ -587,8 +599,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     existingAmlak.JamCode =  getCell(row,22);
                     existingAmlak.PropertyCode =  getCell(row,23);
                     existingAmlak.Year =  getCell(row,24);
-                    existingAmlak.EntryDate =  getCell(row,25);
                     existingAmlak.InternalDate = null; // todo: if(!string.IsNullOrEmpty(getCell(row,26))) Helpers.HejriToMiladiDateTime(getCell(row,26)) else null;
+                    existingAmlak.DocumentDate = null; // todo: if(!string.IsNullOrEmpty(getCell(row,26))) Helpers.HejriToMiladiDateTime(getCell(row,26)) else null;
                     existingAmlak.LatestGeneratingDecision =  0;
                     existingAmlak.SimakCode =  getCell(row,46);
 

@@ -73,6 +73,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;
+        public int ExportKMZ{ get; set; } = 0;
         public int Page{ get; set; } = 1;
         public int PageRows{ get; set; } = 10;
         public string Sort{ get; set; }="Id";

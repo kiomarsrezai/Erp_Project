@@ -12,7 +12,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int AmlakPrivateId{ get; set; }
         public string Status{ get; set; }
         public string Desc{ get; set; }
-        public DateTime Date{ get; set; }
+        public DateTime? Date{ get; set; }
+        public string LetterNumber{ get; set; }
+        public DateTime? LetterDate{ get; set; }
         
         
         
@@ -20,6 +22,11 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         [NotMapped]
         public string? DateFa{
             get{ return Helpers.MiladiToHejri(Date); }
+        }
+        
+        [NotMapped]
+        public string? LetterDateFa{
+            get{ return Helpers.MiladiToHejri(LetterDate); }
         }
         
          
@@ -32,12 +39,15 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int AmlakPrivateId{ get; set; }
         public string Status{ get; set; }
         public string Desc{ get; set; }
+        public string LetterNumber{ get; set; } 
+        public string LetterDate{ get; set; } 
     }
 
     public class AmlakPrivateDocHistoryListVm : AmlakPrivateDocHistoryBaseModel {
         public int Id{ get; set; }
         public string Date{ get; set; } 
         public string DateFa{ get; set; } 
+        public string LetterDateFa{ get; set; } 
         
     }
 
