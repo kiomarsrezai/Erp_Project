@@ -125,6 +125,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string JamCode{ get; set; }
         public string MainPlateNumber{ get; set; }
         public string SubPlateNumber{ get; set; }
+        public string MultiplePlates{ get; set; }
         public int? PropertyType{ get; set; }
         public int? LatestGeneratingDecision{ get; set; }
         public int ForMap{ get; set; } = 0;

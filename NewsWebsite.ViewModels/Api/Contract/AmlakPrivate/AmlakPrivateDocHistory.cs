@@ -10,6 +10,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     public class AmlakPrivateDocHistory:BaseModel {
         public int Id{ get; set; }
         public int AmlakPrivateId{ get; set; }
+        public string Type{ get; set; } // general / seizure / license / completion
         public string Status{ get; set; }
         public string Desc{ get; set; }
         public DateTime? Date{ get; set; }
@@ -31,12 +32,13 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         
          
         [NotMapped]
-        public string? StatusText{get{ return Helpers.UC(Status,"documentHistoryStatus"); }}
+        public string? StatusText{get{ return Helpers.UC(Status,Type+"DocumentHistoryStatus"); }}
     }
 
     
     public class AmlakPrivateDocHistoryBaseModel {
         public int AmlakPrivateId{ get; set; }
+        public string Type{ get; set; }
         public string Status{ get; set; }
         public string Desc{ get; set; }
         public string LetterNumber{ get; set; } 
@@ -48,7 +50,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Date{ get; set; } 
         public string DateFa{ get; set; } 
         public string LetterDateFa{ get; set; } 
-        
+        public string StatusText{ get; set; }
+  
     }
 
 
@@ -68,6 +71,12 @@ public static class AmlakDocHistoryExtensions {
     public static IQueryable<AmlakPrivateDocHistory> AmlakPrivateId(this IQueryable<AmlakPrivateDocHistory> query, int? value){
         if (BaseModel.CheckParameter(value,0)){
             return query.Where(e => e.AmlakPrivateId == value);
+        }
+        return query;
+    }
+    public static IQueryable<AmlakPrivateDocHistory> Type(this IQueryable<AmlakPrivateDocHistory> query, string? value){
+        if (BaseModel.CheckParameter(value,0)){
+            return query.Where(e => e.Type == value);
         }
         return query;
     }

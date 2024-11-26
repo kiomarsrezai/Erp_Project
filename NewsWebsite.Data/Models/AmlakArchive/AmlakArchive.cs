@@ -18,8 +18,8 @@ namespace NewsWebsite.Data.Models.AmlakArchive {
         public string ArchiveCode{ get; set; }
         public string AmlakCode{ get; set; }
         public string Section{ get; set; }
-        public string Plaque1{ get; set; }
-        public string Plaque2{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
         public string Description{ get; set; }
         public string Address{ get; set; }
         public string Coordinates{ get; set; }
@@ -80,6 +80,18 @@ namespace NewsWebsite.Data.Models.AmlakArchive {
                 return query.Where(a => EF.Functions.Like(a.Address, $"%{value}%") ||
                                         EF.Functions.Like(a.Title, $"%{value}%") ||
                                         EF.Functions.Like(a.Description, $"%{value}%"));
+            }
+            return query;
+        }
+        public static IQueryable<AmlakArchive> MainPlateNumber(this IQueryable<AmlakArchive> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.MainPlateNumber == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakArchive> SubPlateNumber(this IQueryable<AmlakArchive> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.SubPlateNumber == value);
             }
             return query;
         }

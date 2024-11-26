@@ -57,6 +57,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .AreaId(param.AreaId)
                 .OwnerId(param.OwnerId)
                 .IsSubmitted(param.IsSubmitted)
+                .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
                 .Search(param.Search);
 
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
@@ -101,8 +102,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 row.Add(item.ArchiveCode);
                 row.Add(item.AmlakCode);
                 row.Add(item.Section);
-                row.Add(item.Plaque1);
-                row.Add(item.Plaque2);
+                row.Add(item.MainPlateNumber);
+                row.Add(item.SubPlateNumber);
                 row.Add(item.Description);
                 row.Add(item.Address);
                 row.Add(item.Coordinates);
@@ -151,8 +152,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.ArchiveCode = param.ArchiveCode;
             item.AmlakCode = param.AmlakCode;
             item.Section = param.Section;
-            item.Plaque1 = param.Plaque1;
-            item.Plaque2 = param.Plaque2;
+            item.MainPlateNumber = param.MainPlateNumber;
+            item.SubPlateNumber = param.SubPlateNumber;
             item.Description = param.Description;
             item.Address = param.Address;
             item.IsSubmitted = 1;

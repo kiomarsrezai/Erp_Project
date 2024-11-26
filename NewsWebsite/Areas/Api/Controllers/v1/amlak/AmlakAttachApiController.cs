@@ -104,7 +104,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
            
         [Route("File/Edit")]
         [HttpPatch]
-        public async Task<ApiResult<string>>EditFile(int fileId,string title){
+        public async Task<ApiResult<string>>EditFile(int fileId,string? title,string? type){
             await CheckUserAuth(_db);
 
             if (fileId == 0) BadRequest();
@@ -113,7 +113,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             if (item == null)
                 return BadRequest("خطا");
 
-            item.FileTitle = title;
+            if(title!=null)
+                item.FileTitle = title;
+            
+            if(type!=null)
+                item.Type = type;
+            
             await _db.SaveChangesAsync();
             
             if(getTargetType(item.TargetType)!=null)

@@ -16,8 +16,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakArchive {
         public string AmlakCode{ get; set; }
         public string JamCode{ get; set; }
         public string Section{ get; set; }
-        public string Plaque1{ get; set; }
-        public string Plaque2{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
     }
 
     public class AmlakArchiveListVm : AmlakArchiveBaseModel {
@@ -60,6 +60,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakArchive {
         public int OwnerId{ get; set; }
         public string Search{ get; set; }
         public int? IsSubmitted{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
         
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;

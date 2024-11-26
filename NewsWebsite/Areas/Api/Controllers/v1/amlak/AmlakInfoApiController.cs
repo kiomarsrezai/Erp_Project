@@ -175,6 +175,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .AreaId(param.AreaId)
                 .OwnerId(param.OwnerId)
                 .AmlakInfoKindId(param.AmlakInfoKindId)
+                .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
                 .Where(a => a.Rentable == param.Rentable);
             
             if (!string.IsNullOrEmpty(param.SupplierName)){
@@ -456,6 +457,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             item.Structure = param.Structure;
             item.OwnerType = param.OwnerType;
             item.Code = param.Code;
+            item.MainPlateNumber = param.MainPlateNumber;
+            item.SubPlateNumber = param.SubPlateNumber;
             item.UpdatedAt = Helpers.GetServerDateTimeType();
             await _db.SaveChangesAsync();
             

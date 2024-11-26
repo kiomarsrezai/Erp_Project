@@ -52,6 +52,12 @@ public static class Helpers {
             else
                 msg = $"(int) {obj}";
         }
+        else if (obj is string[]){
+            if (asJson)
+                msg = $"{{\"string[]\": [{string.Join(", ", ((string[])obj).Select(s => $"\"{s}\""))}]}}";
+            else
+                msg = $"(string[]) [{string.Join(", ", obj)}]";
+        }
         else if (obj.GetType().IsAnonymousType()){
             msg = SerializeAnonymousType(obj, asJson);
         }
@@ -398,9 +404,9 @@ public static class Helpers {
         kmlFile.Save(memoryStream);
 
         string tmpPath = "/tmp/" + $"{preName}_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.kmz";
-        tmpPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"+tmpPath);
+        string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"+tmpPath);
 
-        using var fileStream = new FileStream(tmpPath, FileMode.Create);
+        using var fileStream = new FileStream(fullPath, FileMode.Create);
         using var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true);
 
         var entry = archive.CreateEntry("doc.kml");

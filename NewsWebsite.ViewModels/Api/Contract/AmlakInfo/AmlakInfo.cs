@@ -23,6 +23,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string Structure{ get; set; }
         public string OwnerType{ get; set; }
         public string Code{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
     }
 
     public class AmlakInfoListVm : AmlakInfoBaseModel {
@@ -70,6 +72,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public string SupplierName{ get; set; }
         public int OwnerId{ get; set; }
         public string Search{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
         
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;

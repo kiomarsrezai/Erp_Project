@@ -156,6 +156,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .SadaCode(param.SadaCode).JamCode(param.JamCode).DocumentType(param.DocumentType)
                 .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
+                .MultiplePlates(param.MultiplePlates)
                 .PropertyType(param.PropertyType).Search(param.Search)
                 .LatestGeneratingDecision(param.LatestGeneratingDecision);
 
@@ -363,10 +364,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [Route("DocHistory/List")]
         [HttpGet]
-        public async Task<ApiResult<List<AmlakPrivateDocHistoryListVm>>> AmlakPrivateDocHistoryList(int amlakPrivateId){
+        public async Task<ApiResult<List<AmlakPrivateDocHistoryListVm>>> AmlakPrivateDocHistoryList(int amlakPrivateId,string type){
             await CheckUserAuth(_db);
 
-            var items = await _db.AmlakPrivateDocHistories.AmlakPrivateId(amlakPrivateId).OrderByDescending(a=>a.Id).ToListAsync();
+            var items = await _db.AmlakPrivateDocHistories.AmlakPrivateId(amlakPrivateId).Type(type).OrderByDescending(a=>a.Id).ToListAsync();
             var finalItems = MyMapper.MapTo<AmlakPrivateDocHistory, AmlakPrivateDocHistoryListVm>(items);
 
             return Ok(finalItems);
@@ -376,9 +377,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         [HttpPost]
         public async Task<ApiResult<string>> AmlakPrivateDocHistoryStore( AmlakPrivateDocHistoryStoreVm param){
             await CheckUserAuth(_db);
-
+            
+            if (param.Type != "general" && param.Type != "seizure" && param.Type != "license" && param.Type != "completion"){
+                return BadRequest("این نوع مجاز نمی باشد");
+            }
+            
             var item = new AmlakPrivateDocHistory();
             item.AmlakPrivateId = param.AmlakPrivateId;
+            item.Type = param.Type;
             item.Status = param.Status;
             item.Desc = param.Desc;
             item.LetterDate =!string.IsNullOrEmpty( param.LetterDate) ? DateTime.Parse( param.LetterDate) : (DateTime?)null;;

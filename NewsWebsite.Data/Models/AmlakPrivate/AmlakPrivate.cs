@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.Entities;
@@ -148,6 +149,37 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
             }
             return query;
         }
+
+        public static IQueryable<AmlakPrivateNew> MultiplePlates(this IQueryable<AmlakPrivateNew> query, string? value){
+            if (BaseModel.CheckParameter(value, 0)){
+                value = value.Replace("/", "-");
+
+                var plates = value.Split(" ")
+                    .Select(plate => plate.Split('-'))
+                    .Where(parts => parts.Length == 2)
+                    .Select(parts => new{ Main = parts[0], Sub = parts[1] })
+                    .ToList();
+
+                if (plates.Any()){
+                    // Start with an empty query
+                    IQueryable<AmlakPrivateNew> filteredQuery = query.Where(e => false);
+
+                    // Add each condition as an OR clause
+                    foreach (var plate in plates){
+                        var main = plate.Main;
+                        var sub = plate.Sub;
+                        filteredQuery = filteredQuery.Union(query.Where(e => e.MainPlateNumber == main && e.SubPlateNumber == sub));
+                    }
+
+                    return filteredQuery;
+                }
+            }
+
+            return query;
+        }
+
+
+        
         public static IQueryable<AmlakPrivateNew> SubPlateNumber(this IQueryable<AmlakPrivateNew> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.SubPlateNumber == value);

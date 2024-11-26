@@ -27,6 +27,8 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public string TypeUsing{ get; set; }
         public int Rentable{ get; set; } 
         public string Code{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
         public DateTime? CreatedAt{ get; set; }
         public DateTime? UpdatedAt{ get; set; }
 
@@ -86,6 +88,19 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(a=> EF.Functions.Like(a.EstateInfoName, $"%{value}%") || 
                                        EF.Functions.Like(a.EstateInfoAddress, $"%{value}%"));
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakInfo> MainPlateNumber(this IQueryable<AmlakInfo> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.MainPlateNumber == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakInfo> SubPlateNumber(this IQueryable<AmlakInfo> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.SubPlateNumber == value);
             }
             return query;
         }
