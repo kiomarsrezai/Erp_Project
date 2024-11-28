@@ -68,7 +68,17 @@ namespace NewsWebsite.ViewModels.Fetch
         [Display(Name = "عملکرد")]
         public Int64 Expense { get; set; }
 
-        public Int64 BudgetNext { get; set; }
+        [Display(Name = "پیشنهادی نقدی")]
+        public Int64 PishnahadiCash { get; set; }
+        
+        [Display(Name = "پیشنهادی غیر نقدی")]
+        public Int64 PishnahadiNonCash { get; set; }
+        
+        [Display(Name = "پیشنهادی")]
+        public Int64 Pishnahadi { get; set; }
+
+        [Display(Name = "وضعیت تایید")]
+        public int ConfirmStatus { get; set; }
 
         [Display(Name = "سطح")]
         public int LevelNumber { get; set; }

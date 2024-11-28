@@ -65,11 +65,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Edit = StringExtensions.ToNullableBigInt(dataReader["Edit"].ToString());
                         row.CreditAmount = StringExtensions.ToNullableBigInt(dataReader["CreditAmount"].ToString());
                         row.Expense = Int64.Parse(dataReader["Expense"].ToString());
-                        row.BudgetNext = Int64.Parse(dataReader["BudgetNext"].ToString());
+                        row.PishnahadiCash = Int64.Parse(dataReader["PishnahadiCash"].ToString());
+                        row.PishnahadiNonCash = Int64.Parse(dataReader["PishnahadiNonCash"].ToString());
+                        row.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
+                        row.ConfirmStatus = int.Parse(dataReader["ConfirmStatus"].ToString());
                         row.Crud = (bool)dataReader["Crud"];
                         if (row.Mosavab != 0)
                         {
-                            row.Percent = _uw.Budget_001Rep.Growth(row.BudgetNext, row.Mosavab);
+                            row.Percent = _uw.Budget_001Rep.Growth(row.Pishnahadi, row.Mosavab);
                         }
                         else
                         {
@@ -153,7 +156,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("executionId", param.ExecutionId);
                     sqlCommand.Parameters.AddWithValue("budgetProcessId", param.budgetProcessId);
                     sqlCommand.Parameters.AddWithValue("codingId", param.codingId);
-                    sqlCommand.Parameters.AddWithValue("BudgetNext", param.BudgetNext);
+                    sqlCommand.Parameters.AddWithValue("PishnahadiCash", param.PishnahadiCash);
+                    sqlCommand.Parameters.AddWithValue("PishnahadiNonCash", param.PishnahadiNonCash);
+                    sqlCommand.Parameters.AddWithValue("Pishnahadi", param.Pishnahadi);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
            
                     sqlCommand.CommandType = CommandType.StoredProcedure;
@@ -173,7 +178,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetProposalEditInlineUpdate")]
         [HttpPost]
-        public async Task<ApiResult<string>> BudgetProposalEditInlineUpdate([FromBody] BudgetProposalUpdateViewModel param)
+        public async Task<ApiResult<string>> BudgetProposalEditInlineUpdate([FromBody] BudgetProposalEditUpdateViewModel param)
         {
             string readercount = null;
 

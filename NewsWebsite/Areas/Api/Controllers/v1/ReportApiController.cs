@@ -783,18 +783,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             List<AbstractViewModel> abslist = new List<AbstractViewModel>();
 
             using (SqlConnection sqlConnection = new SqlConnection(_configuration.GetConnectionString("SqlErp"))){
-                var spName = "";
-                if (type == "mosavab"){
-                    spName = "SP500_Abstract";
-                }
-                else{
-                    spName = "SP500_Abstract_Eslahi";
-                }
-                using (SqlCommand cmd = new SqlCommand(spName, sqlConnection))
+                using (SqlCommand cmd = new SqlCommand("SP500_Abstract", sqlConnection))
                 {
                     sqlConnection.Open();
                     cmd.Parameters.AddWithValue("yearId", yearId);
-                    // cmd.Parameters.AddWithValue("KindId", KindId);
+                    cmd.Parameters.AddWithValue("type", type);
                     //cmd.Parameters.AddWithValue("StructureId", StructureId);
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await cmd.ExecuteReaderAsync();

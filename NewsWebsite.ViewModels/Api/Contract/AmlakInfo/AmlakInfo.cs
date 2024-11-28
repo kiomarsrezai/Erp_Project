@@ -92,6 +92,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakInfo {
         public int ContractStatus{ get; set; } = 0;
         public int ZemanatStatus{ get; set; } = 0;
         public string SupplierName{ get; set; }
+        public string MainPlateNumber{ get; set; }
+        public string SubPlateNumber{ get; set; }
+
         public int OwnerId{ get; set; }
         public string Search{ get; set; }
     }

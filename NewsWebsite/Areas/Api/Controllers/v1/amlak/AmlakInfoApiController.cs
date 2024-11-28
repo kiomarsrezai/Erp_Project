@@ -326,6 +326,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .AreaId(param.AreaId)
                 .OwnerId(param.OwnerId)
                 .AmlakInfoKindId(param.AmlakInfoKindId)
+                .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
                 .Where(a => a.Rentable == param.Rentable);
             
             if (!string.IsNullOrEmpty(param.SupplierName)){

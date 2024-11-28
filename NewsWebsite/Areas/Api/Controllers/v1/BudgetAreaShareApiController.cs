@@ -33,31 +33,82 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("BudgetAreaShareRead")]
         [HttpGet]
-        public async Task<ApiResult<List<TblBudgetAreaShare>>> BudgetProposalRead(int yearId){
+        public async Task<ApiResult<List<TblBudgetAreaShare>>> BudgetProposalRead(int yearId,string type){
 
             var items = await _db.TblBudgetAreaShares
                 .Include(a=>a.Area)
-                .Where(c => c.YearId == yearId).ToListAsync();
+                .Where(c => c.YearId == yearId) .Where(c => c.Type == type).ToListAsync();
             return Ok(items);
+        }
+
+        [Route("BudgetAreaShareSingle")]
+        [HttpGet]
+        public async Task<ApiResult<object>> BudgetProposalRead(int yearId,int areaId,int budgetProcessId ){
+
+            var items = await _db.TblBudgetAreaShares
+                .Include(a=>a.Area)
+                .Where(c => c.YearId == yearId).Where(c=>c.AreaId==areaId).ToListAsync();
+
+            var edit = 0L;
+            var pishnahadi = 0L;
+
+            foreach (var item in items){
+                switch (budgetProcessId){
+                    case 1:{
+                        if (item.Type == "edit")
+                            edit = item.ShareProcessId1;
+                        if (item.Type == "pishnahadi")
+                            pishnahadi = item.ShareProcessId1;
+                        break;
+                    }
+                    case 2:{
+                        if (item.Type == "edit")
+                            edit = item.ShareProcessId2;
+                        if (item.Type == "pishnahadi")
+                            pishnahadi = item.ShareProcessId2;
+                        break;
+                    }
+                    case 3:{
+                        if (item.Type == "edit")
+                            edit = item.ShareProcessId3;
+                        if (item.Type == "pishnahadi")
+                            pishnahadi = item.ShareProcessId3;
+                        break;
+                    }
+                    case 4:{
+                        if (item.Type == "edit")
+                            edit = item.ShareProcessId4;
+                        if (item.Type == "pishnahadi")
+                            pishnahadi = item.ShareProcessId4;
+                        break;
+                    }
+                }
+            }
+           
+            return Ok(new{edit,pishnahadi});
         }
 
       
         [Route("BudgetAreaShareInsertNewYear")]
         [HttpGet]
         public async Task<ApiResult<string>> BudgetProposalInsertNewYear(int yearId){
-
+            var types = new string[]{ "pishnahadi", "edit" };
             var areas = await _db.TblAreas.ToListAsync();
-            foreach (var area in areas){
-                var share = new TblBudgetAreaShare();
-                share.YearId = yearId;
-                share.AreaId = area.Id;
-                share.ShareProcessId1 = 0;
-                share.ShareProcessId2 = 0;
-                share.ShareProcessId3 = 0;
-                share.ShareProcessId4 = 0;
 
-                await _db.AddAsync(share);
-            await _db.SaveChangesAsync();
+            foreach (var type in types){
+                foreach (var area in areas){
+                    var share = new TblBudgetAreaShare();
+                    share.YearId = yearId;
+                    share.AreaId = area.Id;
+                    share.Type = type;
+                    share.ShareProcessId1 = 0;
+                    share.ShareProcessId2 = 0;
+                    share.ShareProcessId3 = 0;
+                    share.ShareProcessId4 = 0;
+
+                    await _db.AddAsync(share);
+                    await _db.SaveChangesAsync();
+                } 
             } 
             
             return Ok("انجام شد");
