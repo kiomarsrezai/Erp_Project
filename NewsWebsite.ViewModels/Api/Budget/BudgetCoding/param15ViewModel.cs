@@ -11,6 +11,7 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetCoding
         public int CodingId { get; set; }
         public int YearId { get; set; }
         public int AreaId { get; set; }
+        public int IsPishnahadi { get; set; }
         public Int64 Mosavab { get; set; }
         public int ProgramOperationDetailsId { get; set; }
     }

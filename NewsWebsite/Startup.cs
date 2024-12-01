@@ -120,6 +120,7 @@ namespace NewsWebsite
             // add DWG file as static file
             var provider2 = new FileExtensionContentTypeProvider();
             provider2.Mappings[".dwg"] = "application/acad";
+            provider2.Mappings[".kmz"] = "application/vnd.google-earth.kmz";
             app.UseStaticFiles(new StaticFileOptions
             {
                 ContentTypeProvider = provider2

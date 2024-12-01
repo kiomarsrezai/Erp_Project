@@ -919,6 +919,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             //string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
+                var Mosavab=0L;
+                var Pishnahadi=0L;
+                if (param.IsPishnahadi == 1)
+                    Pishnahadi = param.Mosavab;
+                else{
+                    Mosavab = param.Mosavab;
+                }
+                    
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget_Inline_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
@@ -927,7 +935,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
                     sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
                     sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
+                    sqlCommand.Parameters.AddWithValue("Mosavab", Mosavab);
+                    sqlCommand.Parameters.AddWithValue("Pishnahadi", Pishnahadi);
                     sqlCommand.Parameters.AddWithValue("ProgramOperationDetailsId", param.ProgramOperationDetailsId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
