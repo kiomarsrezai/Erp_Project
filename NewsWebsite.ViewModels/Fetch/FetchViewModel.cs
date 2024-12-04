@@ -79,6 +79,9 @@ namespace NewsWebsite.ViewModels.Fetch
 
         [Display(Name = "وضعیت تایید")]
         public int ConfirmStatus { get; set; }
+        
+        [Display(Name = "ردیف مربوط به سال جدید است")]
+        public int IsNewYear { get; set; }
 
         [Display(Name = "سطح")]
         public int LevelNumber { get; set; }

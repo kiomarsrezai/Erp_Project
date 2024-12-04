@@ -69,6 +69,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.PishnahadiNonCash = Int64.Parse(dataReader["PishnahadiNonCash"].ToString());
                         row.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
                         row.ConfirmStatus = int.Parse(dataReader["ConfirmStatus"].ToString());
+                        row.IsNewYear = int.Parse(dataReader["isNewYear"].ToString());
                         row.Crud = (bool)dataReader["Crud"];
                         if (row.Mosavab != 0)
                         {
