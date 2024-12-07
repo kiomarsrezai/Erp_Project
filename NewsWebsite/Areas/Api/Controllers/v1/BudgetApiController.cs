@@ -635,6 +635,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("Id", param.Id);
                     sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
                     sqlCommand.Parameters.AddWithValue("EditProject", param.EditProject);
+                    sqlCommand.Parameters.AddWithValue("projectCode", param.ProjectCode);
+                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -926,7 +928,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 else{
                     Mosavab = param.Mosavab;
                 }
-                    
+                string readercount = null;
+
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_Budget_Inline_Insert", sqlconnect))
                 {
                     sqlconnect.Open();
@@ -940,13 +943,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("ProgramOperationDetailsId", param.ProgramOperationDetailsId);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    //while (dataReader.Read())
-                    //{
-                    //    if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    //}
+                    while (dataReader.Read())
+                    {
+                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                    }
                 }
+                if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+                else
+                    return BadRequest(readercount);
             }
-            return Ok("با موفقیت انجام شد");
            
         }
 

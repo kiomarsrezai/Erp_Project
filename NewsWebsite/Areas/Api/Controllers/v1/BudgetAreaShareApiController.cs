@@ -46,8 +46,32 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<object>> BudgetProposalRead(int yearId,int areaId,int budgetProcessId ){
 
             var items = await _db.TblBudgetAreaShares
-                .Include(a=>a.Area)
-                .Where(c => c.YearId == yearId).Where(c=>c.AreaId==areaId).ToListAsync();
+                .Include(a => a.Area)
+                .Where(bas => bas.YearId == yearId)
+                .Join(_db.TblAreas,
+                    bas => bas.AreaId,
+                    a => a.Id,
+                    (bas, a) => new { BudgetAreaShare = bas, Area = a })
+                .Where(c => 
+                    (c.Area.Id == areaId && new[] { 1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,29,30,31,32,33,34,35,36,42,43,44,53 }.Contains(areaId)) ||
+                    (areaId == 10 && c.Area.StructureId == 1) ||
+                    (areaId == 37) ||
+                    (areaId == 39 && c.Area.StructureId == 2) ||
+                    (areaId == 40 && c.Area.ToGetherBudget == 10) ||
+                    (areaId == 41 && c.Area.ToGetherBudget == 84)
+                )
+                .Select(c => new TblBudgetAreaShare
+                {
+                    Id = c.BudgetAreaShare.Id,
+                    YearId = c.BudgetAreaShare.YearId,
+                    AreaId = c.BudgetAreaShare.AreaId,
+                    Type = c.BudgetAreaShare.Type ?? string.Empty,
+                    ShareProcessId1 = c.BudgetAreaShare.ShareProcessId1??0,
+                    ShareProcessId2 = c.BudgetAreaShare.ShareProcessId2??0,
+                    ShareProcessId3 = c.BudgetAreaShare.ShareProcessId3??0,
+                    ShareProcessId4 = c.BudgetAreaShare.ShareProcessId4??0
+                })
+                .ToListAsync();
 
             var edit = 0L;
             var pishnahadi = 0L;
@@ -56,30 +80,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 switch (budgetProcessId){
                     case 1:{
                         if (item.Type == "edit")
-                            edit = item.ShareProcessId1;
+                            edit += item.ShareProcessId1??0;
                         if (item.Type == "pishnahadi")
-                            pishnahadi = item.ShareProcessId1;
+                            pishnahadi += item.ShareProcessId1??0;
                         break;
                     }
                     case 2:{
                         if (item.Type == "edit")
-                            edit = item.ShareProcessId2;
+                            edit += item.ShareProcessId2??0;
                         if (item.Type == "pishnahadi")
-                            pishnahadi = item.ShareProcessId2;
+                            pishnahadi += item.ShareProcessId2??0;
                         break;
                     }
                     case 3:{
                         if (item.Type == "edit")
-                            edit = item.ShareProcessId3;
+                            edit += item.ShareProcessId3??0;
                         if (item.Type == "pishnahadi")
-                            pishnahadi = item.ShareProcessId3;
+                            pishnahadi += item.ShareProcessId3??0;
                         break;
                     }
                     case 4:{
                         if (item.Type == "edit")
-                            edit = item.ShareProcessId4;
+                            edit += item.ShareProcessId4??0;
                         if (item.Type == "pishnahadi")
-                            pishnahadi = item.ShareProcessId4;
+                            pishnahadi += item.ShareProcessId4??0;
                         break;
                     }
                 }

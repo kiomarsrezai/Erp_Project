@@ -15,6 +15,7 @@ namespace NewsWebsite.Data.Models
         public int Id { get; set; }
         public string AreaName { get; set; }
         public int StructureId { get; set; }
+        public byte ToGetherBudget { get; set; }
         public string AreaNameShort { get; set; }
 
         public virtual ICollection<TblBudgetDetailProjectArea> TblBudgetDetailProjectArea { get; set; }
