@@ -801,6 +801,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.MosavabRevenue = long.Parse(dataReader["MosavabRevenue"].ToString());
                         fetchView.MosavabDar_Khazane = long.Parse(dataReader["MosavabDar_Khazane"].ToString());
                         fetchView.MosavabNeyabati = long.Parse(dataReader["MosavabNeyabati"].ToString());
+                        fetchView.MosavabHagholamal = long.Parse(dataReader["MosavabHagholamal"].ToString());
                         fetchView.MosavabFinancial = long.Parse(dataReader["MosavabFinancial"].ToString());
                         fetchView.MosavabPayMotomarkez = long.Parse(dataReader["MosavabPayMotomarkez"].ToString());
                         fetchView.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());

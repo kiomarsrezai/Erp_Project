@@ -262,8 +262,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.CodingId = int.Parse(dataReader["CodingId"].ToString());
                         row.AreaId = int.Parse(dataReader["AreaId"].ToString());
                         row.AreaName = dataReader["AreaName"].ToString();
-                        row.ProctorId = dataReader["ProctorId"].ToString();
-                        row.ExecutionId = dataReader["ExecutionId"].ToString();
+                        // row.ProctorId = dataReader["ProctorId"].ToString();
+                        // row.ExecutionId = dataReader["ExecutionId"].ToString();
                         row.Code = dataReader["Code"].ToString();
                         row.Description = dataReader["Description"].ToString();
                         row.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
