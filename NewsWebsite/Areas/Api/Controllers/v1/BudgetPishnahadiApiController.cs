@@ -161,6 +161,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("PishnahadiNonCash", param.PishnahadiNonCash);
                     sqlCommand.Parameters.AddWithValue("Pishnahadi", param.Pishnahadi);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.Parameters.AddWithValue("DelegateTo", param.DelegateTo??0);
+                    sqlCommand.Parameters.AddWithValue("DelegateAmount", param.DelegateAmount??0);
+                    sqlCommand.Parameters.AddWithValue("DelegatePercentage", param.DelegatePercentage??0);
            
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
