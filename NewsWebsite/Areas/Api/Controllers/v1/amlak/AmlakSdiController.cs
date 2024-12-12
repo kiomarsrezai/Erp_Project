@@ -4,28 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using NewsWebsite.Common;
-using NewsWebsite.Common.Api;
 using NewsWebsite.Common.Api.Attributes;
 using NewsWebsite.Data.Contracts;
-using NewsWebsite.ViewModels.Api.Contract;
-using NewsWebsite.ViewModels.Api.Public;
 using Newtonsoft.Json;
-using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data;
-using NewsWebsite.ViewModels;
-using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using NewsWebsite.Data.Models.AmlakAgreement;
 using NewsWebsite.Data.Models.AmlakArchive;
 using NewsWebsite.Data.Models.AmlakPrivate;
-using NewsWebsite.ViewModels.Api.Contract.AmlakAgreement;
 using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
+using Newtonsoft.Json.Linq;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -52,11 +47,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         [HttpGet]
         [Route("updateFromSdi")]
         public async Task<IActionResult> UpdateDataFromSdiAgreement(string type){
-            await ConnectSdi();
-
             switch (type){
                 case "private":
-                    await UpdatePrivate();
+                    return await UpdatePrivate();
                     break;
                 case "rentableAmlak":
                     break;
@@ -74,94 +67,127 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Ok("موفق");
         }
 
+        // ------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<string> ConnectSdi(){
-            var options = new RestClientOptions("https://sdi.ahvaz.ir"){
-                MaxTimeout = -1,
+        private async Task<string> GetToken(){
+            HttpClient httpClient = GetClientHttp();
+            var requestUri = "geoapi/user/login/";
+
+            var loginData = new{
+                username = "ERP_Fava",
+                password = "123456",
+                appId = "mobilegis"
             };
-            var client = new RestClient(options);
-            var request = new RestRequest("/geoapi/user/login/", Method.Post);
-            request.AddHeader("content-type", "application/json");
-            request.AddHeader("Accept", "application/json, text/plain, */*");
-            request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            var body = @"{" + "\n" +
-                       @" ""username"": ""ERP_Fava""," + "\n" +
-                       @" ""password"":" + "\n" +
-                       @"""123456""," + "\n" +
-                       @" ""appId"": ""mobilegis""" + "\n" +
-                       @"}";
-            request.AddStringBody(body, DataFormat.Json);
-            RestResponse responselogin = await client.ExecuteAsync(request);
-            var resplogin = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(responselogin.Content.ToString());
 
-            //var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
-            //{
-            //    MaxTimeout = -1,
-            //};
-            //var client2 = new RestClient(options2);
-            //var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey="+ resplogin.api_key.ToString(), Method.Get);
-            //request.AddHeader("content-type", "application/json");
-            //request.AddHeader("Accept", "application/json, text/plain, */*");
-            //request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            //RestResponse response2 = await client2.ExecuteAsync(request2);
-            ////UTF8Encoding uTF8Encoding = new UTF8Encoding();
-            ////uTF8Encoding.GetBytes(response2.Content.ToString());
-            //byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
-            //string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
-            var options2 = new RestClientOptions("https://sdi.ahvaz.ir"){
-                MaxTimeout = -1,
-            };
-            var client2 = new RestClient(options2);
-            var request2 = new RestRequest(
-                "/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=all_polygon_amlak_472&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey=e434be85d126299659334f104feffb18f51328a6",
-                Method.Post);
-            request2.AddHeader("content-type", "application/json");
-            request2.AddHeader("Accept", "application/json, text/plain, */*");
-            request2.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            RestResponse response2 = await client2.ExecuteAsync(request2);
-            byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
-            string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
+            var jsonData = JsonConvert.SerializeObject(loginData);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            httpClient.DefaultRequestHeaders.Add("Cookie", "cookiesession1=678ADA6551F851226C1A802ED2CBF5B5; csrftoken=rYrDlQ3kyyW0Vf028pjJT819oTzRxOIy; sessionid=ycae2bnq96xt09fymn6vmzq36y5ezdb6");
 
-            return newmessage;
+            var response = await httpClient.PostAsync(requestUri, content);
+            if (response.IsSuccessStatusCode){
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                // Parse the JSON response and return the api_key
+                var responseJson = JObject.Parse(responseContent);
+                return responseJson["api_key"]?.ToString();
+            }
+
+            return null;
         }
 
-        private async Task UpdatePrivate(){
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "amlak.json");
-            string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+
+        private HttpClient GetClientHttp(){
+            HttpClient _httpClient = new HttpClient();
+
+            _httpClient.BaseAddress = new Uri("https://sdi.ahvaz.ir/");
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            return _httpClient;
+        }
+
+        // ------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------------------------------------
 
 
-            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
+        private async Task<IActionResult> UpdatePrivate(){
+            // from File
+            // var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "amlak.json");
+            // string responseContent = await System.IO.File.ReadAllTextAsync(filePath);
+
+            // from API
+            string authKey = await GetToken();
+            HttpClient httpClient = GetClientHttp();
+
+            var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=all_amlak_v14030910_4498&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
+            httpClient.DefaultRequestHeaders.Add("Cookie", "cookiesession1=678ADA6551F851226C1A802ED2CBF5B5; csrftoken=rYrDlQ3kyyW0Vf028pjJT819oTzRxOIy; sessionid=ycae2bnq96xt09fymn6vmzq36y5ezdb6");
+            var response = await httpClient.GetAsync(requestUri);
+
+            if (!response.IsSuccessStatusCode)
+                return BadRequest($"Error: {response.StatusCode} / {authKey}");
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var respLayer = JsonConvert.DeserializeObject<SdiDto>(responseContent.ToString());
 
             for (int i = 0; i < respLayer.TotalFeatures; i++){
                 var feature = respLayer.Features[i];
 
                 var oldItem = await _db.AmlakPrivateNews.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
 
+                var mainPlateNumber = 0;
+                var subPlateNumber = 0;
+                var area = 0.0;
+                if (feature.Properties.pelak_sabt != null){
+                    var plaks = feature.Properties.pelak_sabt.Split("/");
+                    try{
+                        if (plaks.Length > 0){
+                            mainPlateNumber = int.Parse(plaks.GetValue(0).ToString());
+                        }
+                    }
+                    catch (Exception e){
+                    }
+
+                    try{
+                        if (plaks.Length > 1){
+                            subPlateNumber = int.Parse(plaks.GetValue(1).ToString());
+                        }
+                    }
+                    catch (Exception e){
+                    }
+                }
+
+                if (feature.Properties.shape_area != null){
+                    area = (double)feature.Properties.shape_area;
+                }
+
                 if (oldItem == null){
                     var item = new AmlakPrivateNew{
-                        AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
+                        AreaId = 52,
                         OwnerId = 9, // شهرداری مرکز
                         SdiId = feature.Id,
                         Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
-                        SdiPlateNumber = feature.Properties.Pelaksabti,
-                        Masahat = 0,
-                        PredictionUsage = "",
+                        SdiPlateNumber = feature.Properties.pelak_sabt,
+                        MainPlateNumber = mainPlateNumber.ToString(),
+                        SubPlateNumber = subPlateNumber.ToString(),
+                        Masahat = area,
                         Title = feature.Id,
-                        DocumentType = 0,
                         CreatedAt = Helpers.GetServerDateTimeType(),
                         UpdatedAt = Helpers.GetServerDateTimeType(),
                     };
                     _db.Add(item);
                     await _db.SaveChangesAsync();
                 }
-                else{
-                    oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
-                    oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
-                    oldItem.Title = feature.Id;
-                    await _db.SaveChangesAsync();
-                }
+                // else{
+                //     oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
+                //     oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
+                //     await _db.SaveChangesAsync();
+                // }
             }
+
+            return Ok("ok");
         }
+        
+        // ------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------------------------------------
 
         private async Task UpdateArchive(){
             var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "archive.json");
@@ -196,21 +222,60 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             }
         }
 
-        private async Task UpdateAgreements(){
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Agreement.json");
-            string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+        // ------------------------------------------------------------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------------------------------------
 
+        private async Task<IActionResult> UpdateAgreements(){
+            // From File
+            // var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Agreement.json");
+            // string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
 
-            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
+            // From API
+            string authKey = await GetToken();
+            HttpClient httpClient = GetClientHttp();
+
+            var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=tavafoqat1_963&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
+            httpClient.DefaultRequestHeaders.Add("Cookie", "cookiesession1=678ADA6551F851226C1A802ED2CBF5B5; csrftoken=rYrDlQ3kyyW0Vf028pjJT819oTzRxOIy; sessionid=ycae2bnq96xt09fymn6vmzq36y5ezdb6");
+            var response = await httpClient.GetAsync(requestUri);
+
+            if (!response.IsSuccessStatusCode)
+                return BadRequest($"Error: {response.StatusCode} / {authKey}");
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var respLayer = JsonConvert.DeserializeObject<SdiDto>(responseContent.ToString());
 
             for (int i = 0; i < respLayer.TotalFeatures - 1; i++){
                 var feature = respLayer.Features[i];
                 var oldItem = await _db.AmlakAgreements.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
 
+                var mainPlateNumber = 0;
+                var subPlateNumber = 0;
+                if (feature.Properties.pelak_sabt != null){
+                    var plaks = feature.Properties.pelak_sabt.Split("/");
+                    try{
+
+                        if (plaks.Length > 0){
+                            mainPlateNumber = int.Parse(plaks.GetValue(0).ToString());
+                        }
+                    }catch (Exception e){
+                        
+                    }
+                    try{
+                        if (plaks.Length > 1){
+                            subPlateNumber = int.Parse(plaks.GetValue(1).ToString());
+                        }
+                    }catch (Exception e){
+                        
+                    }
+                }
+
+                
                 if (oldItem == null){
                     var item = new AmlakAgreement(){
                         SdiId = feature.Id,
                         Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
+                        MainPlateNumber =mainPlateNumber,
+                        SubPlateNumber =subPlateNumber,
                         IsSubmitted = 0,
                         CreatedAt = Helpers.GetServerDateTimeType(),
                         UpdatedAt = Helpers.GetServerDateTimeType(),
@@ -220,11 +285,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
                     await SaveLogAsync(_db, item.Id, TargetTypes.Agreement, "توافق ویرایش شد.");
                 }
-                else{
-                    oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
-                    await _db.SaveChangesAsync();
-                }
+                // else{
+                //     oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
+                //     await _db.SaveChangesAsync();
+                // }
             }
+            return Ok("ok");
         }
+
     }
 }

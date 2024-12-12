@@ -33,6 +33,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public DateTime LastEditedDate{ get; set; }
         public string Name{ get; set; }
         public string Address{ get; set; }
+        public string? pelak_sabt{ get; set; }
+        public double? shape_area{ get; set; }
     }
 
     public class Crs {

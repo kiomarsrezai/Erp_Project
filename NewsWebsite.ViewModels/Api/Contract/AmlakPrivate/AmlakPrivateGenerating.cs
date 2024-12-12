@@ -52,6 +52,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string DecisionLetterDateFa{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
+        public AmlakPrivateListVm AmlakPrivate{ get; set; }
+
     }
 
     public class AmlakPrivateGeneratingUpdateVm : AmlakPrivateGeneratingBaseModel {
