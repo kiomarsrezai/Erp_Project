@@ -83,6 +83,24 @@ namespace NewsWebsite.ViewModels.Fetch
         [Display(Name = "ردیف مربوط به سال جدید است")]
         public int IsNewYear { get; set; }
 
+        [Display(Name = "نیابت به")]
+        public int DelegateTo { get; set; }
+
+        [Display(Name = "نام نیابت به")]
+        public string DelegateToName { get; set; }
+
+        [Display(Name = "مبلغ نیابت")]
+        public Int64 DelegateAmount { get; set; }
+
+        [Display(Name = "درصد نظارت")]
+        public int DelegatePercentage { get; set; }
+
+        [Display(Name = "درصد نظارت")]
+        public int ExecutionId { get; set; }
+
+        [Display(Name = "درصد نظارت")]
+        public int ProctorId { get; set; }
+
         [Display(Name = "سطح")]
         public int LevelNumber { get; set; }
         public bool Crud { get; set; }

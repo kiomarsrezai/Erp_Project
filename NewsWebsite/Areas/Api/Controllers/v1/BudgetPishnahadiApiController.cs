@@ -70,6 +70,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
                         row.ConfirmStatus = int.Parse(dataReader["ConfirmStatus"].ToString());
                         row.IsNewYear = int.Parse(dataReader["isNewYear"].ToString());
+                        row.DelegateTo = int.Parse(dataReader["DelegateTo"].ToString());
+                        row.DelegateToName = dataReader["DelegateToName"].ToString();
+                        row.DelegateAmount = Int64.Parse(dataReader["DelegateAmount"].ToString());
+                        row.DelegatePercentage = int.Parse(dataReader["DelegatePercentage"].ToString());
+                        row.ExecutionId = int.Parse(dataReader["ExecutionId"].ToString());
+                        row.ProctorId = int.Parse(dataReader["ProctorId"].ToString());
                         row.Crud = (bool)dataReader["Crud"];
                         if (row.Mosavab != 0)
                         {
@@ -146,6 +152,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             string readercount = null;
 
+            if ((param.Pishnahadi - (param.DelegatePercentage ?? 0) * (param.DelegateAmount ?? 0)/100)  < (param.DelegateAmount ?? 0)){
+                return BadRequest("مبلغ ردیف نمی تواند کمتر از مبلغ نیابت بعلاوه حق نظارت باشد");
+            }
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP004_BudgetProposal_Inline_Update", sqlconnect))
@@ -160,7 +169,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("PishnahadiCash", param.PishnahadiCash);
                     sqlCommand.Parameters.AddWithValue("PishnahadiNonCash", param.PishnahadiNonCash);
                     sqlCommand.Parameters.AddWithValue("Pishnahadi", param.Pishnahadi);
-                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    // sqlCommand.Parameters.AddWithValue("Description", param.Description);
                     sqlCommand.Parameters.AddWithValue("DelegateTo", param.DelegateTo??0);
                     sqlCommand.Parameters.AddWithValue("DelegateAmount", param.DelegateAmount??0);
                     sqlCommand.Parameters.AddWithValue("DelegatePercentage", param.DelegatePercentage??0);
