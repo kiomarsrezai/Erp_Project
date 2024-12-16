@@ -62,6 +62,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<AmlakPrivateNew> AmlakPrivateNews { get; set; }
         public virtual DbSet<AmlakPrivateGenerating> AmlakPrivateGeneratings { get; set; }
         public virtual DbSet<AmlakPrivateDocHistory> AmlakPrivateDocHistories { get; set; }
+        public virtual DbSet<AmlakPrivateTransfer> AmlakPrivateTransfers { get; set; }
         public virtual DbSet<AmlakInfo> AmlakInfos { get; set; }
         public virtual DbSet<AmlakInfoContractCheck> AmlakInfoContractChecks { get; set; }
         public virtual DbSet<AmlakInfoContractNotice> AmlakInfoContractNotices { get; set; }
@@ -263,7 +264,13 @@ namespace NewsWebsite.Data
                 entity.ToTable("Tbl_Vasets");
             });
 
+
+            modelBuilder.Entity<AmlakPrivateDocHistory>()
+                .HasOne(dh => dh.AmlakPrivateNew)
+                .WithMany(apn => apn.AmlakPrivateDocHistories)
+                .HasForeignKey(dh => dh.AmlakPrivateId);
            
+            
             OnModelCreatingPartial(modelBuilder);
         }
 

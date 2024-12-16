@@ -22,6 +22,7 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public int? UrbanPlanningPermitRequired{ get; set; } // نیاز به پروانه شهرسازی
         public string? UrbanPlanningPermitNumber{ get; set; } // شماره پروانه شهرسازی
         public DateTime? UrbanPlanningPermitDate{ get; set; } // تاریخ پروانه شهرسازی
+        public DateTime? UrbanPlanningPermitLetterDate{ get; set; } // تاریخ نامه شهرسازی
         public string? DocumentImage{ get; set; } // تصویر سند
         public string? ArchitecturalMapImage{ get; set; } // تصویر نقشه معماری
         public string? SurveyMapImage{ get; set; } // تصویر نقشه برداری
@@ -51,6 +52,9 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         
         [NotMapped]
         public string? UrbanPlanningPermitDateFa{get{ return Helpers.MiladiToHejri(UrbanPlanningPermitDate); }}
+        
+        [NotMapped]
+        public string? UrbanPlanningPermitLetterDateFa{get{ return Helpers.MiladiToHejri(UrbanPlanningPermitLetterDate); }}
         
         [NotMapped]
         public string? DecisionLetterDateFa{get{ return Helpers.MiladiToHejri(DecisionLetterDate); }}
@@ -111,6 +115,18 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public static IQueryable<AmlakPrivateGenerating> Decision(this IQueryable<AmlakPrivateGenerating> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.Decision == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakPrivateGenerating> MainPlateNumber(this IQueryable<AmlakPrivateGenerating> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.AmlakPrivate.MainPlateNumber == value);
+            }
+            return query;
+        }        
+        public static IQueryable<AmlakPrivateGenerating> SubPlateNumber(this IQueryable<AmlakPrivateGenerating> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.AmlakPrivate.SubPlateNumber == value);
             }
             return query;
         }

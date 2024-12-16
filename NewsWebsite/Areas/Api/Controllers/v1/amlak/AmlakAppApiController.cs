@@ -75,6 +75,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var amlakPrivatesTypeZaminCount = await _db.AmlakPrivateNews.PropertyType(2).CountAsync();
             var amlakPrivatesTypeKhaneCount = await _db.AmlakPrivateNews.PropertyType(3).CountAsync();
             
+            var amlakPrivatesWithParcelCount = await _db.AmlakPrivateNews.HasSdiLayer(1).CountAsync();
+            var amlakPrivatesWithoutParcelCount = await _db.AmlakPrivateNews.PropertyType(0).CountAsync();
+            
             
             
             var parcelsCount = await _db.AmlakParcels.CountAsync();
@@ -112,7 +115,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             
             return Ok(new{
-                amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,
+                amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,amlakPrivatesWithParcelCount,amlakPrivatesWithoutParcelCount,
                 parcelsCount,parcelsPendingCount,parcelsAcceptedCount,parcelsRejectedCount,parcelsRemovedCount,
                 archivesNotSubmittedCount,archivesSubmittedCount,
                 amlakInfosNonRentableAllCount,amlakInfosNonRentableParkCount,amlakInfosNonRentableGozarCount,amlakInfosNonRentableOtherCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,
@@ -133,7 +136,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var areas = await _db.TblAreas.Where(a => a.Id <= 9 || a.Id == 52).ToListAsync();
             foreach (var area in areas){
                 if (area.Id == 9){
-                    area.AreaName = "شهرداری مرکز";
+                    area.AreaName = "شهرداری اهواز";
                 }
             }
             return Ok(new {areas});
@@ -147,7 +150,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var owners = await _db.TblAreas.Where(a => a.Id <= 9 || a.StructureId == 2 || a.Id == 52).ToListAsync();
             foreach (var owner in owners){
                 if (owner.Id == 9){
-                    owner.AreaName = "شهرداری مرکز";
+                    owner.AreaName = "شهرداری اهواز";
                 }
             }
             return Ok(new {owners});

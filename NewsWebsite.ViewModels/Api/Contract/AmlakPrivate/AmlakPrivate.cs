@@ -19,6 +19,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int DocumentType{ get; set; }
         public string MainPlateNumber { get; set; }
         public string SubPlateNumber { get; set; }
+        public string PropertyType { get; set; }
+        public string UsageUrban { get; set; }
     }
 
     public class AmlakPrivateListVm : AmlakPrivateBaseModel {
@@ -27,6 +29,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
 
+        public AmlakPrivateDocHistoryVm LastDocHistory{ get; set; }
         public AreaViewModel Area{ get; set; }
         public AreaViewModel Owner{ get; set; }
     }
@@ -38,8 +41,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Section { get; set; }
         public string Address { get; set; }
         public string UsageOnDocument { get; set; }
-        public string UsageUrban { get; set; }
-        public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
         public string OwnershipValueType { get; set; }
         public double OwnershipValue { get; set; }
@@ -83,8 +84,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string Section { get; set; }
         public string Address { get; set; }
         public string UsageOnDocument { get; set; }
-        public string UsageUrban { get; set; }
-        public string PropertyType { get; set; }
         public string OwnershipType { get; set; }
         public string OwnershipValueType { get; set; }
         public double OwnershipValue { get; set; }
@@ -128,6 +127,8 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string MultiplePlates{ get; set; }
         public int? PropertyType{ get; set; }
         public int? LatestGeneratingDecision{ get; set; }
+        public int? IsSubmitted{ get; set; }
+        public int? HasSdiLayer{ get; set; }
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;
         public int ExportKMZ{ get; set; } = 0;

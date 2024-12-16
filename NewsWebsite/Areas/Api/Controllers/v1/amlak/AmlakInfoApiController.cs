@@ -54,112 +54,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         }
 
         
-        [HttpGet]
-        [Route("UpdateDataFromSdi_ahvaz_kiosk14000719_8798")]
-        public async Task<ApiResult<ResponseLayerDto>> UpdateDataFromSdi_ahvaz_kiosk()
-        {
-            var options = new RestClientOptions("https://sdi.ahvaz.ir")
-            {
-                MaxTimeout = -1,
-            };
-            var client = new RestClient(options);
-            var request = new RestRequest("/geoapi/user/login/", Method.Post);
-            request.AddHeader("content-type", "application/json");
-            request.AddHeader("Accept", "application/json, text/plain, */*");
-            request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            var body = @"{" + "\n" +
-            @" ""username"": ""ERP_Fava""," + "\n" +
-            @" ""password"":" + "\n" +
-            @"""123456""," + "\n" +
-            @" ""appId"": ""mobilegis""" + "\n" +
-            @"}";
-            request.AddStringBody(body, DataFormat.Json);
-            RestResponse responselogin = await client.ExecuteAsync(request);
-            var resplogin = JsonConvert.DeserializeObject<ResponseLoginSdiDto>(responselogin.Content.ToString());
-
-            //var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
-            //{
-            //    MaxTimeout = -1,
-            //};
-            //var client2 = new RestClient(options2);
-            //var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey="+ resplogin.api_key.ToString(), Method.Get);
-            //request.AddHeader("content-type", "application/json");
-            //request.AddHeader("Accept", "application/json, text/plain, */*");
-            //request.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            //RestResponse response2 = await client2.ExecuteAsync(request2);
-            ////UTF8Encoding uTF8Encoding = new UTF8Encoding();
-            ////uTF8Encoding.GetBytes(response2.Content.ToString());
-            //byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
-            //string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
-            var options2 = new RestClientOptions("https://sdi.ahvaz.ir")
-            {
-                MaxTimeout = -1,
-            };
-            var client2 = new RestClient(options2);
-            var request2 = new RestRequest("/geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=10000&startIndex=0&authkey=e434be85d126299659334f104feffb18f51328a6", Method.Post);
-            request2.AddHeader("content-type", "application/json");
-            request2.AddHeader("Accept", "application/json, text/plain, */*");
-            request2.AddHeader("Cookie", "cookiesession1=678ADA629490114186F01A0EF409171D; csrftoken=dKwYwwwT5wcj60bhh4ojKy1R4JQrdxD7; sessionid=bsj9qwbunhlpl7bymk7o9uy3x6cr9ubg");
-            RestResponse response2 = await client2.ExecuteAsync(request2);
-            byte[] messageBytes = Encoding.UTF8.GetBytes(response2.Content);
-            string newmessage = Encoding.UTF8.GetString(messageBytes, 0, messageBytes.Length);
-
-            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
-
-            for (int i = 0; i < respLayer.TotalFeatures; i++){
-                var feature = respLayer.Features[i];
-
-                var oldItem = await _db.AmlakInfos.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
-
-                if (oldItem == null){
-                    var item = new AmlakInfo(){
-                        SdiId = feature.Id,
-                        AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52,
-                        Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]),
-                        Masahat = 0,
-                        AmlakInfoKindId= 3,
-                        EstateInfoName = feature.Properties.Name,
-                        EstateInfoAddress = feature.Properties.Address,
-                        CreatedAt = Helpers.GetServerDateTimeType(),
-                        UpdatedAt = Helpers.GetServerDateTimeType(),
-                    };
-                    _db.Add(item);
-                    await _db.SaveChangesAsync();
-                    
-                    await SaveLogAsync(_db, item.Id, TargetTypes.AmlakInfo, "ملک عمومی ثبت شد");
-
-                }
-                else{
-                    oldItem.AreaId = feature.Properties.Mantaqe != null ? feature.Properties.Mantaqe.ToInt() : 52;
-                    oldItem.Coordinates = feature.Geometry == null ? "[]" : JsonConvert.SerializeObject(feature.Geometry.Coordinates[0]);
-                    await _db.SaveChangesAsync();
-                }
-            }
-            
-            // for (int i = 0; i <= respLayer.totalFeatures; i++)
-            // {
-            //     using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            //     {
-            //         using (SqlCommand sqlCommand = new SqlCommand("SP012_AmlakInfo_Insert", sqlconnect))
-            //         {
-            //             sqlconnect.Open();
-            //             sqlCommand.Parameters.AddWithValue("AmlakInfoId", respLayer.features[i].id);
-            //             sqlCommand.Parameters.AddWithValue("AreaId", respLayer.features[i].properties.mantaqe);
-            //             sqlCommand.Parameters.AddWithValue("AmlakInfoKindId", 3);
-            //             sqlCommand.Parameters.AddWithValue("EstateInfoName", respLayer.features[i].properties.name);
-            //             sqlCommand.Parameters.AddWithValue("EstateInfoAddress", respLayer.features[i].properties.adress);
-            //             sqlCommand.Parameters.AddWithValue("AmlakInfolong", respLayer.features[i].geometry.coordinates[0][0].ToString());
-            //             sqlCommand.Parameters.AddWithValue("AmlakInfolate", respLayer.features[i].geometry.coordinates[0][1].ToString());
-            //             sqlCommand.CommandType = CommandType.StoredProcedure;
-            //             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-            //
-            //         }
-            //     }
-            // }
-
-            return Ok(respLayer);
-        }
-    
 
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -257,10 +151,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             foreach (var item in items){
                 if (item.Area!=null && item.Area.Id == 9){
-                    item.Area.AreaName = "شهرداری مرکز";
+                    item.Area.AreaName = "شهرداری اهواز";
                 }
                 if (item.Owner!=null && item.Owner.Id == 9){
-                    item.Owner.AreaName = "شهرداری مرکز";
+                    item.Owner.AreaName = "شهرداری اهواز";
                 }
             }
             if (param.Export == 1){
@@ -424,10 +318,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
 
             
             if (item.Area!=null && item.Area.Id == 9){
-                item.Area.AreaName = "شهرداری مرکز";
+                item.Area.AreaName = "شهرداری اهواز";
             }
             if (item.Owner!=null && item.Owner.Id == 9){
-                item.Owner.AreaName = "شهرداری مرکز";
+                item.Owner.AreaName = "شهرداری اهواز";
             }
             
             var finalItem = MyMapper.MapTo<AmlakInfo, AmlakInfoReadVm>(item);

@@ -19,6 +19,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int UrbanPlanningPermitRequired{ get; set; }
         public string UrbanPlanningPermitNumber{ get; set; }
         public string UrbanPlanningPermitDate{ get; set; }
+        public string UrbanPlanningPermitLetterDate{ get; set; }
         public string DocumentImage{ get; set; }
         public string ArchitecturalMapImage{ get; set; }
         public string SurveyMapImage{ get; set; }
@@ -38,6 +39,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
     public class AmlakPrivateGeneratingListVm : AmlakPrivateGeneratingBaseModel {
         public int Id{ get; set; }
+        public int AmlakPrivateId{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
         public AmlakPrivateListVm AmlakPrivate{ get; set; }
@@ -46,6 +48,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     public class AmlakPrivateGeneratingReadVm : AmlakPrivateGeneratingBaseModel {
         public int Id{ get; set; }
         public string UrbanPlanningPermitDateFa{ get; set; }
+        public string UrbanPlanningPermitLetterDateFa{ get; set; }
         public string LetterDate1Fa{ get; set; }
         public string LetterDate2Fa{ get; set; }
         public string LetterDate3Fa{ get; set; }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.Entities;
+using NewsWebsite.ViewModels.Api.Contract.AmlakPrivate;
 using NewsWebsite.ViewModels.Api.Public;
 
 namespace NewsWebsite.Data.Models.AmlakPrivate {
@@ -57,12 +59,17 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string MeterNumberWater   { get; set; }
         public string MeterNumberElectricity   { get; set; }
         public string MeterNumberPhone   { get; set; }
+        public int IsTransfered   { get; set; }
         public DateTime? CreatedAt{ get; set; }
         public DateTime? UpdatedAt{ get; set; }
         
         
         public virtual TblAreas Area{ get; set; }
         public virtual TblAreas Owner{ get; set; }
+        public virtual ICollection<AmlakPrivateDocHistory> AmlakPrivateDocHistories { get; set; }
+        
+        [NotMapped]
+        public virtual AmlakPrivateDocHistory LastDocHistory { get; set; }
 
         [NotMapped]
         public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
@@ -211,6 +218,29 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(a=> EF.Functions.Like(a.Title, $"%{value}%") 
                 );
+            }
+            return query;
+        }
+        public static IQueryable<AmlakPrivateNew> IsSubmitted(this IQueryable<AmlakPrivateNew> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                if (value == 1){
+                    return query.Where(e => e.MainPlateNumber != "0" && e.SubPlateNumber != "0" && e.Address!=null&& e.Address!=""&& e.DocumentType!=0 && e.Masahat!=0D && e.Section!=null && e.Section!="" && e.AreaId!=0 );
+                }
+                else if (value == 0){
+                    return query.Where(e => !(e.MainPlateNumber != "0" && e.SubPlateNumber != "0" && e.Address!=null&& e.Address!=""&& e.DocumentType!=0 && e.Masahat!=0D && e.Section!=null &&  e.Section!="" && e.AreaId!=0 ));
+                }
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakPrivateNew> HasSdiLayer(this IQueryable<AmlakPrivateNew> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                if (value == 1){
+                    return query.Where(e => e.SdiId!=null );
+                }
+                else if (value == 0){
+                    return query.Where(e => e.SdiId==null );
+                }
             }
             return query;
         }

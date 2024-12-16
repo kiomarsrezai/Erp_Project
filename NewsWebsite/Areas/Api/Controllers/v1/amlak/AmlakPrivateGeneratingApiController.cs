@@ -39,7 +39,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         public async Task<ApiResult<object>> AmlakPrivateGeneratingList(AmlakPrivateGeneratingReadInputVm param){
             await CheckUserAuth(_db);
 
-            var builder = _db.AmlakPrivateGeneratings.AmlakPrivateId(param.AmlakPrivateId).Decision(param.Decision);
+            var builder = _db.AmlakPrivateGeneratings.AmlakPrivateId(param.AmlakPrivateId).Decision(param.Decision).MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber);
 
             var pageCount = (int)Math.Ceiling((await builder.CountAsync())/Convert.ToDouble(param.PageRows));
 
@@ -98,6 +98,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UrbanPlanningPermitRequired = param.UrbanPlanningPermitRequired;
             item.UrbanPlanningPermitNumber = param.UrbanPlanningPermitNumber;
             if (!string.IsNullOrEmpty(param.UrbanPlanningPermitDate)) item.UrbanPlanningPermitDate = DateTime.Parse(param.UrbanPlanningPermitDate);
+            if (!string.IsNullOrEmpty(param.UrbanPlanningPermitLetterDate)) item.UrbanPlanningPermitLetterDate = DateTime.Parse(param.UrbanPlanningPermitLetterDate);
             item.DocumentImage=param.DocumentImage;
             item.ArchitecturalMapImage=param.ArchitecturalMapImage;
             item.SurveyMapImage=param.SurveyMapImage;
@@ -148,6 +149,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.UrbanPlanningPermitRequired = param.UrbanPlanningPermitRequired;
             item.UrbanPlanningPermitNumber = param.UrbanPlanningPermitNumber;
             if (!string.IsNullOrEmpty(param.UrbanPlanningPermitDate)) item.UrbanPlanningPermitDate = DateTime.Parse(param.UrbanPlanningPermitDate);
+            if (!string.IsNullOrEmpty(param.UrbanPlanningPermitLetterDate)) item.UrbanPlanningPermitLetterDate = DateTime.Parse(param.UrbanPlanningPermitLetterDate);
             item.DocumentImage=param.DocumentImage;
             item.ArchitecturalMapImage=param.ArchitecturalMapImage;
             item.SurveyMapImage=param.SurveyMapImage;

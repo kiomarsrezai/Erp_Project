@@ -40,6 +40,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakLog {
         Parcel=6,
         Supplier=7,
         Admin=8,
+        Transfer=9,
     
     }
 }

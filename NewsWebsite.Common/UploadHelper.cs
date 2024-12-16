@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace NewsWebsite.Common {
     public class UploadHelper {
-        public static async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,jpeg,png,gif,bmp,pdf",int maxSizeMB=30){
+        public static async Task<string> UploadFile(IFormFile file, string path,string extensions="jpg,jpeg,png,gif,bmp,pdf,doc,docx",int maxSizeMB=30){
             
             if (!CheckFileType(file, extensions))
                 throw new ErrMessageException("فایل نامعتبر می باشد . پسوند های مجاز :  "+extensions);

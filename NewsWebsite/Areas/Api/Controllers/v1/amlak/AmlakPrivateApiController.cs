@@ -58,7 +58,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .MasahatFrom(param.MasahatFrom).MasahatTo(param.MasahatTo)
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
                 .MultiplePlates(param.MultiplePlates)
-                .PropertyType(param.PropertyType).Search(param.Search)
+                .PropertyType(param.PropertyType).Search(param.Search).IsSubmitted(param.IsSubmitted)
+                .HasSdiLayer(param.HasSdiLayer)
                 .LatestGeneratingDecision(param.LatestGeneratingDecision);
 
             
@@ -69,26 +70,53 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 param.Page = 1;
                 param.PageRows = 100000;
             }
-            
+
+            dynamic items;
             if (param.ForMap == 0){
                 builder = builder
                     .Include(a => a.Area)
                     .Include(a => a.Owner)
+                    .Select(ap => new AmlakPrivateNew
+                        {
+                            Id = ap.Id,
+                            AreaId = ap.AreaId,
+                            OwnerId = ap.OwnerId,
+                            Title = ap.Title,
+                            PredictionUsage = ap.PredictionUsage,
+                            SadaCode = ap.SadaCode,
+                            JamCode = ap.JamCode,
+                            Masahat = ap.Masahat,
+                            DocumentType = ap.DocumentType,
+                            MainPlateNumber = ap.MainPlateNumber,
+                            SubPlateNumber = ap.SubPlateNumber,
+                            PropertyType = ap.PropertyType,
+                            UsageUrban = ap.UsageUrban,
+                            Area = ap.Area,
+                            Owner = ap.Owner,
+                            LastDocHistory = ap.AmlakPrivateDocHistories
+                                .Where(dh => dh.Type == "general")
+                                .OrderByDescending(dh => dh.Id)
+                                .FirstOrDefault()
+                        })
                     .OrderBy(param.Sort,param.SortType)
-                    .Page2(param.Page, param.PageRows);
-            }
-            var items=await builder.ToListAsync();
+                    .Page2(param.Page, param.PageRows)
+                    ;
+                items=await builder!.ToListAsync();
 
+            }
+            else{
+                items=await builder.ToListAsync();
+            }
 
             foreach (var item in items){
                 if (item.Area!=null && item.Area.Id == 9){
-                    item.Area.AreaName = "شهرداری مرکز";
+                    item.Area.AreaName = "شهرداری اهواز";
                 }
                 if (item.Owner!=null && item.Owner.Id == 9){
-                    item.Owner.AreaName = "شهرداری مرکز";
+                    item.Owner.AreaName = "شهرداری اهواز";
                 }
             }
-            
+        
             if (param.Export == 1){
                 var fileUrl = ExportExcel(items);
                 return Ok(new {fileUrl});
@@ -97,9 +125,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 var fileUrl = ExportKmz(items);
                 return Ok(new {fileUrl});
             }
-            
+        
             var finalItems = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateListVm>(items);
 
+            // return Ok(new{items,pageCount});
             return Ok(new{items=finalItems,pageCount});
         }
 
@@ -186,10 +215,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 return BadRequest("پیدا نشد");
             
             if (item.Area!=null && item.Area.Id == 9){
-                item.Area.AreaName = "شهرداری مرکز";
+                item.Area.AreaName = "شهرداری اهواز";
             }
             if (item.Owner!=null && item.Owner.Id == 9){
-                item.Owner.AreaName = "شهرداری مرکز";
+                item.Owner.AreaName = "شهرداری اهواز";
             }
             
             var finalItem = MyMapper.MapTo<AmlakPrivateNew, AmlakPrivateReadVm>(item);
@@ -283,6 +312,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 return BadRequest("این نوع مجاز نمی باشد");
             }
             
+            // var item = new AmlakPrivateDocHistory();
+            // item.AmlakPrivateId = param.AmlakPrivateId;
+            // item.Type = param.Type;
+            // item.Status = param.Status;
+            // item.Desc = param.Desc;
+            // item.LetterDate =!string.IsNullOrEmpty( param.LetterDate) ? DateTime.Parse( param.LetterDate) : (DateTime?)null;;
+            // item.LetterNumber = param.LetterNumber;
+            // item.PersonType = param.PersonType;
+            // item.PersonName = param.PersonName;
+            // item.Date = Helpers.GetServerDateTimeType();
+            // _db.Add(item);
+            // await _db.SaveChangesAsync();
+            //
+            // await SaveLogAsync(_db, item.AmlakPrivateId, TargetTypes.AmlakPrivate, "وضعیت سند با شناسه "+item.Id+" اضافه شد");
+            var item= await DoAmlakPrivateDocHistoryStore(_db,param);
+            await SaveLogAsync(_db, item.AmlakPrivateId, TargetTypes.AmlakPrivate, "وضعیت سند با شناسه "+item.Id+" اضافه شد");
+
+            return Ok("موفق");
+        }
+
+         
+        public static async Task<AmlakPrivateDocHistory> DoAmlakPrivateDocHistoryStore(ProgramBuddbContext _db, AmlakPrivateDocHistoryStoreVm param){
+            
             var item = new AmlakPrivateDocHistory();
             item.AmlakPrivateId = param.AmlakPrivateId;
             item.Type = param.Type;
@@ -290,17 +342,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.Desc = param.Desc;
             item.LetterDate =!string.IsNullOrEmpty( param.LetterDate) ? DateTime.Parse( param.LetterDate) : (DateTime?)null;;
             item.LetterNumber = param.LetterNumber;
+            item.PersonType = param.PersonType;
+            item.PersonName = param.PersonName;
             item.Date = Helpers.GetServerDateTimeType();
             _db.Add(item);
             await _db.SaveChangesAsync();
 
-            await SaveLogAsync(_db, item.AmlakPrivateId, TargetTypes.AmlakPrivate, "وضعیت سند با شناسه "+item.Id+" اضافه شد");
-
             
-            return Ok("موفق");
+            return item;
         }
 
-         
+        
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -416,6 +468,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Id.ToString();
         }
         
+        
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------
+
         [Route("import")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakPrivateUpdate(ExcelImportInputVm param){
@@ -446,7 +503,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             var notExistRows = "";
 
             var areas = _db.TblAreas.ToDictionary(a => a.AreaName, a => a.Id);
-            for (int i = 2; i <= sheet.LastRowNum; i++){
+            for (int i = 1500; i <= sheet.LastRowNum; i++){
                 IRow row = sheet.GetRow(i);
                 if (row == null) continue;
                 if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
@@ -456,25 +513,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 var subPlateNumber = getCellInt(row,1);
                 if (mainPlateNumber==0 && subPlateNumber==0 ) continue;
 
-                // Generate SdiPlateNumber
-                var sdiPlateNumber = $"{mainPlateNumber}/{subPlateNumber}";
-
                 // Fetch the existing record from the database
                 var existingAmlak = await _db.AmlakPrivateNews
-                    .FirstOrDefaultAsync(a => a.SdiPlateNumber == sdiPlateNumber);
+                    .FirstOrDefaultAsync(a => a.MainPlateNumber == mainPlateNumber.ToString() && a.SubPlateNumber==subPlateNumber.ToString());
 
-                if (existingAmlak != null){
+                var isNew = 0;
+                if (existingAmlak == null){
+                    existingAmlak = new AmlakPrivateNew();
+                    isNew = 1;
+                }
+
 
                     var areaId = 0;
-                    if (getCell(row, 6) == "شهرداری مرکز"){
+                    if (getCell(row, 7) == "شهرداری اهواز"){
                         areaId = 9;
                     }else{
-                        if (!areas.TryGetValue(getCell(row, 6), out areaId))
+                        if (!areas.TryGetValue(getCell(row, 7), out areaId))
                             areaId = 52;
                     }
                     
                     var ownerId = 0;
-                    if (getCell(row, 14) == "شهرداری مرکز"){
+                    if (getCell(row, 14) == "شهرداری اهواز"){
                         ownerId = 9;
                     }else{
                         if (!areas.TryGetValue(getCell(row, 14), out ownerId))
@@ -513,41 +572,52 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     existingAmlak.MeterNumberGas =  getCell(row,26);
                     existingAmlak.MeterNumberElectricity =  getCell(row,27);
                     existingAmlak.MeterNumberPhone =  getCell(row,28);
-                    // existingAmlak. =  getCell(row,29);
-                    existingAmlak.UsageOnDocument =  getCell(row,30);
-                    existingAmlak.UsageUrban =  Helpers.UCReverse(getCell(row,31),"amlakPrivateUsageUrban",0).ToString();
-                    existingAmlak.SadaCode =  getCell(row,32);
-                    existingAmlak.JamCode =  getCell(row,33);
-                    existingAmlak.SimakCode =  getCell(row,34);
-                    existingAmlak.PropertyCode =  getCell(row,35);
+                    existingAmlak.UsageOnDocument =  getCell(row,29);
+                    existingAmlak.UsageUrban =  Helpers.UCReverse(getCell(row,30),"amlakPrivateUsageUrban",0).ToString();
+                    existingAmlak.SadaCode =  getCell(row,31);
+                    existingAmlak.JamCode =  getCell(row,32);
+                    existingAmlak.SimakCode =  getCell(row,33);
+                    existingAmlak.PropertyCode =  getCell(row,34);
                     existingAmlak.BlockedStatusSimakUnitWindow =  getCell(row,35);
                     existingAmlak.Status =  getCell(row,36);
                     existingAmlak.Notes =  getCell(row,37);
-                    existingAmlak.TransferredFrom =  getCell(row,38);
+                    existingAmlak.TransferredFrom =  getCell(row,39);
                     existingAmlak.InPossessionOf = 9;  
-                    existingAmlak.LatestGeneratingDecision =  int.Parse(Helpers.UCReverse(getCell(row,31),"amlakPrivatePredictionUsage",0).ToString());
-                    
+                    existingAmlak.LatestGeneratingDecision =  int.Parse(Helpers.UCReverse(getCell(row,41),"amlakPrivatePredictionUsage",0).ToString());
 
-                    // Add to the list of records to update
-                    updateCount++;
-                    if (param.justValidate == 0){
-                        try{
-                            await _db.SaveChangesAsync();
-                        }catch (Exception e){
-                            return BadRequest("خطاااا / "+mainPlateNumber+"-"+subPlateNumber+" / " +  (i+1) + e.InnerException);
+
+                    if (isNew == 1){
+                        notExistCount++;
+                        notExistRows=notExistRows+ (i - 1) +",";
+                        if (param.justValidate == 0){
+                            try{
+                                _db.Add(existingAmlak);
+                                await _db.SaveChangesAsync();
+                            }catch (Exception e){
+                                return BadRequest("خطاااا / "+mainPlateNumber+"-"+subPlateNumber+" / " +  (i+1) + e.InnerException);
+                            }
                         }
                     }
-                }
-                else{
-                    notExistCount++;
-                    notExistRows=notExistRows+ (i - 1) +",";
+                    else{
+                        updateCount++;
+                        if (param.justValidate == 0){
+                            try{
+                                await _db.SaveChangesAsync();
+                            }catch (Exception e){
+                                return BadRequest("خطاااا / "+mainPlateNumber+"-"+subPlateNumber+" / " +  (i+1) + e.InnerException);
+                            }
+                        }
+                        
+                    }
+                    
+                  
                     // not exists
-                }
             }
             if (param.justValidate == 1)
-                return Ok(updateCount + " ردیف ویرایش خواهد شد و " + notExistCount + " ردیف پیدا نشد" + "- ردیف ها : "+notExistRows);
+                return Ok(updateCount + " ردیف ویرایش خواهد شد و " + notExistCount + " ردیف پیدا نشد که اضافه خواهد شد" + "- ردیف ها : "+notExistRows);
 
-            return Ok(updateCount + " ردیف ویرایش شد و " + notExistCount + " ردیف پیدا نشد" + "- ردیف ها : "+notExistRows);
+            
+            return Ok(updateCount + " ردیف ویرایش شد و " + notExistCount + " ردیف پیدا نشد که اضافه شد" + "- ردیف ها : "+notExistRows);
             
         }
 
