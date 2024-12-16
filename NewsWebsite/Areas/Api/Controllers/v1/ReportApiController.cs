@@ -807,6 +807,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.MosavabSanavati = long.Parse(dataReader["MosavabSanavati"].ToString());
                         fetchView.balanceMosavab = long.Parse(dataReader["balanceMosavab"].ToString());
                         fetchView.Resoures = long.Parse(dataReader["Resoures"].ToString());
+                        fetchView.Costs = long.Parse(dataReader["Costs"].ToString());
                         abslist.Add(fetchView);
 
                         //dataReader.NextResult();

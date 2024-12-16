@@ -19,5 +19,6 @@ namespace NewsWebsite.ViewModels.Api.Abstract
         public long MosavabNeyabati { get; set; }
         public long MosavabHagholamal { get; set; }
         public long balanceMosavab { get; set; }
+        public long Costs { get; set; }
     }
 }
