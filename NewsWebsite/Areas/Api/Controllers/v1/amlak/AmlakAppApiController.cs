@@ -71,12 +71,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var amlakPrivatesCount = await _db.AmlakPrivateNews.CountAsync();
             var amlakPrivatesSanadTakBargCount = await _db.AmlakPrivateNews.DocumentType(1).CountAsync();
             var amlakPrivatesSanadDaftarcheCount = await _db.AmlakPrivateNews.DocumentType(3).CountAsync();
-            var amlakPrivatesTypeSakhtemanCount = await _db.AmlakPrivateNews.PropertyType(1).CountAsync();
-            var amlakPrivatesTypeZaminCount = await _db.AmlakPrivateNews.PropertyType(2).CountAsync();
-            var amlakPrivatesTypeKhaneCount = await _db.AmlakPrivateNews.PropertyType(3).CountAsync();
+            var amlakPrivatesOwnershipType1Count = await _db.AmlakPrivateNews.OwnershipType("1").CountAsync();
+            var amlakPrivatesOwnershipType2Count = await _db.AmlakPrivateNews.OwnershipType("2").CountAsync();
+            var amlakPrivatesOwnershipType3Count = await _db.AmlakPrivateNews.OwnershipType("3").CountAsync();
             
             var amlakPrivatesWithParcelCount = await _db.AmlakPrivateNews.HasSdiLayer(1).CountAsync();
-            var amlakPrivatesWithoutParcelCount = await _db.AmlakPrivateNews.PropertyType(0).CountAsync();
+            var amlakPrivatesWithoutParcelCount = await _db.AmlakPrivateNews.HasSdiLayer(0).CountAsync();
             
             
             
@@ -115,7 +115,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             
             
             return Ok(new{
-                amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesTypeSakhtemanCount,amlakPrivatesTypeZaminCount,amlakPrivatesTypeKhaneCount,amlakPrivatesWithParcelCount,amlakPrivatesWithoutParcelCount,
+                amlakPrivatesCount,amlakPrivatesSanadTakBargCount,amlakPrivatesSanadDaftarcheCount,amlakPrivatesOwnershipType1Count,amlakPrivatesOwnershipType2Count,amlakPrivatesOwnershipType3Count,amlakPrivatesWithParcelCount,amlakPrivatesWithoutParcelCount,
                 parcelsCount,parcelsPendingCount,parcelsAcceptedCount,parcelsRejectedCount,parcelsRemovedCount,
                 archivesNotSubmittedCount,archivesSubmittedCount,
                 amlakInfosNonRentableAllCount,amlakInfosNonRentableParkCount,amlakInfosNonRentableGozarCount,amlakInfosNonRentableOtherCount,amlakInfosRentableAllCount,amlakInfosRentableWithContractCount,amlakInfosRentableWithoutContractCount,amlakInfosRentableWithActiveContractCount,amlakInfosRentableWithoutActiveContractCount,

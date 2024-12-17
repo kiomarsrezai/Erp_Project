@@ -138,6 +138,12 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
             }
             return query;
         }
+        public static IQueryable<AmlakPrivateNew> OwnershipType(this IQueryable<AmlakPrivateNew> query, string? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.OwnershipType == value);
+            }
+            return query;
+        }
         public static IQueryable<AmlakPrivateNew> UsageUrban(this IQueryable<AmlakPrivateNew> query, string? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => EF.Functions.Like(e.UsageUrban, $"%{value}%"));

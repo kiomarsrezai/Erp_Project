@@ -47,22 +47,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
         [HttpGet]
         [Route("updateFromSdi")]
-        public async Task<IActionResult> UpdateDataFromSdiAgreement(string type){
+        public async Task<IActionResult> UpdateDataFromSdiAgreement(string type,int fromFile=0){
             switch (type){
+                case "token":
+                    return Ok(await GetToken());
+                
                 case "private":
-                    return await UpdatePrivate();
-                    break;
+                    return await UpdatePrivate(fromFile);
+                
                 case "rentableAmlak":
-                    await UpdateKiosk();
-                    break;
+                    return await UpdateKiosk(fromFile);
+                
                 case "notRentableAmlak":
                     break;
+                
                 case "archive":
-                    await UpdateArchive();
-                    break;
+                    return await UpdateArchive(fromFile);
+                
                 case "agreement":
-                    await UpdateAgreements();
-                    break;
+                    return await UpdateAgreements(fromFile);
             }
 
 
@@ -111,23 +114,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         // ------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        private async Task<IActionResult> UpdatePrivate(){
+        private async Task<IActionResult> UpdatePrivate(int fromFile){
             // from File
-            // var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "amlak.json");
-            // string responseContent = await System.IO.File.ReadAllTextAsync(filePath);
+            string newmessage = "";
+            if (fromFile == 1){
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "amlak.json");
+                newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+            }
+            else{
+                string authKey = await GetToken();
+                HttpClient httpClient = GetClientHttp();
+
+                var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=all_amlak_v14030910_4498&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
+                var response = await httpClient.GetAsync(requestUri);
+
+                if (!response.IsSuccessStatusCode)
+                    return BadRequest($"Error: {response.StatusCode} / {authKey}");
+
+                newmessage = await response.Content.ReadAsStringAsync();
+            }
 
             // from API
-            string authKey = await GetToken();
-            HttpClient httpClient = GetClientHttp();
-
-            var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=all_amlak_v14030910_4498&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
-            var response = await httpClient.GetAsync(requestUri);
-
-            if (!response.IsSuccessStatusCode)
-                return BadRequest($"Error: {response.StatusCode} / {authKey}");
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var respLayer = JsonConvert.DeserializeObject<SdiDto>(responseContent.ToString());
+            
+            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
 
             for (int i = 0; i < respLayer.TotalFeatures; i++){
                 var feature = respLayer.Features[i];
@@ -192,14 +201,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         // ------------------------------------------------------------------------------------------------------------------------------------------
         // ------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task UpdateArchive(){
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "archive.json");
-            string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+        private async Task<IActionResult> UpdateArchive(int fromFile){
+            string newmessage="";
+            if (fromFile == 1){
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "archive.json");
+                newmessage = await System.IO.File.ReadAllTextAsync(filePath);
 
+            }
+            else{
+                
+            }
 
             var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
 
-            for (int i = 0; i < respLayer.TotalFeatures - 1; i++){
+            for (int i = 0; i < respLayer.TotalFeatures; i++){
                 var feature = respLayer.Features[i];
 
                 var oldItem = await _db.AmlakArchives.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
@@ -223,30 +238,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                     await _db.SaveChangesAsync();
                 }
             }
+            return Ok("ok");
+
         }
 
         // ------------------------------------------------------------------------------------------------------------------------------------------
         // ------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<IActionResult> UpdateAgreements(){
+        private async Task<IActionResult> UpdateAgreements(int fromFile){
             // From File
-            // var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Agreement.json");
-            // string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+            string newmessage = "";
+            if (fromFile==1){
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Agreement.json");
+                newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+            }
+            else{
+                // From API
+                string authKey = await GetToken();
+                HttpClient httpClient = GetClientHttp();
 
-            // From API
-            string authKey = await GetToken();
-            HttpClient httpClient = GetClientHttp();
+                var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=tavafoqat1_963&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
+                var response = await httpClient.GetAsync(requestUri);
 
-            var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=tavafoqat1_963&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
-            var response = await httpClient.GetAsync(requestUri);
+                if (!response.IsSuccessStatusCode)
+                    return BadRequest($"Error: {response.StatusCode} / {authKey}");
 
-            if (!response.IsSuccessStatusCode)
-                return BadRequest($"Error: {response.StatusCode} / {authKey}");
+                newmessage = await response.Content.ReadAsStringAsync();
 
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var respLayer = JsonConvert.DeserializeObject<SdiDto>(responseContent.ToString());
+            }
+                var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
 
-            for (int i = 0; i < respLayer.TotalFeatures - 1; i++){
+
+            for (int i = 0; i < respLayer.TotalFeatures; i++){
                 var feature = respLayer.Features[i];
                 var oldItem = await _db.AmlakAgreements.FirstOrDefaultAsync(a => a.SdiId == feature.Id);
 
@@ -294,23 +317,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             }
             return Ok("ok");
         }
-         private async Task<IActionResult> UpdateKiosk(){
+         private async Task<IActionResult> UpdateKiosk(int fromFile){
             // From File
-            // var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Agreement.json");
-            // string newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+            string newmessage = "";
+            if (fromFile == 1){
 
-            // From API
-            string authKey = await GetToken();
-            HttpClient httpClient = GetClientHttp();
-
-            var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
-            var response = await httpClient.GetAsync(requestUri);
-
-            if (!response.IsSuccessStatusCode)
-                return BadRequest($"Error: {response.StatusCode} / {authKey}");
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var respLayer = JsonConvert.DeserializeObject<SdiDto>(responseContent.ToString());
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Agreement.json");
+                newmessage = await System.IO.File.ReadAllTextAsync(filePath);
+            }
+            else{
+                // From API
+                string authKey = await GetToken();
+                HttpClient httpClient = GetClientHttp();
+        
+                var requestUri =$"geoserver/ows?service=wfs&version=1.0.0&request=GetFeature&typeName=ahvaz_kiosk14000719_8798&srsname=EPSG:4326&outputFormat=application/json&maxFeatures=50000&startIndex=0&authkey={authKey}";
+                var response = await httpClient.GetAsync(requestUri);
+        
+                if (!response.IsSuccessStatusCode)
+                    return BadRequest($"Error: {response.StatusCode} / {authKey}");
+        
+                newmessage = await response.Content.ReadAsStringAsync();
+            }
+            
+            var respLayer = JsonConvert.DeserializeObject<SdiDto>(newmessage.ToString());
 
             for (int i = 0; i < respLayer.TotalFeatures; i++){
                 var feature = respLayer.Features[i];

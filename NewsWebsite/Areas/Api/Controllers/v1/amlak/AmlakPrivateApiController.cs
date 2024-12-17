@@ -503,7 +503,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             var notExistRows = "";
 
             var areas = _db.TblAreas.ToDictionary(a => a.AreaName, a => a.Id);
-            for (int i = 1500; i <= sheet.LastRowNum; i++){
+            for (int i = 0; i <= sheet.LastRowNum; i++){
                 IRow row = sheet.GetRow(i);
                 if (row == null) continue;
                 if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
