@@ -34,6 +34,8 @@ using SharpKml.Dom;
 using SharpKml.Engine;
 using System.IO;
 using System.IO.Compression;
+using System.Text.Json.Nodes;
+using NewsWebsite.Data.Models.AmlakAdmin;
 using SharpKml.Base;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
@@ -186,7 +188,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Test11")]
         [HttpGet]
         public async Task<ApiResult<object>> Test11(int ContractId){
-            await CheckUserAuth(_db);
+            var user = await CheckUserAuth(_db);
+            bool result = CheckPermission(user, "amlak_info.ownerAndType.kind","1");
+            bool result2 = CheckPermission(user, "agreement.show.showAgreement","1");
+
+            return Ok(result+"/"+result2);
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
+
+// Use the kinds in EF Core query
+            var houses = _db.AmlakPrivateNews.Where(h => kinds.Contains(h.Id.ToString())).Count();
+            
+            return Ok(houses);
 
             var b = 0;
             var a = 5 / b;

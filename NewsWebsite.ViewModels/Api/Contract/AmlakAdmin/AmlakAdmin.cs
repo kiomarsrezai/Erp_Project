@@ -18,6 +18,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAdmin {
 
     public class AmlakAdminListVm : AmlakAdminBaseModel {
         public int Id{ get; set; }
+        public int IsActive{ get; set; }
 
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
@@ -26,6 +27,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAdmin {
 
     public class AmlakAdminReadVm : AmlakAdminBaseModel {
         public int Id{ get; set; }
+        public int IsActive{ get; set; }
         public string AmlakLisence{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
@@ -42,6 +44,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAdmin {
         public int Id{ get; set; }
         public string AmlakLisence{ get; set; }
 
+    }
+    
+    public class AmlakAdminActivationViewModel
+    {
+        public int Id { get; set; }
+        public int isActive { get; set; }
     }
     public class AmlakAdminReadInputVm  {
         public string Search{ get; set; }

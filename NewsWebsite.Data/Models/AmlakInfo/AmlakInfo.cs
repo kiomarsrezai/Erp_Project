@@ -72,6 +72,14 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             }
             return query;
         }
+        
+        public static IQueryable<AmlakInfo> OwnerIds(this IQueryable<AmlakInfo> query, List<string>? values){
+            if (BaseModel.CheckParameter(values,null)){
+                if(values!=null && values[0]!="*")
+                    return query.Where(h => values.Contains(h.OwnerId.ToString()));
+            }
+            return query;
+        }
         public static IQueryable<AmlakInfo> AreaId(this IQueryable<AmlakInfo> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.AreaId == value);
@@ -81,6 +89,13 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
         public static IQueryable<AmlakInfo> AmlakInfoKindId(this IQueryable<AmlakInfo> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.AmlakInfoKindId == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakInfo> AmlakInfoKindIds(this IQueryable<AmlakInfo> query, List<string>? values){
+            if (BaseModel.CheckParameter(values,null)){
+                if(values!=null && values[0]!="*")
+                    return query.Where(h => values.Contains(h.AmlakInfoKindId.ToString()));
             }
             return query;
         }

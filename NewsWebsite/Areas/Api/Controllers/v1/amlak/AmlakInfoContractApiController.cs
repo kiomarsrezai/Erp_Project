@@ -60,14 +60,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("List")]
         [HttpGet]
         public async Task<ApiResult<object>> ContractList(int amlakInfoId,int ownerId,int lessThanNMonth=0,int lessThanNMonthZemanat=0,int? isActive=null,int export=0,int page=1,int pageRows=10,string sort="Id",string sortType="desc"){
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
+
 
             var builder = _db.AmlakInfoContracts
                 .AmlakInfoId(amlakInfoId)
                 .LessThanNMonth(lessThanNMonth)
                 .LessThanNMonthZemanat(lessThanNMonthZemanat)
                 .IsActive(isActive)
-                .OwnerId(ownerId);
+                .OwnerId(ownerId)
+                .AmlakInfoOwnerIds(owners)
+                .AmlakInfoKindIds(kinds);
 
             if (export == 1){
                 page = 1;
@@ -129,7 +134,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakInfoContractReadVm>> ContractRead(int ContractId){
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
+
             
             var item = await _db.AmlakInfoContracts
                 .Id(ContractId)
@@ -138,6 +146,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
                 .Include(a=>a.Owner)
                 .Include(a=>a.Suppliers)
                 .ThenInclude(s=>s.Supplier)
+                .AmlakInfoOwnerIds(owners)
+                .AmlakInfoKindIds(kinds)
                 .FirstAsync();
             
             
@@ -149,9 +159,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Insert")]
         [HttpPost]
         public async Task<ApiResult<string>> ContractInsert([FromBody] AmlakInfoContractInsertVm param){
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
 
-            var amlakInfo =await  _db.AmlakInfos.Id( param.AmlakInfoId).FirstOrDefaultAsync();
+            var amlakInfo =await  _db.AmlakInfos.Id( param.AmlakInfoId)
+                .OwnerIds(owners)
+                .AmlakInfoKindIds(kinds)
+                .FirstOrDefaultAsync();
             if (amlakInfo == null)
                 return BadRequest("ملک یافت نشد");
             
@@ -245,9 +260,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Update")]
         [HttpPost]
         public async Task<ApiResult<string>> ContractUpdate([FromBody] AmlakInfoContractUpdateVm param){
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
 
-            var contract = await _db.AmlakInfoContracts.Id(param.Id).FirstOrDefaultAsync();
+
+            var contract = await _db.AmlakInfoContracts.Id(param.Id)
+                .AmlakInfoOwnerIds(owners)
+                .AmlakInfoKindIds(kinds)
+                .FirstOrDefaultAsync();
             if (contract == null)
                 return BadRequest("قرارداد یافت نشد");
 
@@ -326,27 +347,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             return Ok(contract.Id.ToString());
         }
 
-        [Route("Delete")]
-        [HttpPost]
-        public async Task<ApiResult<string>> ContractDelete([FromBody] PublicParamIdViewModel param){
-            await CheckUserAuth(_db);
-
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Delete", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Id", param.Id);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                 
-                }
-            }
-            
-            await SaveLogAsync(_db, param.Id, TargetTypes.Contract, "قرارداد حذف شد");
-
-          return Ok("با موفقیت انجام شد");
-        }
-        
+        // [Route("Delete")]
+        // [HttpPost]
+        // public async Task<ApiResult<string>> ContractDelete([FromBody] PublicParamIdViewModel param){
+        //     await CheckUserAuth(_db);
+        //
+        //     using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
+        //     {
+        //         using (SqlCommand sqlCommand = new SqlCommand("SP012_ContractAmlak_Delete", sqlconnect))
+        //         {
+        //             sqlconnect.Open();
+        //             sqlCommand.Parameters.AddWithValue("Id", param.Id);
+        //             sqlCommand.CommandType = CommandType.StoredProcedure;
+        //             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //          
+        //         }
+        //     }
+        //     
+        //     await SaveLogAsync(_db, param.Id, TargetTypes.Contract, "قرارداد حذف شد");
+        //
+        //   return Ok("با موفقیت انجام شد");
+        // }
+        //
     }
 }

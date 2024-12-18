@@ -62,13 +62,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("List")]
         [HttpGet]
         public async Task<ApiResult<object>> AmlakInfoList(AmlakInfoReadInputVm param){
-            await CheckUserAuth(_db);
-
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
+            
             var builder = _db.AmlakInfos
                 .Search(param.Search)
                 .AreaId(param.AreaId)
                 .OwnerId(param.OwnerId)
+                .OwnerIds(owners)
                 .AmlakInfoKindId(param.AmlakInfoKindId)
+                .AmlakInfoKindIds(kinds)
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
                 .Where(a => a.Rentable == param.Rentable);
             
@@ -213,12 +217,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Map")]
         [HttpGet]
         public async Task<ApiResult<object>> AmlakInfoListMap(AmlakInfoListMapInputVm param){
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
+
 
             var builder = _db.AmlakInfos
                 .Search(param.Search)
                 .AreaId(param.AreaId)
                 .OwnerId(param.OwnerId)
+                .OwnerIds(owners)
+                .AmlakInfoKindIds(kinds)
                 .AmlakInfoKindId(param.AmlakInfoKindId)
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
                 .Where(a => a.Rentable == param.Rentable);
@@ -306,13 +315,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Read")]
         [HttpGet]
         public async Task<ApiResult<AmlakInfoReadVm>> AmlakInfoRead(PublicParamIdViewModel param){
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
 
             var item = await _db.AmlakInfos
                 .Include(a=>a.Area)
                 .Include(a => a.Owner)
                 .Include(a=>a.AmlakInfoKind)
-                .Id(param.Id).FirstOrDefaultAsync();
+                .Id(param.Id)
+                .OwnerIds(owners)
+                .AmlakInfoKindIds(kinds)
+                .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
 
@@ -335,9 +349,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakInfoUpdate([FromBody] AmlakInfoUpdateVm param){
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
 
-            var item = await _db.AmlakInfos.Id(param.Id).FirstOrDefaultAsync();
+            var item = await _db.AmlakInfos.Id(param.Id)
+                .OwnerIds(owners)
+                .AmlakInfoKindIds(kinds)
+                .FirstOrDefaultAsync();
             if(item==null)
                 return BadRequest("آیتم پیدا نشد");
         
@@ -367,9 +386,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [HttpPost]
         public async Task<ApiResult<string>> AmlakInfoDelete([FromBody] PublicParamIdViewModel param)
         {
-            await CheckUserAuth(_db);
+            var user=await CheckUserAuth(_db);
+            var owners = GetPermission(user, "amlak_info.ownerAndType.owner_name");
+            var kinds = GetPermission(user, "amlak_info.ownerAndType.kind");
 
-            var item = await _db.AmlakInfos.Id(param.Id).FirstOrDefaultAsync();
+            
+            var item = await _db.AmlakInfos
+                .OwnerIds(owners)
+                .AmlakInfoKindIds(kinds)
+                .Id(param.Id).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
             

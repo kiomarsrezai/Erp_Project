@@ -89,6 +89,20 @@ namespace NewsWebsite.Data.Models.AmlakInfo {
             }
             return query;
         }
+        public static IQueryable<AmlakInfoContract> AmlakInfoOwnerIds(this IQueryable<AmlakInfoContract> query, List<string>? values){
+            if (BaseModel.CheckParameter(values,null)){
+                if(values!=null && values[0]!="*")
+                    return query.Where(h => values.Contains(h.AmlakInfo.OwnerId.ToString()));
+            }
+            return query;
+        }
+        public static IQueryable<AmlakInfoContract> AmlakInfoKindIds(this IQueryable<AmlakInfoContract> query, List<string>? values){
+            if (BaseModel.CheckParameter(values,null)){
+                if(values!=null && values[0]!="*")
+                    return query.Where(h => values.Contains(h.AmlakInfo.AmlakInfoKindId.ToString()));
+            }
+            return query;
+        }
         
         public static IQueryable<AmlakInfoContract> IsActive(this IQueryable<AmlakInfoContract> query, int? value){
             if (BaseModel.CheckParameter(value,null)){

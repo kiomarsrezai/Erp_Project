@@ -9,6 +9,7 @@ namespace NewsWebsite.Data.Models.AmlakAdmin {
     
     [Table("tblAmlakAdmin")]
     public class AmlakAdmin:BaseModel {
+        public int IsActive{ get; set; }
         public string FirstName{ get; set; }
         public string LastName{ get; set; }
         public string UserName{ get; set; }

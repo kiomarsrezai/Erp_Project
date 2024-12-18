@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,15 +11,15 @@ using NewsWebsite.Data;
 using NewsWebsite.Data.Models.AmlakAdmin;
 using NewsWebsite.Entities.identity;
 using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
+using Newtonsoft.Json;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     public class EnhancedController:ControllerBase {
         public async Task<AmlakAdmin> CheckUserAuth(ProgramBuddbContext _db){
+            if (Request.Headers != null && Request.Headers["Referer"].ToString()!.Contains("swagger")){
+                return new AmlakAdmin(); // Return a default AmlakAdmin object for Swagger.
+            }
             
-            // if (HttpContext?.User?.Identity!=null && !HttpContext.User.Identity.IsAuthenticated)
-            // throw new ErrMessageException("UnAuthorized", HttpStatusCode.Conflict);
-            return new AmlakAdmin(); // todo : disable
-
             var authHeader = Request.Headers["Authorization"].ToString();
             if (authHeader == null || !authHeader.StartsWith("Bearer "))
                 throw new ErrMessageException("UnAuthorized", HttpStatusCode.Conflict);
@@ -48,6 +50,61 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
             return user.Id;
         }
+        
+        
+        
+        public static bool CheckPermission(AmlakAdmin admin, string keys, string requestedPermission){
+            var permissions = GetPermissionNode(admin, keys);
+
+            if (permissions is JsonArray kindArray){
+                return kindArray.Count > 0 &&
+                       (kindArray[0]?.GetValue<string>() == "*" ||
+                        kindArray.Any(item => item?.GetValue<string>() == requestedPermission));
+            }
+            else if (permissions is JsonValue valueNode){
+                return valueNode.GetValue<string>() == requestedPermission;
+            }
+
+            return false;
+        }
+
+        public static List<string> GetPermission(AmlakAdmin admin, string keys){
+            var permissions = GetPermissionNode(admin, keys);
+
+            if (permissions is JsonArray arrayNode){
+                return arrayNode.Select(node => node?.GetValue<string>())
+                    .Where(value => value != null)
+                    .ToList()!;
+            }
+
+            return new List<string>();
+        }
+
+        private static JsonNode? GetPermissionNode(AmlakAdmin admin, string keys){
+            try{
+                if (admin.AmlakLisence == null)
+                    return null;
+                var permissions = JsonNode.Parse(admin.AmlakLisence);
+                if (permissions == null)
+                    return null;
+
+                var keyParts = keys.Split('.');
+
+                foreach (var key in keyParts){
+                    if (!(permissions is JsonObject currentObject) || !currentObject.ContainsKey(key))
+                        return null;
+
+                    permissions = currentObject[key];
+                }
+
+                return permissions;
+            }
+            catch (JsonException){
+                return null;
+            }
+        }
+
+        
         
         
         [NonAction]

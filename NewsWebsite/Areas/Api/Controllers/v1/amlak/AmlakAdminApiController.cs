@@ -100,6 +100,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 return BadRequest("کاربر با این نام کاربری قبلا ثبت نام کرده است");
 
             var item = new AmlakAdmin();
+            item.IsActive = 1;
             item.FirstName = param.FirstName;
             item.LastName = param.LastName;
             item.UserName = param.UserName;
@@ -158,6 +159,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
            
         
+        
+        [HttpPost("ChangeActivation")]
+        public async Task<ApiResult<string>> RenewPassword([FromBody] AmlakAdminActivationViewModel viewModel)
+        {
+            var User = await _db.AmlakAdmins.Where(c=>c.Id==viewModel.Id).FirstOrDefaultAsync();
+
+            if (User == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+            User.IsActive = viewModel.isActive;
+            
+            await _db.SaveChangesAsync();
+            
+            return Ok("وضعیت کاربر تغییر یافت");
+        }
+           
+        
         [Route("Login")]
         [HttpPost]
         public async Task<ApiResult<object>> AmlakAdminLogin([FromBody] AmlakAdminLoginVm param){
@@ -166,7 +182,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             if (admin == null)
                 return BadRequest("نام کاربری یا رمز عبور صحیح نمی باشد");
 
-            
+            if (admin.IsActive != 1)
+                return BadRequest("کاربر شما غیرفعال می باشد. با مدیر سامانه تماس بگیرید");
+
             
             var passVerifyResult = new PasswordHasher<AmlakAdmin>().VerifyHashedPassword(null, admin.Password, param.Password);
             if (passVerifyResult!=PasswordVerificationResult.Success){ // todo: check hash
