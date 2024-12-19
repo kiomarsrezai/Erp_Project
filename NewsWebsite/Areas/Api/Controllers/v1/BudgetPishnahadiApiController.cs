@@ -152,8 +152,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             string readercount = null;
 
-            if ((param.Pishnahadi - (param.DelegatePercentage ?? 0) * (param.DelegateAmount ?? 0)/100)  < (param.DelegateAmount ?? 0)){
-                return BadRequest("مبلغ ردیف نمی تواند کمتر از مبلغ نیابت بعلاوه حق نظارت باشد");
+            if (param.Pishnahadi  < (param.DelegateAmount ?? 0)){
+                return BadRequest("مبلغ نیابت نمی تواند بیشتر از مبلغ پیشنهادی باشد");
             }
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
