@@ -15,7 +15,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -1496,6 +1499,116 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
             return Ok(dataModel);
+        }
+        
+        
+        [Route("BudgetBookExport")]
+        [HttpGet]
+        public async Task<ApiResult<object>> AC_BudgetBookExport(BudgetBookInputs param)
+        {
+            List<ComparErpAndTaminViewModel> dataModel = new List<ComparErpAndTaminViewModel>();
+
+            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp"))){
+                var workbook = GetExcelFile();
+                
+                using (SqlCommand sqlCommand = new SqlCommand("SP500_BudgetBook", sqlconnect))
+                {
+                    sqlconnect.Open();
+                    sqlCommand.CommandTimeout = 500;
+                    sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+                    sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+                    while (dataReader.Read())
+                    {
+                        Sheet1Data data1 = new Sheet1Data();
+                        data1.M_Resources =  Int64.Parse(dataReader["M_Resources"].ToString());
+                        data1.M_Khazane =  Int64.Parse(dataReader["M_Khazane"].ToString());
+                        data1.M_Costs = Int64.Parse(dataReader["M_Costs"].ToString());
+                        data1.P_Resources = Int64.Parse(dataReader["P_Resources"].ToString());
+                        data1.P_Khazane = Int64.Parse(dataReader["P_Khazane"].ToString());
+                        data1.P_Costs = Int64.Parse(dataReader["P_Costs"].ToString());
+
+                        workbook = WriteSheet1(workbook, data1);
+                    }
+
+                }
+                var finalFilePath = CreateFinalFile(workbook);
+                return Ok(finalFilePath);
+            }
+
+            
+            return Ok(dataModel);
+        }
+
+
+        public static IWorkbook GetExcelFile()
+        {
+            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/excel_templates/budget_book.xlsx");
+            using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.Read))
+            {
+                return new XSSFWorkbook(file); // Read the file into memory
+            }
+        }
+        
+        
+        public static IWorkbook WriteSheet1(IWorkbook workbook, Sheet1Data data)
+        {
+            ISheet sheet = workbook.GetSheetAt(0); // First sheet (index 0)
+
+            // Helper method to get or create a cell
+            ICell GetOrCreateCell(IRow row, int columnIndex)
+            {
+                return row.GetCell(columnIndex) ?? row.CreateCell(columnIndex);
+            }
+
+            // Row 19
+            IRow row19 = sheet.GetRow(18) ?? sheet.CreateRow(18);
+            GetOrCreateCell(row19, 2).SetCellValue(data.P_Resources.ToString() );
+            GetOrCreateCell(row19, 3).SetCellValue(data.M_Resources.ToString() );
+            GetOrCreateCell(row19, 7).SetCellValue(data.P_Costs.ToString() );
+            GetOrCreateCell(row19, 8).SetCellValue(data.M_Costs.ToString() );
+
+            // Row 20
+            IRow row20 = sheet.GetRow(20) ?? sheet.CreateRow(20);
+            GetOrCreateCell(row20, 2).SetCellValue(data.P_Khazane.ToString() );
+            GetOrCreateCell(row20, 3).SetCellValue(data.M_Khazane.ToString() );
+            GetOrCreateCell(row20, 7).SetCellValue(data.P_Khazane.ToString() );
+            GetOrCreateCell(row20, 8).SetCellValue(data.M_Khazane.ToString() );
+
+            return workbook;
+        }
+        
+        // public static IWorkbook WriteSheet4(Sheet1Data data ,IWorkbook workbook ){
+        //     ISheet sheet = workbook.GetSheetAt(0); // Assuming data should go into the first sheet
+        //
+        //     // Start populating from row 1 (assuming row 0 contains headers)
+        //     int rowIndex = 1;
+        //
+        //     foreach (var item in items){
+        //         IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+        //         for (int i = 0; i < item.Count; i++){
+        //             row.CreateCell(i).SetCellValue(item[i]+""); 
+        //
+        //         }
+        //         rowIndex++;
+        //     }
+        //
+        //     return workbook;
+        // }
+        //
+        public static string CreateFinalFile(IWorkbook workbook){
+
+            // Save the file to a temporary location
+            string tmpPath = "/tmp/"+$"book1403_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.xlsx";
+            string tempFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"+tmpPath);
+    
+            using (FileStream outputFile = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write)){
+                workbook.Write(outputFile); // Write to the file
+            }
+            workbook.Close();
+        
+            return tmpPath; // Return the path to the saved file
         }
     }
 }
