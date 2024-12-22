@@ -1510,115 +1510,74 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         [Route("BudgetBookExport")]
         [HttpGet]
-        public async Task<ApiResult<object>> AC_BudgetBookExport(BudgetBookInputs param)
-        {
-            List<ComparErpAndTaminViewModel> dataModel = new List<ComparErpAndTaminViewModel>();
-
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp"))){
-                var workbook = GetExcelFile();
-
-
-                sqlconnect.Open();
-                
-                string[] codings ={"110000","120000","130000","140000","150000","160000","100000","200000","300000"}; 
-                Coding dataCodings = await GetCodingsAmount(sqlconnect,  codings, param.YearId,param.AreaId, 1);
-
-                using (SqlCommand sqlCommand = new SqlCommand("SP500_BudgetBook", sqlconnect))
-                {
-                    
-                    
-                    sqlCommand.CommandTimeout = 500;
-                    sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
-                    sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        Sheet1Data data1 = new Sheet1Data();
-                        data1.M_Resources =  Int64.Parse(dataReader["M_Resources"].ToString());
-                        data1.M_Khazane =  Int64.Parse(dataReader["M_Khazane"].ToString());
-                        data1.M_Costs = Int64.Parse(dataReader["M_Costs"].ToString());
-                        data1.P_Resources = Int64.Parse(dataReader["P_Resources"].ToString());
-                        data1.P_Khazane = Int64.Parse(dataReader["P_Khazane"].ToString());
-                        data1.P_Costs = Int64.Parse(dataReader["P_Costs"].ToString());
-
-                        workbook = WriteSheet1(workbook, data1,dataCodings);
-                    }
-
-                }
-                var finalFilePath = CreateFinalFile(workbook);
-                return Ok(finalFilePath);
-            }
+        public async Task<ApiResult<object>> AC_BudgetBookExport(BudgetBookInputs param){
+            await using SqlConnection sqlConnect = new SqlConnection(_configuration.GetConnectionString("SqlErp"));
+            sqlConnect.Open();
+        
+            var workbook = GetExcelFile();
+            
+            // sheet1
+            Sheet1Data sheet1Data=await GetDataSheet1(sqlConnect,param);
+            workbook = WriteSheet1(workbook,sheet1Data);
 
             
-            return Ok(dataModel);
+            var finalFilePath = CreateFinalFile(workbook);
+            return Ok(finalFilePath);
         }
 
-        
-        
-        private async Task<Coding> GetCodingsAmount(SqlConnection sqlconnect,  string[] codings, int yearId, int areaId, int budgetProcessId){
-            var dataCoding = new Coding();
-            dataCoding.CodeAmounts = new List<CodingAmount>();
-            using (SqlCommand sqlCommand = new SqlCommand("SP500_BudgetBook_Codings", sqlconnect))
-            {
-                sqlCommand.CommandTimeout = 500;
-                sqlCommand.Parameters.AddWithValue("yearId", yearId);
-                sqlCommand.Parameters.AddWithValue("areaId", areaId);
-                sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
-                sqlCommand.Parameters.AddWithValue("codings", string.Join(",", codings)); // Send codings as a comma-separated string
-                sqlCommand.CommandType = CommandType.StoredProcedure;
-                // Helpers.dd(string.Join(",", codings));
 
-                using (SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync()){
-                    while (await dataReader.ReadAsync()){
-                        var codingAmount = new CodingAmount{
-                            Code = dataReader["Code"].ToString(),
-                            Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString()),
-                            Mosavab =Int64.Parse(dataReader["Mosavab"].ToString())
-                        };
-                        dataCoding.CodeAmounts.Add(codingAmount);
-                    }
-                }
+
+        // ------------------------------------------ sheet 1  ------------------------------------------------------------------------------------------------------------------------
+
+        private static async Task<Sheet1Data> GetDataSheet1(SqlConnection sqlconnect , BudgetBookInputs param){
+            await using SqlCommand sqlCommand = new SqlCommand("SP500_BudgetBook", sqlconnect);
+            sqlCommand.CommandTimeout = 500;
+            sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+            sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            Sheet1Data data1 = new Sheet1Data();
+            while (dataReader.Read()){
+                data1.M_Resources = Int64.Parse(dataReader["M_Resources"].ToString());
+                data1.M_Khazane = Int64.Parse(dataReader["M_Khazane"].ToString());
+                data1.M_Costs = Int64.Parse(dataReader["M_Costs"].ToString());
+                data1.P_Resources = Int64.Parse(dataReader["P_Resources"].ToString());
+                data1.P_Khazane = Int64.Parse(dataReader["P_Khazane"].ToString());
+                data1.P_Costs = Int64.Parse(dataReader["P_Costs"].ToString());
             }
+            await dataReader.CloseAsync();
 
-            return dataCoding;
+            
+            string[] codings ={ "110000", "120000", "130000", "140000", "150000", "160000", "100000", "200000", "300000" };
+            ReportCoding dataReportCodings = await GetCodingsAmount(sqlconnect, codings, param.YearId, param.AreaId, 1);
+            
+            data1.ReportCodings = dataReportCodings;
+
+            return data1;
         }
         
         
-        
-
-        public static IWorkbook GetExcelFile()
-        {
-            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/excel_templates/budget_book.xlsx");
-            using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.Read))
-            {
-                return new XSSFWorkbook(file); // Read the file into memory
-            }
-        }
-        
-        
-        public static IWorkbook WriteSheet1(IWorkbook workbook, Sheet1Data data,Coding dataCodings)
-        {
+        private IWorkbook WriteSheet1( IWorkbook workbook, Sheet1Data data){
             ISheet sheet = workbook.GetSheetAt(0);
 
-            SetCell(sheet,"C8", GetAmount(dataCodings,"p","110000"));
-            SetCell(sheet,"D8", GetAmount(dataCodings,"m","110000"));
-            SetCell(sheet,"C9", GetAmount(dataCodings,"p","120000"));
-            SetCell(sheet,"D9", GetAmount(dataCodings,"m","120000"));
-            SetCell(sheet,"C10", GetAmount(dataCodings,"p","130000"));
-            SetCell(sheet,"D10", GetAmount(dataCodings,"m","130000"));
-            SetCell(sheet,"C11", GetAmount(dataCodings,"p","140000"));
-            SetCell(sheet,"D11", GetAmount(dataCodings,"m","140000"));
-            SetCell(sheet,"C12", GetAmount(dataCodings,"p","150000"));
-            SetCell(sheet,"D12", GetAmount(dataCodings,"m","150000"));
-            SetCell(sheet,"C13", GetAmount(dataCodings,"p","160000"));
-            SetCell(sheet,"D13", GetAmount(dataCodings,"m","160000"));
-            SetCell(sheet,"C14", GetAmount(dataCodings,"p","100000"));
-            SetCell(sheet,"D14", GetAmount(dataCodings,"m","100000"));
-            SetCell(sheet,"C15", GetAmount(dataCodings,"p","200000"));
-            SetCell(sheet,"D15", GetAmount(dataCodings,"m","200000"));
-            SetCell(sheet,"C16", GetAmount(dataCodings,"p","300000"));
-            SetCell(sheet,"D16", GetAmount(dataCodings,"m","300000"));
+            SetCell(sheet,"C8", GetAmount(data.ReportCodings,"p","110000"));
+            SetCell(sheet,"D8", GetAmount(data.ReportCodings,"m","110000"));
+            SetCell(sheet,"C9", GetAmount(data.ReportCodings,"p","120000"));
+            SetCell(sheet,"D9", GetAmount(data.ReportCodings,"m","120000"));
+            SetCell(sheet,"C10", GetAmount(data.ReportCodings,"p","130000"));
+            SetCell(sheet,"D10", GetAmount(data.ReportCodings,"m","130000"));
+            SetCell(sheet,"C11", GetAmount(data.ReportCodings,"p","140000"));
+            SetCell(sheet,"D11", GetAmount(data.ReportCodings,"m","140000"));
+            SetCell(sheet,"C12", GetAmount(data.ReportCodings,"p","150000"));
+            SetCell(sheet,"D12", GetAmount(data.ReportCodings,"m","150000"));
+            SetCell(sheet,"C13", GetAmount(data.ReportCodings,"p","160000"));
+            SetCell(sheet,"D13", GetAmount(data.ReportCodings,"m","160000"));
+            SetCell(sheet,"C14", GetAmount(data.ReportCodings,"p","100000"));
+            SetCell(sheet,"D14", GetAmount(data.ReportCodings,"m","100000"));
+            SetCell(sheet,"C15", GetAmount(data.ReportCodings,"p","200000"));
+            SetCell(sheet,"D15", GetAmount(data.ReportCodings,"m","200000"));
+            SetCell(sheet,"C16", GetAmount(data.ReportCodings,"p","300000"));
+            SetCell(sheet,"D16", GetAmount(data.ReportCodings,"m","300000"));
             
             
             SetCell(sheet,"C19", data.P_Resources);
@@ -1635,8 +1594,69 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return workbook;
         }
 
-        public static Int64 GetAmount(Coding dataCodings, string property, string code){
-            var codingAmount = dataCodings.CodeAmounts.FirstOrDefault(c => c.Code == code);
+        
+        
+        // ------------------------------------------ sheet 1  ------------------------------------------------------------------------------------------------------------------------
+
+
+       
+        // public static IWorkbook WriteSheet4(Sheet1Data data ,IWorkbook workbook ){
+        //     ISheet sheet = workbook.GetSheetAt(0); // Assuming data should go into the first sheet
+        //
+        //     // Start populating from row 1 (assuming row 0 contains headers)
+        //     int rowIndex = 1;
+        //
+        //     foreach (var item in items){
+        //         IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+        //         for (int i = 0; i < item.Count; i++){
+        //             row.CreateCell(i).SetCellValue(item[i]+""); 
+        //
+        //         }
+        //         rowIndex++;
+        //     }
+        //
+        //     return workbook;
+        // }
+        //
+        
+        
+        
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------- Data Functions --------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        private static async Task<ReportCoding> GetCodingsAmount(SqlConnection sqlconnect, string[] codings, int yearId, int areaId, int budgetProcessId){
+            var dataCoding = new ReportCoding();
+            dataCoding.CodeAmounts = new List<CodingAmount>();
+            
+            await using SqlCommand sqlCommand = new SqlCommand("SP500_BudgetBook_Codings", sqlconnect);
+            sqlCommand.CommandTimeout = 500;
+            sqlCommand.Parameters.AddWithValue("yearId", yearId);
+            sqlCommand.Parameters.AddWithValue("areaId", areaId);
+            sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+            sqlCommand.Parameters.AddWithValue("codings", string.Join(",", codings)); // Send codings as a comma-separated string
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            // Helpers.dd(string.Join(",", codings));
+
+            await using SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            while (await dataReader.ReadAsync()){
+                var codingAmount = new CodingAmount{
+                    Code = dataReader["Code"].ToString(),
+                    Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString()),
+                    Mosavab = Int64.Parse(dataReader["Mosavab"].ToString())
+                };
+                dataCoding.CodeAmounts.Add(codingAmount);
+            }
+
+            await dataReader.CloseAsync();
+
+            return dataCoding;
+        }
+
+
+        public static Int64 GetAmount(ReportCoding dataReportCodings, string property, string code){
+            var codingAmount = dataReportCodings.CodeAmounts.FirstOrDefault(c => c.Code == code);
 
             if (codingAmount == null){
                 return 0; // Return 0 if no matching code is found
@@ -1653,8 +1673,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return 0; // Return 0 if an invalid property is specified
         }
 
+        
+        
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------- Excel functions --------------------------------------------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        
+        
+         private static IWorkbook GetExcelFile()
+        {
+            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/excel_templates/budget_book.xlsx");
+            using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.Read))
+            {
+                return new XSSFWorkbook(file); // Read the file into memory
+            }
+        }
 
-        public static void SetCell(ISheet sheet , string cellReference, object value){
+        
+         private static void SetCell(ISheet sheet , string cellReference, object value){
             var cellCoordinates = ParseCellReference(cellReference);
             int rowIndex = cellCoordinates.Item1;
             int colIndex = cellCoordinates.Item2;
@@ -1723,25 +1760,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             return columnIndex - 1; // Convert to 0-based index
         }
-        // public static IWorkbook WriteSheet4(Sheet1Data data ,IWorkbook workbook ){
-        //     ISheet sheet = workbook.GetSheetAt(0); // Assuming data should go into the first sheet
-        //
-        //     // Start populating from row 1 (assuming row 0 contains headers)
-        //     int rowIndex = 1;
-        //
-        //     foreach (var item in items){
-        //         IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
-        //         for (int i = 0; i < item.Count; i++){
-        //             row.CreateCell(i).SetCellValue(item[i]+""); 
-        //
-        //         }
-        //         rowIndex++;
-        //     }
-        //
-        //     return workbook;
-        // }
-        //
-        public static string CreateFinalFile(IWorkbook workbook){
+        
+        
+        
+        
+        private static string CreateFinalFile(IWorkbook workbook){
 
             // Recalculate formulas
             RecalculateFormulas(workbook);
@@ -1759,7 +1782,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        public static void RecalculateFormulas(IWorkbook workbook){
+        private static void RecalculateFormulas(IWorkbook workbook){
             // Get the formula evaluator for the workbook
             IFormulaEvaluator evaluator = workbook.GetCreationHelper().CreateFormulaEvaluator();
 

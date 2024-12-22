@@ -8,7 +8,7 @@ namespace NewsWebsite.ViewModels.Api.Report
         public Sheet1Data sheet1Data  { get; set; }
     }
 
-    public class Coding
+    public class ReportCoding
     {
         public List<CodingAmount> CodeAmounts { get; set; }
     }
@@ -29,7 +29,7 @@ namespace NewsWebsite.ViewModels.Api.Report
         public Int64 P_Khazane { get; set; }
         public Int64 P_Costs { get; set; }
 
-        public Dictionary<string, long> Codings { get; set; } = new Dictionary<string, long>();
+        public ReportCoding ReportCodings { get; set; }
 
     }
     
