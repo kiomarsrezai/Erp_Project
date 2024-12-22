@@ -105,6 +105,13 @@ namespace NewsWebsite.ViewModels.Fetch
         public int LevelNumber { get; set; }
         public bool Crud { get; set; }
         public double Percent { get; set; }
+        
+        [Display(Name = "3 ماهه آخر سال قبل")]
+        public Int64 Last3Month { get; set; }
+        
+        [Display(Name = "9 ماهه اول امسال")]
+        public Int64 Last9Month { get; set; }
+
     }
 
     public class BalanceViewModel

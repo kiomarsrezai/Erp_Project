@@ -76,6 +76,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.DelegatePercentage = int.Parse(dataReader["DelegatePercentage"].ToString());
                         row.ExecutionId = int.Parse(dataReader["ExecutionId"].ToString());
                         row.ProctorId = int.Parse(dataReader["ProctorId"].ToString());
+                        row.Last3Month = int.Parse(dataReader["Last3Month"].ToString());
+                        row.Last9Month = int.Parse(dataReader["Last9Month"].ToString());
                         row.Crud = (bool)dataReader["Crud"];
                         if (row.Mosavab != 0)
                         {
@@ -173,6 +175,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("DelegateTo", param.DelegateTo??0);
                     sqlCommand.Parameters.AddWithValue("DelegateAmount", param.DelegateAmount??0);
                     sqlCommand.Parameters.AddWithValue("DelegatePercentage", param.DelegatePercentage??0);
+                    sqlCommand.Parameters.AddWithValue("Last3Month", param.Last3Month??0);
+                    sqlCommand.Parameters.AddWithValue("Last9Month", param.Last9Month??0);
            
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();

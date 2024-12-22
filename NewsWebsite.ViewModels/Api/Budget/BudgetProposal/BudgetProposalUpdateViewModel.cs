@@ -19,6 +19,8 @@ namespace NewsWebsite.ViewModels.Api.Budget.BudgetProposal
         public int? DelegatePercentage { get; set; }
         public int ProctorId { get; set; }
         public int ExecutionId { get; set; }
+        public Int64? Last3Month { get; set; }
+        public Int64? Last9Month { get; set; }
     }
     public class BudgetProposalEditUpdateViewModel
     {

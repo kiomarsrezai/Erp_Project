@@ -16,6 +16,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -1501,6 +1502,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(dataModel);
         }
         
+        //-------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------
+        
+        
         
         [Route("BudgetBookExport")]
         [HttpGet]
@@ -1510,10 +1516,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp"))){
                 var workbook = GetExcelFile();
+
+
+                sqlconnect.Open();
                 
+                string[] codings ={"110000","120000","130000","140000","150000","160000","100000","200000","300000"}; 
+                Coding dataCodings = await GetCodingsAmount(sqlconnect,  codings, param.YearId,param.AreaId, 1);
+
                 using (SqlCommand sqlCommand = new SqlCommand("SP500_BudgetBook", sqlconnect))
                 {
-                    sqlconnect.Open();
+                    
+                    
                     sqlCommand.CommandTimeout = 500;
                     sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
                     sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
@@ -1529,7 +1542,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         data1.P_Khazane = Int64.Parse(dataReader["P_Khazane"].ToString());
                         data1.P_Costs = Int64.Parse(dataReader["P_Costs"].ToString());
 
-                        workbook = WriteSheet1(workbook, data1);
+                        workbook = WriteSheet1(workbook, data1,dataCodings);
                     }
 
                 }
@@ -1541,6 +1554,38 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(dataModel);
         }
 
+        
+        
+        private async Task<Coding> GetCodingsAmount(SqlConnection sqlconnect,  string[] codings, int yearId, int areaId, int budgetProcessId){
+            var dataCoding = new Coding();
+            dataCoding.CodeAmounts = new List<CodingAmount>();
+            using (SqlCommand sqlCommand = new SqlCommand("SP500_BudgetBook_Codings", sqlconnect))
+            {
+                sqlCommand.CommandTimeout = 500;
+                sqlCommand.Parameters.AddWithValue("yearId", yearId);
+                sqlCommand.Parameters.AddWithValue("areaId", areaId);
+                sqlCommand.Parameters.AddWithValue("budgetProcessId", budgetProcessId);
+                sqlCommand.Parameters.AddWithValue("codings", string.Join(",", codings)); // Send codings as a comma-separated string
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                // Helpers.dd(string.Join(",", codings));
+
+                using (SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync()){
+                    while (await dataReader.ReadAsync()){
+                        var codingAmount = new CodingAmount{
+                            Code = dataReader["Code"].ToString(),
+                            Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString()),
+                            Mosavab =Int64.Parse(dataReader["Mosavab"].ToString())
+                        };
+                        dataCoding.CodeAmounts.Add(codingAmount);
+                    }
+                }
+            }
+
+            return dataCoding;
+        }
+        
+        
+        
 
         public static IWorkbook GetExcelFile()
         {
@@ -1552,33 +1597,132 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
         
         
-        public static IWorkbook WriteSheet1(IWorkbook workbook, Sheet1Data data)
+        public static IWorkbook WriteSheet1(IWorkbook workbook, Sheet1Data data,Coding dataCodings)
         {
-            ISheet sheet = workbook.GetSheetAt(0); // First sheet (index 0)
+            ISheet sheet = workbook.GetSheetAt(0);
 
-            // Helper method to get or create a cell
-            ICell GetOrCreateCell(IRow row, int columnIndex)
-            {
-                return row.GetCell(columnIndex) ?? row.CreateCell(columnIndex);
-            }
-
-            // Row 19
-            IRow row19 = sheet.GetRow(18) ?? sheet.CreateRow(18);
-            GetOrCreateCell(row19, 2).SetCellValue(data.P_Resources.ToString() );
-            GetOrCreateCell(row19, 3).SetCellValue(data.M_Resources.ToString() );
-            GetOrCreateCell(row19, 7).SetCellValue(data.P_Costs.ToString() );
-            GetOrCreateCell(row19, 8).SetCellValue(data.M_Costs.ToString() );
-
-            // Row 20
-            IRow row20 = sheet.GetRow(20) ?? sheet.CreateRow(20);
-            GetOrCreateCell(row20, 2).SetCellValue(data.P_Khazane.ToString() );
-            GetOrCreateCell(row20, 3).SetCellValue(data.M_Khazane.ToString() );
-            GetOrCreateCell(row20, 7).SetCellValue(data.P_Khazane.ToString() );
-            GetOrCreateCell(row20, 8).SetCellValue(data.M_Khazane.ToString() );
+            SetCell(sheet,"C8", GetAmount(dataCodings,"p","110000"));
+            SetCell(sheet,"D8", GetAmount(dataCodings,"m","110000"));
+            SetCell(sheet,"C9", GetAmount(dataCodings,"p","120000"));
+            SetCell(sheet,"D9", GetAmount(dataCodings,"m","120000"));
+            SetCell(sheet,"C10", GetAmount(dataCodings,"p","130000"));
+            SetCell(sheet,"D10", GetAmount(dataCodings,"m","130000"));
+            SetCell(sheet,"C11", GetAmount(dataCodings,"p","140000"));
+            SetCell(sheet,"D11", GetAmount(dataCodings,"m","140000"));
+            SetCell(sheet,"C12", GetAmount(dataCodings,"p","150000"));
+            SetCell(sheet,"D12", GetAmount(dataCodings,"m","150000"));
+            SetCell(sheet,"C13", GetAmount(dataCodings,"p","160000"));
+            SetCell(sheet,"D13", GetAmount(dataCodings,"m","160000"));
+            SetCell(sheet,"C14", GetAmount(dataCodings,"p","100000"));
+            SetCell(sheet,"D14", GetAmount(dataCodings,"m","100000"));
+            SetCell(sheet,"C15", GetAmount(dataCodings,"p","200000"));
+            SetCell(sheet,"D15", GetAmount(dataCodings,"m","200000"));
+            SetCell(sheet,"C16", GetAmount(dataCodings,"p","300000"));
+            SetCell(sheet,"D16", GetAmount(dataCodings,"m","300000"));
+            
+            
+            SetCell(sheet,"C19", data.P_Resources);
+            SetCell(sheet,"D19", data.M_Resources);
+            SetCell(sheet,"H19", data.P_Costs);
+            SetCell(sheet,"I19", data.M_Costs);
+            
+            SetCell(sheet,"C21", data.P_Khazane);
+            SetCell(sheet,"D21", data.M_Khazane);
+            SetCell(sheet,"H21", data.P_Khazane);
+            SetCell(sheet,"I21", data.M_Khazane);
+            
 
             return workbook;
         }
-        
+
+        public static Int64 GetAmount(Coding dataCodings, string property, string code){
+            var codingAmount = dataCodings.CodeAmounts.FirstOrDefault(c => c.Code == code);
+
+            if (codingAmount == null){
+                return 0; // Return 0 if no matching code is found
+            }
+
+            // Use reflection to access the specified property dynamically
+            if (property.ToLower() == "p"){
+                return codingAmount.Pishnahadi;
+            }
+            else if (property.ToLower() == "m"){
+                return codingAmount.Mosavab;
+            }
+
+            return 0; // Return 0 if an invalid property is specified
+        }
+
+
+        public static void SetCell(ISheet sheet , string cellReference, object value){
+            var cellCoordinates = ParseCellReference(cellReference);
+            int rowIndex = cellCoordinates.Item1;
+            int colIndex = cellCoordinates.Item2;
+
+            IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
+            ICell cell = row.GetCell(colIndex) ?? row.CreateCell(colIndex);
+
+            switch (value)
+            {
+                case double numericValue:
+                    cell.SetCellType(CellType.Numeric);
+                    cell.SetCellValue(numericValue);
+                    break;
+
+                case int intValue:
+                    cell.SetCellType(CellType.Numeric);
+                    cell.SetCellValue(intValue);
+                    break;
+
+                case Int64 int64Value:
+                    cell.SetCellType(CellType.Numeric);
+                    cell.SetCellValue(int64Value);
+                    break;
+
+                case string stringValue:
+                    cell.SetCellType(CellType.String);
+                    cell.SetCellValue(stringValue);
+                    break;
+
+                case DateTime dateValue:
+                    cell.SetCellType(CellType.Numeric);
+                    cell.SetCellValue(dateValue); // Automatically applies Excel's date format
+                    break;
+
+                case null:
+                    cell.SetCellType(CellType.Blank);
+                    break;
+
+            }
+                
+        }
+
+        private static (int, int) ParseCellReference(string cellReference){
+            // Example: "B5" -> (4, 1)  (Row 5, Column B)
+
+            // Split the cell reference into column letter and row number
+            string columnLetter = new string(cellReference.TakeWhile(char.IsLetter).ToArray());
+            string rowNumber = new string(cellReference.SkipWhile(char.IsLetter).ToArray());
+
+            // Convert column letter to column index (0-based)
+            int columnIndex = GetColumnIndexFromLetter(columnLetter);
+
+            // Convert row number to 0-based index
+            int rowIndex = int.Parse(rowNumber) - 1;
+
+            return (rowIndex, columnIndex);
+        }
+
+        private static int GetColumnIndexFromLetter(string columnLetter){
+            int columnIndex = 0;
+            int length = columnLetter.Length;
+
+            for (int i = 0; i < length; i++){
+                columnIndex += (columnLetter[i] - 'A' + 1) * (int)Math.Pow(26, length - i - 1);
+            }
+
+            return columnIndex - 1; // Convert to 0-based index
+        }
         // public static IWorkbook WriteSheet4(Sheet1Data data ,IWorkbook workbook ){
         //     ISheet sheet = workbook.GetSheetAt(0); // Assuming data should go into the first sheet
         //
@@ -1599,6 +1743,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //
         public static string CreateFinalFile(IWorkbook workbook){
 
+            // Recalculate formulas
+            RecalculateFormulas(workbook);
+            
             // Save the file to a temporary location
             string tmpPath = "/tmp/"+$"book1403_{DateTimeOffset.Now.ToUnixTimeMilliseconds()}.xlsx";
             string tempFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"+tmpPath);
@@ -1610,5 +1757,33 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
             return tmpPath; // Return the path to the saved file
         }
+
+
+        public static void RecalculateFormulas(IWorkbook workbook){
+            // Get the formula evaluator for the workbook
+            IFormulaEvaluator evaluator = workbook.GetCreationHelper().CreateFormulaEvaluator();
+
+            // Iterate through all sheets in the workbook
+            for (int i = 0; i < workbook.NumberOfSheets; i++){
+                ISheet sheet = workbook.GetSheetAt(i);
+                // Iterate through all rows in the sheet
+                for (int rowIndex = sheet.FirstRowNum; rowIndex <= sheet.LastRowNum; rowIndex++){
+                    IRow row = sheet.GetRow(rowIndex);
+                    if (row == null) continue;
+
+                    // Iterate through all cells in the row
+                    for (int cellIndex = row.FirstCellNum; cellIndex < row.LastCellNum; cellIndex++){
+                        ICell cell = row.GetCell(cellIndex);
+                        if (cell == null) continue;
+
+                        // Recalculate if the cell contains a formula
+                        if (cell.CellType == CellType.Formula){
+                            evaluator.EvaluateFormulaCell(cell);
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 }
