@@ -34,6 +34,36 @@ namespace NewsWebsite.ViewModels.Api.Report
     }
     
     
+    public class Sheet3Data
+    {
+        public List<Sheet3DataSingle> dataList { get; set; }
+
+    }
+    
+    public class Sheet3DataSingle
+    {
+        
+        public string CodingId { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public Int64 MosavabLastYear { get; set; }
+        public Int64 Mosavab { get; set; }
+        public Int64 Edit { get; set; }
+        public Int64 CreditAmount { get; set; }
+        public Int64 Expense { get; set; }
+        public Int64 PishnahadiCash { get; set; }
+        public Int64 PishnahadiNonCash { get; set; }
+        public Int64 Pishnahadi { get; set; }
+        public int levelNumber { get; set; }
+        public int Crud { get; set; }
+        public int ConfirmStatus { get; set; }
+        public int isNewYear { get; set; }
+        public int ProctorId { get; set; }
+        public int ExecutionId { get; set; }
+        public Int64 Last3Month { get; set; }
+        public Int64 Last9Month { get; set; }
+    }
+
     
     
     
