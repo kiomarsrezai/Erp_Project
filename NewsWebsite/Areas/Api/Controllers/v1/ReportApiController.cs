@@ -15,10 +15,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
@@ -1518,12 +1520,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             // sheet1
             Sheet1Data sheet1Data=await GetDataSheet1(sqlConnect,param);
-            workbook = WriteSheet1(workbook,sheet1Data);
+            workbook = WriteSheet1(workbook,sheet1Data,param.YearId);
 
              
             // sheet3
             Sheet3Data sheet3Data=await GetDataSheet3(sqlConnect,param);
             workbook = WriteSheet3(workbook,sheet3Data);
+
+            // sheet6
+            Sheet3Data sheet6Data=await GetDataSheet6(sqlConnect,param);
+            workbook = WriteSheet6(workbook,sheet6Data);
 
             
             var finalFilePath = CreateFinalFile(workbook);
@@ -1562,7 +1568,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
         
         
-        private IWorkbook WriteSheet1( IWorkbook workbook, Sheet1Data data){
+        private IWorkbook WriteSheet1( IWorkbook workbook, Sheet1Data data,int yearId){
             ISheet sheet = workbook.GetSheetAt(0);
 
             SetCell(sheet,"C8", GetAmount(data.ReportCodings,"p","110000"));
@@ -1594,6 +1600,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             SetCell(sheet,"D21", data.M_Khazane);
             SetCell(sheet,"H21", data.P_Khazane);
             SetCell(sheet,"I21", data.M_Khazane);
+
+
+            var year = yearId + 1369;
+            SetCell(sheet,"A25", year);
+            SetCell(sheet,"A26", year-1);
+            SetCell(sheet,"A27", year-2);
             
 
             return workbook;
@@ -1647,56 +1659,196 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var rowIndex = 7;
             
 
+            Int64 SumMosavabLastYear=0;
+            Int64 SumLast3Month=0;
+            Int64 SumLast9Month=0;
+            Int64 SumPishnahadi=0;
+            Int64 SumMosavab=0;
             
+            XSSFColor redColor = new XSSFColor(Color.FromArgb(244, 176, 132));
+            XSSFColor greenColor = new XSSFColor(Color.FromArgb(198, 224, 180));
+            XSSFColor blueColor = new XSSFColor(Color.FromArgb(180, 198, 231));
+            XSSFColor yellowColor = new XSSFColor(Color.FromArgb(255, 255, 153));
             for (int i =0;i<data.dataList.Count;i++){
 
-                if (data.dataList[i].levelNumber == 5)
+                if (data.dataList[i].levelNumber >4 )
                     continue;
+
+                ICellStyle style = GetBaseStyle(workbook);
                 
-                ICellStyle style = workbook.CreateCellStyle();
-                if (data.dataList[i].levelNumber == 1){
-                    style.FillBackgroundColor = IndexedColors.Red.Index;
-                }else if (data.dataList[i].levelNumber == 2){
-                    style.FillForegroundColor = IndexedColors.Green.Index;
+
+                if (data.dataList[i].levelNumber == 1) {
+                    ((XSSFCellStyle)style).SetFillForegroundColor(redColor);
                     style.FillPattern = FillPattern.SolidForeground;
-                }else if (data.dataList[i].levelNumber == 3){
-                    style.FillForegroundColor = IndexedColors.Blue.Index;
+                } else if (data.dataList[i].levelNumber == 2) {
+                    ((XSSFCellStyle)style).SetFillForegroundColor(greenColor);
                     style.FillPattern = FillPattern.SolidForeground;
-                }else if (data.dataList[i].levelNumber == 4){
-                    style.FillForegroundColor = IndexedColors.Yellow.Index;
+                } else if (data.dataList[i].levelNumber == 3) {
+                    ((XSSFCellStyle)style).SetFillForegroundColor(blueColor);
+                    style.FillPattern = FillPattern.SolidForeground;
+                } else if (data.dataList[i].levelNumber == 4) {
+                    ((XSSFCellStyle)style).SetFillForegroundColor(yellowColor);
                     style.FillPattern = FillPattern.SolidForeground;
                 }
-                // ICellStyle style=null;
-                // if (data.dataList[i].levelNumber == 1){
-                //     style=CreateCustomCellStyle(workbook, 255, 255, 0);;
-                // }else if (data.dataList[i].levelNumber == 2){
-                //     style= CreateCustomCellStyle(workbook, 144, 238, 144); // Light Green
-                // }else if (data.dataList[i].levelNumber == 3){
-                //     style= CreateCustomCellStyle(workbook, 173, 216, 230); // Light Blue
-                // }else if (data.dataList[i].levelNumber == 4){
-                //     style=CreateCustomCellStyle(workbook, 255, 255, 0);;
-                // }
                 
                 SetCell(sheet,"A"+rowIndex,data.dataList[i].Code,style);
                 SetCell(sheet,"B"+rowIndex,data.dataList[i].Description,style);
                 SetCell(sheet,"C"+rowIndex,0,style);
-                SetCell(sheet,"D"+rowIndex,data.dataList[i].MosavabLastYear,style);
+                SetCell(sheet,"D"+rowIndex,data.dataList[i].MosavabLastYear/1000,style);
                 SetCell(sheet,"E"+rowIndex,0,style);
-                SetCell(sheet,"F"+rowIndex,data.dataList[i].Last3Month,style);
-                SetCell(sheet,"G"+rowIndex,data.dataList[i].Last9Month,style);
-                SetCell(sheet,"H"+rowIndex,data.dataList[i].Last3Month+data.dataList[i].Last9Month,style);
-                SetCell(sheet,"I"+rowIndex,data.dataList[i].Pishnahadi,style);
-                SetCell(sheet,"J"+rowIndex,data.dataList[i].Mosavab,style);
+                SetCell(sheet,"F"+rowIndex,data.dataList[i].Last3Month/1000,style);
+                SetCell(sheet,"G"+rowIndex,data.dataList[i].Last9Month/1000,style);
+                SetCell(sheet,"H"+rowIndex,data.dataList[i].Last3Month/1000+data.dataList[i].Last9Month/1000,style);
+                SetCell(sheet,"I"+rowIndex,data.dataList[i].Pishnahadi/1000,style);
+                SetCell(sheet,"J"+rowIndex,data.dataList[i].Mosavab/1000,style);
+
+                if (data.dataList[i].levelNumber == 1){
+                    SumMosavabLastYear += data.dataList[i].MosavabLastYear / 1000;
+                    SumLast3Month += data.dataList[i].Last3Month / 1000;
+                    SumLast9Month += data.dataList[i].Last9Month / 1000;
+                    SumPishnahadi += data.dataList[i].Pishnahadi / 1000;
+                    SumMosavab += data.dataList[i].Mosavab / 1000;
+                    
+                }
+
                 rowIndex++;
             }
+
+
+
+            // Helpers.dd(rowIndex);
+            CellRangeAddress mergeRegion = new CellRangeAddress(rowIndex-1, rowIndex-1, 0, 1);
+            sheet.AddMergedRegion(mergeRegion);
+
+            ICellStyle styleSum = GetBaseStyle(workbook);
+            ((XSSFCellStyle)styleSum).SetFillForegroundColor(blueColor);
+            styleSum.FillPattern = FillPattern.SolidForeground;
+            
+            SetCell(sheet,"A"+rowIndex,"جمع کل",styleSum);
+            SetCell(sheet,"C"+rowIndex,0,styleSum);
+            SetCell(sheet,"D"+rowIndex,SumMosavabLastYear,styleSum);
+            SetCell(sheet,"E"+rowIndex,0,styleSum);
+            SetCell(sheet,"F"+rowIndex,SumLast3Month,styleSum);
+            SetCell(sheet,"G"+rowIndex,SumLast9Month,styleSum);
+            SetCell(sheet,"H"+rowIndex,SumLast3Month+SumLast9Month,styleSum);
+            SetCell(sheet,"I"+rowIndex,SumPishnahadi,styleSum);
+            SetCell(sheet,"J"+rowIndex,SumMosavab,styleSum);
 
             return workbook;
         }
 
         
+        // ------------------------------------------ sheet 6  ------------------------------------------------------------------------------------------------------------------------
+
+        private static async Task<Sheet3Data> GetDataSheet6(SqlConnection sqlconnect , BudgetBookInputs param){
+            await using SqlCommand sqlCommand = new SqlCommand("SP004_BudgetBook_List", sqlconnect);
+            sqlCommand.CommandTimeout = 500;
+            sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+            sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+            sqlCommand.Parameters.AddWithValue("budgetProcessId", 2);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            Sheet3Data datas = new Sheet3Data();
+            datas.dataList = new List<Sheet3DataSingle>();
+            while (dataReader.Read()){
+
+                var data1 = new Sheet3DataSingle();
+                
+                data1.CodingId =dataReader["CodingId"].ToString();
+                data1.Code =dataReader["Code"].ToString();
+                data1.Description =dataReader["Description"].ToString();
+                data1.MosavabLastYear = Int64.Parse(dataReader["MosavabLastYear"].ToString());
+                data1.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                data1.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                data1.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+                data1.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                data1.PishnahadiCash = Int64.Parse(dataReader["PishnahadiCash"].ToString());
+                data1.PishnahadiNonCash = Int64.Parse(dataReader["PishnahadiNonCash"].ToString());
+                data1.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
+                data1.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+                // data1.Crud = int.Parse(dataReader["Crud"].ToString());
+                data1.ConfirmStatus = int.Parse(dataReader["ConfirmStatus"].ToString());
+                data1.isNewYear = int.Parse(dataReader["isNewYear"].ToString());
+                datas.dataList.Add(data1);
+            }
+            await dataReader.CloseAsync();
+
+            
+
+            return datas;
+        }
         
         
-        
+        private IWorkbook WriteSheet6( IWorkbook workbook, Sheet3Data data){
+            ISheet sheet = workbook.GetSheetAt(5);
+
+            var rowIndex = 6;
+            
+
+            Int64 SumMosavabLastYear=0;
+            Int64 SumPishnahadi=0;
+            Int64 SumMosavab=0;
+            
+            XSSFColor greenColor = new XSSFColor(Color.FromArgb(198, 224, 180));
+            XSSFColor redColor2 = new XSSFColor(Color.FromArgb(252, 228, 214));
+            XSSFColor yellowColor = new XSSFColor(Color.FromArgb(255, 255, 153));
+            XSSFColor blueColor = new XSSFColor(Color.FromArgb(180, 198, 231));
+            for (int i =0;i<data.dataList.Count;i++){
+
+                if (data.dataList[i].levelNumber >3 )
+                    continue;
+
+                ICellStyle style = GetBaseStyle(workbook);
+                
+
+                if (data.dataList[i].levelNumber == 1) {
+                    ((XSSFCellStyle)style).SetFillForegroundColor(greenColor);
+                    style.FillPattern = FillPattern.SolidForeground;
+                } else if (data.dataList[i].levelNumber == 2) {
+                    ((XSSFCellStyle)style).SetFillForegroundColor(redColor2);
+                    style.FillPattern = FillPattern.SolidForeground;
+                } else if (data.dataList[i].levelNumber == 3) {
+                    ((XSSFCellStyle)style).SetFillForegroundColor(yellowColor);
+                    style.FillPattern = FillPattern.SolidForeground;
+                }
+                
+                SetCell(sheet,"A"+rowIndex,data.dataList[i].Code,style);
+                SetCell(sheet,"B"+rowIndex,data.dataList[i].Description,style);
+                SetCell(sheet,"C"+rowIndex,0,style);
+                SetCell(sheet,"D"+rowIndex,data.dataList[i].MosavabLastYear/1000,style);
+                SetCell(sheet,"E"+rowIndex,data.dataList[i].Pishnahadi/1000,style);
+                SetCell(sheet,"F"+rowIndex,data.dataList[i].Mosavab/1000,style);
+
+                if (data.dataList[i].levelNumber == 1){
+                    SumMosavabLastYear += data.dataList[i].MosavabLastYear / 1000;
+                    SumPishnahadi += data.dataList[i].Pishnahadi / 1000;
+                    SumMosavab += data.dataList[i].Mosavab / 1000;
+                    
+                }
+
+                rowIndex++;
+            }
+
+
+
+            // Helpers.dd(rowIndex);
+            CellRangeAddress mergeRegion = new CellRangeAddress(rowIndex-1, rowIndex-1, 0, 1);
+            sheet.AddMergedRegion(mergeRegion);
+
+            
+            ICellStyle styleSum = GetBaseStyle(workbook);
+            ((XSSFCellStyle)styleSum).SetFillForegroundColor(blueColor);
+            styleSum.FillPattern = FillPattern.SolidForeground;
+            
+            SetCell(sheet,"A"+rowIndex,"جمع کل",styleSum);
+            SetCell(sheet,"C"+rowIndex,0,styleSum);
+            SetCell(sheet,"D"+rowIndex,SumMosavabLastYear,styleSum);
+            SetCell(sheet,"E"+rowIndex,SumPishnahadi,styleSum);
+            SetCell(sheet,"F"+rowIndex,SumMosavab,styleSum);
+
+            return workbook;
+        }
+
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------- Data Functions --------------------------------------------------------------------------------------------
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1886,19 +2038,23 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
         }
         
-        private ICellStyle CreateCustomCellStyle(IWorkbook workbook, int red, int green, int blue)
-        {
+        
+        private ICellStyle GetBaseStyle(IWorkbook workbook){
             ICellStyle style = workbook.CreateCellStyle();
-
-            // Use XSSFColor for custom RGB color
-            if (workbook is XSSFWorkbook xssfWorkbook)
-            {
-                XSSFColor color = new XSSFColor(new[] { (byte)red, (byte)green, (byte)blue });
-                XSSFCellStyle xssfStyle = (XSSFCellStyle)style;
-                xssfStyle.SetFillBackgroundColor(color);
-                xssfStyle.FillPattern = FillPattern.SolidForeground;
-            }
-
+            // aligment
+            style.Alignment = HorizontalAlignment.Center;
+            style.VerticalAlignment = VerticalAlignment.Center;
+            
+            // format number
+            IDataFormat format = workbook.CreateDataFormat();
+            style.DataFormat = format.GetFormat("#,##0");
+            
+            // font
+            IFont font = workbook.CreateFont();
+            font.FontName = "B Titr";
+            font.FontHeightInPoints = 10;
+            style.SetFont(font);
+            
             return style;
         }
         
