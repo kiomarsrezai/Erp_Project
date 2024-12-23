@@ -76,8 +76,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         row.DelegatePercentage = int.Parse(dataReader["DelegatePercentage"].ToString());
                         row.ExecutionId = int.Parse(dataReader["ExecutionId"].ToString());
                         row.ProctorId = int.Parse(dataReader["ProctorId"].ToString());
-                        row.Last3Month = int.Parse(dataReader["Last3Month"].ToString());
-                        row.Last9Month = int.Parse(dataReader["Last9Month"].ToString());
+                        row.Last3Month = Int64.Parse(dataReader["Last3Month"].ToString());
+                        row.Last9Month = Int64.Parse(dataReader["Last9Month"].ToString());
                         row.Crud = (bool)dataReader["Crud"];
                         if (row.Mosavab != 0)
                         {
