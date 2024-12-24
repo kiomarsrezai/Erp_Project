@@ -1677,70 +1677,46 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string sheet2Name = workbook.GetSheetName(6);
 
 
-            // SetCell(sheet, "C9", "         مأموریت.برنامه.خدمت!C9+" + CreateFormula(sheet2Name,"H",sheet7,"1010000000",11), style, true);
-            // SetCell(sheet, "D9", "         مأموریت.برنامه.خدمت!D9+" + CreateFormula(sheet2Name,"I",sheet7,"1010000000",11), style, true);
-            // SetCell(sheet, "E9", "         مأموریت.برنامه.خدمت!E9 " , style, true);
-            // SetCell(sheet, "F9", "         مأموریت.برنامه.خدمت!F9 " , style, true);
-            // SetCell(sheet, "H9", "                                " + CreateFormula(sheet2Name,"J",sheet7,"1010000000",11), style, true);
-            // SetCell(sheet, "J9", "         مأموریت.برنامه.خدمت!I9+" + CreateFormula(sheet2Name,"K",sheet7,"1010000000",11), style, true);
-            //
-            //
-            // SetCell(sheet, "C10", "         مأموریت.برنامه.خدمت!C16+" + CreateFormula(sheet2Name,"H",sheet7,"1020000000",11), style, true);
-            // SetCell(sheet, "D10", "         مأموریت.برنامه.خدمت!D16+" + CreateFormula(sheet2Name,"I",sheet7,"1020000000",11), style, true);
-            // SetCell(sheet, "E10", "         مأموریت.برنامه.خدمت!E16 " , style, true);
-            // SetCell(sheet, "F10", "         مأموریت.برنامه.خدمت!F16 " , style, true);
-            // SetCell(sheet, "H10", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"1020000000",11), style, true);
-            // SetCell(sheet, "J10", "         مأموریت.برنامه.خدمت!I16+" + CreateFormula(sheet2Name,"K",sheet7,"1020000000",11), style, true);
-            //
-            // SetCell(sheet, "C11", "         مأموریت.برنامه.خدمت!C20+" + CreateFormula(sheet2Name,"H",sheet7,"1030000000",11), style, true);
-            // SetCell(sheet, "D11", "         مأموریت.برنامه.خدمت!D20+" + CreateFormula(sheet2Name,"I",sheet7,"1030000000",11), style, true);
-            // SetCell(sheet, "E11", "         مأموریت.برنامه.خدمت!E20 " , style, true);
-            // SetCell(sheet, "F11", "         مأموریت.برنامه.خدمت!F20 " , style, true);
-            // SetCell(sheet, "H11", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"1030000000",11), style, true);
-            // SetCell(sheet, "J11", "         مأموریت.برنامه.خدمت!I20+" + CreateFormula(sheet2Name,"K",sheet7,"1030000000",11), style, true);
-            //
-            // SetCell(sheet, "C12", "         مأموریت.برنامه.خدمت!C26+" + CreateFormula(sheet2Name,"H",sheet7,"1040000000",11), style, true);
-            // SetCell(sheet, "D12", "         مأموریت.برنامه.خدمت!D26+" + CreateFormula(sheet2Name,"I",sheet7,"1040000000",11), style, true);
-            // SetCell(sheet, "E12", "         مأموریت.برنامه.خدمت!E26 " , style, true);
-            // SetCell(sheet, "F12", "         مأموریت.برنامه.خدمت!F26 " , style, true);
-            // SetCell(sheet, "H12", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"1040000000",11), style, true);
-            // SetCell(sheet, "J12", "         مأموریت.برنامه.خدمت!I26+" + CreateFormula(sheet2Name,"K",sheet7,"1040000000",11), style, true);
-            //
-            
-            // SetCell(sheet, "C14", "         مأموریت.برنامه.خدمت!C31+" + CreateFormula(sheet2Name,"H",sheet7,"2010000000",11), style, true);
-            // SetCell(sheet, "D14", "         مأموریت.برنامه.خدمت!D31+" + CreateFormula(sheet2Name,"I",sheet7,"2010000000",11), style, true);
-            // SetCell(sheet, "E14", "         مأموریت.برنامه.خدمت!E31 " , style, true);
-            // SetCell(sheet, "F14", "         مأموریت.برنامه.خدمت!F31 " , style, true);
-            // SetCell(sheet, "H14", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"2010000000",11), style, true);
-            // SetCell(sheet, "J14", "         مأموریت.برنامه.خدمت!I31+" + CreateFormula(sheet2Name,"K",sheet7,"2010000000",11), style, true);
-            //
-            //
-            // SetCell(sheet, "C15", "         مأموریت.برنامه.خدمت!C36+" + CreateFormula(sheet2Name,"H",sheet7,"2020000000",11), style, true);
-            // SetCell(sheet, "D15", "         مأموریت.برنامه.خدمت!D36+" + CreateFormula(sheet2Name,"I",sheet7,"2020000000",11), style, true);
-            // SetCell(sheet, "E15", "         مأموریت.برنامه.خدمت!E36 " , style, true);
-            // SetCell(sheet, "F15", "         مأموریت.برنامه.خدمت!F36 " , style, true);
-            // SetCell(sheet, "H15", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"2020000000",11), style, true);
-            // SetCell(sheet, "J15", "         مأموریت.برنامه.خدمت!I36+" + CreateFormula(sheet2Name,"K",sheet7,"2020000000",11), style, true);
-            //
-            //
-            // SetCell(sheet, "C16", "         مأموریت.برنامه.خدمت!C39+" + CreateFormula(sheet2Name,"H",sheet7,"2030000000",11), style, true);
-            // SetCell(sheet, "D16", "         مأموریت.برنامه.خدمت!D39+" + CreateFormula(sheet2Name,"I",sheet7,"2030000000",11), style, true);
-            // SetCell(sheet, "E16", "         مأموریت.برنامه.خدمت!E39 " , style, true);
-            // SetCell(sheet, "F16", "         مأموریت.برنامه.خدمت!F39 " , style, true);
-            // SetCell(sheet, "H16", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"2030000000",11), style, true);
-            // SetCell(sheet, "J16", "         مأموریت.برنامه.خدمت!I39+" + CreateFormula(sheet2Name,"K",sheet7,"2030000000",11), style, true);
-            //
-            
             var rows = new List<(string mainNumber, int rowNumber, int referenceOffset)>
             {
                 ("1010000000", 9, 9),
                 ("1020000000", 10, 16),
                 ("1030000000", 11, 20),
                 ("1040000000", 12, 26),
+                
                 ("2010000000", 14, 31),
                 ("2020000000", 15, 36),
                 ("2030000000", 16, 39),
-                // Add more rows as needed...
+                ("2040000000", 17, 42),
+                ("2050000000", 18, 47),
+                ("2060000000", 19, 49),
+                ("2070000000", 20, 55),
+                
+                ("3010000000", 22, 61),
+                ("3020000000", 23, 65),
+                ("3030000000", 24, 70),
+                
+                ("4010000000", 26, 73),
+                ("4020000000", 27, 78),
+                ("4030000000", 28, 93),
+                // ("4040000000", 29, 0),
+                ("4050000000", 30, 91),
+                ("4060000000", 31, 93),
+                // ("4070000000", 32, 0),
+                ("4080000000", 33, 99),
+                
+                 
+                ("5010000000", 35, 103),
+                ("5020000000", 36, 108),
+                ("5030000000", 37, 119),
+                ("5040000000", 38, 176),
+                
+                ("6010000000", 40, 179),
+                ("6020000000", 41, 193),
+                ("6030000000", 42, 197),
+                ("6040000000", 43, 201),
+                ("6050000000", 44, 206),
+                ("6060000000", 45, 209),
             };
 
 // Loop through the rows and generate the SetCell calls dynamically
@@ -1748,9 +1724,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             {
                 SetCell(sheet, $"C{rowNumber}", $"         مأموریت.برنامه.خدمت!C{referenceOffset}+" + CreateFormula(sheet2Name, "H", sheet7, mainNumber, 11), style, true);
                 SetCell(sheet, $"D{rowNumber}", $"         مأموریت.برنامه.خدمت!D{referenceOffset}+" + CreateFormula(sheet2Name, "I", sheet7, mainNumber, 11), style, true);
-                SetCell(sheet, $"E{rowNumber}", $"         مأموریت.برنامه.خدمت!E{referenceOffset} ", style, true);
-                SetCell(sheet, $"F{rowNumber}", $"         مأموریت.برنامه.خدمت!F{referenceOffset} ", style, true);
-                SetCell(sheet, $"H{rowNumber}", $"                                 " + CreateFormula(sheet2Name, "J", sheet7, mainNumber, 11), style, true);
+                SetCell(sheet, $"E{rowNumber}", $"         مأموریت.برنامه.خدمت!E{referenceOffset} ",                                                                                     style, true);
+                SetCell(sheet, $"F{rowNumber}", $"         مأموریت.برنامه.خدمت!F{referenceOffset} ",                                                                                     style, true);
+                SetCell(sheet, $"H{rowNumber}", $"                                                " + CreateFormula(sheet2Name, "J", sheet7, mainNumber, 11), style, true);
                 SetCell(sheet, $"J{rowNumber}", $"         مأموریت.برنامه.خدمت!I{referenceOffset}+" + CreateFormula(sheet2Name, "K", sheet7, mainNumber, 11), style, true);
             }
 
