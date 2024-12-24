@@ -25,8 +25,8 @@ WITH CCC AS ( SELECT
                   TblBudgetDetails ON TblBudgets.Id = TblBudgetDetails.BudgetId INNER JOIN
                   tblBudgetDetailProject ON TblBudgetDetails.Id = tblBudgetDetailProject.BudgetDetailId  INNER JOIN
                   tblBudgetDetailProjectArea ON tblBudgetDetailProject.Id = tblBudgetDetailProjectArea.BudgetDetailProjectId INNER JOIN
-                  tblCoding AS tblCoding_1 ON TblBudgetDetails.tblCodingId = tblCoding_1.Id INNER JOIN
-                  tblCoding AS tblCoding_2 ON tblCoding_1.MotherId = tblCoding_2.Id  INNER JOIN
+                  tblCoding AS tblCoding_1 ON TblBudgetDetails.tblCodingId = tblCoding_1.Id LEFT JOIN
+                  tblCoding AS tblCoding_2 ON tblCoding_1.MotherId = tblCoding_2.Id  LEFT JOIN
                   tblCoding AS tblCoding_3 ON tblCoding_2.MotherId = tblCoding_3.Id LEFT JOIN
                   tblCoding AS tblCoding_4 ON tblCoding_3.MotherId = tblCoding_4.Id LEFT JOIN
                   tblCoding AS tblCoding_5 ON tblCoding_4.MotherId = tblCoding_5.Id LEFT JOIN
@@ -40,7 +40,7 @@ WITH CCC AS ( SELECT
 
 
 SELECT        tbl2.CodingId, tblCoding_4.Code , tblCoding_4.Description,tbl2.MosavabLastYear,tbl2.Mosavab,tbl2.Edit,tbl2.Supply as  CreditAmount,tbl2.Expense ,PishnahadiCash,PishnahadiNonCash,
-              tbl2.Pishnahadi, tblCoding_4.levelNumber ,tblCoding_4.Crud,ConfirmStatus AS ConfirmStatus,isNewYear AS isNewYear,tbl2.ProctorId,tbl2.ExecutionId,tbl2.Last3Month,tbl2.Last9Month
+              tbl2.Pishnahadi, tblCoding_4.levelNumber ,tblCoding_4.Crud,ConfirmStatus AS ConfirmStatus,isNewYear AS isNewYear,tbl2.ProctorId,tbl2.ExecutionId,tbl2.Last3Month,tbl2.Last9Month, proctors.ProctorName AS proctorName,executors.ProctorName AS executorName
 FROM            (SELECT CodingId, isnull(SUM(MosavabLastYear),0) AS MosavabLastYear, isnull(SUM(Mosavab),0) AS Mosavab, isnull(SUM(EditArea),0) AS Edit , SUM(Supply) as Supply,isnull(SUM(Expense),0) AS Expense ,isnull(sum(PishnahadiCash),0) as PishnahadiCash,isnull(sum(PishnahadiNonCash),0) as PishnahadiNonCash,isnull(sum(Pishnahadi),0) as Pishnahadi,isnull(min(ConfirmStatus),0) AS ConfirmStatus ,
                         max(isNewYear) AS isNewYear ,isnull(sum(Last3Month),0) AS Last3Month,isnull(sum(Last9Month),0) AS Last9Month
                          ,CASE WHEN COUNT(DISTINCT ProctorId) = 0 THEN 0  WHEN COUNT(DISTINCT ProctorId) <=2 THEN MAX(ProctorId) ELSE -1 END AS ProctorId ,CASE WHEN COUNT(DISTINCT ExecutionId) = 0 THEN 0 WHEN COUNT(DISTINCT ExecutionId) <=2 THEN MAX(ExecutionId) ELSE -1 END AS ExecutionId
@@ -120,7 +120,9 @@ FROM            (SELECT CodingId, isnull(SUM(MosavabLastYear),0) AS MosavabLastY
                          where yearId = @YearId
                      ) AS tbl1
                  GROUP BY CodingId) AS tbl2 INNER JOIN
-                tblCoding AS tblCoding_4 ON tbl2.CodingId = tblCoding_4.Id
+                tblCoding AS tblCoding_4 ON tbl2.CodingId = tblCoding_4.Id LEFT JOIN
+                tblProctor AS proctors On tbl2.ProctorId= proctors.Id LEFT JOIN
+                tblProctor AS executors On tbl2.ExecutionId= executors.Id
 
 ORDER BY  tblCoding_4.Code,tblCoding_4.levelNumber
 

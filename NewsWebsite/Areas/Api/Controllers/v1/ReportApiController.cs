@@ -1517,21 +1517,34 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             sqlConnect.Open();
         
             var workbook = GetExcelFile();
+            InitStyles(workbook);
+
+            // sheet3
+            SheetListsData sheetListsData=await GetDataSheet3(sqlConnect,param);
+            workbook = WriteSheet3(workbook,sheetListsData);
+
+            // sheet6
+            SheetListsData sheet6Data=await GetDataSheet6(sqlConnect,param);
+            workbook = WriteSheet6(workbook,sheet6Data);
+
+            // sheet7
+            SheetListsData sheet7Data=await GetDataSheet7(sqlConnect,param);
+            workbook = WriteSheet7(workbook,sheet7Data);
+
+            // sheet8
+            SheetListsData sheet8Data=await GetDataSheet8(sqlConnect,param);
+            workbook = WriteSheet8(workbook,sheet8Data);
+
+            // sheet9
+            Sheet9Data sheet9Data=await GetDataSheet9(sqlConnect,param);
+            workbook = WriteSheet9(workbook,sheet9Data);
+
+            
             
             // sheet1
             Sheet1Data sheet1Data=await GetDataSheet1(sqlConnect,param);
             workbook = WriteSheet1(workbook,sheet1Data,param.YearId);
 
-             
-            // sheet3
-            Sheet3Data sheet3Data=await GetDataSheet3(sqlConnect,param);
-            workbook = WriteSheet3(workbook,sheet3Data);
-
-            // sheet6
-            Sheet3Data sheet6Data=await GetDataSheet6(sqlConnect,param);
-            workbook = WriteSheet6(workbook,sheet6Data);
-
-            
             var finalFilePath = CreateFinalFile(workbook);
             return Ok(finalFilePath);
         }
@@ -1570,36 +1583,60 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         private IWorkbook WriteSheet1( IWorkbook workbook, Sheet1Data data,int yearId){
             ISheet sheet = workbook.GetSheetAt(0);
+            ISheet sheet3 = workbook.GetSheetAt(2);
 
-            SetCell(sheet,"C8", GetAmount(data.ReportCodings,"p","110000"));
-            SetCell(sheet,"D8", GetAmount(data.ReportCodings,"m","110000"));
-            SetCell(sheet,"C9", GetAmount(data.ReportCodings,"p","120000"));
-            SetCell(sheet,"D9", GetAmount(data.ReportCodings,"m","120000"));
-            SetCell(sheet,"C10", GetAmount(data.ReportCodings,"p","130000"));
-            SetCell(sheet,"D10", GetAmount(data.ReportCodings,"m","130000"));
-            SetCell(sheet,"C11", GetAmount(data.ReportCodings,"p","140000"));
-            SetCell(sheet,"D11", GetAmount(data.ReportCodings,"m","140000"));
-            SetCell(sheet,"C12", GetAmount(data.ReportCodings,"p","150000"));
-            SetCell(sheet,"D12", GetAmount(data.ReportCodings,"m","150000"));
-            SetCell(sheet,"C13", GetAmount(data.ReportCodings,"p","160000"));
-            SetCell(sheet,"D13", GetAmount(data.ReportCodings,"m","160000"));
-            SetCell(sheet,"C14", GetAmount(data.ReportCodings,"p","100000"));
-            SetCell(sheet,"D14", GetAmount(data.ReportCodings,"m","100000"));
-            SetCell(sheet,"C15", GetAmount(data.ReportCodings,"p","200000"));
-            SetCell(sheet,"D15", GetAmount(data.ReportCodings,"m","200000"));
-            SetCell(sheet,"C16", GetAmount(data.ReportCodings,"p","300000"));
-            SetCell(sheet,"D16", GetAmount(data.ReportCodings,"m","300000"));
+            var style = GetBaseStyle(workbook);
+            
+            string sheet2Name = workbook.GetSheetName(2);
+
+
+            SetCell(sheet, "C8", $"'{sheet2Name}'!I{SearchCoding(sheet3, "110000") + 1}", style, true);
+            SetCell(sheet, "D8", $"'{sheet2Name}'!J{SearchCoding(sheet3, "110000") + 1}", style, true);
+            SetCell(sheet, "C9", $"'{sheet2Name}'!I{SearchCoding(sheet3, "120000") + 1}", style,true);
+            SetCell(sheet, "D9", $"'{sheet2Name}'!J{SearchCoding(sheet3, "120000") + 1}", style,true);
+            SetCell(sheet, "C10", $"'{sheet2Name}'!I{SearchCoding(sheet3, "130000") + 1}", style,true);
+            SetCell(sheet, "D10", $"'{sheet2Name}'!J{SearchCoding(sheet3, "130000") + 1}", style,true);
+            SetCell(sheet, "C11", $"'{sheet2Name}'!I{SearchCoding(sheet3, "140000") + 1}", style,true);
+            SetCell(sheet, "D11", $"'{sheet2Name}'!J{SearchCoding(sheet3, "140000") + 1}", style,true);
+            SetCell(sheet, "C12", $"'{sheet2Name}'!I{SearchCoding(sheet3, "150000") + 1}", style,true);
+            SetCell(sheet, "D12", $"'{sheet2Name}'!J{SearchCoding(sheet3, "150000") + 1}", style,true);
+            SetCell(sheet, "C13", $"'{sheet2Name}'!I{SearchCoding(sheet3, "160000") + 1}", style,true);
+            SetCell(sheet, "D13", $"'{sheet2Name}'!J{SearchCoding(sheet3, "160000") + 1}", style,true);
+            SetCell(sheet, "C14", $"'{sheet2Name}'!I{SearchCoding(sheet3, "100000") + 1}", blueStyle2,true);
+            SetCell(sheet, "D14", $"'{sheet2Name}'!J{SearchCoding(sheet3, "100000") + 1}", blueStyle2,true);
+            SetCell(sheet, "C15", $"'{sheet2Name}'!I{SearchCoding(sheet3, "200000") + 1}", blueStyle2,true);
+            SetCell(sheet, "D15", $"'{sheet2Name}'!J{SearchCoding(sheet3, "200000") + 1}", blueStyle2,true);
+            SetCell(sheet, "C16", $"'{sheet2Name}'!I{SearchCoding(sheet3, "300000") + 1}", blueStyle2,true);
+            SetCell(sheet, "D16", $"'{sheet2Name}'!J{SearchCoding(sheet3, "300000") + 1}", blueStyle2,true);
+            // SetCell(sheet,"C8", GetAmount(data.ReportCodings,"p","110000"),style);
+            // SetCell(sheet,"D8", GetAmount(data.ReportCodings,"m","110000"),style);
+            // SetCell(sheet,"C9", GetAmount(data.ReportCodings,"p","120000"),style);
+            // SetCell(sheet,"D9", GetAmount(data.ReportCodings,"m","120000"),style);
+            // SetCell(sheet,"C10", GetAmount(data.ReportCodings,"p","130000"),style);
+            // SetCell(sheet,"D10", GetAmount(data.ReportCodings,"m","130000"),style);
+            // SetCell(sheet,"C11", GetAmount(data.ReportCodings,"p","140000"),style);
+            // SetCell(sheet,"D11", GetAmount(data.ReportCodings,"m","140000"),style);
+            // SetCell(sheet,"C12", GetAmount(data.ReportCodings,"p","150000"),style);
+            // SetCell(sheet,"D12", GetAmount(data.ReportCodings,"m","150000"),style);
+            // SetCell(sheet,"C13", GetAmount(data.ReportCodings,"p","160000"),style);
+            // SetCell(sheet,"D13", GetAmount(data.ReportCodings,"m","160000"),style);
+            // SetCell(sheet,"C14", GetAmount(data.ReportCodings,"p","100000"),blueStyle2);
+            // SetCell(sheet,"D14", GetAmount(data.ReportCodings,"m","100000"),blueStyle2);
+            // SetCell(sheet,"C15", GetAmount(data.ReportCodings,"p","200000"),blueStyle2);
+            // SetCell(sheet,"D15", GetAmount(data.ReportCodings,"m","200000"),blueStyle2);
+            // SetCell(sheet,"C16", GetAmount(data.ReportCodings,"p","300000"),blueStyle2);
+            // SetCell(sheet,"D16", GetAmount(data.ReportCodings,"m","300000"),blueStyle2);
             
             
-            SetCell(sheet,"C19", data.P_Resources);
-            SetCell(sheet,"D19", data.M_Resources);
-            SetCell(sheet,"H19", data.P_Costs);
-            SetCell(sheet,"I19", data.M_Costs);
+            SetCell(sheet,"C19", data.P_Resources,style);
+            SetCell(sheet,"D19", data.M_Resources,style);
+            SetCell(sheet,"H19", data.P_Costs,style);
+            SetCell(sheet,"I19", data.M_Costs,style);
             
-            SetCell(sheet,"C21", data.P_Khazane);
-            SetCell(sheet,"D21", data.M_Khazane);
-            SetCell(sheet,"H21", data.P_Khazane);
-            SetCell(sheet,"I21", data.M_Khazane);
+            SetCell(sheet,"C21", data.P_Khazane,style);
+            SetCell(sheet,"D21", data.M_Khazane,style);
+            SetCell(sheet,"H21", data.P_Khazane,style);
+            SetCell(sheet,"I21", data.M_Khazane,style);
 
 
             var year = yearId + 1369;
@@ -1614,7 +1651,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         // ------------------------------------------ sheet 3  ------------------------------------------------------------------------------------------------------------------------
 
-        private static async Task<Sheet3Data> GetDataSheet3(SqlConnection sqlconnect , BudgetBookInputs param){
+        private static async Task<SheetListsData> GetDataSheet3(SqlConnection sqlconnect , BudgetBookInputs param){
             await using SqlCommand sqlCommand = new SqlCommand("SP004_BudgetBook_List", sqlconnect);
             sqlCommand.CommandTimeout = 500;
             sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
@@ -1622,11 +1659,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             sqlCommand.Parameters.AddWithValue("budgetProcessId", 1);
             sqlCommand.CommandType = CommandType.StoredProcedure;
             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-            Sheet3Data datas = new Sheet3Data();
-            datas.dataList = new List<Sheet3DataSingle>();
+            SheetListsData datas = new SheetListsData();
+            datas.dataList = new List<SheetListDataSingle>();
             while (dataReader.Read()){
 
-                var data1 = new Sheet3DataSingle();
+                var data1 = new SheetListDataSingle();
                 
                 data1.CodingId =dataReader["CodingId"].ToString();
                 data1.Code =dataReader["Code"].ToString();
@@ -1653,42 +1690,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
         
         
-        private IWorkbook WriteSheet3( IWorkbook workbook, Sheet3Data data){
+        private IWorkbook WriteSheet3( IWorkbook workbook, SheetListsData data){
             ISheet sheet = workbook.GetSheetAt(2);
 
             var rowIndex = 7;
             
-
             Int64 SumMosavabLastYear=0;
             Int64 SumLast3Month=0;
             Int64 SumLast9Month=0;
             Int64 SumPishnahadi=0;
             Int64 SumMosavab=0;
             
-            XSSFColor redColor = new XSSFColor(Color.FromArgb(244, 176, 132));
-            XSSFColor greenColor = new XSSFColor(Color.FromArgb(198, 224, 180));
-            XSSFColor blueColor = new XSSFColor(Color.FromArgb(180, 198, 231));
-            XSSFColor yellowColor = new XSSFColor(Color.FromArgb(255, 255, 153));
             for (int i =0;i<data.dataList.Count;i++){
 
                 if (data.dataList[i].levelNumber >4 )
                     continue;
 
                 ICellStyle style = GetBaseStyle(workbook);
-                
-
-                if (data.dataList[i].levelNumber == 1) {
-                    ((XSSFCellStyle)style).SetFillForegroundColor(redColor);
-                    style.FillPattern = FillPattern.SolidForeground;
+                if (data.dataList[i].levelNumber == 1){
+                    style = redStyle;
                 } else if (data.dataList[i].levelNumber == 2) {
-                    ((XSSFCellStyle)style).SetFillForegroundColor(greenColor);
-                    style.FillPattern = FillPattern.SolidForeground;
+                    style = greenStyle;
                 } else if (data.dataList[i].levelNumber == 3) {
-                    ((XSSFCellStyle)style).SetFillForegroundColor(blueColor);
-                    style.FillPattern = FillPattern.SolidForeground;
+                    style = blueStyle;
                 } else if (data.dataList[i].levelNumber == 4) {
-                    ((XSSFCellStyle)style).SetFillForegroundColor(yellowColor);
-                    style.FillPattern = FillPattern.SolidForeground;
+                    style = yellowStyle;
                 }
                 
                 SetCell(sheet,"A"+rowIndex,data.dataList[i].Code,style);
@@ -1720,7 +1746,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             CellRangeAddress mergeRegion = new CellRangeAddress(rowIndex-1, rowIndex-1, 0, 1);
             sheet.AddMergedRegion(mergeRegion);
 
-            ICellStyle styleSum = GetBaseStyle(workbook);
+            ICellStyle styleSum = GetBaseStyle(workbook,12);
             ((XSSFCellStyle)styleSum).SetFillForegroundColor(blueColor);
             styleSum.FillPattern = FillPattern.SolidForeground;
             
@@ -1740,7 +1766,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         
         // ------------------------------------------ sheet 6  ------------------------------------------------------------------------------------------------------------------------
 
-        private static async Task<Sheet3Data> GetDataSheet6(SqlConnection sqlconnect , BudgetBookInputs param){
+        private static async Task<SheetListsData> GetDataSheet6(SqlConnection sqlconnect , BudgetBookInputs param){
             await using SqlCommand sqlCommand = new SqlCommand("SP004_BudgetBook_List", sqlconnect);
             sqlCommand.CommandTimeout = 500;
             sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
@@ -1748,11 +1774,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             sqlCommand.Parameters.AddWithValue("budgetProcessId", 2);
             sqlCommand.CommandType = CommandType.StoredProcedure;
             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-            Sheet3Data datas = new Sheet3Data();
-            datas.dataList = new List<Sheet3DataSingle>();
+            SheetListsData datas = new SheetListsData();
+            datas.dataList = new List<SheetListDataSingle>();
             while (dataReader.Read()){
 
-                var data1 = new Sheet3DataSingle();
+                var data1 = new SheetListDataSingle();
                 
                 data1.CodingId =dataReader["CodingId"].ToString();
                 data1.Code =dataReader["Code"].ToString();
@@ -1779,7 +1805,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
         
         
-        private IWorkbook WriteSheet6( IWorkbook workbook, Sheet3Data data){
+        private IWorkbook WriteSheet6( IWorkbook workbook, SheetListsData data){
             ISheet sheet = workbook.GetSheetAt(5);
 
             var rowIndex = 6;
@@ -1789,27 +1815,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             Int64 SumPishnahadi=0;
             Int64 SumMosavab=0;
             
-            XSSFColor greenColor = new XSSFColor(Color.FromArgb(198, 224, 180));
-            XSSFColor redColor2 = new XSSFColor(Color.FromArgb(252, 228, 214));
-            XSSFColor yellowColor = new XSSFColor(Color.FromArgb(255, 255, 153));
-            XSSFColor blueColor = new XSSFColor(Color.FromArgb(180, 198, 231));
             for (int i =0;i<data.dataList.Count;i++){
 
                 if (data.dataList[i].levelNumber >3 )
                     continue;
 
                 ICellStyle style = GetBaseStyle(workbook);
-                
-
-                if (data.dataList[i].levelNumber == 1) {
-                    ((XSSFCellStyle)style).SetFillForegroundColor(greenColor);
-                    style.FillPattern = FillPattern.SolidForeground;
+                if (data.dataList[i].levelNumber == 1){
+                    style = greenStyle;
                 } else if (data.dataList[i].levelNumber == 2) {
-                    ((XSSFCellStyle)style).SetFillForegroundColor(redColor2);
-                    style.FillPattern = FillPattern.SolidForeground;
+                    style = redStyle2;
                 } else if (data.dataList[i].levelNumber == 3) {
-                    ((XSSFCellStyle)style).SetFillForegroundColor(yellowColor);
-                    style.FillPattern = FillPattern.SolidForeground;
+                    style = yellowStyle;
                 }
                 
                 SetCell(sheet,"A"+rowIndex,data.dataList[i].Code,style);
@@ -1836,7 +1853,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             sheet.AddMergedRegion(mergeRegion);
 
             
-            ICellStyle styleSum = GetBaseStyle(workbook);
+            ICellStyle styleSum = GetBaseStyle(workbook,12);
             ((XSSFCellStyle)styleSum).SetFillForegroundColor(blueColor);
             styleSum.FillPattern = FillPattern.SolidForeground;
             
@@ -1848,6 +1865,245 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             return workbook;
         }
+
+        
+        // ------------------------------------------ sheet 7  ------------------------------------------------------------------------------------------------------------------------
+
+        private static async Task<SheetListsData> GetDataSheet7(SqlConnection sqlconnect , BudgetBookInputs param){
+            await using SqlCommand sqlCommand = new SqlCommand("SP004_BudgetBook_List", sqlconnect);
+            sqlCommand.CommandTimeout = 500;
+            sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+            sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+            sqlCommand.Parameters.AddWithValue("budgetProcessId", 3);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            SheetListsData datas = new SheetListsData();
+            datas.dataList = new List<SheetListDataSingle>();
+            while (dataReader.Read()){
+                var data1 = new SheetListDataSingle();
+                
+                data1.CodingId =dataReader["CodingId"].ToString();
+                data1.Code =dataReader["Code"].ToString();
+                data1.Description =dataReader["Description"].ToString();
+                data1.MosavabLastYear = Int64.Parse(dataReader["MosavabLastYear"].ToString());
+                data1.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                data1.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                data1.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+                data1.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                data1.PishnahadiCash = Int64.Parse(dataReader["PishnahadiCash"].ToString());
+                data1.PishnahadiNonCash = Int64.Parse(dataReader["PishnahadiNonCash"].ToString());
+                data1.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
+                data1.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+                data1.proctorName = dataReader["proctorName"].ToString();
+                data1.executorName = dataReader["executorName"].ToString();
+                // data1.Crud = int.Parse(dataReader["Crud"].ToString());
+                data1.ConfirmStatus = int.Parse(dataReader["ConfirmStatus"].ToString());
+                data1.isNewYear = int.Parse(dataReader["isNewYear"].ToString());
+                datas.dataList.Add(data1);
+            }
+            await dataReader.CloseAsync();
+
+            
+
+            return datas;
+        }
+        
+        
+        private IWorkbook WriteSheet7( IWorkbook workbook, SheetListsData data){
+            ISheet sheet = workbook.GetSheetAt(6);
+
+            var rowIndex = 7;
+            
+            Int64 SumMosavabLastYear=0;
+            Int64 SumPishnahadi=0;
+            Int64 SumMosavab=0;
+
+            for (int i =0;i<data.dataList.Count;i++){
+
+                if (data.dataList[i].levelNumber >4 )
+                    continue;
+
+                ICellStyle style = GetBaseStyle(workbook);
+
+                if (data.dataList[i].levelNumber == 1){
+                    style = redStyle;
+                } else if (data.dataList[i].levelNumber == 2) {
+                    style = greenStyle;
+                } else if (data.dataList[i].levelNumber == 3) {
+                    style = blueStyle;
+                } else if (data.dataList[i].levelNumber == 4) {
+                    style = yellowStyle;
+                }
+                
+                SetCell(sheet,"D"+rowIndex,data.dataList[i].Code.Substring(0,1),redStyle);
+                SetCell(sheet,"C"+rowIndex,data.dataList[i].Code.Substring(1,2),greenStyle);
+                SetCell(sheet,"B"+rowIndex,data.dataList[i].Code.Substring(3,3),blueStyle);
+                SetCell(sheet,"A"+rowIndex,data.dataList[i].Code.Substring(6,4),yellowStyle);
+                SetCell(sheet,"E"+rowIndex,data.dataList[i].Description,style);
+                SetCell(sheet,"F"+rowIndex,data.dataList[i].proctorName,style);
+                SetCell(sheet,"G"+rowIndex,data.dataList[i].executorName,style);
+                SetCell(sheet,"H"+rowIndex,0,style);
+                SetCell(sheet,"I"+rowIndex,data.dataList[i].MosavabLastYear/1000,style);
+                SetCell(sheet,"J"+rowIndex,data.dataList[i].Pishnahadi/1000,style);
+                SetCell(sheet,"K"+rowIndex,data.dataList[i].Mosavab/1000,style);
+
+                if (data.dataList[i].levelNumber == 1){
+                    SumMosavabLastYear += data.dataList[i].MosavabLastYear / 1000;
+                    SumPishnahadi += data.dataList[i].Pishnahadi / 1000;
+                    SumMosavab += data.dataList[i].Mosavab / 1000;
+                    
+                }
+
+                rowIndex++;
+            }
+
+
+
+            // Helpers.dd(rowIndex);
+            CellRangeAddress mergeRegion = new CellRangeAddress(rowIndex-1, rowIndex-1, 0, 6);
+            sheet.AddMergedRegion(mergeRegion);
+
+            
+            ICellStyle styleSum = GetBaseStyle(workbook,12);
+            ((XSSFCellStyle)styleSum).SetFillForegroundColor(blueColor);
+            styleSum.FillPattern = FillPattern.SolidForeground;
+            
+            SetCell(sheet,"A"+rowIndex,"جمع کل",styleSum);
+            SetCell(sheet,"H"+rowIndex,0,styleSum);
+            SetCell(sheet,"I"+rowIndex,SumMosavabLastYear,styleSum);
+            SetCell(sheet,"J"+rowIndex,SumPishnahadi,styleSum);
+            SetCell(sheet,"K"+rowIndex,SumMosavab,styleSum);
+
+            return workbook;
+        }
+  
+        // ------------------------------------------ sheet 8  ------------------------------------------------------------------------------------------------------------------------
+
+        private static async Task<SheetListsData> GetDataSheet8(SqlConnection sqlconnect , BudgetBookInputs param){
+            await using SqlCommand sqlCommand = new SqlCommand("SP004_BudgetBook_List", sqlconnect);
+            sqlCommand.CommandTimeout = 500;
+            sqlCommand.Parameters.AddWithValue("yearId", param.YearId);
+            sqlCommand.Parameters.AddWithValue("areaId", param.AreaId);
+            sqlCommand.Parameters.AddWithValue("budgetProcessId", 4);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+            SheetListsData datas = new SheetListsData();
+            datas.dataList = new List<SheetListDataSingle>();
+            while (dataReader.Read()){
+                var data1 = new SheetListDataSingle();
+                
+                data1.CodingId =dataReader["CodingId"].ToString();
+                data1.Code =dataReader["Code"].ToString();
+                data1.Description =dataReader["Description"].ToString();
+                data1.MosavabLastYear = Int64.Parse(dataReader["MosavabLastYear"].ToString());
+                data1.Mosavab = Int64.Parse(dataReader["Mosavab"].ToString());
+                data1.Edit = Int64.Parse(dataReader["Edit"].ToString());
+                data1.CreditAmount = Int64.Parse(dataReader["CreditAmount"].ToString());
+                data1.Expense = Int64.Parse(dataReader["Expense"].ToString());
+                data1.PishnahadiCash = Int64.Parse(dataReader["PishnahadiCash"].ToString());
+                data1.PishnahadiNonCash = Int64.Parse(dataReader["PishnahadiNonCash"].ToString());
+                data1.Pishnahadi = Int64.Parse(dataReader["Pishnahadi"].ToString());
+                data1.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
+                // data1.Crud = int.Parse(dataReader["Crud"].ToString());
+                data1.ConfirmStatus = int.Parse(dataReader["ConfirmStatus"].ToString());
+                data1.isNewYear = int.Parse(dataReader["isNewYear"].ToString());
+                datas.dataList.Add(data1);
+            }
+            await dataReader.CloseAsync();
+
+            
+
+            return datas;
+        }
+        
+        
+        private IWorkbook WriteSheet8( IWorkbook workbook, SheetListsData data){
+            ISheet sheet = workbook.GetSheetAt(7);
+
+            var rowIndex = 6;
+            
+            Int64 SumMosavabLastYear=0;
+            Int64 SumPishnahadi=0;
+            Int64 SumMosavab=0;
+
+            for (int i =0;i<data.dataList.Count;i++){
+
+                if (data.dataList[i].levelNumber >3 )
+                    continue;
+
+                ICellStyle style = GetBaseStyle(workbook);
+
+                if (data.dataList[i].levelNumber == 1){
+                    style = greenStyle;
+                } else if (data.dataList[i].levelNumber == 3) {
+                    style = redStyle2;
+                }
+                
+                SetCell(sheet,"A"+rowIndex,data.dataList[i].Code,style);
+                SetCell(sheet,"B"+rowIndex,data.dataList[i].Description,style);
+                SetCell(sheet,"C"+rowIndex,0,style);
+                SetCell(sheet,"D"+rowIndex,data.dataList[i].MosavabLastYear/1000,style);
+                SetCell(sheet,"E"+rowIndex,data.dataList[i].Pishnahadi/1000,style);
+                SetCell(sheet,"F"+rowIndex,data.dataList[i].Mosavab/1000,style);
+
+                if (data.dataList[i].levelNumber == 1){
+                    SumMosavabLastYear += data.dataList[i].MosavabLastYear / 1000;
+                    SumPishnahadi += data.dataList[i].Pishnahadi / 1000;
+                    SumMosavab += data.dataList[i].Mosavab / 1000;
+                    
+                }
+
+                rowIndex++;
+            }
+
+
+
+            // Helpers.dd(rowIndex);
+            CellRangeAddress mergeRegion = new CellRangeAddress(rowIndex-1, rowIndex-1, 0, 1);
+            sheet.AddMergedRegion(mergeRegion);
+
+            
+            ICellStyle styleSum = GetBaseStyle(workbook,12);
+            ((XSSFCellStyle)styleSum).SetFillForegroundColor(blueColor);
+            styleSum.FillPattern = FillPattern.SolidForeground;
+            
+            SetCell(sheet,"A"+rowIndex,"جمع کل",styleSum);
+            SetCell(sheet,"C"+rowIndex,0,styleSum);
+            SetCell(sheet,"D"+rowIndex,SumMosavabLastYear,styleSum);
+            SetCell(sheet,"E"+rowIndex,SumPishnahadi,styleSum);
+            SetCell(sheet,"F"+rowIndex,SumMosavab,styleSum);
+
+            return workbook;
+        }
+        
+         // ------------------------------------------ sheet 9  ------------------------------------------------------------------------------------------------------------------------
+
+        private static async Task<Sheet9Data> GetDataSheet9(SqlConnection sqlconnect , BudgetBookInputs param){
+            Sheet9Data data = new Sheet9Data();
+            
+            string[] codings ={ "8000" };
+            ReportCoding dataReportCodings = await GetCodingsAmount(sqlconnect, codings, param.YearId, param.AreaId, 5);
+            
+            data.ReportCodings = dataReportCodings;
+
+            return data;
+        }
+        
+        
+        private IWorkbook WriteSheet9( IWorkbook workbook, Sheet9Data data){
+            ISheet sheet = workbook.GetSheetAt(8);
+
+            var style = GetBaseStyle(workbook);
+            SetCell(sheet,"B7", GetAmount(data.ReportCodings,"p","8000"),style);
+            SetCell(sheet,"C7", GetAmount(data.ReportCodings,"m","8000"),style);
+            SetCell(sheet,"F7", GetAmount(data.ReportCodings,"p","8000"),style);
+            SetCell(sheet,"G7", GetAmount(data.ReportCodings,"m","8000"),style);
+            
+            return workbook;
+        }
+
+        
+        
 
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------- Data Functions --------------------------------------------------------------------------------------------
@@ -1890,24 +2146,97 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return 0; // Return 0 if no matching code is found
             }
 
-            // Use reflection to access the specified property dynamically
-            if (property.ToLower() == "p"){
-                return codingAmount.Pishnahadi;
-            }
-            else if (property.ToLower() == "m"){
-                return codingAmount.Mosavab;
-            }
-
-            return 0; // Return 0 if an invalid property is specified
+            return property.ToLower() switch{
+                "p" => codingAmount.Pishnahadi/1000,
+                "m" => codingAmount.Mosavab/1000,
+                _ => 0
+            };
         }
 
+
+        public int SearchCoding(ISheet sheet, string searchValue){
+            int newRowNumber = -1;
+            for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++){
+                IRow row = sheet.GetRow(rowIndex);
+                if (row != null){
+                    ICell cell = row.GetCell(0); // Column A (index 0)
+                    if (cell != null  && cell.StringCellValue == searchValue){
+                        newRowNumber = rowIndex;
+                        break;
+                    }
+                }
+            }
+            
+            return newRowNumber;
+        }
+        
+        
+        public void UpdateFormulaBasedOnValue(string filePath, double searchValue)
+        {
+// Load the workbook
+            IWorkbook workbook = new XSSFWorkbook(filePath);
+
+// Get the sheets
+            ISheet sheet0 = workbook.GetSheetAt(0);
+            ISheet sheet2 = workbook.GetSheetAt(2);
+
+// Find the new row number of the search value in column A of sheet2
+            int newRowNumber = -1;
+            for (int rowIndex = 0; rowIndex <= sheet2.LastRowNum; rowIndex++)
+            {
+                IRow row = sheet2.GetRow(rowIndex);
+                if (row != null)
+                {
+                    ICell cell = row.GetCell(0); // Column A (index 0)
+                    if (cell != null && cell.CellType == CellType.Numeric && cell.NumericCellValue == searchValue)
+                    {
+                        newRowNumber = rowIndex;
+                        break;
+                    }
+                }
+            }
+
+            if (newRowNumber != -1)
+            {
+                string sheet2Name = workbook.GetSheetName(2);
+
+// Update the formula in sheet0
+                IRow row0 = sheet0.GetRow(0); // Assuming row 0
+                ICell cell0 = row0.GetCell(0); // Column A (index 0)
+                cell0.SetCellFormula($"'{sheet2Name}'!I{newRowNumber + 1}"); // +1 because Excel rows are 1-based
+
+// Recalculate formulas
+                XSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
+
+// Save the workbook
+                using (FileStream fileOut = new FileStream("path_to_your_updated_excel_file.xlsx", FileMode.Create, FileAccess.Write))
+                {
+                    workbook.Write(fileOut);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Value not found in column A of sheet2.");
+            }
+        }
         
         
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------- Excel functions --------------------------------------------------------------------------------------------
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        
+        public ICellStyle greenStyle;
+        public ICellStyle redStyle;
+        public ICellStyle redStyle2;
+        public ICellStyle yellowStyle;
+        public ICellStyle blueStyle;
+        public ICellStyle blueStyle2;
+        public XSSFColor greenColor;
+        public XSSFColor redColor;
+        public XSSFColor redColor2;
+        public XSSFColor yellowColor;
+        public XSSFColor blueColor;
+        public XSSFColor blueColor2;
         
          private static IWorkbook GetExcelFile()
         {
@@ -1919,7 +2248,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
         
-         private static void SetCell(ISheet sheet , string cellReference, object value,ICellStyle style=null){
+         private static void SetCell(ISheet sheet , string cellReference, object value,ICellStyle style=null,bool isFormula=false){
             var cellCoordinates = ParseCellReference(cellReference);
             int rowIndex = cellCoordinates.Item1;
             int colIndex = cellCoordinates.Item2;
@@ -1927,37 +2256,44 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             IRow row = sheet.GetRow(rowIndex) ?? sheet.CreateRow(rowIndex);
             ICell cell = row.GetCell(colIndex) ?? row.CreateCell(colIndex);
             
-            switch (value)
-            {
-                case double numericValue:
-                    cell.SetCellType(CellType.Numeric);
-                    cell.SetCellValue(numericValue);
-                    break;
+            row.HeightInPoints = 34; // 45 pixels approximately
 
-                case int intValue:
-                    cell.SetCellType(CellType.Numeric);
-                    cell.SetCellValue(intValue);
-                    break;
-
-                case Int64 int64Value:
-                    cell.SetCellType(CellType.Numeric);
-                    cell.SetCellValue(int64Value);
-                    break;
-
-                case string stringValue:
-                    cell.SetCellType(CellType.String);
-                    cell.SetCellValue(stringValue);
-                    break;
-
-                case DateTime dateValue:
-                    cell.SetCellType(CellType.Numeric);
-                    cell.SetCellValue(dateValue); // Automatically applies Excel's date format
-                    break;
-
-                case null:
-                    cell.SetCellType(CellType.Blank);
-                    break;
-
+            if (isFormula){
+                cell.SetCellType(CellType.Formula);
+                cell.SetCellFormula(value.ToString());
+            }
+            else{
+                switch (value){
+                    case double numericValue:
+                        cell.SetCellType(CellType.Numeric);
+                        cell.SetCellValue(numericValue);
+                        break;
+    
+                    case int intValue:
+                        cell.SetCellType(CellType.Numeric);
+                        cell.SetCellValue(intValue);
+                        break;
+    
+                    case Int64 int64Value:
+                        cell.SetCellType(CellType.Numeric);
+                        cell.SetCellValue(int64Value);
+                        break;
+    
+                    case string stringValue:
+                        cell.SetCellType(CellType.String);
+                        cell.SetCellValue(stringValue);
+                        break;
+    
+                    case DateTime dateValue:
+                        cell.SetCellType(CellType.Numeric);
+                        cell.SetCellValue(dateValue); // Automatically applies Excel's date format
+                        break;
+    
+                    case null:
+                        cell.SetCellType(CellType.Blank);
+                        break;
+    
+                }
             }
 
             cell.CellStyle = style;
@@ -2037,9 +2373,31 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 }
             }
         }
+
+        private void InitStyles(IWorkbook workbook){
+            greenStyle = GetBaseStyle(workbook);
+            redStyle = GetBaseStyle(workbook);
+            redStyle2 = GetBaseStyle(workbook);
+            yellowStyle = GetBaseStyle(workbook);
+            blueStyle = GetBaseStyle(workbook);
+            blueStyle2 = GetBaseStyle(workbook);
+
+            greenColor = new XSSFColor(Color.FromArgb(198, 224, 180));
+            redColor = new XSSFColor(Color.FromArgb(244, 176, 132));
+            redColor2 = new XSSFColor(Color.FromArgb(252, 228, 214));
+            yellowColor = new XSSFColor(Color.FromArgb(255, 255, 153));
+            blueColor = new XSSFColor(Color.FromArgb(180, 198, 231));
+            blueColor2 = new XSSFColor(Color.FromArgb(189, 215, 238));
+            
+            ((XSSFCellStyle)greenStyle).SetFillForegroundColor(greenColor);greenStyle.FillPattern = FillPattern.SolidForeground;
+            ((XSSFCellStyle)redStyle).SetFillForegroundColor(redColor);redStyle.FillPattern = FillPattern.SolidForeground;
+            ((XSSFCellStyle)redStyle2).SetFillForegroundColor(redColor2);redStyle2.FillPattern = FillPattern.SolidForeground;
+            ((XSSFCellStyle)yellowStyle).SetFillForegroundColor(yellowColor);yellowStyle.FillPattern = FillPattern.SolidForeground;
+            ((XSSFCellStyle)blueStyle).SetFillForegroundColor(blueColor);blueStyle.FillPattern = FillPattern.SolidForeground;
+            ((XSSFCellStyle)blueStyle2).SetFillForegroundColor(blueColor2);blueStyle2.FillPattern = FillPattern.SolidForeground;
+        }
         
-        
-        private ICellStyle GetBaseStyle(IWorkbook workbook){
+        private ICellStyle GetBaseStyle(IWorkbook workbook,short fontSize=10){
             ICellStyle style = workbook.CreateCellStyle();
             // aligment
             style.Alignment = HorizontalAlignment.Center;
@@ -2049,12 +2407,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             IDataFormat format = workbook.CreateDataFormat();
             style.DataFormat = format.GetFormat("#,##0");
             
-            // font
             IFont font = workbook.CreateFont();
             font.FontName = "B Titr";
-            font.FontHeightInPoints = 10;
+            font.FontHeightInPoints = fontSize;
+            // font.Boldweight = (short)FontBoldWeight.Normal;
+            // font.IsBold = true; 
             style.SetFont(font);
             
+            
+            // Borders
+            style.BorderTop = BorderStyle.Thin;
+            style.BorderBottom = BorderStyle.Thin;
+            style.BorderLeft = BorderStyle.Thin;
+            style.BorderRight = BorderStyle.Thin;
+
             return style;
         }
         
