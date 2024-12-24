@@ -1545,6 +1545,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             Sheet1Data sheet1Data=await GetDataSheet1(sqlConnect,param);
             workbook = WriteSheet1(workbook,sheet1Data,param.YearId);
 
+            // sheet4
+            Sheet1Data sheet4Data=await GetDataSheet4(sqlConnect,param);
+            workbook = WriteSheet4(workbook,sheet4Data,param.YearId);
+
             var finalFilePath = CreateFinalFile(workbook);
             return Ok(finalFilePath);
         }
@@ -1589,25 +1593,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             string sheet2Name = workbook.GetSheetName(2);
 
-
-            SetCell(sheet, "C8", $"'{sheet2Name}'!I{SearchCoding(sheet3, "110000") + 1}", style, true);
-            SetCell(sheet, "D8", $"'{sheet2Name}'!J{SearchCoding(sheet3, "110000") + 1}", style, true);
-            SetCell(sheet, "C9", $"'{sheet2Name}'!I{SearchCoding(sheet3, "120000") + 1}", style,true);
-            SetCell(sheet, "D9", $"'{sheet2Name}'!J{SearchCoding(sheet3, "120000") + 1}", style,true);
-            SetCell(sheet, "C10", $"'{sheet2Name}'!I{SearchCoding(sheet3, "130000") + 1}", style,true);
-            SetCell(sheet, "D10", $"'{sheet2Name}'!J{SearchCoding(sheet3, "130000") + 1}", style,true);
-            SetCell(sheet, "C11", $"'{sheet2Name}'!I{SearchCoding(sheet3, "140000") + 1}", style,true);
-            SetCell(sheet, "D11", $"'{sheet2Name}'!J{SearchCoding(sheet3, "140000") + 1}", style,true);
-            SetCell(sheet, "C12", $"'{sheet2Name}'!I{SearchCoding(sheet3, "150000") + 1}", style,true);
-            SetCell(sheet, "D12", $"'{sheet2Name}'!J{SearchCoding(sheet3, "150000") + 1}", style,true);
-            SetCell(sheet, "C13", $"'{sheet2Name}'!I{SearchCoding(sheet3, "160000") + 1}", style,true);
-            SetCell(sheet, "D13", $"'{sheet2Name}'!J{SearchCoding(sheet3, "160000") + 1}", style,true);
-            SetCell(sheet, "C14", $"'{sheet2Name}'!I{SearchCoding(sheet3, "100000") + 1}", blueStyle2,true);
-            SetCell(sheet, "D14", $"'{sheet2Name}'!J{SearchCoding(sheet3, "100000") + 1}", blueStyle2,true);
-            SetCell(sheet, "C15", $"'{sheet2Name}'!I{SearchCoding(sheet3, "200000") + 1}", blueStyle2,true);
-            SetCell(sheet, "D15", $"'{sheet2Name}'!J{SearchCoding(sheet3, "200000") + 1}", blueStyle2,true);
-            SetCell(sheet, "C16", $"'{sheet2Name}'!I{SearchCoding(sheet3, "300000") + 1}", blueStyle2,true);
-            SetCell(sheet, "D16", $"'{sheet2Name}'!J{SearchCoding(sheet3, "300000") + 1}", blueStyle2,true);
+            SetCell(sheet, "C8", CreateFormula(sheet2Name,"I",sheet3,"110000"), style, true);
+            SetCell(sheet, "D8", CreateFormula(sheet2Name,"J",sheet3,"110000"), style, true);
+            SetCell(sheet, "C9", CreateFormula(sheet2Name,"I",sheet3,"120000"), style, true);
+            SetCell(sheet, "D9", CreateFormula(sheet2Name,"J",sheet3,"120000"), style, true);
+            SetCell(sheet, "C10", CreateFormula(sheet2Name,"I",sheet3,"130000"), style, true);
+            SetCell(sheet, "D10", CreateFormula(sheet2Name,"J",sheet3,"130000"), style, true);
+            SetCell(sheet, "C11", CreateFormula(sheet2Name,"I",sheet3,"140000"), style, true);
+            SetCell(sheet, "D11", CreateFormula(sheet2Name,"J",sheet3,"140000"), style, true);
+            SetCell(sheet, "C12", CreateFormula(sheet2Name,"I",sheet3,"150000"), style, true);
+            SetCell(sheet, "D12", CreateFormula(sheet2Name,"J",sheet3,"150000"), style, true);
+            SetCell(sheet, "C13", CreateFormula(sheet2Name,"I",sheet3,"160000"), style, true);
+            SetCell(sheet, "D13", CreateFormula(sheet2Name,"J",sheet3,"160000"), style, true);
+            SetCell(sheet, "C14", CreateFormula(sheet2Name,"I",sheet3,"100000"), blueStyle2, true);
+            SetCell(sheet, "D14", CreateFormula(sheet2Name,"J",sheet3,"100000"), blueStyle2, true);
+            SetCell(sheet, "C15", CreateFormula(sheet2Name,"I",sheet3,"200000"), blueStyle2, true);
+            SetCell(sheet, "D15", CreateFormula(sheet2Name,"J",sheet3,"200000"), blueStyle2, true);
+            SetCell(sheet, "C16", CreateFormula(sheet2Name,"I",sheet3,"300000"), blueStyle2, true);
+            SetCell(sheet, "D16", CreateFormula(sheet2Name,"J",sheet3,"300000"), blueStyle2, true);
+            
             // SetCell(sheet,"C8", GetAmount(data.ReportCodings,"p","110000"),style);
             // SetCell(sheet,"D8", GetAmount(data.ReportCodings,"m","110000"),style);
             // SetCell(sheet,"C9", GetAmount(data.ReportCodings,"p","120000"),style);
@@ -1644,6 +1648,111 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             SetCell(sheet,"A26", year-1);
             SetCell(sheet,"A27", year-2);
             
+
+            return workbook;
+        }
+
+        
+        
+        // ------------------------------------------ sheet 4  ------------------------------------------------------------------------------------------------------------------------
+
+        private static async Task<Sheet1Data> GetDataSheet4(SqlConnection sqlconnect , BudgetBookInputs param){
+            Sheet1Data data1 = new Sheet1Data();
+            
+            // string[] codings ={ "110000", "120000", "130000", "140000", "150000", "160000", "100000", "200000", "300000" };
+            // ReportCoding dataReportCodings = await GetCodingsAmount(sqlconnect, codings, param.YearId, param.AreaId, 1);
+            //
+            // data1.ReportCodings = dataReportCodings;
+
+            return data1;
+        }
+        
+        
+        private IWorkbook WriteSheet4( IWorkbook workbook, Sheet1Data data,int yearId){
+            ISheet sheet = workbook.GetSheetAt(3);
+            ISheet sheet7 = workbook.GetSheetAt(6);
+
+            var style = GetBaseStyle(workbook);
+            
+            string sheet2Name = workbook.GetSheetName(6);
+
+
+            // SetCell(sheet, "C9", "         مأموریت.برنامه.خدمت!C9+" + CreateFormula(sheet2Name,"H",sheet7,"1010000000",11), style, true);
+            // SetCell(sheet, "D9", "         مأموریت.برنامه.خدمت!D9+" + CreateFormula(sheet2Name,"I",sheet7,"1010000000",11), style, true);
+            // SetCell(sheet, "E9", "         مأموریت.برنامه.خدمت!E9 " , style, true);
+            // SetCell(sheet, "F9", "         مأموریت.برنامه.خدمت!F9 " , style, true);
+            // SetCell(sheet, "H9", "                                " + CreateFormula(sheet2Name,"J",sheet7,"1010000000",11), style, true);
+            // SetCell(sheet, "J9", "         مأموریت.برنامه.خدمت!I9+" + CreateFormula(sheet2Name,"K",sheet7,"1010000000",11), style, true);
+            //
+            //
+            // SetCell(sheet, "C10", "         مأموریت.برنامه.خدمت!C16+" + CreateFormula(sheet2Name,"H",sheet7,"1020000000",11), style, true);
+            // SetCell(sheet, "D10", "         مأموریت.برنامه.خدمت!D16+" + CreateFormula(sheet2Name,"I",sheet7,"1020000000",11), style, true);
+            // SetCell(sheet, "E10", "         مأموریت.برنامه.خدمت!E16 " , style, true);
+            // SetCell(sheet, "F10", "         مأموریت.برنامه.خدمت!F16 " , style, true);
+            // SetCell(sheet, "H10", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"1020000000",11), style, true);
+            // SetCell(sheet, "J10", "         مأموریت.برنامه.خدمت!I16+" + CreateFormula(sheet2Name,"K",sheet7,"1020000000",11), style, true);
+            //
+            // SetCell(sheet, "C11", "         مأموریت.برنامه.خدمت!C20+" + CreateFormula(sheet2Name,"H",sheet7,"1030000000",11), style, true);
+            // SetCell(sheet, "D11", "         مأموریت.برنامه.خدمت!D20+" + CreateFormula(sheet2Name,"I",sheet7,"1030000000",11), style, true);
+            // SetCell(sheet, "E11", "         مأموریت.برنامه.خدمت!E20 " , style, true);
+            // SetCell(sheet, "F11", "         مأموریت.برنامه.خدمت!F20 " , style, true);
+            // SetCell(sheet, "H11", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"1030000000",11), style, true);
+            // SetCell(sheet, "J11", "         مأموریت.برنامه.خدمت!I20+" + CreateFormula(sheet2Name,"K",sheet7,"1030000000",11), style, true);
+            //
+            // SetCell(sheet, "C12", "         مأموریت.برنامه.خدمت!C26+" + CreateFormula(sheet2Name,"H",sheet7,"1040000000",11), style, true);
+            // SetCell(sheet, "D12", "         مأموریت.برنامه.خدمت!D26+" + CreateFormula(sheet2Name,"I",sheet7,"1040000000",11), style, true);
+            // SetCell(sheet, "E12", "         مأموریت.برنامه.خدمت!E26 " , style, true);
+            // SetCell(sheet, "F12", "         مأموریت.برنامه.خدمت!F26 " , style, true);
+            // SetCell(sheet, "H12", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"1040000000",11), style, true);
+            // SetCell(sheet, "J12", "         مأموریت.برنامه.خدمت!I26+" + CreateFormula(sheet2Name,"K",sheet7,"1040000000",11), style, true);
+            //
+            
+            // SetCell(sheet, "C14", "         مأموریت.برنامه.خدمت!C31+" + CreateFormula(sheet2Name,"H",sheet7,"2010000000",11), style, true);
+            // SetCell(sheet, "D14", "         مأموریت.برنامه.خدمت!D31+" + CreateFormula(sheet2Name,"I",sheet7,"2010000000",11), style, true);
+            // SetCell(sheet, "E14", "         مأموریت.برنامه.خدمت!E31 " , style, true);
+            // SetCell(sheet, "F14", "         مأموریت.برنامه.خدمت!F31 " , style, true);
+            // SetCell(sheet, "H14", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"2010000000",11), style, true);
+            // SetCell(sheet, "J14", "         مأموریت.برنامه.خدمت!I31+" + CreateFormula(sheet2Name,"K",sheet7,"2010000000",11), style, true);
+            //
+            //
+            // SetCell(sheet, "C15", "         مأموریت.برنامه.خدمت!C36+" + CreateFormula(sheet2Name,"H",sheet7,"2020000000",11), style, true);
+            // SetCell(sheet, "D15", "         مأموریت.برنامه.خدمت!D36+" + CreateFormula(sheet2Name,"I",sheet7,"2020000000",11), style, true);
+            // SetCell(sheet, "E15", "         مأموریت.برنامه.خدمت!E36 " , style, true);
+            // SetCell(sheet, "F15", "         مأموریت.برنامه.خدمت!F36 " , style, true);
+            // SetCell(sheet, "H15", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"2020000000",11), style, true);
+            // SetCell(sheet, "J15", "         مأموریت.برنامه.خدمت!I36+" + CreateFormula(sheet2Name,"K",sheet7,"2020000000",11), style, true);
+            //
+            //
+            // SetCell(sheet, "C16", "         مأموریت.برنامه.خدمت!C39+" + CreateFormula(sheet2Name,"H",sheet7,"2030000000",11), style, true);
+            // SetCell(sheet, "D16", "         مأموریت.برنامه.خدمت!D39+" + CreateFormula(sheet2Name,"I",sheet7,"2030000000",11), style, true);
+            // SetCell(sheet, "E16", "         مأموریت.برنامه.خدمت!E39 " , style, true);
+            // SetCell(sheet, "F16", "         مأموریت.برنامه.خدمت!F39 " , style, true);
+            // SetCell(sheet, "H16", "                                 " + CreateFormula(sheet2Name,"J",sheet7,"2030000000",11), style, true);
+            // SetCell(sheet, "J16", "         مأموریت.برنامه.خدمت!I39+" + CreateFormula(sheet2Name,"K",sheet7,"2030000000",11), style, true);
+            //
+            
+            var rows = new List<(string mainNumber, int rowNumber, int referenceOffset)>
+            {
+                ("1010000000", 9, 9),
+                ("1020000000", 10, 16),
+                ("1030000000", 11, 20),
+                ("1040000000", 12, 26),
+                ("2010000000", 14, 31),
+                ("2020000000", 15, 36),
+                ("2030000000", 16, 39),
+                // Add more rows as needed...
+            };
+
+// Loop through the rows and generate the SetCell calls dynamically
+            foreach (var (mainNumber, rowNumber, referenceOffset) in rows)
+            {
+                SetCell(sheet, $"C{rowNumber}", $"         مأموریت.برنامه.خدمت!C{referenceOffset}+" + CreateFormula(sheet2Name, "H", sheet7, mainNumber, 11), style, true);
+                SetCell(sheet, $"D{rowNumber}", $"         مأموریت.برنامه.خدمت!D{referenceOffset}+" + CreateFormula(sheet2Name, "I", sheet7, mainNumber, 11), style, true);
+                SetCell(sheet, $"E{rowNumber}", $"         مأموریت.برنامه.خدمت!E{referenceOffset} ", style, true);
+                SetCell(sheet, $"F{rowNumber}", $"         مأموریت.برنامه.خدمت!F{referenceOffset} ", style, true);
+                SetCell(sheet, $"H{rowNumber}", $"                                 " + CreateFormula(sheet2Name, "J", sheet7, mainNumber, 11), style, true);
+                SetCell(sheet, $"J{rowNumber}", $"         مأموریت.برنامه.خدمت!I{referenceOffset}+" + CreateFormula(sheet2Name, "K", sheet7, mainNumber, 11), style, true);
+            }
 
             return workbook;
         }
@@ -1946,6 +2055,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 SetCell(sheet,"I"+rowIndex,data.dataList[i].MosavabLastYear/1000,style);
                 SetCell(sheet,"J"+rowIndex,data.dataList[i].Pishnahadi/1000,style);
                 SetCell(sheet,"K"+rowIndex,data.dataList[i].Mosavab/1000,style);
+                SetCell(sheet,"L"+rowIndex,data.dataList[i].Code.Substring(0,10),style);
 
                 if (data.dataList[i].levelNumber == 1){
                     SumMosavabLastYear += data.dataList[i].MosavabLastYear / 1000;
@@ -2154,12 +2264,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        public int SearchCoding(ISheet sheet, string searchValue){
+        public int SearchCoding(ISheet sheet, string searchValue,int col=0){
             int newRowNumber = -1;
             for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++){
                 IRow row = sheet.GetRow(rowIndex);
                 if (row != null){
-                    ICell cell = row.GetCell(0); // Column A (index 0)
+                    ICell cell = row.GetCell(col); // Column A (index 0)
                     if (cell != null  && cell.StringCellValue == searchValue){
                         newRowNumber = rowIndex;
                         break;
@@ -2168,6 +2278,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             }
             
             return newRowNumber;
+        }
+        
+        // sheet2Name,'I',sheet3,"110000"
+        public string CreateFormula(string sheetName, string colName, ISheet Sheet,string coding,int col=0){
+            var res=SearchCoding(Sheet, coding,col);
+            if (res == -1)
+                return "0";
+            
+            return $"'{sheetName}'!{colName}{res + 1}";
         }
         
         
