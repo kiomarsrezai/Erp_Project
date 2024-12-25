@@ -1546,8 +1546,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             workbook = WriteSheet1(workbook,sheet1Data,param.YearId);
 
             // sheet4
-            Sheet1Data sheet4Data=await GetDataSheet4(sqlConnect,param);
-            workbook = WriteSheet4(workbook,sheet4Data,param.YearId);
+            workbook = WriteSheet4(workbook);
+
+            // sheet5
+            workbook = WriteSheet5(workbook);
 
             var finalFilePath = CreateFinalFile(workbook);
             return Ok(finalFilePath);
@@ -1668,7 +1670,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
         
         
-        private IWorkbook WriteSheet4( IWorkbook workbook, Sheet1Data data,int yearId){
+        private IWorkbook WriteSheet4( IWorkbook workbook){
             ISheet sheet = workbook.GetSheetAt(3);
             ISheet sheet7 = workbook.GetSheetAt(6);
 
@@ -1677,57 +1679,170 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string sheet2Name = workbook.GetSheetName(6);
 
 
-            var rows = new List<(string mainNumber, int rowNumber, int referenceOffset)>
-            {
-                ("1010000000", 9, 9),
-                ("1020000000", 10, 16),
-                ("1030000000", 11, 20),
-                ("1040000000", 12, 26),
+            var rows = new List<(int rowNumber, string codingNumber, int khedmatRow)>{
+                 (9,"1010000000", 9),
+                (10,"1020000000", 16),
+                (11,"1030000000", 20),
+                (12,"1040000000", 26),
                 
-                ("2010000000", 14, 31),
-                ("2020000000", 15, 36),
-                ("2030000000", 16, 39),
-                ("2040000000", 17, 42),
-                ("2050000000", 18, 47),
-                ("2060000000", 19, 49),
-                ("2070000000", 20, 55),
+                (14,"2010000000", 31),
+                (15,"2020000000", 36),
+                (16,"2030000000", 39),
+                (17,"2040000000", 42),
+                (18,"2050000000", 47),
+                (19,"2060000000", 49),
+                (20,"2070000000", 55),
                 
-                ("3010000000", 22, 61),
-                ("3020000000", 23, 65),
-                ("3030000000", 24, 70),
+                (22,"3010000000", 61),
+                (23,"3020000000", 65),
+                (24,"3030000000", 70),
                 
-                ("4010000000", 26, 73),
-                ("4020000000", 27, 78),
-                ("4030000000", 28, 93),
-                // ("4040000000", 29, 0),
-                ("4050000000", 30, 91),
-                ("4060000000", 31, 93),
-                // ("4070000000", 32, 0),
-                ("4080000000", 33, 99),
+                (26,"4010000000", 73),
+                (27,"4020000000", 78),
+                (28,"4030000000", 93),
+                // (29,"4040000000", 0),
+                (30,"4050000000", 91),
+                (31,"4060000000", 93),
+                // (32,"4070000000", 0),
+                (33,"4080000000", 99),
                 
                  
-                ("5010000000", 35, 103),
-                ("5020000000", 36, 108),
-                ("5030000000", 37, 119),
-                ("5040000000", 38, 176),
+                (35,"5010000000", 103),
+                (36,"5020000000", 108),
+                (37,"5030000000", 119),
+                (38,"5040000000", 176),
                 
-                ("6010000000", 40, 179),
-                ("6020000000", 41, 193),
-                ("6030000000", 42, 197),
-                ("6040000000", 43, 201),
-                ("6050000000", 44, 206),
-                ("6060000000", 45, 209),
+                (40,"6010000000", 179),
+                (41,"6020000000", 193),
+                (42,"6030000000", 197),
+                (43,"6040000000", 201),
+                (44,"6050000000", 206),
+                (45,"6060000000", 209),
+            };
+            
+            string khedmatSheet = workbook.GetSheetName(4);
+// Loop through the rows and generate the SetCell calls dynamically
+            foreach (var ( rowNumber,codingNumber, khedmatRow) in rows)
+            {
+                SetCell(sheet, $"C{rowNumber}", $"{khedmatSheet}!C{khedmatRow}+    " + CreateFormula(sheet2Name, "H", sheet7, codingNumber, 11), style, true);
+                SetCell(sheet, $"D{rowNumber}", $"{khedmatSheet}!D{khedmatRow}+    " + CreateFormula(sheet2Name, "I", sheet7, codingNumber, 11), style, true);
+                SetCell(sheet, $"E{rowNumber}", $"{khedmatSheet}!E{khedmatRow}     ",                                                                                 style, true);
+                SetCell(sheet, $"F{rowNumber}", $"{khedmatSheet}!F{khedmatRow}     ",                                                                                 style, true);
+                SetCell(sheet, $"H{rowNumber}", $"                                 " + CreateFormula(sheet2Name, "J", sheet7, codingNumber, 11), style, true);
+                SetCell(sheet, $"J{rowNumber}", $"{khedmatSheet}!I{khedmatRow}+    " + CreateFormula(sheet2Name, "K", sheet7, codingNumber, 11), style, true);
+            }
+
+            return workbook;
+        }
+
+        
+        // ------------------------------------------ sheet 5  ------------------------------------------------------------------------------------------------------------------------
+
+        
+        private IWorkbook WriteSheet5( IWorkbook workbook){
+            ISheet sheet = workbook.GetSheetAt(4);
+            ISheet sheet7 = workbook.GetSheetAt(5);
+
+            var style = GetBaseStyle(workbook);
+            
+            string sheet2Name = workbook.GetSheetName(5);
+
+
+            // type :  1 = جبران خدمات کارکنان
+            // type :  2 = سایر فصول
+            var rows = new List<(int rowNumber, string codingNumber,int type)>{
+                (43,"120401",2),
+                (44,"120402",2),
+                (45,"120210",1),
+                (46,"120209",2),
+                
+                (48,"120207",1),
+                
+                (74,"120208",2),
+                
+                (104,"120307",2),
+                (105,"120308",2),
+
+                (109,"121202",2),
+                (110,"121208",2),
+                (111,"121201",2),
+                (112,"121207",2),
+                (113,"121206",2),
+                (114,"121205",2),
+                (117,"121209",2),
+                (118,"121204",2),
+
+                (120,"110100",1),
+                (121,"110200",1),
+                (122,"120100",2),
+                (123,"120201",1),
+                (124,"120203",1),
+                (125,"120206",2),
+                (126,"120211",2),
+                (127,"120290",2),
+                (128,"120301",2),
+                (129,"120302",2),
+                (130,"120304",2),
+                (131,"120306",2),
+                (132,"120403",2),
+                (133,"120404",2),
+                (134,"120405",2),
+                (135,"120407",2),
+                (136,"120408",2),
+                (137,"120500",2),
+                (138,"120600",2),
+                (139,"120800",2),
+                (140,"120900",2),
+                (141,"121000",2),
+                (142,"121100",2),
+                (143,"121301",2),
+                (144,"121400",2),
+                (145,"130100",2),
+                (146,"140301",1),
+                (147,"140302",2),
+                (148,"150101",2),
+                (149,"150102",2),
+                (150,"150201",2),
+                (151,"160100",1),
+                (152,"160200",1),
+                (153,"160300",2),
+                (154,"170100",2),
+                (155,"170200",2),
+                (156,"120202",2),
+                (157,"120212",2),
+                (158,"120214",2),
+                (159,"120215",2),
+                (160,"120216",2),
+                (161,"120303",2),
+                (162,"120305",2),
+                (163,"120406",2),
+                (164,"121302",2),
+                (165,"140101",2),
+                (166,"140102",2),
+                (167,"140201",2),
+                (168,"140202",2),
+                (169,"150202",2),
+
+                (180,"150203",2),
+                (181,"150207",2),
+                (184,"150300",2),
+
+                (194,"120702",2),
+                (195,"120701",2),
+                
+                (202,"120213",1),
+
+                (210,"120205",2),
+
             };
 
-// Loop through the rows and generate the SetCell calls dynamically
-            foreach (var (mainNumber, rowNumber, referenceOffset) in rows)
+            foreach (var ( rowNumber,codingNumber,type) in rows)
             {
-                SetCell(sheet, $"C{rowNumber}", $"         مأموریت.برنامه.خدمت!C{referenceOffset}+" + CreateFormula(sheet2Name, "H", sheet7, mainNumber, 11), style, true);
-                SetCell(sheet, $"D{rowNumber}", $"         مأموریت.برنامه.خدمت!D{referenceOffset}+" + CreateFormula(sheet2Name, "I", sheet7, mainNumber, 11), style, true);
-                SetCell(sheet, $"E{rowNumber}", $"         مأموریت.برنامه.خدمت!E{referenceOffset} ",                                                                                     style, true);
-                SetCell(sheet, $"F{rowNumber}", $"         مأموریت.برنامه.خدمت!F{referenceOffset} ",                                                                                     style, true);
-                SetCell(sheet, $"H{rowNumber}", $"                                                " + CreateFormula(sheet2Name, "J", sheet7, mainNumber, 11), style, true);
-                SetCell(sheet, $"J{rowNumber}", $"         مأموریت.برنامه.خدمت!I{referenceOffset}+" + CreateFormula(sheet2Name, "K", sheet7, mainNumber, 11), style, true);
+                            SetCell(sheet, $"C{rowNumber}",  CreateFormula(sheet2Name, "C", sheet7, codingNumber), style, true);
+                            SetCell(sheet, $"D{rowNumber}",  CreateFormula(sheet2Name, "D", sheet7, codingNumber), style, true);
+                if(type==1) SetCell(sheet, $"E{rowNumber}",  CreateFormula(sheet2Name, "E", sheet7, codingNumber), style, true);
+                if(type==2) SetCell(sheet, $"F{rowNumber}",  CreateFormula(sheet2Name, "E", sheet7, codingNumber), style, true);
+                            SetCell(sheet, $"I{rowNumber}",  CreateFormula(sheet2Name, "F", sheet7, codingNumber), style, true);
             }
 
             return workbook;
@@ -2240,7 +2355,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        public int SearchCoding(ISheet sheet, string searchValue,int col=0){
+        private int SearchCoding(ISheet sheet, string searchValue,int col=0){
             int newRowNumber = -1;
             for (int rowIndex = 0; rowIndex <= sheet.LastRowNum; rowIndex++){
                 IRow row = sheet.GetRow(rowIndex);
@@ -2257,64 +2372,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
         
         // sheet2Name,'I',sheet3,"110000"
-        public string CreateFormula(string sheetName, string colName, ISheet Sheet,string coding,int col=0){
+        private string CreateFormula(string sheetName, string colName, ISheet Sheet,string coding,int col=0){
             var res=SearchCoding(Sheet, coding,col);
             if (res == -1)
                 return "0";
             
             return $"'{sheetName}'!{colName}{res + 1}";
         }
-        
-        
-        public void UpdateFormulaBasedOnValue(string filePath, double searchValue)
-        {
-// Load the workbook
-            IWorkbook workbook = new XSSFWorkbook(filePath);
-
-// Get the sheets
-            ISheet sheet0 = workbook.GetSheetAt(0);
-            ISheet sheet2 = workbook.GetSheetAt(2);
-
-// Find the new row number of the search value in column A of sheet2
-            int newRowNumber = -1;
-            for (int rowIndex = 0; rowIndex <= sheet2.LastRowNum; rowIndex++)
-            {
-                IRow row = sheet2.GetRow(rowIndex);
-                if (row != null)
-                {
-                    ICell cell = row.GetCell(0); // Column A (index 0)
-                    if (cell != null && cell.CellType == CellType.Numeric && cell.NumericCellValue == searchValue)
-                    {
-                        newRowNumber = rowIndex;
-                        break;
-                    }
-                }
-            }
-
-            if (newRowNumber != -1)
-            {
-                string sheet2Name = workbook.GetSheetName(2);
-
-// Update the formula in sheet0
-                IRow row0 = sheet0.GetRow(0); // Assuming row 0
-                ICell cell0 = row0.GetCell(0); // Column A (index 0)
-                cell0.SetCellFormula($"'{sheet2Name}'!I{newRowNumber + 1}"); // +1 because Excel rows are 1-based
-
-// Recalculate formulas
-                XSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
-
-// Save the workbook
-                using (FileStream fileOut = new FileStream("path_to_your_updated_excel_file.xlsx", FileMode.Create, FileAccess.Write))
-                {
-                    workbook.Write(fileOut);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Value not found in column A of sheet2.");
-            }
-        }
-        
         
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------- Excel functions --------------------------------------------------------------------------------------------
@@ -2492,7 +2556,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             ((XSSFCellStyle)blueStyle2).SetFillForegroundColor(blueColor2);blueStyle2.FillPattern = FillPattern.SolidForeground;
         }
         
-        private ICellStyle GetBaseStyle(IWorkbook workbook,short fontSize=10){
+        private ICellStyle GetBaseStyle(IWorkbook workbook,short fontSize=11){
             ICellStyle style = workbook.CreateCellStyle();
             // aligment
             style.Alignment = HorizontalAlignment.Center;
