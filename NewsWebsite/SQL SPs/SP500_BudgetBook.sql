@@ -28,7 +28,14 @@ WITH CommonBudgetData AS (
 
     WHERE
             TblBudgets.TblYearId = @YearId and
-            TblAreas.ToGetherBudget='84'
+            TblAreas.ToGetherBudget='84'   AND (
+                ( @AreaId IN (37)) OR
+                (TblAreas.StructureId=1 AND @AreaId IN (10)) OR
+                (TblAreas.StructureId=2 AND @AreaId IN (39)) OR
+                (TblAreas.ToGetherBudget =10 AND @AreaId IN (40)) OR
+                (TblAreas.ToGetherBudget =84 AND @AreaId IN (41)) OR
+                (tblBudgetDetailProjectArea.AreaId = @AreaId AND  @AreaId in (11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,29))
+            )
     GROUP BY
         TblAreas.Id,
         tblCoding.TblBudgetProcessId

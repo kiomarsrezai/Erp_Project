@@ -1,16 +1,5 @@
-﻿-- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-USE [ProgramBudDB]
-GO
-/****** Object:  StoredProcedure [dbo].[SP500_BudgetBook_Codings]    Script Date: 12/22/2024 2:38:59 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[SP500_BudgetBook_Codings]
+﻿-- auto-generated definition
+CREATE PROCEDURE SP500_BudgetBook_Codings
     @YearId INT,
     @AreaId INT,
     @BudgetProcessId INT,
@@ -57,7 +46,15 @@ FROM
 WHERE
         TblBudgets.TblYearId = @YearId
   AND tblCoding.TblBudgetProcessId = @BudgetProcessId
-  AND (@Code IN (tblCoding.Code, tblCoding_2.Code, tblCoding_3.Code, tblCoding_1.Code, tblCoding_4.Code, tblCoding_5.Code));
+  AND (@Code IN (tblCoding.Code, tblCoding_2.Code, tblCoding_3.Code, tblCoding_1.Code, tblCoding_4.Code, tblCoding_5.Code))
+  AND (
+        ( @AreaId IN (37)) OR
+        (TblAreas.StructureId=1 AND @AreaId IN (10)) OR
+        (TblAreas.StructureId=2 AND @AreaId IN (39)) OR
+        (TblAreas.ToGetherBudget =10 AND @AreaId IN (40)) OR
+        (TblAreas.ToGetherBudget =84 AND @AreaId IN (41)) OR
+        (tblBudgetDetailProjectArea.AreaId = @AreaId AND  @AreaId in (11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,29))
+    );
 END;
 
     -- Return the results
@@ -65,5 +62,6 @@ SELECT * FROM #Results;
 
 -- Clean up
 DROP TABLE #Results;
-END;go
+END;
+go
 
