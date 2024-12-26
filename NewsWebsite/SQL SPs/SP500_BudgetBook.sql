@@ -24,18 +24,19 @@ WITH CommonBudgetData AS (
         tblBudgetDetailProject ON tblBudgetDetailProject.BudgetDetailId = TblBudgetDetails.Id  INNER JOIN
         tblBudgetDetailProjectArea ON tblBudgetDetailProject.Id = tblBudgetDetailProjectArea.BudgetDetailProjectId INNER JOIN
         tblCoding ON TblBudgetDetails.tblCodingId = tblCoding.Id INNER JOIN
-        TblAreas ON tblBudgetDetailProjectArea.AreaId = TblAreas.Id
+        TblAreas ON tblBudgetDetailProjectArea.AreaId = TblAreas.Id LEFT JOIN
+        TblAreasTogether ON TblAreasTogether.AreaId = TblAreas.Id AND TblAreasTogether.YearId=TblBudgets.TblYearId
 
     WHERE
             TblBudgets.TblYearId = @YearId and
             TblAreas.ToGetherBudget='84'   AND (
-                ( @AreaId IN (37)) OR
-                (TblAreas.StructureId=1 AND @AreaId IN (10)) OR
-                (TblAreas.StructureId=2 AND @AreaId IN (39)) OR
-                (TblAreas.ToGetherBudget =10 AND @AreaId IN (40)) OR
-                (TblAreas.ToGetherBudget =84 AND @AreaId IN (41)) OR
-                (tblBudgetDetailProjectArea.AreaId = @AreaId AND  @AreaId in (11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,29))
-            )
+            ( @AreaId IN (37)) OR
+            (TblAreas.StructureId=1 AND @AreaId IN (10)) OR
+            (TblAreas.StructureId=2 AND @AreaId IN (39)) OR
+            (TblAreasTogether.ToGetherBudget =10 AND @AreaId IN (40)) OR
+            (TblAreasTogether.ToGetherBudget =84 AND @AreaId IN (41)) OR
+            (tblBudgetDetailProjectArea.AreaId = @AreaId AND  @AreaId in (11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,29))
+        )
     GROUP BY
         TblAreas.Id,
         tblCoding.TblBudgetProcessId

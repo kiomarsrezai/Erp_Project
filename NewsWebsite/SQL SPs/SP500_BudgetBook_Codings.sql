@@ -43,6 +43,7 @@ FROM
         LEFT JOIN tblCoding AS tblCoding_1 ON tblCoding_3.MotherId = tblCoding_1.Id
         LEFT JOIN tblCoding AS tblCoding_4 ON tblCoding_1.MotherId = tblCoding_4.Id
         LEFT JOIN tblCoding AS tblCoding_5 ON tblCoding_4.MotherId = tblCoding_5.Id
+        LEFT JOIN TblAreasTogether  ON TblAreasTogether.AreaId = TblAreas.Id AND TblAreasTogether.YearId =TblBudgets.TblYearId
 WHERE
         TblBudgets.TblYearId = @YearId
   AND tblCoding.TblBudgetProcessId = @BudgetProcessId
@@ -51,8 +52,8 @@ WHERE
         ( @AreaId IN (37)) OR
         (TblAreas.StructureId=1 AND @AreaId IN (10)) OR
         (TblAreas.StructureId=2 AND @AreaId IN (39)) OR
-        (TblAreas.ToGetherBudget =10 AND @AreaId IN (40)) OR
-        (TblAreas.ToGetherBudget =84 AND @AreaId IN (41)) OR
+        (TblAreasTogether.ToGetherBudget =10 AND @AreaId IN (40)) OR
+        (TblAreasTogether.ToGetherBudget =84 AND @AreaId IN (41)) OR
         (tblBudgetDetailProjectArea.AreaId = @AreaId AND  @AreaId in (11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,29))
     );
 END;

@@ -1618,15 +1618,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             // SetCell(sheet,"C8", GetAmount(data.ReportCodings,"p","110000"),style);
             
             
-            SetCell(sheet,"C19", data.P_Resources,style);
-            SetCell(sheet,"D19", data.M_Resources,style);
-            SetCell(sheet,"H19", data.P_Costs,style);
-            SetCell(sheet,"I19", data.M_Costs,style);
+            SetCell(sheet,"C19", data.P_Resources/1000,style);
+            SetCell(sheet,"D19", data.M_Resources/1000,style);
+            SetCell(sheet,"H19", data.P_Costs/1000,style);
+            SetCell(sheet,"I19", data.M_Costs/1000,style);
             
-            SetCell(sheet,"C21", data.P_Khazane,style);
-            SetCell(sheet,"D21", data.M_Khazane,style);
-            SetCell(sheet,"H21", data.P_Khazane,style);
-            SetCell(sheet,"I21", data.M_Khazane,style);
+            SetCell(sheet,"C21", data.P_Khazane/1000,style);
+            SetCell(sheet,"D21", data.M_Khazane/1000,style);
+            SetCell(sheet,"H21", data.P_Khazane/1000,style);
+            SetCell(sheet,"I21", data.M_Khazane/1000,style);
 
 
             var year = yearId + 1369;

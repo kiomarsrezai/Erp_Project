@@ -1,4 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[SP500_BudgetBook_List]
+﻿-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[SP500_BudgetBook_List]
 @yearId int, 
 @areaId int,
 @budgetProcessId int
@@ -26,13 +31,15 @@ WITH CCC AS ( SELECT
                   tblCoding AS tblCoding_4 ON tblCoding_3.MotherId = tblCoding_4.Id LEFT JOIN
                   tblCoding AS tblCoding_5 ON tblCoding_4.MotherId = tblCoding_5.Id LEFT JOIN
                   tblCoding AS tblCoding_6 ON tblCoding_5.MotherId = tblCoding_6.Id LEFT JOIN
-                  TblAreas ON tblBudgetDetailProjectArea.AreaId = TblAreas.Id
+                  TblAreas ON tblBudgetDetailProjectArea.AreaId = TblAreas.Id LEFT JOIN
+                  TblAreasTogether ON TblAreasTogether.AreaId = TblAreas.Id AND TblAreasTogether.YearId =TblBudgets.TblYearId
+
               WHERE        (tblCoding_1.TblBudgetProcessId = @BudgetProcessId)     AND (
                       ( @areaId IN (37)) OR
                       (TblAreas.StructureId=1 AND @areaId IN (10)) OR
                       (TblAreas.StructureId=2 AND @areaId IN (39)) OR
-                      (TblAreas.ToGetherBudget =10 AND @areaId IN (40)) OR
-                      (TblAreas.ToGetherBudget =84 AND @areaId IN (41)) OR
+                      (TblAreasTogether.ToGetherBudget =10 AND @areaId IN (40)) OR
+                      (TblAreasTogether.ToGetherBudget =84 AND @areaId IN (41)) OR
                       (tblBudgetDetailProjectArea.AreaId = @areaId AND  @areaId in (11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,29))
                   )
 )
