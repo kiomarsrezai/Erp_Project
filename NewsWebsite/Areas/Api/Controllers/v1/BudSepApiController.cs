@@ -149,6 +149,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                     sqlconnect.Close();
                 }
+                
+                using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+                {
+                    using (SqlCommand sqlCommand = new SqlCommand("SP9999_Convert_Tamin_To_ERP_1403", sqlconnect))
+                    {
+                        sqlconnect.Open();
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        sqlCommand.ExecuteReader();
+                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                    }
+                    sqlconnect.Close();
+                }
             }
             return Ok();
         }
