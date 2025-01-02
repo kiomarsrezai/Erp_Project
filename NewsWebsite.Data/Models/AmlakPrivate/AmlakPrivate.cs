@@ -69,7 +69,9 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public virtual ICollection<AmlakPrivateDocHistory> AmlakPrivateDocHistories { get; set; }
         
         [NotMapped]
-        public virtual AmlakPrivateDocHistory LastDocHistory { get; set; }
+        public virtual AmlakPrivateDocHistory LastDocHistory { get; set; } 
+        [NotMapped]
+        public virtual AmlakPrivateDocHistory LastDocHistoryPossession { get; set; }
 
         [NotMapped]
         public string? CreatedAtFa{get{ return Helpers.MiladiToHejri(CreatedAt); }}
@@ -235,6 +237,12 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
                 else if (value == 0){
                     return query.Where(e => !(e.MainPlateNumber != "0" && e.SubPlateNumber != "0" && e.Address!=null&& e.Address!=""&& e.DocumentType!=0 && e.Masahat!=0D && e.Section!=null &&  e.Section!="" && e.AreaId!=0 ));
                 }
+            }
+            return query;
+        }
+        public static IQueryable<AmlakPrivateNew> IsTransfered(this IQueryable<AmlakPrivateNew> query, int? value){
+            if (BaseModel.CheckParameter(value,null)){
+                    return query.Where(e => e.IsTransfered==value );
             }
             return query;
         }

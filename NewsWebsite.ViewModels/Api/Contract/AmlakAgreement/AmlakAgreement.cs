@@ -10,6 +10,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAgreement {
     
     public class AmlakAgreementBaseModel {
         public int Id{ get; set; }
+        public int AreaId{ get; set; }
         public string Title{ get; set; }
         public string ContractParty{ get; set; }
         public int MainPlateNumber{ get; set; }
@@ -44,6 +45,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAgreement {
         public string UpdatedAtFa{ get; set; }
 
          
+        public AreaViewModel Area{ get; set; }
 
     }
     public class AmlakAgreementUpdateVm : AmlakAgreementBaseModel {
@@ -64,6 +66,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAgreement {
         public int? MainPlateNumber{ get; set; }
         public int? SubPlateNumber{ get; set; }
         public int? Type{ get; set; }
+        public int? AreaId{ get; set; }
 
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;

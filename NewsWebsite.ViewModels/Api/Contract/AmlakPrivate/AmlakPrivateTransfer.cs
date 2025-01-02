@@ -19,11 +19,15 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string NotaryOfficeNumber { get; set; }
         public string NotaryOfficeLocation { get; set; }
         public string ExitDate { get; set; }
+        public int Reason { get; set; }
+        public string Desc { get; set; }
     }
 
 
     public class AmlakPrivateTransferReadVm : AmlakPrivateTransferBaseModel {
+        public int Id { get; set; } 
         public AmlakPrivateListVm AmlakPrivate{ get; set; }
+        public string ReasonText { get; set; }
         public string CreatedAt { get; set; }
         public string LetterDateFa { get; set; }
         public string ExitDateFa { get; set; }
@@ -36,5 +40,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     }
 
     public class AmlakPrivateTransferStoreVm : AmlakPrivateTransferBaseModel {
+    }
+    
+    public class AmlakPrivateTransferDeleteVm {
+        public int AmlakPrivateId { get; set; } 
     }
 }

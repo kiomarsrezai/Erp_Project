@@ -10,6 +10,7 @@ namespace NewsWebsite.Data.Models.AmlakAgreement {
     [Table("tblAmlakAgreement")]
     public class AmlakAgreement:BaseModel {
         public string SdiId{ get; set; }
+        public int? AreaId{ get; set; }
         public int IsSubmitted{ get; set; }
         public string Title{ get; set; }
         public DateTime? Date{ get; set; }
@@ -28,7 +29,8 @@ namespace NewsWebsite.Data.Models.AmlakAgreement {
         public DateTime? UpdatedAt{ get; set; }
         
         
-        
+        public virtual TblAreas Area{ get; set; }
+
         [NotMapped]
         public string? DateFa{get{ return Helpers.MiladiToHejri(Date); }}
         
@@ -55,6 +57,12 @@ namespace NewsWebsite.Data.Models.AmlakAgreement {
 
     public static class AmlakAgreementExtensions {
 
+        public static IQueryable<AmlakAgreement> AreaId(this IQueryable<AmlakAgreement> query, int? value){
+            if (BaseModel.CheckParameter(value,0)){
+                return query.Where(e => e.AreaId == value);
+            }
+            return query;
+        }
         public static IQueryable<AmlakAgreement> IsSubmitted(this IQueryable<AmlakAgreement> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(a => a.IsSubmitted==value);

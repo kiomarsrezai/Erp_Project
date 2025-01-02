@@ -45,17 +45,48 @@
     "8": "مزایده",
     "15": "منتقل (خارج) شده"
   },
+  "generalDocumentHistoryStatusColor": {
+    "1": "success",
+    "2": "warning",
+    "3": "primary",
+    "4": "teal",
+    "5": "info",
+    "6": "cyan",
+    "7": "lime",
+    "8": "pink",
+    "15": "danger"
+  },
   "seizureDocumentHistoryStatus": {
     "1": "توقیف است",
     "2": "توقیف نیست"
+  },
+  "seizureDocumentHistoryStatusColor": {
+    "1": "danger",
+    "2": "success"
   },
   "licenseDocumentHistoryStatus": {
     "1": "دارد",
     "2": "ندارد"
   },
+  "licenseDocumentHistoryStatusColor": {
+    "1": "success",
+    "2": "danger"
+  },
   "completionDocumentHistoryStatus": {
     "1": "دارد",
     "2": "ندارد"
+  },
+  "completionDocumentHistoryStatusColor": {
+    "1": "success",
+    "2": "danger"
+  },
+  "possessionDocumentHistoryStatus": {
+    "1": "تصرف هست",
+    "2": "تصرف نیست"
+  },
+  "possessionDocumentHistoryStatusColor": {
+    "1": "danger",
+    "2": "success"
   },
   "documentHistoryPersonType": {
     "1": "حقیقی",
@@ -263,5 +294,14 @@
   "transferRecipientType": {
     "1": "حقیقی",
     "2": "حقوقی"
+  },
+  "TransferReasons": {
+    "1": "تفکیک",
+    "2": "استانداردسازی پلاک",
+    "3": "مزایده",
+    "4": "توافق نامه",
+    "5": "معوض",
+    "6": "اجراییه دادگاه"
   }
+  
 }

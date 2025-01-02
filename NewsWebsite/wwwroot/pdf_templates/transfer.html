@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>فرم تحویل موقت سند املاک و مستغلات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            direction: rtl;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        .form-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .form-container {
+            border: 1px solid #000;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: right;
+        }
+        .signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .signature-box {
+            border: 1px solid #000;
+            padding: 10px;
+            min-height: 80px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <div class="header">
+        <div>QMS-Fr-10.20.01-04</div>
+        <div class="form-title">فرم تحویل موقت سند املاک و مستغلات</div>
+        <img src="/api/placeholder/80/80" alt="Logo" />
+    </div>
+
+    <div>
+        <label>شماره:</label>
+        <input type="text" />
+        <label>تاریخ:</label>
+        <input type="text" />
+        <label>پیوست:</label>
+        <input type="checkbox" /> دارد
+        <input type="checkbox" /> ندارد
+    </div>
+
+    <div>
+        <label>اینجانب / اینجانبان:</label>
+        <input type="text" style="width: 50%;" />
+        <label>با نام ملی / شناسه ملی (حقیقی / حقوقی):</label>
+        <input type="text" style="width: 30%;" />
+    </div>
+
+    <table>
+        <tr>
+            <th>نام و نام خانوادگی مالک</th>
+            <th>کد رهگیری</th>
+            <th>نوع سند</th>
+            <th>منطقه / سازمان</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <div>
+        <label>آدرس پستی ملک:</label>
+        <input type="text" style="width: 100%;" />
+    </div>
+
+    <table>
+        <tr>
+            <th>پلاک ثبتی</th>
+            <th colspan="3"></th>
+        </tr>
+        <tr>
+            <td>فرعی</td>
+            <td>اصلی</td>
+            <td>بخش</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <div>
+        <label>توضیحات سند:</label>
+        <textarea style="width: 100%; min-height: 60px;"></textarea>
+    </div>
+
+    <div class="signatures">
+        <div class="signature-box">
+            <div>تحویل دهندگان</div>
+        </div>
+        <div class="signature-box">
+            <div>تحویل گیرندگان</div>
+        </div>
+        <div class="signature-box">
+            <div>مسئول امور املاک و ثبت اطلاعات</div>
+            <div>نام و نام خانوادگی و تاریخ و امضاء</div>
+        </div>
+        <div class="signature-box">
+            <div>تحویل گیرنده سند</div>
+            <div>نام و نام خانوادگی و تاریخ و امضاء</div>
+        </div>
+        <div class="signature-box">
+            <div>رئیس اداره ثبتی و حقوقی</div>
+            <div>نام و نام خانوادگی و تاریخ و امضاء</div>
+        </div>
+        <div class="signature-box">
+            <div>تحویل گیرنده سند</div>
+            <div>نام و نام خانوادگی و تاریخ و امضاء</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

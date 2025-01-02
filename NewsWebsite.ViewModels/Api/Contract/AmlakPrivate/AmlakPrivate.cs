@@ -25,11 +25,16 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
     public class AmlakPrivateListVm : AmlakPrivateBaseModel {
         public string SdiId{ get; set; }
+        public string Section{ get; set; }
+        public string DocumentTypeText{ get; set; }
         public string Coordinates{ get; set; }
+        public string OwnershipValue{ get; set; }
+        public string OwnershipValueTotal{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
 
         public AmlakPrivateDocHistoryVm LastDocHistory{ get; set; }
+        public AmlakPrivateDocHistoryVm LastDocHistoryPossession{ get; set; }
         public AreaViewModel Area{ get; set; }
         public AreaViewModel Owner{ get; set; }
     }
@@ -58,9 +63,9 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string PropertyCode { get; set; }
         public string Year { get; set; }
         public string EntryDate { get; set; }
-        public string InternalDate { get; set; }
+        public DateTime? InternalDate { get; set; }
         public string InternalDateFa { get; set; }
-        public string DocumentDate { get; set; }
+        public DateTime? DocumentDate { get; set; }
         public string DocumentDateFa { get; set; }
         public int LatestGeneratingDecision { get; set; }
         public string LatestGeneratingDecisionText { get; set; }
@@ -112,6 +117,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string MeterNumberPhone { get; set; }
     }
 
+    public class AmlakPrivateUpdateNoteVm  {
+        public int Id{ get; set; }
+        public string Notes{ get; set; }
+
+    }
+
 
     public class AmlakPrivateReadInputVm {
         public int? AreaId{ get; set; }
@@ -128,6 +139,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int? PropertyType{ get; set; }
         public int? LatestGeneratingDecision{ get; set; }
         public int? IsSubmitted{ get; set; }
+        public int? IsTransfered{ get; set; }
         public int? HasSdiLayer{ get; set; }
         public int ForMap{ get; set; } = 0;
         public int Export{ get; set; } = 0;

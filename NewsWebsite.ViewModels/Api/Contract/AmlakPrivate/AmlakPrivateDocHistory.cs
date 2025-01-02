@@ -25,6 +25,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string DateFa{ get; set; } 
         public string LetterDateFa{ get; set; } 
         public string StatusText{ get; set; }
+        public string StatusColor{ get; set; }
         public string PersonTypeText{ get; set; }
   
     }
@@ -32,6 +33,7 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     public class AmlakPrivateDocHistoryVm  {
         public string Status{ get; set; }
         public string StatusText{ get; set; }
+        public string StatusColor{ get; set; }
   
     }
 

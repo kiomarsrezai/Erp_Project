@@ -36,6 +36,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text.Json.Nodes;
 using NewsWebsite.Data.Models.AmlakAdmin;
+using NewsWebsite.Data.Models.LogRequest;
 using SharpKml.Base;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
@@ -185,7 +186,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Route("Test11")]
+        [Route("Test1Success")]
         [HttpGet]
         public async Task<ApiResult<object>> Test11(int ContractId){
             var user = await CheckUserAuth(_db);
@@ -208,6 +209,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
             var pageCount = await builder.CountAsync();
 
             return Ok( new{i,pageCount});
+        }
+        
+        [Route("Test1Error")]
+        [HttpGet]
+        public async Task<ApiResult<object>> Test12(int ContractId){
+
+            var logException22 = new LogRequestException{
+                LogRequestId = 22,
+                Location = "at NewsWebsite.Areas.Api.Controllers.v\n            1.amlak.AmlakAppApiController.Test13(Int32 ContractId) in D:\\projects\\ASP\\Erp_Project\\NewsWebsite\\Areas\\Api\\Controllers\\v1\\amlak\\AmlakApp\n            ApiController.cs:line 227", // todo: , // You can improve this by identifying the exact location
+                Exception = "Attempted to divide by zero.", // todo: ,
+                Code = "500", // todo: 
+            };
+              
+            
+            _db.LogRequestExceptions.Add(logException22);
+            await _db.SaveChangesAsync();
+
+            
+               return  BadRequest("sssssssss");
+        }
+        
+        
+        [Route("Test1Crash")]
+        [HttpGet]
+        public async Task<ApiResult<object>> Test13(int ContractId){
+            var b = 0;
+            var a = 5 / b;
+
+            return Ok("ok");
         }
         
         

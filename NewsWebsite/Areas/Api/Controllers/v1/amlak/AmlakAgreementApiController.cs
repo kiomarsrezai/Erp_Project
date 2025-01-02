@@ -59,6 +59,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .MainPlateNumber(param.MainPlateNumber)
                 .SubPlateNumber(param.SubPlateNumber)
                 .Type(param.Type)
+                .AreaId(param.AreaId)
                 .Search(param.Search);
 
             var pageCount = (int)Math.Ceiling((await builder.IsSubmitted(1).CountAsync())/Convert.ToDouble(param.PageRows));
@@ -95,6 +96,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             foreach (var item in items){
                 var row = new List<object>();
                 row.Add(item.Id);
+                // row.Add(item.AreaId);
                 row.Add(item.SdiId);
                 row.Add(item.IsSubmitted);
                 row.Add(item.Title);
@@ -126,10 +128,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             await CheckUserAuth(_db);
 
             var item = await _db.AmlakAgreements.Id(param.Id)
+                .Include(a=>a.Area)
                 .FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("پیدا نشد");
             
+            if (item.Area!=null && item.Area.Id == 9){
+                item.Area.AreaName = "شهرداری اهواز";
+            }
             var finalItem = MyMapper.MapTo<AmlakAgreement, AmlakAgreementReadVm>(item);
         
             return Ok(finalItem);
@@ -146,6 +152,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             if (item == null)
                 return BadRequest("پیدا نشد");
 
+            item.AreaId = param.AreaId;
             item.Title = param.Title;
             item.Date = DateTime.Parse(param.Date);
             item.ContractParty = param.ContractParty;

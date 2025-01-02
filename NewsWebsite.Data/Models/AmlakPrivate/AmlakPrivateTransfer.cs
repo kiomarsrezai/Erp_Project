@@ -21,6 +21,8 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
         public string? NotaryOfficeNumber { get; set; } // شماره دفترخانه
         public string? NotaryOfficeLocation { get; set; } // محل دفترخانه
         public DateTime? ExitDate { get; set; } // تاریخ خروج
+        public int? Reason { get; set; }
+        public string? Desc { get; set; }
         public DateTime? UpdatedAt { get; set; } 
         public DateTime? CreatedAt { get; set; } 
         
@@ -51,6 +53,10 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
          
         [NotMapped]
         public string? RecipientTypeText{get{ return Helpers.UC(RecipientType,"transferRecipientType"); }}
+         
+        [NotMapped]
+        public string? ReasonText{get{ return Helpers.UC(Reason,"TransferReasons"); }}
+        
     }
 
     

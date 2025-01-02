@@ -35,6 +35,10 @@ namespace NewsWebsite.Data.Models.AmlakPrivate {
          
         [NotMapped]
         public string? StatusText{get{ return Helpers.UC(Status,Type+"DocumentHistoryStatus"); }}
+        
+        [NotMapped]
+        public string? StatusColor{get{ return Helpers.UC(Status,Type+"DocumentHistoryStatusColor"); }}
+        
         [NotMapped]
         public string? PersonTypeText{get{ return Helpers.UC(PersonType,"documentHistoryPersonType"); }}
     }

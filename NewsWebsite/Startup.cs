@@ -85,6 +85,7 @@ namespace NewsWebsite
             var cachePeriod = env.IsDevelopment() ? "600" : "605800";
             app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
             {
+                // appBuilder.UseRequestLogging();
                 appBuilder.UseCustomExceptionHandler();
             });
 

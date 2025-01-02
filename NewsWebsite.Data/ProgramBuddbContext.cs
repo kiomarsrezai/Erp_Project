@@ -12,6 +12,7 @@ using NewsWebsite.Data.Models.AmlakAgreement;
 using NewsWebsite.Data.Models.AmlakArchive;
 using NewsWebsite.Data.Models.AmlakInfo;
 using NewsWebsite.Data.Models.AmlakPrivate;
+using NewsWebsite.Data.Models.LogRequest;
 using NewsWebsite.ViewModels.Api.Contract.AmlakAgreement;
 using NewsWebsite.ViewModels.Api.Contract.AmlakArchive;
 using NewsWebsite.ViewModels.Api.Contract.amlakAttachs;
@@ -28,7 +29,10 @@ namespace NewsWebsite.Data
         public ProgramBuddbContext(DbContextOptions<ProgramBuddbContext> options) : base(options)
         {
         }
-
+        public virtual DbSet<LogRequest> LogRequests { get; set; }
+        public virtual DbSet<LogRequestQuery> LogRequestQueries { get; set; }
+        public virtual DbSet<LogRequestException> LogRequestExceptions { get; set; }
+        
         public virtual DbSet<FileDetail> FileDetails { set; get; }
         public virtual DbSet<Section> Sections { set; get; }
         public virtual DbSet<Category> Categories { set; get; }
@@ -270,6 +274,16 @@ namespace NewsWebsite.Data
                 .WithMany(apn => apn.AmlakPrivateDocHistories)
                 .HasForeignKey(dh => dh.AmlakPrivateId);
            
+            
+            modelBuilder.Entity<LogRequestQuery>()
+                .HasOne(q => q.LogRequest)
+                .WithMany(r => r.Queries)
+                .HasForeignKey(q => q.LogRequestId);
+
+            modelBuilder.Entity<LogRequestException>()
+                .HasOne(e => e.LogRequest)
+                .WithMany(r => r.Exceptions)
+                .HasForeignKey(e => e.LogRequestId);
             
             OnModelCreatingPartial(modelBuilder);
         }

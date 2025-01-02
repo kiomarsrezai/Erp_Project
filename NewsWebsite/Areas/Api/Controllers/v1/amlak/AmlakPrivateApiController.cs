@@ -59,7 +59,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 .MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber)
                 .MultiplePlates(param.MultiplePlates)
                 .PropertyType(param.PropertyType).Search(param.Search).IsSubmitted(param.IsSubmitted)
-                .HasSdiLayer(param.HasSdiLayer)
+                .HasSdiLayer(param.HasSdiLayer).IsTransfered(param.IsTransfered)
                 .LatestGeneratingDecision(param.LatestGeneratingDecision);
 
             
@@ -89,12 +89,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                             DocumentType = ap.DocumentType,
                             MainPlateNumber = ap.MainPlateNumber,
                             SubPlateNumber = ap.SubPlateNumber,
+                            Section = ap.Section,
                             PropertyType = ap.PropertyType,
                             UsageUrban = ap.UsageUrban,
+                            OwnershipValue = ap.OwnershipValue,
+                            OwnershipValueTotal = ap.OwnershipValueTotal,
                             Area = ap.Area,
                             Owner = ap.Owner,
                             LastDocHistory = ap.AmlakPrivateDocHistories
                                 .Where(dh => dh.Type == "general")
+                                .OrderByDescending(dh => dh.Id)
+                                .FirstOrDefault(),
+                            LastDocHistoryPossession = ap.AmlakPrivateDocHistories
+                                .Where(dh => dh.Type == "possession")
                                 .OrderByDescending(dh => dh.Id)
                                 .FirstOrDefault()
                         })
@@ -227,6 +234,69 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
 
+        [Route("Store")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AmlakPrivateStore([FromBody] AmlakPrivateUpdateVm param){
+            await CheckUserAuth(_db);
+
+            var item0 = await _db.AmlakPrivateNews.MainPlateNumber(param.MainPlateNumber).SubPlateNumber(param.SubPlateNumber).FirstOrDefaultAsync();
+            if (item0 != null)
+                return BadRequest(new{ message = "این پلاک اصلی و فرعی قبلا ثبت شده است" });
+
+
+            var item = new AmlakPrivateNew();
+            item.AreaId = param.AreaId;
+            item.OwnerId = param.OwnerId;
+            item.Masahat = param.Masahat;
+            item.PredictionUsage = param.PredictionUsage;
+            item.Title = param.Title;
+            item.DocumentType = param.DocumentType;
+            item.SadaCode = param.SadaCode;
+            item.JamCode = param.JamCode;
+            item.SimakCode=param.SimakCode;
+            item.MainPlateNumber=param.MainPlateNumber;
+            item.SubPlateNumber=param.SubPlateNumber;
+            item.Section=param.Section;
+            item.Address=param.Address;
+            item.UsageOnDocument=param.UsageOnDocument;
+            item.UsageUrban=param.UsageUrban;
+            item.PropertyType=param.PropertyType;
+            item.OwnershipType=param.OwnershipType;
+            item.OwnershipValueType=param.OwnershipValueType;
+            item.OwnershipValue=param.OwnershipValue;
+            item.OwnershipValueTotal=param.OwnershipValueTotal;
+            item.TransferredFrom=param.TransferredFrom;
+            item.InPossessionOf=param.InPossessionOf;
+            item.InPossessionOfOther=param.InPossessionOfOther;
+            item.BlockedStatusSimakUnitWindow=param.BlockedStatusSimakUnitWindow;
+            item.Status=param.Status;
+            item.ArchiveLocation=param.ArchiveLocation;
+            item.DocumentSerial=param.DocumentSerial;
+            item.DocumentSeries=param.DocumentSeries;
+            item.DocumentAlphabet=param.DocumentAlphabet;
+            item.PropertyCode=param.PropertyCode;
+            item.Year=!string.IsNullOrEmpty(param.InternalDate)?Helpers.MiladiToHejri(param.InternalDate).Substring(0,4):"0"; // todo: : 
+            item.InternalDate=!string.IsNullOrEmpty(param.InternalDate) ? DateTime.Parse(param.InternalDate) : (DateTime?)null;
+            item.DocumentDate=!string.IsNullOrEmpty(param.DocumentDate) ? DateTime.Parse(param.DocumentDate) : (DateTime?)null;
+            // item.LatestGeneratingDecision=param.LatestGeneratingDecision;
+            item.BuildingStatus=param.BuildingStatus;
+            item.BuildingMasahat=param.BuildingMasahat;
+            item.BuildingFloorsNumber=param.BuildingFloorsNumber;
+            item.BuildingUsage=param.BuildingUsage;
+            item.MeterNumberGas=param.MeterNumberGas;
+            item.MeterNumberWater=param.MeterNumberWater;
+            item.MeterNumberElectricity=param.MeterNumberElectricity;
+            item.MeterNumberPhone=param.MeterNumberPhone;
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
+            item.CreatedAt = Helpers.GetServerDateTimeType();
+            _db.Add(item);
+            await _db.SaveChangesAsync();
+
+            await SaveLogAsync(_db, item.Id, TargetTypes.AmlakPrivate, "ملک خصوصی ثبت شد");
+
+            return Ok(item.Id.ToString());
+        }
+
         [Route("Update")]
         [HttpPost]
         public async Task<ApiResult<string>> AmlakPrivateUpdate([FromBody] AmlakPrivateUpdateVm param){
@@ -262,7 +332,6 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             item.InPossessionOfOther=param.InPossessionOfOther;
             item.BlockedStatusSimakUnitWindow=param.BlockedStatusSimakUnitWindow;
             item.Status=param.Status;
-            item.Notes=param.Notes;
             item.ArchiveLocation=param.ArchiveLocation;
             item.DocumentSerial=param.DocumentSerial;
             item.DocumentSeries=param.DocumentSeries;
@@ -288,6 +357,27 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             return Ok(item.Id.ToString());
         }
 
+        
+        
+        [Route("UpdateNote")]
+        [HttpPost]
+        public async Task<ApiResult<string>> AmlakPrivateUpdateNote([FromBody] AmlakPrivateUpdateNoteVm param){
+            await CheckUserAuth(_db);
+
+            var item = await _db.AmlakPrivateNews.Id(param.Id).FirstOrDefaultAsync();
+            if (item == null)
+                return BadRequest(new{ message = "یافت نشد" });
+
+            item.Notes=param.Notes;
+            item.UpdatedAt = Helpers.GetServerDateTimeType();
+            await _db.SaveChangesAsync();
+
+            await SaveLogAsync(_db, item.Id, TargetTypes.AmlakPrivate, "ملک خصوصی ویرایش شد");
+
+            return Ok(item.Id.ToString());
+        }
+
+        
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -308,7 +398,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         public async Task<ApiResult<string>> AmlakPrivateDocHistoryStore( AmlakPrivateDocHistoryStoreVm param){
             await CheckUserAuth(_db);
             
-            if (param.Type != "general" && param.Type != "seizure" && param.Type != "license" && param.Type != "completion"){
+            if (param.Type != "general" && param.Type != "seizure" && param.Type != "license" && param.Type != "completion"&& param.Type != "possession"){
                 return BadRequest("این نوع مجاز نمی باشد");
             }
             

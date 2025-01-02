@@ -9,7 +9,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
     public class AmlakPrivateGeneratingBaseModel {
         public int Decision{ get; set; }
         public string DecisionLetterNumber{ get; set; }
-        public string DecisionLetterDate{ get; set; }
         public int MunicipalityActionRequired{ get; set; }
         public int MunicipalityAction{ get; set; } 
         public string MunicipalityActionLetterNumber{ get; set; } 
@@ -18,8 +17,6 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public string LegalActionLetterNumber{ get; set; }
         public int UrbanPlanningPermitRequired{ get; set; }
         public string UrbanPlanningPermitNumber{ get; set; }
-        public string UrbanPlanningPermitDate{ get; set; }
-        public string UrbanPlanningPermitLetterDate{ get; set; }
         public string DocumentImage{ get; set; }
         public string ArchitecturalMapImage{ get; set; }
         public string SurveyMapImage{ get; set; }
@@ -28,13 +25,11 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
         public int ActionHistory{ get; set; }
         public int FollowUpSentTo1{ get; set; }
         public string LetterNumber1{ get; set; }
-        public string LetterDate1{ get; set; }
         public int FollowUpSentTo2{ get; set; }
         public string LetterNumber2{ get; set; }
-        public string LetterDate2{ get; set; }
         public int FollowUpSentTo3{ get; set; }
         public string LetterNumber3{ get; set; }
-        public string LetterDate3{ get; set; }
+
     }
 
     public class AmlakPrivateGeneratingListVm : AmlakPrivateGeneratingBaseModel {
@@ -47,12 +42,18 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
     public class AmlakPrivateGeneratingReadVm : AmlakPrivateGeneratingBaseModel {
         public int Id{ get; set; }
-        public string UrbanPlanningPermitDateFa{ get; set; }
-        public string UrbanPlanningPermitLetterDateFa{ get; set; }
-        public string LetterDate1Fa{ get; set; }
-        public string LetterDate2Fa{ get; set; }
-        public string LetterDate3Fa{ get; set; }
+        public DateTime? DecisionLetterDate{ get; set; }
         public string DecisionLetterDateFa{ get; set; }
+        public DateTime? UrbanPlanningPermitDate{ get; set; }
+        public string UrbanPlanningPermitDateFa{ get; set; }
+        public DateTime? UrbanPlanningPermitLetterDate{ get; set; }
+        public string UrbanPlanningPermitLetterDateFa{ get; set; }
+        public DateTime? LetterDate1{ get; set; }
+        public string LetterDate1Fa{ get; set; }
+        public DateTime? LetterDate2{ get; set; }
+        public string LetterDate2Fa{ get; set; }
+        public DateTime? LetterDate3{ get; set; }
+        public string LetterDate3Fa{ get; set; }
         public string CreatedAtFa{ get; set; }
         public string UpdatedAtFa{ get; set; }
         public AmlakPrivateListVm AmlakPrivate{ get; set; }
@@ -61,10 +62,22 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakPrivate {
 
     public class AmlakPrivateGeneratingUpdateVm : AmlakPrivateGeneratingBaseModel {
         public int Id{ get; set; }
+        public string DecisionLetterDate{ get; set; }
+        public string UrbanPlanningPermitDate{ get; set; }
+        public string UrbanPlanningPermitLetterDate{ get; set; }
+        public string LetterDate1{ get; set; }
+        public string LetterDate2{ get; set; }
+        public string LetterDate3{ get; set; }
     }
 
     public class AmlakPrivateGeneratingStoreVm : AmlakPrivateGeneratingBaseModel {
         public int AmlakPrivateId{ get; set; }
+        public string DecisionLetterDate{ get; set; }
+        public string UrbanPlanningPermitDate{ get; set; }
+        public string UrbanPlanningPermitLetterDate{ get; set; }
+        public string LetterDate1{ get; set; }
+        public string LetterDate2{ get; set; }
+        public string LetterDate3{ get; set; }
     }
 
 

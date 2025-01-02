@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ using SharpKml.Dom;
 using SharpKml.Engine;
 using System.IO;
 using System.IO.Compression;
+using System.Text.Json;
 using SharpKml.Base;
 using TimeSpan = System.TimeSpan;
 
@@ -29,7 +31,70 @@ namespace NewsWebsite.Common {
 
 public static class Helpers {
 
+    public static string ReqAll(this HttpContext context){
+        object objs = new{};
 
+        if (context.Request.HasFormContentType){
+            objs = CombineObjects(objs, new{form=context.Request.Form});
+        }
+        
+        objs = CombineObjects(objs, new{query=context.Request.Query});
+        
+        try{
+            string body;
+            JsonDocument jsonDoc = null;
+            context.Request.EnableBuffering();
+    
+            if (context.Request.Body.CanSeek){
+                context.Request.Body.Position = 0;
+            }
+    
+            using (var reader = new StreamReader(context.Request.Body, leaveOpen: true)){
+                body = reader.ReadToEndAsync().Result;
+            }
+
+            var obj2 = JsonConvert.DeserializeObject<ExpandoObject>(body);
+            
+            objs = CombineObjects(objs, new{body= obj2 });
+            
+            // Reset the position to allow subsequent reads
+            context.Request.Body.Position = 0;
+        }
+        catch (Exception ){
+            // ignored
+        }
+
+        
+        return JsonConvert.SerializeObject(objs, Formatting.Indented);
+        // return objs;
+    }
+    
+    
+    public static object CombineObjects(object? obj1, object? obj2){
+        if (obj1 == null && obj2 == null){
+            return new{ };
+        }
+
+        var combined = new ExpandoObject() as IDictionary<string, object>;
+
+        if (obj1 != null){
+            var properties1 = obj1.GetType().GetProperties();
+            foreach (var prop in properties1){
+                combined[prop.Name] = prop.GetValue(obj1);
+            }
+        }
+
+        if (obj2 != null){
+            var properties2 = obj2.GetType().GetProperties();
+            foreach (var prop in properties2){
+                combined[prop.Name] = prop.GetValue(obj2);
+            }
+        }
+
+        return combined;
+    }
+    
+    
     public static string? dd(object? obj, bool asJson = true, bool retun = false){
         string msg;
 
