@@ -81,5 +81,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.AmlakAdmin {
         public int Id{ get; set; }
         public string Message{ get; set; }
     }
+    
+    
+    public class AmlakAdminTicket {
+        public int Id{ get; set; }
+        public string FirstName{ get; set; }
+        public string LastName{ get; set; }
+    }
 
 }

@@ -17,7 +17,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
     public class EnhancedController:ControllerBase {
         public async Task<AmlakAdmin> CheckUserAuth(ProgramBuddbContext _db){
             if (Request.Headers != null && Request.Headers["Referer"].ToString()!.Contains("swagger")){
-                return new AmlakAdmin(); // Return a default AmlakAdmin object for Swagger.
+                return await _db.AmlakAdmins.FirstOrDefaultAsync(); // Return a default AmlakAdmin object for Swagger.
             }
             
             var authHeader = Request.Headers["Authorization"].ToString();

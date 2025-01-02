@@ -12,6 +12,7 @@ using NewsWebsite.Data.Models.AmlakAgreement;
 using NewsWebsite.Data.Models.AmlakArchive;
 using NewsWebsite.Data.Models.AmlakInfo;
 using NewsWebsite.Data.Models.AmlakPrivate;
+using NewsWebsite.Data.Models.AmlakTicket;
 using NewsWebsite.Data.Models.LogRequest;
 using NewsWebsite.ViewModels.Api.Contract.AmlakAgreement;
 using NewsWebsite.ViewModels.Api.Contract.AmlakArchive;
@@ -82,6 +83,9 @@ namespace NewsWebsite.Data
         public virtual DbSet<AmlakLog> AmlakLogs { get; set; }
         public virtual DbSet<AmlakAdmin> AmlakAdmins { get; set; }
         public virtual DbSet<AmlakAttach> AmlakAttachs { get; set; }
+        public virtual DbSet<AmlakTicket> AmlakTickets { get; set; }
+        public virtual DbSet<AmlakTicketMessage> AmlakTicketMessages { get; set; }
+        public virtual DbSet<AmlakTicketAdmin> AmlakTicketAdmins { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
