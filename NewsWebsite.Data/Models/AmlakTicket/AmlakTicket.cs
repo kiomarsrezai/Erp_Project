@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Common;
 using NewsWebsite.ViewModels.Api.Public;
 using Newtonsoft.Json;
@@ -10,6 +11,7 @@ namespace NewsWebsite.Data.Models.AmlakTicket {
     [Table("tblAmlakTicket")]
     public class AmlakTicket:BaseModel
     {
+        public string UUID { get; set; }
         public string Title { get; set; } 
         public int AdminId { get; set; } 
         public int LastAdminId { get; set; } 
@@ -40,7 +42,10 @@ namespace NewsWebsite.Data.Models.AmlakTicket {
         }
         
         [NotMapped]
-        public string? StatusText{get{ return Helpers.UC(Status,"ticketStatus"); }}
+        public string? StatusText{get{ return Helpers.UC(Status,"TicketStatus"); }}
+        
+        [NotMapped]
+        public string? StatusColor{get{ return Helpers.UC(Status,"TicketStatusColor"); }}
         
         
         [NotMapped] // Prevent EF from mapping this property directly
@@ -64,6 +69,17 @@ namespace NewsWebsite.Data.Models.AmlakTicket {
 
     public static class TicketExtensions {
 
+        public static IQueryable<AmlakTicket> UUID(this IQueryable<AmlakTicket> query, string? value){
+            return query.Where(e => e.UUID == value);
+        }
+        
+        public static IQueryable<AmlakTicket> Title(this IQueryable<AmlakTicket> query, string? value){
+            if (BaseModel.CheckParameter(value,"")){
+                return query.Where(a => EF.Functions.Like(a.Title, $"%{value}%"));
+            }
+            return query;
+        }
+        
         public static IQueryable<AmlakTicket> AdminId(this IQueryable<AmlakTicket> query, int? value){
             if (BaseModel.CheckParameter(value,0)){
                 return query.Where(e => e.AdminId == value);

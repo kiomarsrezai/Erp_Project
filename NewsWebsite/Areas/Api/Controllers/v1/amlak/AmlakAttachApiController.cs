@@ -14,6 +14,7 @@ using RestSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
  
             // todo:check existing in DB
 
+           return await DoUpload(fileUpload);
+        }
+
+        [NonAction]
+        public async Task<ApiResult<string>> DoUpload(AmlakAttachUploadVm fileUpload){
             string fileName = await UploadHelper.UploadFile(fileUpload.FormFile, fileUpload.TargetType+"/" + fileUpload.TargetId);
             if (fileName != ""){
                 var item = new AmlakAttach();
@@ -71,9 +77,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 return BadRequest("!فایل نامعتبر می باشد");
             }
             
-
-
             return Ok("موفق");
+
         }
 
         [Route("Files")]
@@ -94,7 +99,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
 
 
             foreach (var item in finalItems){
-                item.FileName = "/Upload/"+targetType+"/" +targetId+"/"+ item.FileName;
+                item.FileName = "/Upload/"+targetType+"/" +targetId+"/"+ item.FileName; // todo :remove. FullPath should be use instead
             }
             
             return Ok(finalItems);
@@ -128,14 +133,14 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
         }
 
            
-        [Route("File/Delete")]
-        [HttpDelete]
-        public async Task<ApiResult<string>>EditDelete(int fileId){
+        [Route("File/Delete/")]
+        [HttpPost]
+        public async Task<ApiResult<string>>EditDelete([FromBody] AmlakAttachDeleteVm param){
             await CheckUserAuth(_db);
-
-            if (fileId == 0) BadRequest();
+            
+            if (param.FileId == 0) BadRequest();
         
-            var item = await _db.AmlakAttachs.Where(a => a.Id == fileId).FirstOrDefaultAsync();
+            var item = await _db.AmlakAttachs.Where(a => a.Id == param.FileId).FirstOrDefaultAsync();
             if (item == null)
                 return BadRequest("خطا");
 

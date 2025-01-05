@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using AutoMapper;
 using Coravel;
@@ -6,6 +7,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -82,6 +84,16 @@ namespace NewsWebsite
         {
             app.UseCors(options => options.WithOrigins("*").AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+            var defaultCulture = new CultureInfo("en-US"); // Change to the desired culture
+            var supportedCultures = new[] { defaultCulture };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(defaultCulture),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+            
             var cachePeriod = env.IsDevelopment() ? "600" : "605800";
             app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
             {

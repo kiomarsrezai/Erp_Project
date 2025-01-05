@@ -281,6 +281,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
             if (admin == null)
                 return BadRequest("UnAuthenticated");
 
+            
+            var ticketCountTodo = await _db.AmlakTickets.Where(a => a.LastAdminId == admin.Id).CountAsync();
+            
             // todo check expire token date
             var adminData = new{
                 Id=admin.Id,
@@ -289,6 +292,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak {
                 UserName=admin.UserName,
                 Bio=admin.Bio,
                 AmlakLisence=admin.AmlakLisence,
+                TicketCountTodo=ticketCountTodo,
             };
             
             return Ok(adminData);

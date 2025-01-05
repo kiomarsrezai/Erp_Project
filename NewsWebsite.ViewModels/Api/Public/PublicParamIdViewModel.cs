@@ -8,4 +8,9 @@ namespace NewsWebsite.ViewModels.Api.Public
     {
         public int Id { get; set; }
     }
+    
+    public class PublicParamUUIDViewModel
+    {
+        public string UUID { get; set; }
+    }
 }

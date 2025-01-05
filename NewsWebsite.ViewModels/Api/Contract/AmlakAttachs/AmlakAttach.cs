@@ -15,6 +15,12 @@ namespace NewsWebsite.ViewModels.Api.Contract.amlakAttachs {
         public string FileName{ get; set; }
         public string FileTitle{ get; set; }
         public string Type{ get; set; }
+        
+          
+        [NotMapped]
+        public string? FullPath{get{ return  "/Upload/"+TargetType+"/" +TargetId+"/"+ FileName;; }}
+
+        
     }
 
     
@@ -31,19 +37,35 @@ namespace NewsWebsite.ViewModels.Api.Contract.amlakAttachs {
     public class AmlakAttachsListVm : AmlakAttachsBaseModel {
         public int Id{ get; set; }
         public string FileName{ get; set; }
+        public string FullPath{ get; set; }
     }
 
     public class AmlakAttachUploadVm : AmlakAttachsBaseModel {
         public IFormFile FormFile{ get; set; }
     }
     
-    
+    public class AmlakAttachDeleteVm  {
+        public int FileId{ get; set; }
+    }
     
     public static class AmlakAttachsExtensions {
 
         public static IQueryable<AmlakAttach> Type(this IQueryable<AmlakAttach> query, string? value){
             if (BaseModel.CheckParameter(value,"")){
                 return query.Where(e => e.Type == value);
+            }
+            return query;
+        }
+        public static IQueryable<AmlakAttach> TargetType(this IQueryable<AmlakAttach> query, string? value){
+            if (BaseModel.CheckParameter(value,"")){
+                return query.Where(e => e.TargetType == value);
+            }
+            return query;
+        }
+        
+        public static IQueryable<AmlakAttach> TargetId(this IQueryable<AmlakAttach> query, int? value){
+            if (BaseModel.CheckParameter(value,"")){
+                return query.Where(e => e.TargetId == value);
             }
             return query;
         }
