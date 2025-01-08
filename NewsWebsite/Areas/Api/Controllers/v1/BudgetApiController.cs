@@ -279,6 +279,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         fetchView.levelNumber = int.Parse(dataReader["levelNumber"].ToString());
                         fetchView.Crud = bool.Parse(dataReader["Crud"].ToString());
                         fetchView.CodingKindId = int.TryParse(dataReader["CodingKindId"].ToString(), out var result) ? result : 0;
+                        fetchView.Scope = int.Parse(dataReader["Scope"].ToString());
+                        fetchView.Stability = int.Parse(dataReader["Stability"].ToString());
+                        fetchView.PublicConsumptionPercent = int.Parse(dataReader["PublicConsumptionPercent"].ToString());
+                        fetchView.PrivateConsumptionPercent = int.Parse(dataReader["PrivateConsumptionPercent"].ToString());
 
 
                         fecthViewModel.Add(fetchView);
@@ -306,6 +310,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("description", param.description);
                     sqlCommand.Parameters.AddWithValue("levelNumber", param.levelNumber);
                     sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
+                    sqlCommand.Parameters.AddWithValue("Scope", param.Scope);
+                    sqlCommand.Parameters.AddWithValue("Stability", param.Stability);
+                    sqlCommand.Parameters.AddWithValue("PublicConsumptionPercent", param.PublicConsumptionPercent);
+                    sqlCommand.Parameters.AddWithValue("PrivateConsumptionPercent", param.PrivateConsumptionPercent);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
@@ -360,6 +368,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("crud", budgetCodingUpdate.crud);
                     sqlCommand.Parameters.AddWithValue("levelNumber", budgetCodingUpdate.levelNumber);
                     sqlCommand.Parameters.AddWithValue("description", budgetCodingUpdate.description);
+                    sqlCommand.Parameters.AddWithValue("Scope", budgetCodingUpdate.Scope);
+                    sqlCommand.Parameters.AddWithValue("Stability", budgetCodingUpdate.Stability);
+                    sqlCommand.Parameters.AddWithValue("PublicConsumptionPercent", budgetCodingUpdate.PublicConsumptionPercent);
+                    sqlCommand.Parameters.AddWithValue("PrivateConsumptionPercent", budgetCodingUpdate.PrivateConsumptionPercent);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())

@@ -341,6 +341,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
                     sqlCommand.Parameters.AddWithValue("Code", param.Code);
                     sqlCommand.Parameters.AddWithValue("Description", param.Description);
+                    sqlCommand.Parameters.AddWithValue("Scope", param.Scope);
+                    sqlCommand.Parameters.AddWithValue("Stability", param.Stability);
+                    sqlCommand.Parameters.AddWithValue("PublicConsumptionPercent", param.PublicConsumptionPercent);
+                    sqlCommand.Parameters.AddWithValue("PrivateConsumptionPercent", param.PrivateConsumptionPercent);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
                     while (dataReader.Read())
