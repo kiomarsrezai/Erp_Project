@@ -11,6 +11,7 @@ using NewsWebsite.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using NewsWebsite.Data.Models;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -18,7 +19,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class BudgetAreaShareApiController : Controller
+    public class BudgetAreaShareApiController : EnhancedBudgetController
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
@@ -152,6 +153,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             await _db.SaveChangesAsync();
             
+            await SaveLogAsync(_db, 0, TargetTypesBudgetLog.AreaShare, "ویرایش سهم بودجه شناسه : "+param.Id 
+                                                                                          +" درآمد:"+param.ShareProcessId1
+                                                                                          +" هزینه ای:"+param.ShareProcessId2
+                                                                                          +" تملک سرمایه ای:"+param.ShareProcessId3
+                                                                                          +" تملک مالی:"+param.ShareProcessId4
+                , "");
+
             return Ok("انجام شد");
         }
 

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using NewsWebsite.Data;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -16,13 +18,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class VasetApiController : Controller
+    public class VasetApiController : EnhancedBudgetController
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
-        public VasetApiController(IUnitOfWork uw,IConfiguration configuration)
+        private readonly ProgramBuddbContext _db;
+
+        public VasetApiController(IUnitOfWork uw,IConfiguration configuration,ProgramBuddbContext db)
         {
             _config = configuration;
+            _db = db;
             _uw = uw;
         }
 
@@ -126,6 +131,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
+            await SaveLogAsync(_db, id, TargetTypesBudgetLog.VasetAcc, "اضافه کردن کد حسابداری  "+id  , "");
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -150,6 +157,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
+            
+            await SaveLogAsync(_db, id, TargetTypesBudgetLog.VasetAcc, "خالی کردن کد های حسابداری " , "");
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -168,7 +178,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Close();
                 }
             }
-       
+            await SaveLogAsync(_db, id, TargetTypesBudgetLog.VasetAcc, "حذف کدینگ واسط " , "");
+
             return Ok("با موفقیت انجام شد");
         }
         
@@ -187,7 +198,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Close();
                 }
             }
-       
+            await SaveLogAsync(_db, 0, TargetTypesBudgetLog.VasetAcc, "حذف کدینگ های واسط "+ids , "");
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -211,11 +223,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("titleAcc", model.titleAcc);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         SqlDataReader dataReader =await sqlCommand.ExecuteReaderAsync();
-                        TempData["notification"] = "ویرایش با موفقیت انجام شد";
+                        // TempData["notification"] = "ویرایش با موفقیت انجام شد";
                     }
                 }
 
              }
+            await SaveLogAsync(_db, model.id, TargetTypesBudgetLog.VasetAcc, "اتصال کد حسابداری "+model.id + " منطقه "+model.areaId , "");
+
             return Ok("با موفقیت انجام شد");
             
         }

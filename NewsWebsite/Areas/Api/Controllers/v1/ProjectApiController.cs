@@ -16,6 +16,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Threading.Tasks;
+using NewsWebsite.Data;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -23,14 +25,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class ProjectApiController : Controller
+    public class ProjectApiController : EnhancedBudgetController
     {
         public readonly IConfiguration _config;
+        private readonly ProgramBuddbContext _db;
         public readonly IUnitOfWork _uw;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ProjectApiController(IUnitOfWork uw, IConfiguration config)
+        public ProjectApiController(IUnitOfWork uw, IConfiguration config,ProgramBuddbContext db)
         {
             _config = config;
+            _db = db;
             _uw = uw;
         }
 
@@ -119,6 +123,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
+            
+            await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Project, "افزودن کارت چارت پروژه شناسه "+id, "");
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -142,6 +149,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
+            await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Project, "بروزرسانی کارت چارت پروژه شناسه "+param.Id + " نام : "+param.projectName + " کد: "+param.projectCode, "");
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -162,6 +171,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Close();
                 }
             }
+            await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Project, "حذف کارت چارت پروژه شناسه "+param.Id , "");
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -252,8 +263,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     sqlconnect.Close();
                 }
             }
-            if (string.IsNullOrEmpty(readercount))
+
+            if (string.IsNullOrEmpty(readercount)){
+                
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Project, "افزودن پروژه "+param.ProjectName , "");
+
                 return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -283,8 +299,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount))
+
+            if (string.IsNullOrEmpty(readercount)){
+                
+                await SaveLogAsync(_db, param.Id, TargetTypesBudgetLog.Project, "ویرایش پروژه "+param.ProjectName , "");
+
                 return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -309,8 +330,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount))
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, param.Id, TargetTypesBudgetLog.Project, "حذف پروژه " , "");
+   
                 return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }

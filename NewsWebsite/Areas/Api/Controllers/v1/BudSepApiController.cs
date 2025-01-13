@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using NewsWebsite.Data;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -19,14 +21,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class BudSepApiController : Controller
+    public class BudSepApiController : EnhancedBudgetController
     {
         public readonly IUnitOfWork _uw;
         public readonly IConfiguration _configuration;
+        private readonly ProgramBuddbContext _db;
         public readonly ISqlDataAccess _sqlDataAccess;
-        public BudSepApiController(IUnitOfWork uw, IConfiguration configuration)
+        public BudSepApiController(IUnitOfWork uw, IConfiguration configuration,ProgramBuddbContext db)
         {
             _configuration = configuration;
+            _db = db;
             _uw = uw;
         }
 
@@ -101,7 +105,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
         [Route("RefreshSeperator")]
         [HttpGet]
-        public async Task<ApiResult> RefreshSeprator(RefreshFormViewModel refreshFormViewModel)
+        public async Task<ApiResult<string>> RefreshSeprator(RefreshFormViewModel refreshFormViewModel)
         {
             if (refreshFormViewModel.yearId == 32)
             {
@@ -113,7 +117,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("areaId", refreshFormViewModel.areaId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         await sqlCommand.ExecuteReaderAsync();
-                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                        // ViewBag.alertsucces = "بروزرسانی انجام شد";
                     }
                     sqlconnect.Close();
                 }
@@ -129,7 +133,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("areaId", refreshFormViewModel.areaId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         sqlCommand.ExecuteReader();
-                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                        // ViewBag.alertsucces = "بروزرسانی انجام شد";
                     }
                     sqlconnect.Close();
                 }
@@ -145,7 +149,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlCommand.Parameters.AddWithValue("areaId", refreshFormViewModel.areaId);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         sqlCommand.ExecuteReader();
-                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                        // ViewBag.alertsucces = "بروزرسانی انجام شد";
                     }
                     sqlconnect.Close();
                 }
@@ -157,12 +161,13 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         sqlconnect.Open();
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         sqlCommand.ExecuteReader();
-                        ViewBag.alertsucces = "بروزرسانی انجام شد";
+                        // ViewBag.alertsucces = "بروزرسانی انجام شد";
                     }
                     sqlconnect.Close();
                 }
             }
-            return Ok();
+            
+            return Ok("با موفقیت انجام شد");
         }
 
         [Route("TaminInsert")]
@@ -328,35 +333,35 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             return Ok(dataModel);
         }
 
-        [Route("CodingUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgetSepratorAreaProjectModal_Update([FromBody] CodingUpdateParamViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_Coding_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
-                    sqlCommand.Parameters.AddWithValue("Code", param.Code);
-                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
-                    sqlCommand.Parameters.AddWithValue("Scope", param.Scope);
-                    sqlCommand.Parameters.AddWithValue("Stability", param.Stability);
-                    sqlCommand.Parameters.AddWithValue("PublicConsumptionPercent", param.PublicConsumptionPercent);
-                    sqlCommand.Parameters.AddWithValue("PrivateConsumptionPercent", param.PrivateConsumptionPercent);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
+        // [Route("CodingUpdate")]
+        // [HttpPost]
+        // public async Task<ApiResult<string>> BudgetSepratorAreaProjectModal_Update([FromBody] CodingUpdateParamViewModel param)
+        // {
+        //     string readercount = null;
+        //     using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //     {
+        //         using (SqlCommand sqlCommand = new SqlCommand("SP002_Coding_Update", sqlconnect))
+        //         {
+        //             sqlconnect.Open();
+        //             sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+        //             sqlCommand.Parameters.AddWithValue("Code", param.Code);
+        //             sqlCommand.Parameters.AddWithValue("Description", param.Description);
+        //             sqlCommand.Parameters.AddWithValue("Scope", param.Scope);
+        //             sqlCommand.Parameters.AddWithValue("Stability", param.Stability);
+        //             sqlCommand.Parameters.AddWithValue("PublicConsumptionPercent", param.PublicConsumptionPercent);
+        //             sqlCommand.Parameters.AddWithValue("PrivateConsumptionPercent", param.PrivateConsumptionPercent);
+        //             sqlCommand.CommandType = CommandType.StoredProcedure;
+        //             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //             while (dataReader.Read())
+        //             {
+        //                 if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+        //             }
+        //         }
+        //     }
+        //     if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+        //     else
+        //         return BadRequest(readercount);
+        // }
 
         [Route("BudgetSepratorAreaProjectModal2")]
         [HttpGet]
@@ -408,11 +413,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
+                    dataReader.Close();
                 }
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    var obj = await getCodingBaseBDP(sqlconnect, modalUpdateViewModel.BudgetDetailPrjectId);
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "ویرایش پروژه ردیف بودجه برای سال "+ obj.YearId, obj.Code);
+                    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgetSepratorDepartmantRead")]
@@ -599,34 +612,34 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         }
 
 
-        [Route("CodingManualUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> AC_CodingManualUpdate([FromBody] CodingManualUpdate param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_EditCodingManual", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
-                    sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
-                    sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
-                    sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
-                    sqlCommand.Parameters.AddWithValue("Code", param.Code);
-                    sqlCommand.Parameters.AddWithValue("Description", param.Description);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
+        // [Route("CodingManualUpdate")]
+        // [HttpPost]
+        // public async Task<ApiResult<string>> AC_CodingManualUpdate([FromBody] CodingManualUpdate param)
+        // {
+        //     string readercount = null;
+        //     using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //     {
+        //         using (SqlCommand sqlCommand = new SqlCommand("SP002_EditCodingManual", sqlconnect))
+        //         {
+        //             sqlconnect.Open();
+        //             sqlCommand.Parameters.AddWithValue("YearId", param.YearId);
+        //             sqlCommand.Parameters.AddWithValue("AreaId", param.AreaId);
+        //             sqlCommand.Parameters.AddWithValue("BudgetProcessId", param.BudgetProcessId);
+        //             sqlCommand.Parameters.AddWithValue("CodingId", param.CodingId);
+        //             sqlCommand.Parameters.AddWithValue("Code", param.Code);
+        //             sqlCommand.Parameters.AddWithValue("Description", param.Description);
+        //             sqlCommand.CommandType = CommandType.StoredProcedure;
+        //             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //             while (dataReader.Read())
+        //             {
+        //                 if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+        //             }
+        //         }
+        //     }
+        //     if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+        //     else
+        //         return BadRequest(readercount);
+        // }
 
 
         [Route("MosavabManualModal")]
@@ -663,34 +676,34 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             return Ok(fecthViewModel);
         }
-
-
-        [Route("MosavabManualUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> AC_MosavabManualUpdate([FromBody] MosavabManualUpdateViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP002_EditMosavabManual", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
-                    sqlCommand.Parameters.AddWithValue("BudgetDetailId", param.BudgetDetailId);
-                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectId", param.BudgetDetailProjectId);
-                    sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaId", param.BudgetDetailProjectAreaId);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
+        //
+        //
+        // [Route("MosavabManualUpdate")]
+        // [HttpPost]
+        // public async Task<ApiResult<string>> AC_MosavabManualUpdate([FromBody] MosavabManualUpdateViewModel param)
+        // {
+        //     string readercount = null;
+        //     using (SqlConnection sqlconnect = new SqlConnection(_configuration.GetConnectionString("SqlErp")))
+        //     {
+        //         using (SqlCommand sqlCommand = new SqlCommand("SP002_EditMosavabManual", sqlconnect))
+        //         {
+        //             sqlconnect.Open();
+        //             sqlCommand.Parameters.AddWithValue("Mosavab", param.Mosavab);
+        //             sqlCommand.Parameters.AddWithValue("BudgetDetailId", param.BudgetDetailId);
+        //             sqlCommand.Parameters.AddWithValue("BudgetDetailProjectId", param.BudgetDetailProjectId);
+        //             sqlCommand.Parameters.AddWithValue("BudgetDetailProjectAreaId", param.BudgetDetailProjectAreaId);
+        //             sqlCommand.CommandType = CommandType.StoredProcedure;
+        //             SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
+        //             while (dataReader.Read())
+        //             {
+        //                 if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+        //             }
+        //         }
+        //     }
+        //     if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+        //     else
+        //         return BadRequest(readercount);
+        // }
 
 
         [Route("BudgetSepratorAbstractAreaModal")]

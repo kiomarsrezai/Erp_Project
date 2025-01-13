@@ -22,13 +22,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiResultFilter]
     [ApiVersion("1")]
-    public class UsersApiController : ControllerBase
+    public class UsersApiController : EnhancedBudgetController
     {
         private readonly IApplicationUserManager _userManager;
         private readonly IApplicationRoleManager _roleManager;
@@ -120,41 +121,47 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                 return Ok(user);
         }
 
-        [HttpPost("[Action]")]
-        [AllowAnonymous]
-        public virtual async Task<ApiResult<UserSignViewModel>> SignIn([FromBody] SignInBaseViewModel ViewModel)
-        {
-
-            var User = await _userManager.FindByNameAsync(ViewModel.UserName);
-
-            if (User == null)
-                return BadRequest(" نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
-            else
-            {
-                User.Token = await _jwtService.GenerateTokenAsync(User);
-                await _userManager.UpdateAsync(User);
-
-                UserSignViewModel userSignView = new UserSignViewModel()
-                {
-                    Id = User.Id,
-                    FirstName = User.FirstName,
-                    LastName = User.LastName,
-                    Lisence = User.Lisence,
-                    AmlakLisence = User.AmlakLisence,
-                    SectionId = User.SectionId,
-                    SectionName = await _uw.AreaNameByIdAsync(User.SectionId),
-                    Token = User.Token,
-                    UserName = User.UserName,
-                    Bio = User.Bio,
-                    DateNow = DateTime.Now.ToShortDateString()
-                };
-                var result = await _userManager.CheckPasswordAsync(User, ViewModel.Password);
-                if (result)
-                    return Ok(userSignView);
-                else
-                    return BadRequest("شماره موبایل یا کلمه عبور شما صحیح نمی باشد.");
-            }
-        }
+        // [HttpPost("[Action]")]
+        // [AllowAnonymous]
+        // public virtual async Task<ApiResult<UserSignViewModel>> SignIn([FromBody] SignInBaseViewModel ViewModel)
+        // {
+        //
+        //     var User = await _userManager.FindByNameAsync(ViewModel.UserName);
+        //
+        //     if (User == null)
+        //         return BadRequest(" نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
+        //     else
+        //     {
+        //         User.Token = await _jwtService.GenerateTokenAsync(User);
+        //         await _userManager.UpdateAsync(User);
+        //
+        //         UserSignViewModel userSignView = new UserSignViewModel()
+        //         {
+        //             Id = User.Id,
+        //             FirstName = User.FirstName,
+        //             LastName = User.LastName,
+        //             Lisence = User.Lisence,
+        //             AmlakLisence = User.AmlakLisence,
+        //             SectionId = User.SectionId,
+        //             SectionName = await _uw.AreaNameByIdAsync(User.SectionId),
+        //             Token = User.Token,
+        //             UserName = User.UserName,
+        //             Bio = User.Bio,
+        //             DateNow = DateTime.Now.ToShortDateString()
+        //         };
+        //         var result = await _userManager.CheckPasswordAsync(User, ViewModel.Password);
+        //         if (result){
+        //             await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "ورود موفق به حساب "+ViewModel.UserName , "");
+        //
+        //             return Ok(userSignView);
+        //         }
+        //         else{
+        //             await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "ورود ناموفق به حساب "+ViewModel.UserName , "");
+        //
+        //             return BadRequest("شماره موبایل یا کلمه عبور شما صحیح نمی باشد.");
+        //         }
+        //     }
+        // }
 
         
         
@@ -164,8 +171,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         {
             var User = await _Context.Users.Where(c=>c.UserName==ViewModel.UserName).FirstOrDefaultAsync();
 
-            if (User == null)
+            if (User == null){
+                await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "تلاش ناموفق برای ورود به حساب "+ViewModel.UserName , "");
+
                 return BadRequest(" نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
+            }
             
             if (!User.IsActive)
                 return BadRequest(" حساب شما غیرفعال می باشد.");
@@ -184,9 +194,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             };
             var passVerifyResult = new PasswordHasher<UserSignViewModel>().VerifyHashedPassword(null, User.PasswordHash, ViewModel.Password);
             if (passVerifyResult!=PasswordVerificationResult.Success){ // todo: check hash
+                await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "تلاش ناموفق (رمز غلط) برای ورود به حساب "+ViewModel.UserName , "");
                 return BadRequest(" نام کاربری یا کلمه عبور شما صحیح نمی باشد.");
             }
             //     
+            await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "ورود موفق به حساب "+ViewModel.UserName , "");
+
             await _Context.SaveChangesAsync();
             
             return Ok(userSignView);
@@ -203,27 +216,30 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
 
             var changePassResult = await _userManager.ChangePasswordAsync(user, ViewModel.OldPassword, ViewModel.NewPassword);
 
-            if (changePassResult.Succeeded)
+            if (changePassResult.Succeeded){
+                await SaveLogAsync(_Context, ViewModel.Id, TargetTypesBudgetLog.User, "تغییر رمز عبور کاربر "+ViewModel.Id , "");
+   
                 return Ok("موفق");
+            }
             else
                 return BadRequest("ناموفق");
         }
 
 
-        [Route("ForgetPassword")]
-        [HttpPost]
-        public virtual async Task<ApiResult<string>> ForgetPassword([FromBody] ResetPasswordViewModel ViewModel)
-        {
-            var user = await _Context.Users.FirstOrDefaultAsync(x => x.PhoneNumber == ViewModel.PhoneNumber);
-            if (user == null)
-                return BadRequest("");
-
-            //ارسال رمز عبور که رندوم ساخته شد
-            string pass = "Aa54321";
-            //ارسال پیام برای شخص
-
-            return Ok(pass);
-        }
+        // [Route("ForgetPassword")]
+        // [HttpPost]
+        // public virtual async Task<ApiResult<string>> ForgetPassword([FromBody] ResetPasswordViewModel ViewModel)
+        // {
+        //     var user = await _Context.Users.FirstOrDefaultAsync(x => x.PhoneNumber == ViewModel.PhoneNumber);
+        //     if (user == null)
+        //         return BadRequest("");
+        //
+        //     //ارسال رمز عبور که رندوم ساخته شد
+        //     string pass = "Aa54321";
+        //     //ارسال پیام برای شخص
+        //
+        //     return Ok(pass);
+        // }
 
         [HttpPost("GetUserByTocken")]
         [AllowAnonymous]
@@ -265,6 +281,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             var user = await _Context.Users.FirstOrDefaultAsync(x => x.Id == lisence.Id);
             user.Lisence = lisence.Lisence;
             await _Context.SaveChangesAsync();
+            await SaveLogAsync(_Context, lisence.Id, TargetTypesBudgetLog.User, "تغییر دسترسی های کاربر "+lisence.Id , "");
+
             return Ok("با موفقیت انجام شد");
         }
 
@@ -340,43 +358,46 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         //    else
         //        return BadRequest(readercount);
         //}
-
-        [HttpPost("EmployeeInsert")]
-        public async Task<ApiResult<string>> Create([FromBody] UserInsertViewModel viewModel)
-        {
-            if (viewModel.UserName == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
-            // validation
-            var roleresult = await _roleManager.FindByNameAsync("کاربر");
-                if (roleresult == null)
-                    await _roleManager.CreateAsync(new Role("کاربر"));
-            var user = new User
-            {
-                UserName = viewModel.UserName,
-                Bio = viewModel.Bio,
-                Email = null,
-                BirthDate = DateTime.Now,
-                RegisterDateTime = DateTime.Now,
-                IsActive = true,
-                SectionId = 9,
-                FirstName = viewModel.FirstName,
-                LastName = viewModel.LastName,
-            };
-
-            IdentityResult result = await _userManager.CreateAsync(user,"abc123");
-
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, "کاربر");
-
-                byte[] passwordHash, passwordSalt;
-                _userManager.CreatePasswordHash("abc123", out passwordHash, out passwordSalt);
-
-                await _Context.Users.AddAsync(user);
-                _Context.SaveChanges();
-
-            }
-            return Ok("کاربر با موفقیت ایجاد شد");
-        }
+        //
+        // [HttpPost("EmployeeInsert")]
+        // public async Task<ApiResult<string>> Create([FromBody] UserInsertViewModel viewModel)
+        // {
+        //     if (viewModel.UserName == null) BadRequest("پارامترهای ارسالی نامعتبر می باشد");
+        //     // validation
+        //     var roleresult = await _roleManager.FindByNameAsync("کاربر");
+        //         if (roleresult == null)
+        //             await _roleManager.CreateAsync(new Role("کاربر"));
+        //     var user = new User
+        //     {
+        //         UserName = viewModel.UserName,
+        //         Bio = viewModel.Bio,
+        //         Email = null,
+        //         BirthDate = DateTime.Now,
+        //         RegisterDateTime = DateTime.Now,
+        //         IsActive = true,
+        //         SectionId = 9,
+        //         FirstName = viewModel.FirstName,
+        //         LastName = viewModel.LastName,
+        //     };
+        //
+        //     IdentityResult result = await _userManager.CreateAsync(user,"abc123");
+        //
+        //     if (result.Succeeded)
+        //     {
+        //         await _userManager.AddToRoleAsync(user, "کاربر");
+        //
+        //         byte[] passwordHash, passwordSalt;
+        //         _userManager.CreatePasswordHash("abc123", out passwordHash, out passwordSalt);
+        //
+        //         await _Context.Users.AddAsync(user);
+        //         _Context.SaveChanges();
+        //
+        //     }
+        //     
+        //     await SaveLogAsync(_Context, user.Id, TargetTypesBudgetLog.User, "ایجاد کاربر "+viewModel.UserName , "");
+        //
+        //     return Ok("کاربر با موفقیت ایجاد شد");
+        // }
 
         [HttpPost("EmployeeInsertNew")]
         public async Task<ApiResult<string>> CreateNew([FromBody] UserInsertViewModel viewModel)
@@ -404,6 +425,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             _Context.Add(user);
             await _Context.SaveChangesAsync();
             
+            await SaveLogAsync(_Context, user.Id, TargetTypesBudgetLog.User, "ایجاد کاربر "+viewModel.UserName , "");
+
             return Ok("کاربر با موفقیت ایجاد شد");
         }
 
@@ -429,6 +452,15 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             await _Context.SaveChangesAsync();
             
+            await SaveLogAsync(_Context, user.Id, TargetTypesBudgetLog.User, "ویرایش کاربر "+viewModel.UserName +
+                                                                            " نام کاربری : "+viewModel.UserName+
+                                                                            " سمت : "+viewModel.Bio+
+                                                                            " نام : "+viewModel.FirstName+
+                                                                            " نام خانوادگی : "+viewModel.LastName+
+                                                                            " شماره تلفن : "+viewModel.PhoneNumber
+                , "");
+
+            
             return Ok("کاربر با موفقیت ویرایش شد");
         }
 
@@ -442,6 +474,8 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             await _Context.SaveChangesAsync();
             
+            await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "بازنشانی رمز کاربر "+User.UserName , "");
+
             return Ok("رمز عبور بازنشانی شد");
         }
 
@@ -455,58 +489,63 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             
             await _Context.SaveChangesAsync();
             
+            if(viewModel.isActive==1)
+                await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "فعال سازی کاربر "+User.UserName , "");
+            if(viewModel.isActive==0)
+                await SaveLogAsync(_Context, User.Id, TargetTypesBudgetLog.User, "غیرفعال سازی کاربر "+User.UserName , "");
+
             return Ok("وضعیت کاربر تغییر یافت");
         }
 
-        [HttpPost("UpdateUser")]
-        public void Update(User userParam)
-        {
-            var user = _Context.Users.Find(userParam.Id);
+        // [HttpPost("UpdateUser")]
+        // public void Update(User userParam)
+        // {
+        //     var user = _Context.Users.Find(userParam.Id);
+        //
+        //     if (user == null)
+        //         throw new Exception("User not found");
+        //
+        //     // update username if it has changed
+        //     if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
+        //     {
+        //         // throw error if the new username is already taken
+        //         if (_Context.Users.Any(x => x.UserName == userParam.UserName))
+        //             throw new Exception("Username " + userParam.UserName + " is already taken");
+        //
+        //         user.UserName = userParam.UserName;
+        //     }
+        //
+        //     // update user properties if provided
+        //     if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+        //         user.FirstName = userParam.FirstName;
+        //
+        //     if (!string.IsNullOrWhiteSpace(userParam.LastName))
+        //         user.LastName = userParam.LastName;
+        //
+        //     // update password if provided
+        //     //if (!string.IsNullOrWhiteSpace(password))
+        //     //{
+        //     //    byte[] passwordHash, passwordSalt;
+        //     //    _userManager.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+        //
+        //     //    user.passStoredHash = passwordHash;
+        //     //    user.passStoredSalt = passwordSalt;
+        //     //}
+        //
+        //     _Context.Users.Update(user);
+        //     _Context.SaveChanges();
+        // }
 
-            if (user == null)
-                throw new Exception("User not found");
-
-            // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
-            {
-                // throw error if the new username is already taken
-                if (_Context.Users.Any(x => x.UserName == userParam.UserName))
-                    throw new Exception("Username " + userParam.UserName + " is already taken");
-
-                user.UserName = userParam.UserName;
-            }
-
-            // update user properties if provided
-            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
-                user.FirstName = userParam.FirstName;
-
-            if (!string.IsNullOrWhiteSpace(userParam.LastName))
-                user.LastName = userParam.LastName;
-
-            // update password if provided
-            //if (!string.IsNullOrWhiteSpace(password))
-            //{
-            //    byte[] passwordHash, passwordSalt;
-            //    _userManager.CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-            //    user.passStoredHash = passwordHash;
-            //    user.passStoredSalt = passwordSalt;
-            //}
-
-            _Context.Users.Update(user);
-            _Context.SaveChanges();
-        }
-
-        [HttpPost("DeleteUser")]
-        public void Delete(int id)
-        {
-            var user = _Context.Users.Find(id);
-            if (user != null)
-            {
-                _Context.Users.Remove(user);
-                _Context.SaveChanges();
-            }
-        }
+        // [HttpPost("DeleteUser")]
+        // public void Delete(int id)
+        // {
+        //     var user = _Context.Users.Find(id);
+        //     if (user != null)
+        //     {
+        //         _Context.Users.Remove(user);
+        //         _Context.SaveChanges();
+        //     }
+        // }
 
         [HttpGet("SearchLicense")]
         public async Task<ApiResult<List<UsersViewModel>>> SearchLicense(string license){

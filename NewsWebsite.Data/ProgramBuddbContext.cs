@@ -86,6 +86,7 @@ namespace NewsWebsite.Data
         public virtual DbSet<AmlakTicket> AmlakTickets { get; set; }
         public virtual DbSet<AmlakTicketMessage> AmlakTicketMessages { get; set; }
         public virtual DbSet<AmlakTicketAdmin> AmlakTicketAdmins { get; set; }
+        public virtual DbSet<BudgetLog> BudgetLogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -202,7 +203,7 @@ namespace NewsWebsite.Data
 
                 entity.Property(e => e.Code).HasMaxLength(50);
 
-                entity.Property(e => e.CodeAcc).HasMaxLength(50);
+                // entity.Property(e => e.CodeAcc).HasMaxLength(50);
 
                 entity.Property(e => e.CodePbb)
                     .HasColumnName("CodePBB")

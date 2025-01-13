@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using NewsWebsite.Data;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -29,14 +31,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class BudgetPishnahadiApiController : Controller
+    public class BudgetPishnahadiApiController : EnhancedBudgetController
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
-        public BudgetPishnahadiApiController(IUnitOfWork uw, IConfiguration configuration)
+        private readonly ProgramBuddbContext _db;
+
+        public BudgetPishnahadiApiController(IUnitOfWork uw, IConfiguration configuration,ProgramBuddbContext db)
         {
             _config = configuration;
             _uw = uw;
+            _db = db;
         }
 
         [Route("BudgetProposalRead")]
@@ -124,6 +129,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<string>> BudgetProposalInlineInsert([FromBody] BudgetPrposalInsertModalViewModel updateParamViewModel)
         {
             string readercount = null;
+            string newCode = null;
 
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
@@ -139,10 +145,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     while (dataReader.Read())
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
+                        if (dataReader["NewCode"].ToString() != null) newCode = dataReader["NewCode"].ToString();
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "افزودن ردیف بودجه  برای منطقه"+updateParamViewModel.areaId+" وسال "+updateParamViewModel.yearId, newCode);
+
+                return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -186,7 +198,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "ویرایش بودجه پیشنهادی منطقه"+param.areaId+" وسال "+param.yearId
+                                                                        +"Pishnahadi : " + param.Pishnahadi
+                                                                        +"PishnahadiCash : " + param.PishnahadiCash
+                                                                        +"PishnahadiNonCash : " + param.PishnahadiNonCash
+                                                                        +"DelegateTo : " + (param.DelegateTo ?? 0)
+                                                                        +"DelegateAmount : " + (param.DelegateAmount??0)
+                                                                        +"DelegatePercentage : " + (param.DelegatePercentage??0)
+                                                                        +"Last3Month : " + (param.Last3Month??0)
+                                                                        +"Last9Month : " + (param.Last9Month??0)
+                    , param.codingId);
+
+                return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -221,7 +247,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "ویرایش اصلاح پیشنهادی به "+param.BudgetNext + " برای منطقه " + param.areaId+" و سال "+param.yearId, param.codingId);
+
+                return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -250,7 +281,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "حذف کدینگ منطقه"+paramDelete.areaId+" وسال "+paramDelete.yearId, paramDelete.codingId);
+                return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }

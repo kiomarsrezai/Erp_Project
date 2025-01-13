@@ -35,6 +35,8 @@ using SharpKml.Engine;
 using System.IO;
 using System.IO.Compression;
 using System.Text.Json.Nodes;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing.Patterns;
 using NewsWebsite.Data.Models.AmlakAdmin;
 using NewsWebsite.Data.Models.LogRequest;
 using SharpKml.Base;
@@ -189,6 +191,29 @@ namespace NewsWebsite.Areas.Api.Controllers.v1.amlak
         [Route("Test1Success")]
         [HttpGet]
         public async Task<ApiResult<object>> Test11(int ContractId){
+
+            
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (authHeader == null || !authHeader.StartsWith("Bearer "))
+                return 0;
+            
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+            var user1 = await _db.Users.Where(u => u.Token == token).FirstOrDefaultAsync();
+            if (user1 == null){
+                return 0;
+            }
+            Helpers.dd(Helpers.GetUserDeviceInfo(HttpContext));
+            
+            // Helpers.dd(Helpers.GetUserIp(HttpContext));
+            
+            
+            var a1 = HttpContext.GetEndpoint();
+            var b1 = a1.Metadata;
+            var c2 = b1.GetMetadata<ControllerActionDescriptor>();
+            var c1 = b1.GetMetadata<RouteAttribute>();
+            var d2 = c2.AttributeRouteInfo.Template;
+            var d1 = c1.Template;
+            Helpers.dd(HttpContext.GetEndpoint()?.Metadata.GetMetadata<RoutePattern>()?.RawText);
             var user = await CheckUserAuth(_db);
             bool result = CheckPermission(user, "amlak_info.ownerAndType.kind","1");
             bool result2 = CheckPermission(user, "agreement.show.showAgreement","1");

@@ -281,6 +281,14 @@
     "Supplier": "supplier",
     "Admin": "user"
   },
+  "budgetLogTargetType": {
+    "Coding": "ردیف های بودجه",
+    "AreaShare": "سهم مناطق",
+    "Project": "پروژه",
+    "VasetAcc": "واسط کدینگ",
+    "User": "کاربر"
+    
+  },
   "amlakPrivateSection": {
   "1": "1",
   "2": "2",

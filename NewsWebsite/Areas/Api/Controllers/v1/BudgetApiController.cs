@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using NewsWebsite.Data;
+using NewsWebsite.ViewModels.Api.Contract.AmlakLog;
 
 namespace NewsWebsite.Areas.Api.Controllers.v1
 {
@@ -27,13 +29,16 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1")]
     [ApiResultFilter]
-    public class BudgetApiController : Controller
+    public class BudgetApiController : EnhancedBudgetController
     {
         public readonly IUnitOfWork _uw;
         private readonly IConfiguration _config;
-        public BudgetApiController(IUnitOfWork uw, IConfiguration configuration)
+        private readonly ProgramBuddbContext _db;
+
+        public BudgetApiController(IUnitOfWork uw, IConfiguration configuration,ProgramBuddbContext db)
         {
             _config = configuration;
+            _db = db;
             _uw = uw;
         }
 
@@ -217,7 +222,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "تغییر انتصاب بودجه  - متولی: "+param.ProctorId + " - مجری : " + param.CodingNatureId, param.id);
+                return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -322,8 +331,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount))
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "افزودن کدینگ جدید ", param.code);
+   
                 return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -333,6 +346,7 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<string>> CodingDelete([FromBody] RequestBudgetDeleteViewModel param)
         {
             string readercount = null;
+            var obj = await getCoding(_db,param.Id);
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Delete", sqlconnect))
@@ -347,7 +361,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "حذف کدینگ ", obj.Code);
+
+                return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -357,8 +376,9 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
         public async Task<ApiResult<string>> CodingUpdate([FromBody] BudgetCodingUpdateParamModel budgetCodingUpdate)
         {
             string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
+            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp"))){
+                var obj = await getCoding(_db, budgetCodingUpdate.id);
+                
                 using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Update", sqlconnect))
                 {
                     sqlconnect.Open();
@@ -379,10 +399,17 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
                 }
+                sqlconnect.Close();
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "ویرایش کدینگ به "+budgetCodingUpdate.code, obj.Code);
+    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgetCodingMainModal")]
@@ -481,7 +508,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     }
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+            if (string.IsNullOrEmpty(readercount)){
+                await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "افزودن سطح 1 برای منطقه " + budgetCodingInsert.areaId, budgetCodingInsert.CodingId);
+                return Ok("با موفقیت انجام شد");
+            }
             else
                 return BadRequest(readercount);
         }
@@ -508,11 +539,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
+                    dataReader.Close();
                 }
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    var obj = (await getCodingBaseBD(sqlconnect, Param.id));
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "ویرایش سطح 1 شناسه "+Param.id +" برای سال "+obj.YearId,obj.Code);
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgteModal1CodingDelete")]
@@ -522,9 +560,10 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
+                sqlconnect.Open();
+                var obj = (await getCodingBaseBD(sqlconnect, param.Id));
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal1Coding_Delete", sqlconnect))
                 {
-                    sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -533,10 +572,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
                 }
+                
+                
+                if (string.IsNullOrEmpty(readercount)){
+
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "حذف سطح 1 شناسه "+param.Id+" برای سال "+ obj.YearId,obj.Code);
+    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgetModal2CodingRead")]
@@ -627,11 +674,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
+                    dataReader.Close();
+
                 }
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "افزودن سطح 2 برای سال "+budgetCodingInsert.YearId+" و منطقه "+budgetCodingInsert.AreaId ,
+                        (await getCodingBaseBD(sqlconnect, budgetCodingInsert.BudgetDetailId)).Code);
+    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgteModal2ProjectUpdate")]
@@ -655,11 +711,20 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
+                    
+                    dataReader.Close();
+                    
+                    if (string.IsNullOrEmpty(readercount)){
+                        var obj = (await getCodingBaseBDP(sqlconnect, param.Id));
+                        await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "ویرایش سطح 2  برای منطقه "+param.AreaId +" برای سال " + obj.YearId, obj.Code);
+        
+                        return Ok("با موفقیت انجام شد");
+                    }
+                    else
+                        return BadRequest(readercount);
                 }
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgteModal2ProjectDelete")]
@@ -669,9 +734,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
+                sqlconnect.Open();
+                var obj = await getCodingBaseBDP(sqlconnect, param.Id);
+
                 using (SqlCommand sqlCommand = new SqlCommand("SP001_BudgetModal2Project_Delete", sqlconnect))
                 {
-                    sqlconnect.Open();
+                    
                     sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -680,93 +748,18 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
                 }
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "حذف سطح 2 با شناسه "+param.Id +" برای سال " + obj.YearId, obj.Code);
+    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
-        [Route("BudgteCodingInsert")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgteCodingInsert([FromBody] BudgetCodingInsertParamModel budgetCodingInsert)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Insert", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("MotherId", budgetCodingInsert.MotherId);
-                    sqlCommand.Parameters.AddWithValue("code", budgetCodingInsert.code);
-                    sqlCommand.Parameters.AddWithValue("description", budgetCodingInsert.description);
-                    sqlCommand.Parameters.AddWithValue("show", budgetCodingInsert.show);
-                    sqlCommand.Parameters.AddWithValue("crud", budgetCodingInsert.crud);
-                    sqlCommand.Parameters.AddWithValue("levelNumber", budgetCodingInsert.levelNumber);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-        [Route("BudgteCodingDelete")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgteCodingDelete([FromBody] RequestBudgetDeleteViewModel param)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Delete", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", param.Id);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
-
-        [Route("BudgteCodingUpdate")]
-        [HttpPost]
-        public async Task<ApiResult<string>> BudgteCodingUpdate([FromBody] BudgetCodingUpdateParamModel budgetCodingUpdate)
-        {
-            string readercount = null;
-            using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
-            {
-                using (SqlCommand sqlCommand = new SqlCommand("SP000_Coding_Update", sqlconnect))
-                {
-                    sqlconnect.Open();
-                    sqlCommand.Parameters.AddWithValue("id", budgetCodingUpdate.id);
-                    sqlCommand.Parameters.AddWithValue("code", budgetCodingUpdate.code);
-                    sqlCommand.Parameters.AddWithValue("description", budgetCodingUpdate.description);
-                    sqlCommand.Parameters.AddWithValue("show", budgetCodingUpdate.show);
-                    sqlCommand.Parameters.AddWithValue("crud", budgetCodingUpdate.crud);
-                    sqlCommand.Parameters.AddWithValue("levelNumber", budgetCodingUpdate.levelNumber);
-                    sqlCommand.CommandType = CommandType.StoredProcedure;
-                    SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
-                    while (dataReader.Read())
-                    {
-                        if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
-        }
 
         [Route("BudgetModal3AreaRead")]
         [HttpGet]
@@ -832,11 +825,25 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
+                    dataReader.Close();
+
                 }
+                
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    var obj = (await getCodingBaseBDPA(sqlconnect, param.Id));
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "ویرایش سطح 3 برای منطقه "+obj.AreaId +" برای سال " + obj.YearId 
+                                                                            + " Pishnahadi : " + param.Pishnahadi
+                                                                            + " Mosavab : " + param.mosavab
+                                                                            + " EditArea : " + param.EditArea
+                        , obj.Code);
+                    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgetModal3AreaInsert")]
@@ -861,11 +868,21 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
+                    dataReader.Close();
+
                 }
+                
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    var obj = (await getCodingBaseBDP(sqlconnect, areaInsert.areaPublicId));
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "افزودن ردیف بودجه سطح 3 برای منطقه "+areaInsert.areaId +" برای سال " + areaInsert.yearId, obj.Code);
+    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgetModal3AreaDelete")]
@@ -876,9 +893,11 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
             string readercount = null;
             using (SqlConnection sqlconnect = new SqlConnection(_config.GetConnectionString("SqlErp")))
             {
+                sqlconnect.Open();
+                var obj = (await getCodingBaseBDPA(sqlconnect, param.Id));
+
                 using (SqlCommand sqlCommand = new SqlCommand("[SP001_BudgetModal3Area_Delete]", sqlconnect))
                 {
-                    sqlconnect.Open();
                     sqlCommand.Parameters.AddWithValue("id", param.Id);
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     SqlDataReader dataReader = await sqlCommand.ExecuteReaderAsync();
@@ -886,11 +905,19 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                     {
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
+                    dataReader.Close();
                 }
+                
+                
+                if (string.IsNullOrEmpty(readercount)){
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "حذف سطح 3 برای منطقه "+obj.AreaId +" برای سال " + obj.YearId, obj.Code);
+    
+                    return Ok("با موفقیت انجام شد");
+                }
+                else
+                    return BadRequest(readercount);
             }
-            if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
-            else
-                return BadRequest(readercount);
+
         }
 
         [Route("BudgetCodingInfoModalRead")]
@@ -960,7 +987,12 @@ namespace NewsWebsite.Areas.Api.Controllers.v1
                         if (dataReader["Message_DB"].ToString() != null) readercount = dataReader["Message_DB"].ToString();
                     }
                 }
-                if (string.IsNullOrEmpty(readercount)) return Ok("با موفقیت انجام شد");
+
+                if (string.IsNullOrEmpty(readercount)){
+                    await SaveLogAsync(_db, 0, TargetTypesBudgetLog.Coding, "افزودن ردیف  برای منطقه "+param.AreaId +" برای سال " + param.YearId, param.CodingId);
+
+                    return Ok("با موفقیت انجام شد");
+                }
                 else
                     return BadRequest(readercount);
             }

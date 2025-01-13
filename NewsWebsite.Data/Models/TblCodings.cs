@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NewsWebsite.Data.Models
 {
+        [Table("tblCoding")]
     public partial class TblCodings
     {
         public TblCodings()
@@ -17,7 +19,7 @@ namespace NewsWebsite.Data.Models
         public string Description { get; set; }
         public int? LevelNumber { get; set; }
         public int? TblBudgetProcessId { get; set; }
-        public string CodeAcc { get; set; }
+        // public string? CodeAcc { get; set; }
         public int? CodingPbbid { get; set; }
         public string CodePbb { get; set; }
 

@@ -21,6 +21,7 @@ using SharpKml.Dom;
 using SharpKml.Engine;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Text.Json;
 using SharpKml.Base;
 using TimeSpan = System.TimeSpan;
@@ -482,6 +483,41 @@ public static class Helpers {
         return tmpPath;
     }
      
+    
+    
+    
+    public static String GetUserIp(HttpContext context)
+    {
+        
+        string[] keys = { "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP", "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "REMOTE_ADDR" };
+    
+        foreach (var key in keys)
+        {
+            if (context.Request.Headers.ContainsKey(key)){
+                foreach (var ip in context.Request.Headers[key].ToString().Split(','))
+                {
+                    var trimmedIp = ip.Trim();
+                    if (IPAddress.TryParse(trimmedIp, out IPAddress parsedIp) &&
+                        (!IPAddress.IsLoopback(parsedIp) ))//|| !IPAddress.IsIPv6LinkLocal(parsedIp)
+                    {
+                        return trimmedIp;
+                    }
+                }
+            }
+        }
+
+        return context.Connection.RemoteIpAddress?.ToString();
+    }
+
+    public static string GetUserDeviceInfo(HttpContext context)
+    {
+        if (context.Request.Headers.TryGetValue("User-Agent", out var userAgent))
+        {
+            return userAgent.ToString();
+        }
+
+        return "Unknown Device";
+    }
 
 }
 }
